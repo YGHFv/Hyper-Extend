@@ -31,15 +31,28 @@ jobs:
           distribution: temurin
           java-version: "21"
 
-      - name: 配置 Android SDK
-        uses: android-actions/setup-android@v3
-
+      # ubuntu 运行器已预装 Android SDK 与已接受的许可证，这里直接复用，
+      # 不引入 android-actions/setup-android（它需要写 runner 的 SDK 目录，易失败）。
+      #
       # compileSdk 37 对应的是带次版本号的平台包 platforms;android-37.0，
       # 预装镜像里没有它，必须显式安装，否则 AGP 会报 “SDK platform 37 not found”。
       - name: 安装 SDK 平台与构建工具
         run: |
-          sdkmanager --install "platform-tools" "platforms;android-37.0" "build-tools;37.0.0"
-          sdkmanager --list_installed | grep -E "android-37|build-tools;37"
+          set -euo pipefail
+          SDK_ROOT="${ANDROID_SDK_ROOT:-${ANDROID_HOME:-/usr/local/lib/android/sdk}}"
+          echo "SDK root: $SDK_ROOT"
+
+          SDKMANAGER="$(find "$SDK_ROOT/cmdline-tools" -type f -name sdkmanager 2>/dev/null | sort | tail -n1)"
+          if [ -z "$SDKMANAGER" ]; then SDKMANAGER="$(command -v sdkmanager || true)"; fi
+          if [ -z "$SDKMANAGER" ]; then echo "找不到 sdkmanager"; exit 1; fi
+          echo "sdkmanager: $SDKMANAGER"
+
+          yes | "$SDKMANAGER" --install "platform-tools" "platforms;android-37.0" "build-tools;37.0.0"
+          "$SDKMANAGER" --list_installed | grep -E "android-37|build-tools;37"
+
+          # 没有 local.properties（被 .gitignore 排除），AGP 只能靠环境变量定位 SDK。
+          echo "ANDROID_SDK_ROOT=$SDK_ROOT" >> "$GITHUB_ENV"
+          echo "ANDROID_HOME=$SDK_ROOT" >> "$GITHUB_ENV"
 
       - name: 配置 Gradle 缓存
         uses: gradle/actions/setup-gradle@v4
