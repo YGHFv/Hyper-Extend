@@ -1,0 +1,10 @@
+<resources>
+    <!-- adaptive icon 的底色。浅色/深色系统下都用同一个蓝，避免图标在深色桌面上认不出来。 -->
+    <color name="ic_launcher_background">#FF3482FF</color>
+
+    <!-- 图标变体底色：与 LauncherIconStyle 枚举里的预览色一一对应，改一处必须同步另一处。 -->
+    <color name="ic_launcher_mono_background">#FFF2EFE7</color>
+    <color name="ic_launcher_gold_background">#FF2A221E</color>
+    <color name="ic_launcher_night_background">#FF12161D</color>
+    <color name="ic_launcher_sky_background">#FFDDEEE3</color>
+</resources>

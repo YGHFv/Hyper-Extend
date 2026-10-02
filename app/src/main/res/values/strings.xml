@@ -1,0 +1,4 @@
+<resources>
+    <string name="module_name">澎湃补全计划</string>
+    <string name="module_description">把散落在各个小模块里的澎湃 OS 补全功能收进一个开关面板：手势横条、壁纸取色、原生通知图标、NFC 卡面、通行密钥</string>
+</resources>

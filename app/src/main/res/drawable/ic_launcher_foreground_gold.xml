@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  adaptive icon 的前景层：与默认版同一个「+」，只有颜色不同。
+  形状落在 108 画布的中心 72×72 安全区内（18..90），见 ic_launcher_foreground 的注释。
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- 横杠：48×12，圆角 6 -->
+    <path
+        android:fillColor="#FFD9B36C"
+        android:pathData="M36,48 h36 a6,6 0 0 1 6,6 a6,6 0 0 1 -6,6 h-36 a6,6 0 0 1 -6,-6 a6,6 0 0 1 6,-6 z" />
+    <!-- 竖杠：12×48，圆角 6 -->
+    <path
+        android:fillColor="#FFD9B36C"
+        android:pathData="M48,36 a6,6 0 0 1 6,-6 a6,6 0 0 1 6,6 v36 a6,6 0 0 1 -6,6 a6,6 0 0 1 -6,-6 z" />
+</vector>

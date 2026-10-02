@@ -1,0 +1,24 @@
+# 构建产物（Gradle / AGP）
+/build/
+app/build/
+.gradle/
+.kotlin/
+
+# 本机与私有环境
+local.properties
+*.jks
+*.keystore
+
+# 参考实现、宿主 APK 与诊断材料：体积大且不属于模块源码
+.workbuddy/
+mcp/
+build.log
+
+# IDE
+.idea/
+*.iml
+captures/
+
+# 打包产物
+*.apk
+*.aab

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  模块作用域。LSPosed Manager 读这份做勾选界面；META-INF/xposed/scope.list 是 API 102
+  的实际生效清单（staticScope=true 时以它为准）。两处必须一致 —— 少写一处，Manager
+  里就会出现「列表里根本没有这个 App 可勾」的情况。
+
+  ## 逐项为什么在
+
+  - com.android.systemui：手势横条（HideLine）、壁纸取色（HyperWallpaperMonet）、
+    原生通知图标（MIUINativeNotifyIcon）三个功能的宿主，是作用域里最重的一项。
+  - com.miui.tsmclient（小米智能卡）：NFC 卡面的宿主。
+  - com.android.settings：通行密钥（HyperPasskey）的默认凭据提供方列表与选择器都住在这里。
+  - com.miui.securitycenter：它会在开机时把 autofill / credential_service 的
+    Settings.Secure 配置覆写回小米自己的值，是通行密钥失效的直接原因。
+  - com.xiaomi.scanner：扫描器拉起通行密钥时会带错调用方包名，单独修。
+  - system（libxposed 约定包名，代表 system_server）：通行密钥的服务端侧
+    （RequestSession / IntentFactory）只有在这里才修得动。
+
+  ## 风险等级
+
+  system 与 com.android.systemui 是两个不同量级：system_server 崩溃 = 开机循环，
+  SystemUI 崩溃 = 状态栏重启。所以两者的 hook 全部按「找不到目标就安静跳过」写，
+  绝不抛异常出去；系统界面侧还额外保证只在 HyperOS 上装 hook（见各 feature 的 applicableTo）。
+-->
+<resources>
+    <string-array name="xposed_scope">
+        <item>com.android.systemui</item>
+        <item>com.miui.tsmclient</item>
+        <item>com.android.settings</item>
+        <item>com.miui.securitycenter</item>
+        <item>com.xiaomi.scanner</item>
+        <item>system</item>
+    </string-array>
+</resources>

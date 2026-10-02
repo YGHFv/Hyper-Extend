@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  API 26+ 的自适应图标。minSdk 就是 26，所以这一份对所有支持的设备都生效；
+  mipmap-*/ic_launcher.png 那五档只是给个别不接受纯 vector 前景的启动器留的兜底。
+-->
+<adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
+    <background android:drawable="@color/ic_launcher_background" />
+    <foreground android:drawable="@drawable/ic_launcher_foreground" />
+</adaptive-icon>

@@ -1,0 +1,12 @@
+# 与参考实现 ReaMicro-Extend 保持一致：源码统一 LF 入库。
+# Windows 上不这样定的话，签出会把 .kt/.kts 换成 CRLF，diff 里全是行尾噪音。
+* text=auto eol=lf
+
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+*.apk binary
+*.aab binary
+*.jar binary

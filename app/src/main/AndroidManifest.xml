@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+    <!--
+      miuix-blur 把 minSdk 声明成 33（RuntimeShader 需要 Android 13）。库内所有效果路径都有
+      isRuntimeShaderSupported()（SDK_INT >= 33）运行时门禁，低版本设备只是没有效果、不会崩；
+      模块自己的调用侧同样先查这个开关再挂玻璃层，所以放行合并。
+    -->
+    <uses-sdk tools:overrideLibrary="top.yukonga.miuix.kmp.blur" />
+
+    <!--
+      模块界面只做「读写开关 + 显示诊断」。功能的效果都发生在被注入的宿主进程里，
+      所以除了下面这一条，不申请任何权限 —— 申请了却用不上的权限只会让用户在安装时多一层疑虑。
+
+      NFC 卡面的选图同样不需要存储权限：走的是系统相册选择器（SAF），
+      用户选完由模块把字节复制进自己的私有目录（见 core/NfcCardImage）。
+    -->
+    <!--
+      INTERNET 只有一个用途：把「钱包自带卡面」显示在卡面页左侧。
+
+      钱包的那张卡面在多数情况下是一个网络地址（注入侧只负责把地址交回来，见
+      hook/feature/NfcCardFace）。去下载它是**本进程**的事，所以必须联网权限。
+      这是普通的安装期权限，不会在运行时弹窗，也不涉及任何用户数据。
+    -->
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <!--
+      包可见性声明。Android 11 起，不声明就查不到别的应用 —— 而「默认通行密钥应用」
+      那一行正是靠 queryIntentServices 枚举实现了凭据提供方服务的应用
+      （见 core/CredentialProviders）。只声明这一个 action，不做宽泛的包名列举。
+    -->
+    <queries>
+        <package android:name="com.miui.tsmclient" />
+        <package android:name="com.android.systemui" />
+        <intent>
+            <action android:name="android.service.credentials.CredentialProviderService" />
+        </intent>
+    </queries>
+    <application
+        android:name=".HyperExtendApplication"
+        android:allowBackup="false"
+        android:description="@string/module_description"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/module_name"
+        android:supportsRtl="true"
+        android:theme="@style/ModuleTheme">
+
+        <!--
+          LSPosed Manager 的模块识别靠这四个 meta-data。API 102 实际生效的模块元数据在
+          META-INF/xposed/module.prop（minApiVersion / targetApiVersion / staticScope），
+          这里这份是给 Manager 界面显示用的，两者必须一致。
+        -->
+        <meta-data
+            android:name="xposedmodule"
+            android:value="true" />
+        <meta-data
+            android:name="xposeddescription"
+            android:resource="@string/module_description" />
+        <meta-data
+            android:name="xposedminversion"
+            android:value="102" />
+        <meta-data
+            android:name="xposedscope"
+            android:resource="@array/xposed_scope" />
+
+        <!--
+          NFC 卡面图片的只读出口。
+
+          钱包是另一个 uid，读不到本应用的私有目录，所以卡面副本必须经由一个
+          content:// 通道交给它。这里的两个属性是配对的、缺一不可：
+
+          - exported="false"：任何应用默认都读不到（连列举都做不到）；
+          - grantUriPermissions="true"：允许本应用用 grantUriPermission 把**那一个**
+            Uri 的读权限显式授予钱包包名 —— 这与 FileProvider 的用法完全一致。
+
+          路径固定、只读、没有写入入口，详见 core/NfcCardImageProvider 的注释。
+        -->
+        <provider
+            android:name=".core.NfcCardImageProvider"
+            android:authorities="io.github.YGHFv.HyperExtend.nfc"
+            android:exported="true"
+            android:grantUriPermissions="true" />
+
+        <provider
+            android:name=".core.WalletCardFaceCaptureProvider"
+            android:authorities="io.github.YGHFv.HyperExtend.wallet.capture"
+            android:exported="true" />
+
+        <!--
+          模块主界面。也是让模块脱离 stopped 状态的入口。
+          没有 launcher intent-filter：模块入口由 LSPosed Manager 的「打开」按钮调起
+          （见下面的 MODULE_SETTINGS category），桌面上再多一个图标没有意义。
+        -->
+        <activity
+            android:name=".ui.SettingsActivity"
+            android:enabled="true"
+            android:exported="true"
+            android:label="@string/module_name"
+            android:theme="@style/ModuleTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="de.robv.android.xposed.category.MODULE_SETTINGS" />
+            </intent-filter>
+        </activity>
+
+        <!--
+          另开一个可被桌面图标启动的别名：部分设备上 LSPosed Manager 的入口会被系统隐藏，
+          留一条自己能走进去的路。
+
+          「切换应用图标 / 隐藏桌面图标」正是建立在这一批别名上：每套配色一个别名，
+          启用目标、禁用其余（见 core/LauncherIcons）；隐藏 = 全部禁用。别名默认只有
+          .ui.Home 启用（清单默认值），其余四套 enabled=false —— 组件状态读回来的
+          DEFAULT 就是「这套在用」的依据，改清单默认值之前先读 LauncherIcons。
+        -->
+        <activity-alias
+            android:name=".ui.Home"
+            android:enabled="true"
+            android:exported="true"
+            android:label="@string/module_name"
+            android:icon="@mipmap/ic_launcher"
+            android:targetActivity=".ui.SettingsActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+        <activity-alias
+            android:name=".ui.HomeMono"
+            android:enabled="false"
+            android:exported="true"
+            android:label="@string/module_name"
+            android:icon="@mipmap/ic_launcher_mono"
+            android:targetActivity=".ui.SettingsActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+        <activity-alias
+            android:name=".ui.HomeGold"
+            android:enabled="false"
+            android:exported="true"
+            android:label="@string/module_name"
+            android:icon="@mipmap/ic_launcher_gold"
+            android:targetActivity=".ui.SettingsActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+        <activity-alias
+            android:name=".ui.HomeNight"
+            android:enabled="false"
+            android:exported="true"
+            android:label="@string/module_name"
+            android:icon="@mipmap/ic_launcher_night"
+            android:targetActivity=".ui.SettingsActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+        <activity-alias
+            android:name=".ui.HomeSky"
+            android:enabled="false"
+            android:exported="true"
+            android:label="@string/module_name"
+            android:icon="@mipmap/ic_launcher_sky"
+            android:targetActivity=".ui.SettingsActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+    </application>
+</manifest>
