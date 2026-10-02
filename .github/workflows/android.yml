@@ -26,7 +26,7 @@ jobs:
 
       # compileSdk 37 与 AGP 9.2.1 都要求 JDK 17 以上，本机用的也是 21。
       - name: 配置 JDK 21
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: "21"
@@ -42,12 +42,21 @@ jobs:
           SDK_ROOT="${ANDROID_SDK_ROOT:-${ANDROID_HOME:-/usr/local/lib/android/sdk}}"
           echo "SDK root: $SDK_ROOT"
 
-          SDKMANAGER="$(find "$SDK_ROOT/cmdline-tools" -type f -name sdkmanager 2>/dev/null | sort | tail -n1)"
-          if [ -z "$SDKMANAGER" ]; then SDKMANAGER="$(command -v sdkmanager || true)"; fi
-          if [ -z "$SDKMANAGER" ]; then echo "找不到 sdkmanager"; exit 1; fi
+          SDKMANAGER="$SDK_ROOT/cmdline-tools/latest/bin/sdkmanager"
+          if [ ! -x "$SDKMANAGER" ]; then
+            SDKMANAGER="$(find "$SDK_ROOT/cmdline-tools" -type f -name sdkmanager | sort | tail -n1)"
+          fi
           echo "sdkmanager: $SDKMANAGER"
 
-          yes | "$SDKMANAGER" --install "platform-tools" "platforms;android-37.0" "build-tools;37.0.0"
+          # 运行器镜像已经接受过 SDK 许可证，正常不需要交互确认。
+          # 这里刻意关掉 pipefail：确认输入用完后 yes 会收到 SIGPIPE，
+          # 开着 pipefail 会把这条管道判成失败，让整步误报（首次运行的实际原因）。
+          # 真正的判据是下面那条 list_installed + grep。
+          set +o pipefail
+          yes | "$SDKMANAGER" --licenses > /dev/null 2>&1 || true
+          yes | "$SDKMANAGER" --install "platform-tools" "platforms;android-37.0" "build-tools;37.0.0" || true
+          set -o pipefail
+
           "$SDKMANAGER" --list_installed | grep -E "android-37|build-tools;37"
 
           # 没有 local.properties（被 .gitignore 排除），AGP 只能靠环境变量定位 SDK。
