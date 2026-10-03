@@ -207,6 +207,26 @@ data class HyperOption(
  */
 val FEATURES: List<HyperFeature> = listOf(
     HyperFeature(
+        id = "screenshot_clipboard",
+        title = "截图自动写入剪贴板",
+        summary = "解锁截图自动复制，等待图片保存并发布后再写入剪贴板，避免设备互联读取未完成的截图",
+        scopes = listOf("screenshot"),
+        origin = "西米露 / HyperCeiler · UnlockCopyPicture；本模块补充保存时序保护",
+        license = "AGPL-3.0",
+        defaultEnabled = false,
+        requirement = "当前适配截图 RELEASE-1.6.3.38-09051623；其他版本安全跳过。建议同时开启设备互联的剪贴板读取保护，并关闭西米露中的同类开关。",
+    ),
+    HyperFeature(
+        id = "milink_clipboard_guard",
+        title = "剪贴板读取崩溃修复",
+        summary = "设备互联遇到未发布、已删除或无权限的剪贴板图片时返回不可用，不再因读取异常崩溃",
+        scopes = listOf("milink"),
+        origin = "本模块原创 · 根据设备互联崩溃堆栈修复",
+        license = "AGPL-3.0",
+        defaultEnabled = false,
+        requirement = "需在 LSPosed 启用设备互联作用域并重启其进程；也可单独配合西米露使用。",
+    ),
+    HyperFeature(
         id = "gesture_line",
         title = "隐藏手势横条",
         summary = "去掉屏幕底部那条手势提示横条（小白条），不影响上滑手势与小爱识屏",

@@ -16,6 +16,8 @@ import android.content.pm.ApplicationInfo
 import io.github.YGHFv.HyperExtend.core.ModuleLog
 import io.github.YGHFv.HyperExtend.core.NFC_IMAGE_KEY
 import io.github.YGHFv.HyperExtend.hook.feature.GestureLineHider
+import io.github.YGHFv.HyperExtend.hook.feature.ScreenshotClipboard
+import io.github.YGHFv.HyperExtend.hook.feature.MilinkClipboardGuard
 import io.github.YGHFv.HyperExtend.hook.feature.NativeNotifyIcon
 import io.github.YGHFv.HyperExtend.hook.feature.NfcCardFace
 import io.github.YGHFv.HyperExtend.hook.feature.PasskeyFix
@@ -63,6 +65,14 @@ internal object HookDispatcher {
      * 不做任何读设置、扫 dex 的动作。
      */
     private fun hostTask(packageName: String): HostTask? = when (packageName) {
+        "com.miui.screenshot" -> { loader, settings ->
+            if (settings.isOn("screenshot_clipboard")) "screenshot_clipboard=${ScreenshotClipboard.install(loader)}"
+            else "no feature enabled"
+        }
+        "com.milink.service" -> { loader, settings ->
+            if (settings.isOn("milink_clipboard_guard")) "milink_clipboard_guard=${MilinkClipboardGuard.install(loader)}"
+            else "no feature enabled"
+        }
         HostPlatform.SYSTEMUI -> { loader, settings -> installSystemUi(loader, settings) }
         HostPlatform.TSM_CLIENT -> { loader, settings -> installNfcCardFace(loader, settings) }
         HostPlatform.SETTINGS,

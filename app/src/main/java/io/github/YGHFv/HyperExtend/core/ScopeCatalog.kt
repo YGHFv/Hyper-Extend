@@ -61,6 +61,20 @@ enum class RestartKind {
  */
 val SCOPES: List<HyperScope> = listOf(
     HyperScope(
+        id = "screenshot",
+        title = "截屏",
+        summary = "截图保存与自动复制到剪贴板",
+        process = "com.miui.screenshot",
+        restartKind = RestartKind.KILL,
+    ),
+    HyperScope(
+        id = "milink",
+        title = "设备互联",
+        summary = "跨设备剪贴板与文件读取保护",
+        process = "com.milink.service",
+        restartKind = RestartKind.KILL,
+    ),
+    HyperScope(
         id = "system_server",
         title = "系统框架",
         summary = "整机所有应用的宿主进程，凭据会话等系统级服务都在这里",
