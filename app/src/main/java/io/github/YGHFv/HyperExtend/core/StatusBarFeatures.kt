@@ -42,13 +42,9 @@ package io.github.YGHFv.HyperExtend.core
  *   等类在 OS4 的系统界面 dex 里一个都没有，整块能力已经换了实现。要做得先重新定位靶子。
  * - **电池信息卡片**（状态栏电量条里那行温度 / 电流 / 功率）：参考项目的入口是
  *   `com.miui.charge.ChargeUtils`，OS4 没有这个类。同样是先定位再迁移。
- * - **移动网络「显示逻辑」那一族**：参考项目「移动网络」页里，除了本模块已做的四个标记
- *   （漫游 / VoWiFi / VoLTE / 活动指示器），还有「移动信号显示逻辑」（默认 / 非 WLAN 时 /
- *   仅连接时 / 仅上网卡四档）、「隐藏 SIM 卡 1 / 2 信号图标」、「移动网络类型图标单独显示」
- *   「双排移动网络图标」「大网络类型图标」「自定义移动网络类型文本」。它们要么得接管视图
- *   模型里的一条**可变**状态流，并监听飞行模式 / WLAN / 数据网络 / SIM 变化的广播持续更新它
- *   （改错的后果是信号图标直接消失），要么要连同一百三十多个 `statusbar_signal_*` 矢量图
- *   一起搬 —— 都属于「另起一个子系统」的量级，不适合顺手做。
+ * - **移动网络类型与双排图标**：「移动网络类型图标单独显示」「双排移动网络图标」
+ *   「大网络类型图标」「自定义移动网络类型文本」尚未迁移。
+ *   移动信号显示逻辑四档、隐藏 SIM 卡 1 / 2 已接入 OS4 可变状态流。
  * - **时钟的其余形态**：参考项目「时钟指示器」页还有「时钟样式」（状态栏时钟显示成两行
  *   日期）、「隐藏 Pad 日期时钟」、「禁用时钟同步」等；本模块只做了最常改的时钟格式，以及
  *   状态栏时钟本身的字号 / 加粗 / 位置。
@@ -412,12 +408,35 @@ val STATUS_BAR_FEATURES: List<HyperFeature> = listOf(
     HyperFeature(
         id = "status_bar_mobile",
         title = "移动网络",
-        summary = "隐藏漫游、通话及网络活动图标",
+        summary = "调整信号显示逻辑与各类网络图标",
         scopes = listOf("systemui"),
         origin = "西米露 / HyperCeiler · MobilePublicHookV（HideVoWiFiIcon 并入）",
         license = "AGPL-3.0",
         defaultEnabled = false,
+        requirement = "仅隐藏信号图标，不停用 SIM 卡。仅在连接时显示、仅显示上网卡模式下，隐藏 SIM 卡选项不生效。修改后重启系统界面生效。",
+        config = listOf(
+            HyperChoice(
+                key = MobileSignalSettings.MODE,
+                title = "移动信号显示逻辑",
+                entries = listOf(
+                    ChoiceEntry("0", "默认"),
+                    ChoiceEntry("1", "非 WiFi 下始终显示"),
+                    ChoiceEntry("2", "仅在连接时显示"),
+                    ChoiceEntry("3", "仅显示上网卡"),
+                ),
+            ),
+        ),
         options = listOf(
+            HyperOption(
+                id = MobileSignalSettings.HIDE_SIM_1,
+                title = "隐藏 SIM 卡 1 信号图标",
+                defaultEnabled = false,
+            ),
+            HyperOption(
+                id = MobileSignalSettings.HIDE_SIM_2,
+                title = "隐藏 SIM 卡 2 信号图标",
+                defaultEnabled = false,
+            ),
             HyperOption(
                 id = "status_bar_mobile.hide_roaming",
                 title = "隐藏漫游图标",

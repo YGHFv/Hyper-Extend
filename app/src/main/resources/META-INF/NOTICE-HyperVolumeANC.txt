@@ -1,0 +1,21 @@
+HyperVolumeANC
+Copyright 2026 zhhhyyyyyy
+https://github.com/zhhhyyyyyy/HyperVolumeANC
+Revision: 636ce289457ed10f149c033e3b723cdfc62838aa
+
+HyperExtend adapts MediaVolumeEntry, MediaPlaybackWatcher and MiSoundAppVolumeHook
+ideas/code into hook/feature/volume/AppVolumeEntryHooks.kt, AppVolumePolicy.kt,
+MediaPlayback.kt, MiSoundCardHooks.kt and AppVolumeCardGeometry.kt.
+These files retain the Apache License 2.0; its full text is included in
+META-INF/licenses/HyperVolumeANC-Apache-2.0.txt.
+
+Modifications: Kotlin port, HyperExtend settings and hook runtime, per-view
+lifecycle, bounded permission-protected launch requests, native MiSound click
+handoff, lockscreen checks and non-accumulating margin calculation, native helper
+material initialization, controller-scoped floating-ball suppression, right-side
+blur card layout, native slider/pager reuse, guarded slide animations and
+viewport-safe card sizing.
+No ANC, Bluetooth, third-party earphone protocol or navigation code is included.
+MiSoundVolumeHooks.kt is a new implementation based on target-host inspection;
+the visual adaptations are in the Apache-2.0 files listed above.
+The rest of HyperExtend remains under its stated licenses.

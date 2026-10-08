@@ -69,11 +69,13 @@ class HookSettings internal constructor(private val prefs: SharedPreferences?) {
     }
 
     /** 不做子项归属检查的原始读取，只给 [isOn] 用。 */
-    private fun raw(id: String): Boolean = prefs?.getBoolean(id, defaultEnabledOf(id)) ?: false
+    private fun raw(id: String): Boolean = runCatching {
+        prefs?.getBoolean(id, defaultEnabledOf(id)) ?: false
+    }.getOrDefault(false)
 
     /** 读一个字符串设置。缺省是空串 —— 所有的字符串项语义都是「空 = 未配置」，
      * 于是调用方不用区分「没这个键」和「值是空」，一条 `isBlank()` 就够。 */
-    fun string(key: String): String = prefs?.getString(key, "") ?: ""
+    fun string(key: String): String = runCatching { prefs?.getString(key, "") ?: "" }.getOrDefault("")
 
     /**
      * 读一个数值型配置（滑块）。

@@ -14,24 +14,7 @@ package io.github.YGHFv.HyperExtend.hook.feature.statusbar
 
 import io.github.YGHFv.HyperExtend.hook.Reflect
 
-/**
- * 用宿主自己的 `kotlinx.coroutines` 造一条「永远是同一个值」的状态流。
- *
- * ## 为什么不是模块自己 new 一个
- *
- * 新版系统界面的图标可见性、WIFI 标准、漫游标记全都改成了状态流：宿主在构造时建一条流，
- * 之后由界面层 `collect` 它。模块要「把某个值钉死」，就得往那个字段里换一条流 ——
- * 而这条流**必须和宿主用的是同一份 kotlinx**：宿主的收集方调的是它自己 classloader 里那个
- * `StateFlow` 接口，模块 classloader 里另有一份同名接口，两边不通用（`ClassCastException`）。
- *
- * 所以这里反射调用 `StateFlowKt.MutableStateFlow(value)` + `asStateFlow()`，
- * 造出来的对象天然属于宿主的类型体系。
- *
- * ## 为什么用只读流
- *
- * 宿主往这些字段上写的机会不多（基本只在构造里赋一次），而只读流能保证「没有人能再把值改掉」——
- * 这正是「始终隐藏」这类开关需要的语义。
- */
+/** OS4 has an inlined asStateFlow; construct its host-owned read-only wrapper directly. */
 internal class StateFlowFactory(private val loader: ClassLoader) {
 
     private val factoryClass: Class<*>? =
@@ -41,11 +24,12 @@ internal class StateFlowFactory(private val loader: ClassLoader) {
         Reflect.firstMethod(it, "MutableStateFlow") { method -> method.parameterCount == 1 }
     }
 
-    private val readonlyFactory = factoryClass?.let {
-        Reflect.firstMethod(it, "asStateFlow") { method -> method.parameterCount == 1 }
-    }
+    private val readonlyConstructor = Reflect.loadClass(loader, "kotlinx.coroutines.flow.ReadonlyStateFlow")
+        ?.declaredConstructors?.firstOrNull {
+            it.parameterTypes.map { type -> type.name } == listOf("kotlinx.coroutines.flow.MutableStateFlow")
+        }?.also { it.isAccessible = true }
 
-    val isAvailable: Boolean get() = mutableFactory != null && readonlyFactory != null
+    val isAvailable: Boolean get() = mutableFactory != null && readonlyConstructor != null
 
     /**
      * 造一条只读常量流。
@@ -53,9 +37,27 @@ internal class StateFlowFactory(private val loader: ClassLoader) {
      * 返回 null 表示宿主里拿不到 kotlinx（不是这种形态的系统界面），调用方据此安静跳过 ——
      * 猜一个替代做法只会把不确定变成故障。
      */
-    fun constant(value: Any?): Any? {
+    fun constant(value: Any?): Any? = mutable(value)?.readonly
+
+    fun mutable(value: Any?): HostStateFlow? {
         val mutable = mutableFactory ?: return null
-        val readonly = readonlyFactory ?: return null
-        return Reflect.attempt { readonly.invoke(null, mutable.invoke(null, value)) }
+        val readonly = readonlyConstructor ?: return null
+        return Reflect.attempt {
+            mutable.isAccessible = true
+            val state = mutable.invoke(null, value) ?: return@attempt null
+            val setter = state.javaClass.getMethod("setValue", Any::class.java)
+            HostStateFlow(readonly.newInstance(state), state, setter)
+        }
     }
+}
+
+internal class HostStateFlow(
+    val readonly: Any,
+    private val state: Any,
+    private val setter: java.lang.reflect.Method,
+) {
+    fun set(value: Any): Boolean = Reflect.attempt {
+        setter.invoke(state, value)
+        true
+    } == true
 }

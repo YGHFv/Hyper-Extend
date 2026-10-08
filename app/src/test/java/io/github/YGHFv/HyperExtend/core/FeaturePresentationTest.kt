@@ -15,7 +15,7 @@ class FeaturePresentationTest {
             setOf(
                 "screenshot_clipboard", "milink_clipboard_guard", "mishare_receive_guard",
                 "rotation_suggestion", "rotation_lock_fix", "status_bar_double_tap", "status_bar_screenshot_hide",
-            ),
+            ) + (SYSTEM_UI_FEATURES + APP_VOLUME_FEATURE).filterNot { it.hasDetailPage }.map { it.id },
             FEATURES.filterNot { it.hasDetailPage }.map { it.id }.toSet(),
         )
     }

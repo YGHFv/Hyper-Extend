@@ -97,6 +97,13 @@ val SCOPES: List<HyperScope> = listOf(
         restartKind = RestartKind.KILL,
     ),
     HyperScope(
+        id = "misound",
+        title = "音质音效",
+        summary = "系统分应用音量面板；入口设置归于系统界面",
+        process = "com.miui.misound",
+        restartKind = RestartKind.KILL,
+    ),
+    HyperScope(
         id = "tsmclient",
         title = "小米智能卡",
         summary = "公交卡、门禁卡的刷卡界面与卡面",
@@ -154,13 +161,18 @@ fun featuresOfScope(scopeId: String): List<HyperFeature> =
 /** 二级菜单仍属于原宿主，没有独立的总开关或重启目标。 */
 enum class ScopeFeatureGroup(val scopeId: String, val title: String, val summary: String) {
     STATUS_BAR("systemui", "状态栏", "图标、电池、网速、时钟与手势"),
+    LOCK_SCREEN("systemui", "锁屏", "锁屏通知、状态栏与解锁提示"),
+    CONTROL_CENTER("systemui", "通知与控制中心", "通知提醒、背景与显示设置"),
+    SYSTEM_UI_OTHER("systemui", "其他", "通知小窗及其他系统界面设置"),
 }
 
 val HyperFeature.entryGroup: ScopeFeatureGroup?
     get() = group?.takeIf { it.scopeId == entryScope?.id }
 
 fun featureGroupsOfScope(scopeId: String): List<ScopeFeatureGroup> =
-    featuresOfScope(scopeId).mapNotNull { it.entryGroup }.distinct()
+    ScopeFeatureGroup.entries.filter { group ->
+        group.scopeId == scopeId && featuresOfScope(scopeId).any { it.entryGroup == group }
+    }
 
 /** null 表示作用域主页的直属功能；首页总数仍使用未分组的 featuresOfScope。 */
 fun featuresOfScopePage(scopeId: String, group: ScopeFeatureGroup? = null): List<HyperFeature> =

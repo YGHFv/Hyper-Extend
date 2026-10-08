@@ -66,6 +66,7 @@ import io.github.YGHFv.HyperExtend.core.HyperChoice
 import io.github.YGHFv.HyperExtend.core.HyperFeature
 import io.github.YGHFv.HyperExtend.core.HyperSlider
 import io.github.YGHFv.HyperExtend.core.HyperText
+import io.github.YGHFv.HyperExtend.core.MobileSignalSettings
 import io.github.YGHFv.HyperExtend.core.MONET_SCHEMES
 import io.github.YGHFv.HyperExtend.core.MONET_SCHEME_KEY
 import io.github.YGHFv.HyperExtend.core.NFC_IMAGE_KEY
@@ -249,10 +250,15 @@ internal fun FeatureDetailPage(
                             GroupTitle(title)
                             SettingsCard {
                                 options.forEach { option ->
+                                    val available = !MobileSignalSettings.isHideCardOption(option.id) ||
+                                        MobileSignalSettings.allowsHiddenCards(
+                                            MobileSignalSettings.mode(strings[MobileSignalSettings.MODE]),
+                                        )
                                     SwitchPreference(
                                         title = option.title,
-                                        summary = option.summary,
-                                        checked = switches[option.id] == true,
+                                        summary = if (available) option.summary else "当前显示逻辑下不生效",
+                                        enabled = available,
+                                        checked = available && switches[option.id] == true,
                                         onCheckedChange = { on -> onSwitch(option.id, on) },
                                     )
                                 }

@@ -209,13 +209,19 @@ internal object HookRuntime {
                 // 重新挂载也不会被框架拒绝。ID 用 label 而不是自己编序号：
                 // 它唯一需要满足的性质就是「同一个挂载点在每一代代码里都一样」。
                 .setId(label)
-                .setExceptionMode(XposedInterface.ExceptionMode.PROTECTIVE)
+                // We contain module failures ourselves. Host exceptions must not trigger framework replay.
+                .setExceptionMode(XposedInterface.ExceptionMode.PASSTHROUGH)
                 .intercept { chain ->
-                    try {
-                        block(chain)
-                    } catch (t: Throwable) {
-                        ModuleLog.error("interceptor threw, falling through: $label", t)
-                        chain.proceed()
+                    val invocation = HookInvocation()
+                    val guarded = object : XposedInterface.Chain by chain {
+                        override fun proceed(): Any? = invocation.proceed { chain.proceed() }
+                        override fun proceed(args: Array<out Any?>): Any? = invocation.proceed { chain.proceed(args) }
+                        override fun proceedWith(receiver: Any): Any? = invocation.proceed { chain.proceedWith(receiver) }
+                        override fun proceedWith(receiver: Any, args: Array<out Any?>): Any? =
+                            invocation.proceed { chain.proceedWith(receiver, args) }
+                    }
+                    invocation.protect({ block(guarded) }, { chain.proceed() }) {
+                        ModuleLog.error("interceptor failed; preserving single host invocation: $label", it)
                     }
                 }
             installedHooks.incrementAndGet()

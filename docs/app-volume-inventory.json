@@ -1,0 +1,58 @@
+{
+  "reference": "https://github.com/zhhhyyyyyy/HyperVolumeANC",
+  "revision": "636ce289457ed10f149c033e3b723cdfc62838aa",
+  "feature": "volume_app_entry",
+  "status": "experimental_implemented_static_verified_pending_device_acceptance",
+  "deviceAcceptance": false,
+  "items": [
+    {
+      "part": "settings_and_scopes",
+      "status": "implemented_tested",
+      "scopes": [
+        "com.android.systemui",
+        "com.miui.misound"
+      ]
+    },
+    {
+      "part": "plugin_loader_discovery",
+      "status": "implemented_static_verified",
+      "hostVersionCode": 202602260
+    },
+    {
+      "part": "entry_layout_and_animation",
+      "status": "implemented_static_verified_pending_device_acceptance",
+      "hostVersionCode": 183022200,
+      "evidence": "systemui-plugin-host-evidence.json"
+    },
+    {
+      "part": "controller_dismiss_geometry_accessibility_lifecycle",
+      "status": "implemented_static_verified_and_policy_unit_tested",
+      "deviceAcceptance": false
+    },
+    {
+      "part": "native_misound_panel_launch",
+      "status": "implemented_static_verified",
+      "hostVersionCode": 260903
+    },
+    {
+      "part": "playback_filter",
+      "status": "implemented_static_verified_and_unit_tested"
+    },
+    {
+      "part": "floating_ball_suppression",
+      "status": "implemented_static_verified_pending_device_acceptance",
+      "hostVersionCode": 260903,
+      "deviceAcceptance": false
+    },
+    {
+      "part": "panel_restyle_blur_and_slide_animations",
+      "status": "implemented_static_verified_pending_device_acceptance",
+      "hostVersionCode": 260903,
+      "deviceAcceptance": false
+    },
+    {
+      "part": "anc_and_bluetooth",
+      "status": "outside_requested_entry_scope"
+    }
+  ]
+}

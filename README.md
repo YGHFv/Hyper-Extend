@@ -4,7 +4,7 @@
 
 基准平台：澎湃 OS 4（Android 16）。技术栈：libxposed API 102 + miuix（HyperOS 风格 Compose UI）。
 
-当前版本：`0.1.1`（versionCode `2`）。
+当前版本：`0.1.2`（versionCode `3`）。
 
 ---
 
@@ -26,6 +26,7 @@
 | NFC 卡面自定义 | 把小米智能卡的卡面换成你自己选的图片 | DIY NFC 卡面图片（zhizi42） | GPL-3.0 |
 | 通行密钥修复 | 通行密钥调不出凭据管理器，或调出来是空列表 | 修复澎湃系统通行密钥（Howard20181） | GPL-3.0 |
 | 小米互传接收修复 | 文件已删除但媒体索引仍占用路径，导致对方显示发送失败 | 本模块原创 · 双端日志及文件系统证据 | AGPL-3.0 |
+| 分应用音量入口（实验性） | 在音量条上方打开系统独立音量面板；已静态核验，待真机验收 | HyperVolumeANC（zhhhyyyyyy） | Apache-2.0 |
 
 界面与布局参考了 **HyperCeiler** 与 **ReaPress-Extend**。
 
@@ -48,6 +49,33 @@
 网速、时钟、双击锁屏与截屏隐藏状态栏统一收纳于此。手势横条、壁纸取色、旋转建议留在
 系统界面主页。分组不新增总开关、不改变已有设置键或作用域，启用数量仍按实际功能统计；
 状态栏页右上角的“让改动生效”仍作用于系统界面进程。
+
+系统界面还设有“锁屏、通知与控制中心、其他”子页。西米露迁移目前登记 28 个功能入口，包含
+PIN 乱序、锁屏双击/提示、生物识别能力、通知静音/小窗/渠道/折叠、剪贴板浮窗、
+控制中心行为、自定义莫奈色、指定应用焦点通知、媒体自定义操作，以及媒体卡片布局与字号，均默认关闭。
+媒体布局与字号含 9 个子配置：封面/角标、按钮顺序、靠左、隐藏输出入口、两项间距及三项字号；
+只修改通知中心普通卡片，不修改翻折外屏和灵动岛。按钮图标缩放、进度条与背景效果仍待迁移。
+其中颜色与焦点应用名单在功能详情中配置。**全量迁移尚未完成，当前验证为 MT 宿主代码核验与本地构建测试，未做设备验收。**
+源码直接参考 [HyperCeiler](https://github.com/ReChronoRain/HyperCeiler)；详见 [迁移记录与待办](docs/systemui-migration.md)。
+
+续迁移增加指定应用通知展开、展开悬浮通知超时收起，以及运营商“隐藏名称”模式（其他模式仍待迁移）。
+另接入 [HyperVolumeANC](https://github.com/zhhhyyyyyy/HyperVolumeANC) 的分应用音量入口，默认关闭，
+需同时勾选 `com.android.systemui` 和 `com.miui.misound` 并重启两个宿主。
+**音量入口仍为实验性**：已核对 MiSound 260903、主包插件加载链和音量插件 183022200 的代码与布局，
+未做真机验收。已补齐旧悬浮球隐藏、右侧局部毛玻璃卡片、参考滑块比例及滑入滑出动画；保留原生音量调节逻辑，不包含降噪。
+完整边界、许可与验收步骤见 [音量入口迁移记录](docs/app-volume-migration.md)。
+插件续迁移新增“隐藏控制中心编辑按钮”和“隐藏折叠音量面板底部按钮”，均默认关闭、待真机验收。
+AOD 工件已收到并核对快捷按钮候选链；WMShell 工件为不含 dex 的资源 APK，代码迁移仍需实现工件。
+
+「移动网络」现支持 OS4 的移动信号显示逻辑与隐藏 SIM 卡 1/2：
+- 默认：保留系统信号显示规则，只隐藏手动选择的卡槽图标。
+- 非 WiFi 下始终显示：连接 WiFi 时隐藏移动信号，断开后显示；可叠加隐藏指定卡槽。
+- 仅在连接时显示：仅在默认数据网络为蜂窝连接时显示上网卡。
+- 仅显示上网卡：只显示默认上网卡，不要求正在联网；飞行模式下隐藏。
+
+后两档禁用隐藏 SIM 卡选项，但保留其配置，切回前两档后恢复。这里只改变图标，
+不会停用 SIM 卡或修改 WiFi、移动数据、飞行模式等系统设置。
+验证记录和待真机验收项见 [OS4 移动信号验证](docs/os4-mobile-signal.md)。
 
 只有一个开关的功能直接在列表中操作；包含子选项、参数、图片或附加配置的功能保留二级入口。
 搜索结果采用同一规则。兼容性与重启提示保留在开关下方，设置键、默认值和生效方式不变。
@@ -164,8 +192,8 @@ com.miui.mishare.connectivity 小米互传接收文件索引冲突保护（接�
 
 作用域里有 `system`（system_server），所以「最坏情况」是开机循环。按下面五层防线处理：
 
-**① 默认全关（最重要的一层）。** 五个功能出厂全部为关。模块装上去、在 LSPosed 里启用之后，
-只要没有在界面上主动打开某个开关，**一个 hook 都不会装**。
+**① 默认全关（最重要的一层）。** 所有布尔功能主开关默认关闭，读不到设置或设置类型错误也按关闭处理。
+NFC 卡面为配置型功能，保留只读采集 Hook，不属于布尔主开关；未配置时不替换卡面。
 
 这一层有一条容易写错的细节：功能有主开关与子项两级，而有的 hook 点是直接按子项 id 判断的
 （`passkey_fix.system_server` 等）。子项的默认值是「开」
@@ -179,9 +207,10 @@ com.miui.mishare.connectivity 小米互传接收文件索引冲突保护（接�
 是 **AOSP 类**，在类原生系统上挂它们会把凭据会话错误地指向 Google GMS —— 那属于
 「修出一个原本不存在的故障」。目标类/方法找不到时一律「记日志 + 跳过」，绝不报错。
 
-**③ 异常不出圈。** `HookRuntime.hook` 统一 `try/catch` 一切 throwable，拦截体里再兜一层；
-拦截体抛异常时让原方法照常跑完（`ExceptionMode.PROTECTIVE`）。
-每个 feature 的安装过程各自 `runCatching`，入口的三个生命周期回调也全部 `runCatching`。
+**③ 异常保护。** `HookRuntime.hook` 对每次宿主调用保存结果：模块前置处理出错时调用原方法一次，
+后置处理出错时保留原结果（含 void/null），不重放宿主副作用。宿主自己抛出的异常按原语义传回，
+不伪造成功或重试。API 102 使用 `PASSTHROUGH`，模块错误由自己的保护层处理，避免框架二次兜底重放。
+生命周期入口和功能安装路径也做异常隔离，但这不能保证修复所有异步回调或本地层崩溃。
 
 **④ 逃生门（恢复模式可用）。** 万一真进了开机循环，系统进不去 → 模块界面和 LSPosed Manager
 都打不开，界面上的「停用」按钮恰好够不着。所以提供两个**不需要开机即可生效**的标记，
@@ -189,29 +218,30 @@ com.miui.mishare.connectivity 小米互传接收文件索引冲突保护（接�
 
 ```
 # 方式一：属性（需要 root，persist. 前缀保证重启后仍生效）
-adb shell setprop persist.sys.hyperextend.disabled 1
+adb shell su -c 'setprop persist.sys.hyperextend.disabled 1'
 
 # 方式二：文件
 adb shell touch /data/local/tmp/hyperextend.disabled
 adb shell mkdir -p /sdcard/HyperExtend && adb shell touch /sdcard/HyperExtend/disable
 ```
 
-撤销：属性设回 `0` 或删掉文件，重启即可。**不需要卸载模块、不需要清 LSPosed 数据。**
+撤销：属性设回 `0` 并删除已设置的文件标记，重启即可。属性读失败时不安装 Hook；文件标记在部分 SELinux/存储环境不可读，优先使用 root 属性方式。**不需要卸载模块、不需要清 LSPosed 数据。**
 
-**⑤ 自动熔断。** 模块还会跨进程记录 `system_server` 启动事件；五分钟内出现三次重启后，
-自动持久化禁用 `system_server` 与 `SystemUI` 的全部 Hook，防止下一次启动继续循环。
-普通应用、设置页和模块界面不受这道闸影响。模块界面的“手动解除自动熔断并启用框架 Hook”会发起一次性解除请求，清零当前计数但不会关闭下一轮自动检测；若模块界面无法打开，再在 root/恢复环境清除下面两项后重启：
+**⑤ 自动熔断。** `system_server` 与 `SystemUI` 分别记录启动，首次启动不算重启；同一五分钟窗口内
+三次重启（第四次启动）触发持久熔断。框架熔断同时禁止 SystemUI；SystemUI 独立崩溃只熔断自身。
+状态采用同目录临时文件、同步写入后替换；坏文件、IO 失败和异常时钟均跳过 Hook。正常运行或重启不能自行解除已触发熔断。
+普通应用、设置页和模块界面不受这道闸影响。界面“解除自动熔断”发起一次性请求，清零计数但不关闭下一轮检测。
+先关闭可疑功能；若模块界面无法打开，再在 root/恢复环境清除以下状态并重启：
 
 ```
-adb shell setprop persist.sys.hyperextend.framework_disabled 0
-adb shell rm /data/system/hyperextend_bootguard
+adb shell su -c 'setprop persist.sys.hyperextend.framework_disabled 0'
+adb shell su -c 'rm -f /data/system/hyperextend_bootguard /data/user/0/com.android.systemui/files/hyperextend_systemui_bootguard'
 ```
 
 实现见 `hook/BootLoopGuard.kt`，检查点在 `system_server` 安装前与 `SystemUI` 分派前；正常启动走
 `HookDispatcher.dispatch`。
 实现见 `hook/KillSwitch.kt`，检查点在所有 hook 之前：正常启动走 `HookDispatcher.dispatch`
-与 `installSystemServerHooks`（`dispatch` 里连 dex 扫描都跳过），热重载走
-`onHotReloaded` → 同一个 `installSystemServerHooks`，两条路共用同一道闸。
+与 `installSystemServerHooks`（`dispatch` 里连 dex 扫描都跳过）。当前禁用热重载，需重启相应宿主生效。
 
 ## 构建
 

@@ -22,3 +22,7 @@ captures/
 # 打包产物
 *.apk
 *.aab
+
+# Python inspection tool caches
+__pycache__/
+*.py[cod]
