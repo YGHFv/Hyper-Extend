@@ -1,0 +1,45 @@
+{
+  "checkedDate": "2026-10-09",
+  "source": "MT allowed artifact inventory, read-only",
+  "availableArtifactCount": 19,
+  "artifacts": [
+    {
+      "workspaceId": "gqbnd0ih",
+      "packageName": "miui.systemui.plugin",
+      "versionName": "18.3.2.22.0",
+      "versionCode": 183022200,
+      "counts": {
+        "zipEntries": 3775,
+        "dexEntries": 2,
+        "xmlEntries": 3230,
+        "classes": 14371
+      }
+    },
+    {
+      "workspaceId": "7rdlzzo0",
+      "packageName": "com.miui.aod",
+      "versionName": "DEV-2446.3.0.1-09042206",
+      "versionCode": 22446301,
+      "counts": {
+        "zipEntries": 5824,
+        "dexEntries": 3,
+        "xmlEntries": 4341,
+        "classes": 22197
+      }
+    },
+    {
+      "workspaceId": "36se70sn",
+      "packageName": "com.android.wm.shell",
+      "versionName": "17",
+      "versionCode": 37,
+      "counts": {
+        "zipEntries": 1358,
+        "dexEntries": 0,
+        "xmlEntries": 1160,
+        "classes": 0
+      }
+    }
+  ],
+  "wmshellStatus": "Resource APK only: no DEX implementation. Implementation JAR or other code container still needed.",
+  "deviceAcceptance": false
+}

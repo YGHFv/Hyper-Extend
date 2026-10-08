@@ -15,8 +15,8 @@ android {
         // 基准平台是澎湃 OS 4（Android 16），targetSdk 停在 35 是刻意的：
         // 模块本体没有需要 36/37 行为变更的功能，抬上去只会多引入一层前台服务与通知的限制。
         targetSdk = 35
-        versionCode = 2
-        versionName = "0.1.1"
+        versionCode = 3
+        versionName = "0.1.2"
     }
 
     compileOptions {

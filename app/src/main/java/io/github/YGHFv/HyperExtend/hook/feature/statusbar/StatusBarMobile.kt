@@ -55,6 +55,7 @@ internal object StatusBarMobile {
 
     fun install(loader: ClassLoader, settings: HookSettings): Int {
         var installed = 0
+        installed += MobileSignalVisibility.install(loader, settings)
         installed += installMobileMarkers(loader, settings)
         installed += installOperatorIcons(loader, settings)
         return installed

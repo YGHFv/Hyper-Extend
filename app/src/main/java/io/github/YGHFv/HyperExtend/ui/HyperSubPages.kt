@@ -299,16 +299,16 @@ internal fun AboutTab(
             )
             if (showRecovery) {
                 HintText("开机异常时，可通过以下任一方式停用所有 Hook。")
-                HintText("方式一：adb shell setprop persist.sys.hyperextend.disabled 1")
+                HintText("方式一（需 root）：adb shell su -c 'setprop persist.sys.hyperextend.disabled 1'")
                 HintText("方式二：adb shell touch /data/local/tmp/hyperextend.disabled")
-                HintText("五分钟内连续三次重启，自动停用系统框架与系统界面 Hook。")
+                HintText("系统框架、系统界面分别记录启动；五分钟内三次重启触发持久熔断。系统界面独立熔断只停用其自身 Hook。")
                 HintText(
                     "恢复：属性设回 0，删除停用标记 /data/local/tmp/hyperextend.disabled" +
                         "（或 /sdcard/HyperExtend/disable）；解除自动熔断后重启设备。",
                 )
                 HintText(
                     "无法进入模块时：将 persist.sys.hyperextend.framework_disabled 设为 0，" +
-                        "删除 /data/system/hyperextend_bootguard 后重启。",
+                        "删除 /data/system/hyperextend_bootguard 和系统界面私有 files/hyperextend_systemui_bootguard 后重启。先关闭可疑功能再解除熔断。",
                 )
             }
             CardDivider()

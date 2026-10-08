@@ -13,7 +13,11 @@ class ScopeFeatureGroupTest {
         val children = featuresOfScopePage("systemui", ScopeFeatureGroup.STATUS_BAR)
         assertEquals(expected, children.map { it.id }.toSet())
         assertEquals(expected.size, children.size)
-        assertEquals(listOf(ScopeFeatureGroup.STATUS_BAR), featureGroupsOfScope("systemui"))
+        assertEquals(
+            listOf(ScopeFeatureGroup.STATUS_BAR, ScopeFeatureGroup.LOCK_SCREEN,
+                ScopeFeatureGroup.CONTROL_CENTER, ScopeFeatureGroup.SYSTEM_UI_OTHER),
+            featureGroupsOfScope("systemui"),
+        )
     }
 
     @Test fun systemUiMainPageKeepsOnlyUnrelatedFeatures() {

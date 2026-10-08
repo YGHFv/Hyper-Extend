@@ -14,6 +14,9 @@ package io.github.YGHFv.HyperExtend.hook
 
 import android.content.pm.ApplicationInfo
 import io.github.YGHFv.HyperExtend.core.ModuleLog
+import io.github.YGHFv.HyperExtend.core.AppVolumeSettings
+import io.github.YGHFv.HyperExtend.hook.feature.systemui.SystemUiPluginHooks
+import io.github.YGHFv.HyperExtend.hook.feature.volume.MiSoundVolumeHooks
 import io.github.YGHFv.HyperExtend.core.NFC_IMAGE_KEY
 import io.github.YGHFv.HyperExtend.hook.feature.GestureLineHider
 import io.github.YGHFv.HyperExtend.hook.feature.ScreenshotClipboard
@@ -31,6 +34,14 @@ import io.github.YGHFv.HyperExtend.hook.feature.statusbar.StatusBarGestures
 import io.github.YGHFv.HyperExtend.hook.feature.statusbar.StatusBarIcons
 import io.github.YGHFv.HyperExtend.hook.feature.statusbar.StatusBarMobile
 import io.github.YGHFv.HyperExtend.hook.feature.statusbar.StatusBarNetworkSpeed
+import io.github.YGHFv.HyperExtend.hook.feature.systemui.LockScreenHooks
+import io.github.YGHFv.HyperExtend.hook.feature.systemui.NotificationHooks
+import io.github.YGHFv.HyperExtend.hook.feature.systemui.NotificationExpansionHooks
+import io.github.YGHFv.HyperExtend.hook.feature.systemui.ClipboardOverlayHooks
+import io.github.YGHFv.HyperExtend.hook.feature.systemui.ControlCenterHooks
+import io.github.YGHFv.HyperExtend.hook.feature.systemui.installSystemUiFeature
+import io.github.YGHFv.HyperExtend.hook.feature.systemui.SystemUiCustomHooks
+import io.github.YGHFv.HyperExtend.hook.feature.systemui.MediaCardHooks
 import java.util.concurrent.ConcurrentHashMap
 
 /**
@@ -73,6 +84,11 @@ internal object HookDispatcher {
      * 不做任何读设置、扫 dex 的动作。
      */
     private fun hostTask(packageName: String): HostTask? = when (packageName) {
+        AppVolumeSettings.PACKAGE -> { loader, settings ->
+            buildList {
+                installSystemUiFeature(settings, AppVolumeSettings.FEATURE) { MiSoundVolumeHooks.install(loader) }
+            }.joinToString()
+        }
         "com.miui.screenshot" -> { loader, settings ->
             val parts = mutableListOf<String>()
             if (settings.isOn("screenshot_clipboard")) {
@@ -142,7 +158,7 @@ internal object HookDispatcher {
         }
 
 
-        if (packageName == HostPlatform.SYSTEMUI && BootLoopGuard.shouldSkipSystemUiHooks()) {
+        if (packageName == HostPlatform.SYSTEMUI && BootLoopGuard.shouldSkipSystemUiHooks(settings, applicationInfo?.dataDir)) {
             ModuleLog.warn("SystemUI hooks skipped (framework hook fuse engaged)")
             return
         }
@@ -200,6 +216,14 @@ internal object HookDispatcher {
         }
         val parts = mutableListOf<String>()
 
+        parts += LockScreenHooks.install(loader, settings)
+        parts += NotificationHooks.install(loader, settings)
+        parts += NotificationExpansionHooks.install(loader, settings)
+        parts += ControlCenterHooks.install(loader, settings)
+        parts += SystemUiCustomHooks.install(loader, settings)
+        parts += MediaCardHooks.install(loader, settings)
+        parts += SystemUiPluginHooks.install(loader, settings)
+        parts.installSystemUiFeature(settings, "clipboard_native_overlay") { ClipboardOverlayHooks.install(loader) }
         if (settings.isOn("gesture_line")) {
             parts += "gesture_line=${GestureLineHider.install(loader, settings)}"
         }

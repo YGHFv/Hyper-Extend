@@ -78,8 +78,7 @@ internal object KillSwitch {
     private var reported = false
 
     /**
-     * 停用闸是否已合上。任何读取失败都按「未合上」处理 ——
-     * 这里的失败方向必须是「让模块正常工作」，因为绝大多数用户不会去设这两个标记。
+     * 属性读取失败时跳过 Hook；文件路径不可访问时由属性逃生门兜底。
      */
     fun isEngaged(): Boolean {
         cached?.let { return it }
@@ -113,11 +112,10 @@ internal object KillSwitch {
         val clazz = Class.forName("android.os.SystemProperties")
         val get = clazz.getMethod("get", String::class.java)
         val value = get.invoke(null, PROPERTY_NAME) as? String
-        // 只认 "1"：空值（属性没设过）返回的也是空串，不能把空串当成合上。
-        value?.trim() == "1"
-    } catch (_: Throwable) {
-        // 隐藏 API 限制、类不存在……都当作没设。这一步是「额外保险」，不能反过来影响主流程。
-        false
+        value?.trim() !in listOf("", "0")
+    } catch (failure: Throwable) {
+        ModuleLog.error("kill switch property unreadable; hooks skipped", failure)
+        true
     }
 
     private fun fileFlag(): Boolean = FLAG_FILES.any { path ->

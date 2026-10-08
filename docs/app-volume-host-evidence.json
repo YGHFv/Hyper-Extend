@@ -1,0 +1,182 @@
+{
+  "host": {
+    "packageName": "com.miui.misound",
+    "versionName": "16-4.0-4-20260903",
+    "versionCode": 260903
+  },
+  "reference": {
+    "url": "https://github.com/zhhhyyyyyy/HyperVolumeANC",
+    "revision": "636ce289457ed10f149c033e3b723cdfc62838aa"
+  },
+  "verification": "MiSound 260903 and plugin 183022200 statically inspected; card migration pending device runtime acceptance.",
+  "evidence": [
+    {
+      "locator": "dex_method:Lcom/miui/misound/playervolume/VolumeUIService;->onStartCommand(Landroid/content/Intent;II)I",
+      "contains": [
+        "\"streamType\"",
+        "\"flags\"",
+        "->B()V",
+        "->t()V"
+      ]
+    },
+    {
+      "locator": "dex_method:Lcom/miui/misound/playervolume/a;->B()V",
+      "contains": [
+        "->u()V",
+        "->z()V",
+        "->m()V"
+      ]
+    },
+    {
+      "locator": "dex_method:Lcom/miui/misound/playervolume/a;->n()V",
+      "contains": [
+        "->n:Lmiuix/miuixbasewidget/widget/FloatingActionButton;",
+        "->setOnClickListener("
+      ]
+    },
+    {
+      "locator": "dex_method:Lcom/miui/misound/playervolume/a;->y()V",
+      "contains": [
+        "0x1388",
+        "->C(Landroid/view/View;Landroid/view/WindowManager$LayoutParams;)V"
+      ]
+    },
+    {
+      "locator": "dex_method:Lcom/miui/misound/playervolume/a;->u()V",
+      "contains": [
+        "->t:Ljava/util/List;",
+        "->u:Ljava/util/List;"
+      ]
+    },
+    {
+      "locator": "dex_method:Lcom/miui/misound/playervolume/VolumeUIService;->onCreate()V",
+      "contains": [
+        "->startForeground("
+      ]
+    },
+    {
+      "locator": "dex_method:Lcom/miui/misound/playervolume/f;->a(Landroid/content/Context;)Ljava/util/List;",
+      "contains": [
+        "\"getClientUid\"",
+        "\"getPlayerState\"",
+        "->getVolumeControlStream()I"
+      ]
+    },
+    {
+      "locator": "dex_class:Lcom/miui/misound/playervolume/a$c;",
+      "contains": [
+        "0x7d0",
+        "->y()V",
+        "->a:I"
+      ]
+    },
+    {
+      "locator": "axml:AndroidManifest.xml",
+      "contains": [
+        "android:name=\"com.miui.misound.playervolume.VolumeUIService\" android:exported=\"true\""
+      ]
+    },
+    {
+      "locator": "dex_method:Lcom/miui/misound/playervolume/a;->C(Landroid/view/View;Landroid/view/WindowManager$LayoutParams;)V",
+      "contains": [
+        "->isAttachedToWindow()Z",
+        "->addView("
+      ]
+    },
+    {
+      "locator": "dex_method:Lcom/miui/misound/playervolume/a;->g()V",
+      "contains": [
+        "0x1388",
+        "0x12d",
+        "->postDelayed("
+      ]
+    },
+    {
+      "locator": "dex_method:Lcom/miui/misound/playervolume/a;->p()V",
+      "contains": [
+        "->D(Landroid/view/View;)V",
+        "->a:I"
+      ]
+    },
+    {
+      "locator": "dex_method:Lcom/miui/misound/playervolume/a;->m()V",
+      "contains": [
+        "->setAdapter(",
+        "La",
+        "->registerOnPageChangeCallback("
+      ]
+    },
+    {
+      "locator": "dex_class:Lcom/miui/misound/playervolume/a$i;",
+      "contains": [
+        "->e:Ljava/util/List;",
+        "->g:Lcom/miui/misound/playervolume/a;",
+        "onBindViewHolder",
+        "onCreateViewHolder",
+        "const/4 v4, 0x5"
+      ]
+    },
+    {
+      "locator": "dex_class:Lcom/miui/misound/playervolume/a$i$a;",
+      "contains": [
+        ".field e:Landroid/view/ViewGroup;",
+        "->setOnClickListener("
+      ]
+    },
+    {
+      "locator": "dex_class:Lcom/miui/misound/playervolume/a$e;",
+      "contains": [
+        "onPageSelected(I)V",
+        "->a:Lcom/miui/misound/playervolume/a;"
+      ]
+    },
+    {
+      "locator": "axml:res/P8.xml",
+      "contains": [
+        "MediaVolumePageView",
+        "ViewPager2",
+        "@7F0A03A0"
+      ]
+    },
+    {
+      "locator": "axml:res/nR.xml",
+      "contains": [
+        "@7F0A03A2",
+        "match_parent"
+      ]
+    },
+    {
+      "locator": "axml:res/qp.xml",
+      "contains": [
+        "MiuiVolumeSeekBar",
+        "paddingBottom=\"15dp\"",
+        "layout_alignBottom=\"@7F0A039F\""
+      ]
+    },
+    {
+      "locator": "axml:res/bi.xml",
+      "contains": [
+        "orientation=\"horizontal\"",
+        "wrap_content"
+      ]
+    }
+  ],
+  "resourceFiles": [
+    {
+      "locator": "resource:0x7f0d0108",
+      "path": "res/P8.xml"
+    },
+    {
+      "locator": "resource:0x7f0d0109",
+      "path": "res/nR.xml"
+    },
+    {
+      "locator": "resource:0x7f0d004b",
+      "path": "res/qp.xml"
+    },
+    {
+      "locator": "resource:0x7f0d004e",
+      "path": "res/bi.xml"
+    }
+  ]
+}

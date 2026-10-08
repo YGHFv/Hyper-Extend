@@ -1,0 +1,463 @@
+{
+  "host": {
+    "packageName": "com.android.systemui",
+    "versionName": "17.03.260226.r",
+    "versionCode": 202602260
+  },
+  "reference": {
+    "url": "https://github.com/ReChronoRain/HyperCeiler",
+    "revision": "5e46860"
+  },
+  "verification": "Read-only MT MCP code evidence; not runtime acceptance.",
+  "evidence": [
+    {
+      "locator": "dex_method:Lcom/android/keyguard/KeyguardPINView;->onFinishInflate()V",
+      "contains": [
+        "->mViews:[[Landroid/view/View;",
+        "->mNumViews:[[Landroid/view/View;"
+      ]
+    },
+    {
+      "locator": "axml:res/layout/keyguard_pin_view.xml",
+      "contains": [
+        "com.android.keyguard.NumPadKey",
+        "app:digit=\"0\""
+      ]
+    },
+    {
+      "locator": "dex_method:Lcom/android/keyguard/KeyguardUpdateMonitor;->isUnlockWithFacePossible()Z",
+      "contains": [
+        "->isFaceAuthEnabledAndEnrolled()Z"
+      ]
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/keyguard/KeyguardIndicationRotateTextViewController;->indicationTypeToString(I)Ljava/lang/String;",
+      "contains": [
+        "\"is_dismissible\"",
+        "\"secure_lock_device\"",
+        "\"enter_to_unlock_hint\""
+      ]
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/keyguard/KeyguardIndicationRotateTextViewController;->updateIndication(ILcom/android/systemui/keyguard/KeyguardIndication;Z)V",
+      "contains": [
+        "->mIndicationQueue:Ljava/util/List;",
+        "->remove(Ljava/lang/Object;)Ljava/lang/Object;"
+      ]
+    },
+    {
+      "locator": "dex_method:Lcom/miui/systemui/notification/view/viewmodel/NotificationNumStateViewModel;-><init>(Lcom/android/systemui/statusbar/policy/ZenModeControllerImpl;Lcom/miui/systemui/notification/data/repository/NotificationNumRepositoryImpl;Lcom/android/keyguard/injector/KeyguardUpdateMonitorInjector;Lcom/android/systemui/statusbar/StatusBarStateControllerExt;Lcom/android/systemui/statusbar/policy/ConfigurationController;Lcom/android/keyguard/panel/KeyguardPanelViewController;Ldagger/Lazy;Lcom/android/keyguard/injector/KeyguardBottomAreaInjector;Lkotlinx/coroutines/CoroutineScope;Lcom/miui/systemui/notification/view/animator/NotificationScreenOnOffAnimator;Ldagger/Lazy;Lcom/android/systemui/power/domain/interactor/PowerInteractor;Landroid/content/Context;)V",
+      "contains": [
+        "->isZenModeEnabled:Lkotlinx/coroutines/flow/ReadonlyStateFlow;"
+      ]
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/clipboardoverlay/ClipboardListener;->onPrimaryClipChanged()V",
+      "contains": [
+        "->sCtsTestPkgList:Ljava/util/List;",
+        "->isDeviceLocked()Z",
+        "android.content.extra.IS_SENSITIVE"
+      ]
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/qs/tileimpl/QSTileImpl;->click(Lcom/android/systemui/animation/Expandable;)V",
+      "contains": [
+        "->sendToTarget()V",
+        "->mState:Lcom/android/systemui/plugins/qs/QSTile$State;"
+      ]
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/qs/pipeline/domain/adapter/MiuiQSHostAdapter;->collapsePanels()V",
+      "contains": [
+        "->collapsePanels()V"
+      ]
+    },
+    {
+      "locator": "dex_class:Lcom/miui/systemui/controlcenter/data/repository/ControlCenterSettingsRepositoryImpl$special$$inlined$map$1$2;",
+      "contains": [
+        "->forceUseControlCenter:Z",
+        "use_control_panel"
+      ]
+    },
+    {
+      "locator": "dex_method:Lcom/miui/systemui/notification/NotificationSettingsHelper;->startAppNotificationSettings(Landroid/content/Context;Ljava/lang/String;Ljava/lang/String;ILjava/lang/String;)V",
+      "contains": [
+        "highlight_channel_id",
+        "->startActivityAsUser"
+      ]
+    },
+    {
+      "locator": "dex_class:Lcom/android/systemui/statusbar/notification/row/MiuiNotificationMenuRow$$ExternalSyntheticLambda5;",
+      "contains": [
+        "->startAppNotificationSettings",
+        "->animExitModal$default"
+      ]
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/theme/ThemeOverlayController;->createOverlays(I)V",
+      "contains": [
+        "->mDarkColorScheme:",
+        "->mLightColorScheme:"
+      ]
+    },
+    {
+      "locator": "dex_method:Lcom/miui/systemui/notification/NotificationSettingsManager;->canShowFocusState(Landroid/content/Context;Ljava/lang/String;)I",
+      "contains": [
+        "->getFocusState",
+        "->mInstalledPkgsSet:"
+      ]
+    },
+    {
+      "locator": "dex_method:Lcom/miui/systemui/notification/NotificationSettingsManager;->canShowFocusStateApp(Landroid/content/Context;Ljava/lang/String;)I",
+      "contains": [
+        "->getFocusState",
+        "->isInSupportBlockFocusXmsList"
+      ]
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/notification/utils/NotificationUtil;->shouldIgnoreEntry(Lcom/android/systemui/statusbar/notification/collection/NotificationEntry;)Z",
+      "contains": [
+        "->mIsFold:Z",
+        "->mIsFocusNotification:Z"
+      ]
+    },
+    {
+      "locator": "dex_class:Lcom/android/systemui/statusbar/notification/mediacontrol/MediaActionsInjector$getCustomAction$2;",
+      "contains": [
+        "->mHiddenCustomActionsListLocal:",
+        "->sendCustomAction"
+      ]
+    },
+    {
+      "locator": "dex_method:Lcom/android/keyguard/stub/MiuiKeyguardUpdateMonitorStub;->isUnlockWithFingerprintPossible(I)Z",
+      "contains": [
+        "->isUnlockWithFingerprintPossible(I)Z"
+      ]
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/media/controls/domain/pipeline/MediaActionsKt$$ExternalSyntheticLambda0;->invoke(Ljava/lang/Object;)Ljava/lang/Object;",
+      "contains": [
+        "->mHiddenCustomActionsListLocal:",
+        "-><init>(Landroid/graphics/drawable/Drawable;Ljava/lang/Runnable;"
+      ]
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/notification/collection/coordinator/FoldCoordinator$collectionListener$1;->onEntryAdded(Lcom/android/systemui/statusbar/notification/collection/NotificationEntry;)V",
+      "contains": [
+        "->shouldIgnoreEntry"
+      ]
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/notification/collection/coordinator/FoldCoordinator$collectionListener$1;->onEntryUpdated(Lcom/android/systemui/statusbar/notification/collection/NotificationEntry;)V",
+      "contains": [
+        "->shouldIgnoreEntry"
+      ]
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/notification/collection/coordinator/FoldCoordinator$shadeExpansionListener$1;->onPanelExpansionChanged$1(Lcom/android/systemui/shade/ShadeExpansionChangeEvent;)V",
+      "contains": [
+        "->mPendingNotifications:",
+        "->shouldIgnoreEntry"
+      ]
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/notification/collection/coordinator/FoldCoordinator$alarmScheduler$2$1$onReceive$1;->run()V",
+      "contains": [
+        "->shouldIgnoreEntry"
+      ]
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/notification/mediacontrol/MiuiMediaNotificationControllerImpl;->loadLayout()V",
+      "contains": [
+        "->normalLayout:Landroidx/constraintlayout/widget/ConstraintSet;",
+        "->normalAlbumLayout:Landroidx/constraintlayout/widget/ConstraintSet;",
+        "->tinyLayout:Landroidx/constraintlayout/widget/ConstraintSet;",
+        "->load(Landroid/content/Context;I)V"
+      ]
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/notification/mediacontrol/MiuiMediaNotificationControllerImpl;->updateLayout$1()V",
+      "contains": [
+        "->isFlipTinyScreen(Landroid/content/Context;)Z",
+        "->tinyAlbumLayout:",
+        "->normalAlbumLayout:",
+        "->applyTo(Landroidx/constraintlayout/widget/ConstraintLayout;)V",
+        "->titleText:Landroid/widget/TextView;",
+        "->artistText:Landroid/widget/TextView;",
+        "->setTextAppearance(I)V"
+      ]
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/notification/mediacontrol/MiuiMediaViewControllerImpl;->attach(Lcom/android/systemui/statusbar/notification/mediacontrol/MiuiMediaViewHolder;)V",
+      "contains": [
+        "->holder:Lcom/android/systemui/statusbar/notification/mediacontrol/MiuiMediaViewHolder;",
+        "->setOnSeekBarChangeListener",
+        "->updateForegroundColors()V"
+      ]
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/notification/mediacontrol/MiuiMediaViewControllerImpl;->setSeamless(Lcom/android/systemui/media/controls/shared/model/MediaData;)V",
+      "contains": [
+        "->seamless:Landroid/view/ViewGroup;",
+        "->setVisibility(I)V",
+        "->applyMediaTransferView",
+        "->setContentDescription"
+      ]
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/notification/stack/NotificationSectionsManager;->reinflateViews()V",
+      "contains": [
+        "new-instance v8, Lcom/android/systemui/statusbar/notification/mediacontrol/MiuiMediaViewHolder;",
+        "->elapsedTimeView:Landroid/widget/TextView;",
+        "->totalTimeView:Landroid/widget/TextView;",
+        "->attach(Lcom/android/systemui/statusbar/notification/mediacontrol/MiuiMediaViewHolder;)V",
+        "->loadLayout()V",
+        "->updateLayout$1()V"
+      ]
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/notification/mediacontrol/MiuiMediaNotificationControllerImpl$configurationCallback$1;->onMaxBoundsChanged(Z)V",
+      "contains": [
+        "->updateLayout$1()V"
+      ]
+    },
+    {
+      "locator": "dex_method:Lcom/miui/utils/configs/MiuiConfigs;->isFlipTinyScreen(Landroid/content/Context;)Z",
+      "contains": [
+        "->isFlipDevice()Z",
+        "->isTinyScreen(Landroid/content/Context;Z)Z"
+      ]
+    },
+    {
+      "locator": "axml:res/xml/miui_media_session_normal.xml",
+      "contains": [
+        "@7F0B0057",
+        "@7F0B00C1",
+        "@7F0B071D",
+        "app:layout_constraintHorizontal_chainStyle=\"spread_inside\"",
+        "app:layout_constraintLeft_toLeftOf=\"@7F0B00AC\""
+      ]
+    },
+    {
+      "locator": "axml:res/xml/miui_media_session_album_normal.xml",
+      "contains": [
+        "@7F0B0566",
+        "@7F0B00C2"
+      ]
+    },
+    {
+      "locator": "dex_method:Landroidx/constraintlayout/widget/ConstraintSet;->clone(Landroidx/constraintlayout/widget/ConstraintSet;)V",
+      "contains": [
+        "->mConstraints:Ljava/util/HashMap;",
+        "->clone()Landroidx/constraintlayout/widget/ConstraintSet$Constraint;"
+      ]
+    },
+    {
+      "locator": "dex_method:Landroidx/constraintlayout/widget/ConstraintSet;->connect(IIII)V",
+      "contains": [
+        "->leftToLeft:I",
+        "->rightToLeft:I"
+      ]
+    },
+    {
+      "locator": "dex_method:Landroidx/constraintlayout/widget/ConstraintSet;->clear(II)V",
+      "contains": [
+        "->leftToLeft:I",
+        "->rightToRight:I"
+      ]
+    },
+    {
+      "locator": "dex_method:Landroidx/constraintlayout/widget/ConstraintSet;->setMargin(III)V",
+      "contains": [
+        "->topMargin:I",
+        "->startMargin:I"
+      ]
+    },
+    {
+      "locator": "dex_method:Landroidx/constraintlayout/widget/ConstraintSet;->setGoneMargin(III)V",
+      "contains": [
+        "->goneStartMargin:I",
+        "->goneEndMargin:I"
+      ]
+    },
+    {
+      "locator": "dex_method:Landroidx/constraintlayout/widget/ConstraintSet;->setVisibility(II)V",
+      "contains": [
+        "->visibility:I"
+      ]
+    },
+    {
+      "locator": "dex_method:Landroidx/constraintlayout/widget/ConstraintSet;->setHorizontalChainStyle(II)V",
+      "contains": [
+        "->horizontalChainStyle:I"
+      ]
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/shared/plugins/PluginInstance$PluginFactory;->createClassLoader()Ljava/lang/ClassLoader;",
+      "contains": [
+        "->pluginAppInfo:Landroid/content/pm/ApplicationInfo;",
+        "->sClassLoaders:Ljava/util/Map;",
+        "->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;"
+      ]
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/notification/row/ExpandableNotificationRow;->setSystemExpanded(Z)V",
+      "contains": [
+        "->mIsSystemExpanded:Z",
+        "->notifyHeightChanged"
+      ]
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/notification/row/ExpandableNotificationRow;->onNotificationUpdated()V",
+      "contains": [
+        "->getEntry()",
+        "->mSbn:"
+      ]
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/notification/row/ExpandableNotificationRow;->isExpanded$1()Z",
+      "contains": [
+        "->mHasUserChangedExpansion:Z",
+        "->shouldShowPublic()Z"
+      ]
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/notification/row/ExpandableNotificationRow;->toggleExpansionState(Landroid/view/View;Z)V",
+      "contains": [
+        "->mExpandedWhenPinned:Z",
+        "->onExpandClicked("
+      ]
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/notification/row/ExpandableNotificationRow;->setHeadsUp(Z)V",
+      "contains": [
+        "->mIsHeadsUp:Z",
+        "->setHeadsUp(Z)V"
+      ]
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/notification/headsup/HeadsUpManagerImpl$HeadsUpEntry;->updateEntry(Ljava/lang/String;Z)V",
+      "contains": [
+        "->mEntry:",
+        "->isSticky()Z",
+        "->cancelAutoRemovalCallbacks("
+      ]
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/notification/headsup/HeadsUpManagerImpl$HeadsUpEntry;->isSticky()Z",
+      "contains": [
+        "->mRemoteInputActive:Z",
+        "->mGutsShownPinned:Z",
+        "->hasFullScreenIntent("
+      ]
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/controlcenter/shade/ControlCenterHeaderController;->updateCarrierAndPrivacyVisible(Lcom/android/systemui/plugins/miui/statusbar/MiuiPrivacyController$MiuiPromptInfo;Lcom/android/systemui/plugins/miui/statusbar/MiuiPrivacyController$AndroidPromptInfo;)V",
+      "contains": [
+        "->carrierLayout:",
+        "->privacyContainer:",
+        "->setVisibility(I)V"
+      ]
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/phone/StatusBarNotificationPresenter;->onExpandClicked(Lcom/android/systemui/statusbar/notification/row/ExpandableNotificationRow;Lcom/android/systemui/statusbar/notification/collection/EntryAdapter;Z)V",
+      "contains": [
+        "->mExpanded:Z",
+        "->getHeadsUpEntry(",
+        "->cancelAutoRemovalCallbacks("
+      ]
+    },
+    {
+      "locator": "axml:AndroidManifest.xml",
+      "contains": [
+        "android.permission.STATUS_BAR_SERVICE"
+      ]
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/notification/row/ExpandableNotificationRow;->getEntry()Lcom/android/systemui/statusbar/notification/collection/NotificationEntry;",
+      "contains": [
+        "->getInjector()",
+        "->getLegacyEntry()"
+      ]
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/notification/headsup/HeadsUpManagerImpl$HeadsUpEntry;->cancelAutoRemovalCallbacks(Ljava/lang/String;)V",
+      "contains": [
+        "->mAvalancheController:",
+        "->update(",
+        "->isHeadsUpEntry("
+      ]
+    },
+    {
+      "locator": "dex_class:Lcom/android/systemui/statusbar/notification/headsup/HeadsUpManagerImpl$HeadsUpEntry$$ExternalSyntheticLambda5;",
+      "contains": [
+        "->mEntriesToRemoveWhenReorderingAllowed:",
+        "->removeEntry(Ljava/lang/String;Ljava/lang/String;)V",
+        "->mEntry:"
+      ]
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/notification/row/ActivatableNotificationView;->setOnKeyguard(Z)V",
+      "contains": [
+        "->mOnKeyguard:Z"
+      ]
+    }
+  ],
+  "resourceNames": [
+    {
+      "type": "id",
+      "name": "action0",
+      "locator": "resource:0x7f0b0057"
+    },
+    {
+      "type": "id",
+      "name": "action1",
+      "locator": "resource:0x7f0b0058"
+    },
+    {
+      "type": "id",
+      "name": "action2",
+      "locator": "resource:0x7f0b0059"
+    },
+    {
+      "type": "id",
+      "name": "action3",
+      "locator": "resource:0x7f0b005a"
+    },
+    {
+      "type": "id",
+      "name": "action4",
+      "locator": "resource:0x7f0b005b"
+    },
+    {
+      "type": "id",
+      "name": "actions",
+      "locator": "resource:0x7f0b00ac"
+    },
+    {
+      "type": "id",
+      "name": "album_art",
+      "locator": "resource:0x7f0b00c1"
+    },
+    {
+      "type": "id",
+      "name": "header_artist",
+      "locator": "resource:0x7f0b0522"
+    },
+    {
+      "type": "id",
+      "name": "header_title",
+      "locator": "resource:0x7f0b0534"
+    },
+    {
+      "type": "id",
+      "name": "icon",
+      "locator": "resource:0x7f0b0566"
+    },
+    {
+      "type": "id",
+      "name": "media_seamless",
+      "locator": "resource:0x7f0b071d"
+    }
+  ]
+}
