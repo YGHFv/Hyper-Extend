@@ -75,6 +75,13 @@ val SCOPES: List<HyperScope> = listOf(
         restartKind = RestartKind.KILL,
     ),
     HyperScope(
+        id = "mishare",
+        title = "小米互传",
+        summary = "接收文件保存与媒体库索引冲突保护",
+        process = "com.miui.mishare.connectivity",
+        restartKind = RestartKind.KILL,
+    ),
+    HyperScope(
         id = "system_server",
         title = "系统框架",
         summary = "整机所有应用的宿主进程，凭据会话等系统级服务都在这里",
@@ -143,6 +150,21 @@ fun scopesOfFeature(feature: HyperFeature): List<HyperScope> =
 /** 一个作用域入口下的功能（只认归属，不认「也在这里生效」）。 */
 fun featuresOfScope(scopeId: String): List<HyperFeature> =
     FEATURES.filter { it.entryScope?.id == scopeId }
+
+/** 二级菜单仍属于原宿主，没有独立的总开关或重启目标。 */
+enum class ScopeFeatureGroup(val scopeId: String, val title: String, val summary: String) {
+    STATUS_BAR("systemui", "状态栏", "图标、电池、网速、时钟与手势"),
+}
+
+val HyperFeature.entryGroup: ScopeFeatureGroup?
+    get() = group?.takeIf { it.scopeId == entryScope?.id }
+
+fun featureGroupsOfScope(scopeId: String): List<ScopeFeatureGroup> =
+    featuresOfScope(scopeId).mapNotNull { it.entryGroup }.distinct()
+
+/** null 表示作用域主页的直属功能；首页总数仍使用未分组的 featuresOfScope。 */
+fun featuresOfScopePage(scopeId: String, group: ScopeFeatureGroup? = null): List<HyperFeature> =
+    featuresOfScope(scopeId).filter { it.entryGroup == group }
 
 /**
  * 首页要显示的作用域入口。

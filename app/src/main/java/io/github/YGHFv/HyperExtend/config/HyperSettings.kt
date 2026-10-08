@@ -17,6 +17,7 @@ import android.content.SharedPreferences
 import io.github.YGHFv.HyperExtend.core.FEATURES
 import io.github.YGHFv.HyperExtend.core.FRAMEWORK_FUSE_RESET_KEY
 import io.github.YGHFv.HyperExtend.core.FrameworkBridge
+import io.github.YGHFv.HyperExtend.core.CONFIG_KEYS
 import io.github.YGHFv.HyperExtend.core.MONET_SCHEME_KEY
 import io.github.YGHFv.HyperExtend.core.ModuleLog
 import io.github.YGHFv.HyperExtend.core.NFC_IMAGE_KEY
@@ -73,16 +74,21 @@ object HyperSettings {
     /**
      * 字符串型设置。
      *
-     * 只有确实需要「用户提供一段内容」的功能才登记在这里（目前只有 NFC 卡面图片）。
+     * 两类东西在这里：**用户提供的内容**（NFC 卡面图片）与**功能目录里的配置行**
+     * （多选一 / 数值，见 `core/FeatureCatalog` 的 [HyperConfigRow]）。
      * 登记而不是随手 `putString`，理由与布尔开关相同：读全量时只认登记过的键，
      * 否则老版本残留的键会变成一个界面看不见、hook 却在读的「幽灵配置」。
+     *
+     * 配置行的键从 [FEATURES] 派生（[CONFIG_KEYS]），不在这里再抄一份：
+     * 抄的那份加一个配置行就会漏一处，表现是「改完设置、重启宿主还是老样子」，
+     * 而日志里看不出任何异常。
      */
     val STRING_KEYS: List<String> = listOf(
         NFC_IMAGE_KEY,
         MONET_SCHEME_KEY,
         NOTIFY_ICON_SOURCE_KEY,
         NOTIFY_ICON_AUTO_TIME_KEY,
-    )
+    ) + CONFIG_KEYS
 
     /** 模块 App 进程的本地 prefs。 */
     fun localPrefs(context: Context): SharedPreferences =
@@ -228,12 +234,11 @@ object HyperSettings {
         }
     }
 
-    /** 诊断用：设置来源是否可用。 */
+    /** 开关数量摘要；框架状态由界面单独展示。 */
     fun describe(context: Context): String {
         val values = read(context)
         val on = values.count { it.value }
-        val framework = if (FrameworkBridge.isConnected()) "已连接" else "未连接"
-        return "已启用 $on / ${values.size} 项，框架服务$framework"
+        return "已启用 $on / ${values.size} 项"
     }
 
     // ------------------------------------------------------------------ 备份 / 恢复

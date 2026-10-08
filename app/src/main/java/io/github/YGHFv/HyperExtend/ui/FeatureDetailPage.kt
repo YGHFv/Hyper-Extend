@@ -62,7 +62,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import io.github.YGHFv.HyperExtend.core.FeatureExtra
+import io.github.YGHFv.HyperExtend.core.HyperChoice
 import io.github.YGHFv.HyperExtend.core.HyperFeature
+import io.github.YGHFv.HyperExtend.core.HyperSlider
+import io.github.YGHFv.HyperExtend.core.HyperText
 import io.github.YGHFv.HyperExtend.core.MONET_SCHEMES
 import io.github.YGHFv.HyperExtend.core.MONET_SCHEME_KEY
 import io.github.YGHFv.HyperExtend.core.NFC_IMAGE_KEY
@@ -80,6 +83,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import android.content.Intent
+import kotlin.math.roundToInt
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.basic.IconButton
 import top.yukonga.miuix.kmp.basic.MiuixScrollBehavior
@@ -116,7 +120,7 @@ private val THUMB_WIDTH = 104.dp
  *
  * 那三行是给「这个功能从哪抄来的」用的，而用户打开这一页是来**拨开关 / 换卡面**的。
  * 每次进来先读三段与自己无关的字，只会把真正要动的东西挤到屏幕外。
- * 来源与许可并没有丢：它们在「关于」页里逐条列着（那里才是查出处的地方），
+ * 来源与许可保留在源码及文档，「关于」页统一展示开源项目致谢，
  * 生效范围则由作用域页的入口与右下角的提示表达。
  *
  * 唯一被留下的「硬前提」是 [HyperFeature.requirement]（例如通行密钥需要 GMS）——
@@ -235,17 +239,82 @@ internal fun FeatureDetailPage(
                 }
 
                 if (feature.options.isNotEmpty()) {
-                    GroupTitle(if (configKey == null) "子项" else "选项")
-                    SettingsCard {
-                        feature.options.forEach { option ->
-                            SwitchPreference(
-                                title = option.title,
-                                summary = option.summary,
-                                checked = switches[option.id] == true,
-                                onCheckedChange = { on -> onSwitch(option.id, on) },
-                            )
+                    // 按声明顺序分组：有 group 的另起一张卡片。参考项目本来就是分组的，
+                    // 十几行开关全塞进一张卡之后，用户分不清它们是同一件事的几个方面
+                    // 还是一堆不相干的开关。
+                    val defaultTitle = if (configKey == null) "子项" else "选项"
+                    feature.options
+                        .groupBy { it.group ?: defaultTitle }
+                        .forEach { (title, options) ->
+                            GroupTitle(title)
+                            SettingsCard {
+                                options.forEach { option ->
+                                    SwitchPreference(
+                                        title = option.title,
+                                        summary = option.summary,
+                                        checked = switches[option.id] == true,
+                                        onCheckedChange = { on -> onSwitch(option.id, on) },
+                                    )
+                                }
+                            }
                         }
-                    }
+                }
+
+                if (feature.config.isNotEmpty()) {
+                    feature.config
+                        .groupBy { it.group }
+                        .forEach { (title, rows) ->
+                            GroupTitle(title ?: "配置")
+                            SettingsCard {
+                                rows.forEach { row ->
+                                    when (row) {
+                                        is HyperChoice -> {
+                                            val current = strings[row.key].orEmpty()
+                                                .ifBlank { row.default }
+                                            ChoiceRow(
+                                                title = row.title,
+                                                summary = row.summary,
+                                                currentLabel = row.labelOf(current),
+                                                options = row.entries.map { it.label },
+                                                selectedIndex = row.entries
+                                                    .indexOfFirst { it.variant == current }
+                                                    .coerceAtLeast(0),
+                                                onSelect = { picked ->
+                                                    row.entries.getOrNull(picked)?.let {
+                                                        onString(row.key, it.variant)
+                                                    }
+                                                },
+                                            )
+                                        }
+
+                                        is HyperSlider -> {
+                                            val stored = strings[row.key].orEmpty()
+                                                .toIntOrNull() ?: row.default
+                                            NumberRow(
+                                                title = row.title,
+                                                summary = row.summary,
+                                                value = stored.toFloat(),
+                                                valueRange = row.min.toFloat()..row.max.toFloat(),
+                                                steps = ((row.max - row.min) / row.step - 1)
+                                                    .coerceAtLeast(0),
+                                                format = { row.display(it.roundToInt()) },
+                                                onFinished = { onString(row.key, it.roundToInt().toString()) },
+                                            )
+                                        }
+
+                                        is HyperText -> {
+                                            TextInputRow(
+                                                title = row.title,
+                                                summary = row.summary,
+                                                value = strings[row.key].orEmpty(),
+                                                placeholder = row.placeholder,
+                                                onCommit = { onString(row.key, it) },
+                                            )
+                                        }
+                                    }
+                                }
+                            }
+                        }
                 }
 
                 if (configKey != null) {

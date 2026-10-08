@@ -45,6 +45,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -65,10 +66,14 @@ import io.github.YGHFv.HyperExtend.core.FEATURES
 import io.github.YGHFv.HyperExtend.core.FrameworkBridge
 import io.github.YGHFv.HyperExtend.core.HyperScope
 import io.github.YGHFv.HyperExtend.core.NfcCardImage
+import io.github.YGHFv.HyperExtend.core.ScopeFeatureGroup
 import io.github.YGHFv.HyperExtend.core.enabledCountInScope
 import io.github.YGHFv.HyperExtend.core.entryScopes
+import io.github.YGHFv.HyperExtend.core.entryScope
+import io.github.YGHFv.HyperExtend.core.entryGroup
 import io.github.YGHFv.HyperExtend.core.featureById
 import io.github.YGHFv.HyperExtend.core.featuresOfScope
+import io.github.YGHFv.HyperExtend.core.hasDetailPage
 import io.github.YGHFv.HyperExtend.core.isFeatureActive
 import io.github.YGHFv.HyperExtend.core.scopeById
 import top.yukonga.miuix.kmp.basic.Icon
@@ -239,6 +244,7 @@ private fun HyperApp(themeMode: Int, onThemeMode: (Int) -> Unit) {
     // 位置状态：空串代表「不在这一层」。用空串而不是 null，是为了让保存逻辑不必处理 null 值。
     var tabIndex by rememberSaveable { mutableStateOf(0) }
     var openScopeId by rememberSaveable { mutableStateOf("") }
+    var openGroupId by rememberSaveable { mutableStateOf("") }
     var openFeatureId by rememberSaveable { mutableStateOf("") }
     var searching by rememberSaveable { mutableStateOf(false) }
     // 设置页的二级页面（AppSettingsPage 枚举名）。与作用域页同级的「整页替换」层。
@@ -294,6 +300,15 @@ private fun HyperApp(themeMode: Int, onThemeMode: (Int) -> Unit) {
     }
 
     val feature = featureById(openFeatureId)
+    if (feature != null && !feature.hasDetailPage) {
+        // Saved navigation from an older build may still point at a now-inline switch.
+        LaunchedEffect(feature.id) {
+            openScopeId = feature.entryScope?.id.orEmpty()
+            openGroupId = feature.entryGroup?.name.orEmpty()
+            openFeatureId = ""
+        }
+        return
+    }
     if (feature != null) {
         FeatureDetailPage(
             feature = feature,
@@ -308,12 +323,28 @@ private fun HyperApp(themeMode: Int, onThemeMode: (Int) -> Unit) {
 
     val scope = scopeById(openScopeId)
     if (scope != null) {
-        ScopeDetailPage(
-            scope = scope,
-            strings = strings,
-            onOpenFeature = { openFeatureId = it.id },
-            onBack = { openScopeId = "" },
-        )
+        val group = ScopeFeatureGroup.entries.firstOrNull {
+            it.name == openGroupId && it.scopeId == scope.id
+        }
+        // Separate page state: entering a submenu must not inherit its parent's scroll offset.
+        key(scope.id, group) {
+            ScopeDetailPage(
+                scope = scope,
+                switches = switches,
+                strings = strings,
+                onSwitch = setSwitch,
+                group = group,
+                onOpenFeature = { openFeatureId = it.id },
+                onOpenGroup = { openGroupId = it.name },
+                onBack = {
+                    if (group != null) openGroupId = ""
+                    else {
+                        openGroupId = ""
+                        openScopeId = ""
+                    }
+                },
+            )
+        }
         return
     }
 
@@ -321,6 +352,7 @@ private fun HyperApp(themeMode: Int, onThemeMode: (Int) -> Unit) {
         SearchPage(
             switches = switches,
             strings = strings,
+            onSwitch = setSwitch,
             onOpenFeature = { hit ->
                 searching = false
                 openFeatureId = hit.id
@@ -336,7 +368,10 @@ private fun HyperApp(themeMode: Int, onThemeMode: (Int) -> Unit) {
         switches = switches,
         strings = strings,
         ui = ui,
-        onOpenScope = { openScopeId = it.id },
+        onOpenScope = {
+            openGroupId = ""
+            openScopeId = it.id
+        },
         onOpenAppPage = { openAppPage = it.id },
         onSearch = { searching = true },
     )

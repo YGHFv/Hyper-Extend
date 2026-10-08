@@ -13,8 +13,6 @@
 package io.github.YGHFv.HyperExtend.ui
 
 import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -23,47 +21,39 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalUriHandler
 import android.content.Context
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import io.github.YGHFv.HyperExtend.BuildConfig
 import io.github.YGHFv.HyperExtend.config.HyperSettings
-import io.github.YGHFv.HyperExtend.core.FEATURES
+import io.github.YGHFv.HyperExtend.core.OPEN_SOURCE_PROJECTS
 import io.github.YGHFv.HyperExtend.core.FrameworkBridge
 import io.github.YGHFv.HyperExtend.core.HyperFeature
 import io.github.YGHFv.HyperExtend.core.ModuleLog
 import io.github.YGHFv.HyperExtend.core.RootAccess
 import io.github.YGHFv.HyperExtend.core.SCOPES
 import io.github.YGHFv.HyperExtend.core.entryScope
+import io.github.YGHFv.HyperExtend.core.entryGroup
 import io.github.YGHFv.HyperExtend.core.isFeatureActive
+import io.github.YGHFv.HyperExtend.core.hasDetailPage
 import io.github.YGHFv.HyperExtend.core.searchFeatures
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.basic.IconButton
 import top.yukonga.miuix.kmp.basic.MiuixScrollBehavior
 import top.yukonga.miuix.kmp.basic.Scaffold
 import top.yukonga.miuix.kmp.basic.ScrollBehavior
-import top.yukonga.miuix.kmp.basic.Text
 import top.yukonga.miuix.kmp.basic.TopAppBar
 import top.yukonga.miuix.kmp.icon.MiuixIcons
 import top.yukonga.miuix.kmp.icon.extended.Back
@@ -119,6 +109,7 @@ internal fun readHostLogs(context: Context): List<Pair<String, String>> = SCOPES
 internal fun SearchPage(
     switches: Map<String, Boolean>,
     strings: Map<String, String>,
+    onSwitch: (String, Boolean) -> Unit,
     onOpenFeature: (HyperFeature) -> Unit,
     onBack: () -> Unit,
 ) {
@@ -126,6 +117,10 @@ internal fun SearchPage(
     // 回来时输入框还应该是他刚打的那几个字（`remember` 活不过 Activity 重建）。
     var query by rememberSaveable { mutableStateOf("") }
     val hits = remember(query) { searchFeatures(query) }
+    val hitSections = remember(hits) {
+        val (details, switches) = hits.partition { it.feature.hasDetailPage }
+        listOf("功能设置" to details, "快捷开关" to switches).filter { it.second.isNotEmpty() }
+    }
 
     val scrollBehavior = MiuixScrollBehavior()
     val scrollState = rememberScrollState()
@@ -179,30 +174,37 @@ internal fun SearchPage(
                 }
 
                 else -> {
-                    GroupTitle("命中 ${hits.size} 项")
-                    SettingsCard {
-                        hits.forEach { hit ->
-                            val matched = hit.matchedOption
-                            ArrowPreference(
-                                title = hit.feature.title,
-                                summary = buildString {
-                                    // 报**归属入口**而不是全部宿主：作用域是首页上的字，
-                                    // 也是「改动生效要作用到谁」的答案。四个宿主全列出来反而没人读。
-                                    append(hit.feature.entryScope?.title.orEmpty())
-                                    append(
-                                        if (isFeatureActive(hit.feature, switches, strings)) {
-                                            " · 已启用"
-                                        } else {
-                                            " · 未启用"
-                                        },
-                                    )
-                                    if (matched != null) {
-                                        append(" · 命中：")
-                                        append(matched.title)
-                                    }
-                                },
-                                onClick = { onOpenFeature(hit.feature) },
-                            )
+                    hitSections.forEach { (title, sectionHits) ->
+                        GroupTitle(if (hitSections.size > 1) title else "命中 ${hits.size} 项")
+                        SettingsCard {
+                            sectionHits.forEachIndexed { index, hit ->
+                                if (index > 0) RowDivider()
+                                val matched = hit.matchedOption
+                                FeaturePreference(
+                                    feature = hit.feature,
+                                    switches = switches,
+                                    strings = strings,
+                                    onSwitch = onSwitch,
+                                    onOpenFeature = onOpenFeature,
+                                    summary = buildString {
+                                        // 报**归属入口**而不是全部宿主：作用域是首页上的字，
+                                        // 也是「改动生效要作用到谁」的答案。四个宿主全列出来反而没人读。
+                                        append(hit.feature.entryScope?.title.orEmpty())
+                                        hit.feature.entryGroup?.let { append(" / ${it.title}") }
+                                        append(
+                                            if (isFeatureActive(hit.feature, switches, strings)) {
+                                                " · 已启用"
+                                            } else {
+                                                " · 未启用"
+                                            },
+                                        )
+                                        if (matched != null) {
+                                            append(" · 命中：")
+                                            append(matched.title)
+                                        }
+                                    },
+                                )
+                            }
                         }
                     }
                 }
@@ -234,9 +236,9 @@ internal fun AboutTab(
     onOpenLogs: () -> Unit,
 ) {
     val context = LocalContext.current
+    val uriHandler = LocalUriHandler.current
     val scrollState = rememberScrollState()
-    val coroutineScope = rememberCoroutineScope()
-    var fuseResetting by remember { mutableStateOf(false) }
+    var showRecovery by rememberSaveable { mutableStateOf(false) }
     var fuseResetMessage by remember { mutableStateOf<String?>(null) }
 
     Column(
@@ -253,7 +255,7 @@ internal fun AboutTab(
             // 构建模式并进版本行而不是单占一行：排查「这个包到底装的是哪个」时，
             // 它和版本号是同一个问题的两个部分。
             InfoRow(
-                label = "版本",
+                label = "构建版本",
                 value = "${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE}) · " +
                     if (BuildConfig.DEBUG) "debug" else "release",
             )
@@ -268,18 +270,17 @@ internal fun AboutTab(
             )
         }
 
-        GroupTitle("功能来源与许可")
+        GroupTitle("开源致谢")
         SettingsCard {
-            // 逐条列出，不省略：这既是给用户的透明度，也是本模块采用 AGPL-3.0 的依据。
-            FEATURES.forEachIndexed { index, feature ->
+            OPEN_SOURCE_PROJECTS.forEachIndexed { index, project ->
                 if (index > 0) RowDivider()
-                Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 9.dp)) {
-                    Text(feature.title)
-                    Spacer(Modifier.height(3.dp))
-                    SecondaryText(feature.origin)
-                    Spacer(Modifier.height(2.dp))
-                    SecondaryText(feature.license)
-                }
+                ArrowPreference(
+                    title = project.name,
+                    onClick = {
+                        runCatching { uriHandler.openUri(project.url) }
+                            .onFailure { ModuleLog.warn("Cannot open project link: ${project.name}") }
+                    },
+                )
             }
         }
 
@@ -292,25 +293,33 @@ internal fun AboutTab(
         // 那种情况下用户没有耐心读解释，需要的是能照着敲的命令。
         GroupTitle("紧急停用")
         SettingsCard {
-            HintText("开机异常时，可通过以下任一方式停用所有 Hook。")
-            HintText("方式一：adb shell setprop persist.sys.hyperextend.disabled 1")
-            HintText("方式二：adb shell touch /data/local/tmp/hyperextend.disabled")
-            HintText("自动防砖：五分钟内连续三次重启后，会自动停用 system_server 和 SystemUI Hook。")
-            HintText(
-                "恢复：把属性设回 0（setprop persist.sys.hyperextend.disabled 0）" +
-                    "，并清除 persist.sys.hyperextend.framework_disabled 与 /data/system/hyperextend_bootguard，然后重启。不需要卸载模块，也不需要清 LSPosed 数据。",
+            CardActionRow(
+                label = if (showRecovery) "收起恢复说明" else "停用与恢复说明",
+                onClick = { showRecovery = !showRecovery },
             )
+            if (showRecovery) {
+                HintText("开机异常时，可通过以下任一方式停用所有 Hook。")
+                HintText("方式一：adb shell setprop persist.sys.hyperextend.disabled 1")
+                HintText("方式二：adb shell touch /data/local/tmp/hyperextend.disabled")
+                HintText("五分钟内连续三次重启，自动停用系统框架与系统界面 Hook。")
+                HintText(
+                    "恢复：属性设回 0，删除停用标记 /data/local/tmp/hyperextend.disabled" +
+                        "（或 /sdcard/HyperExtend/disable）；解除自动熔断后重启设备。",
+                )
+                HintText(
+                    "无法进入模块时：将 persist.sys.hyperextend.framework_disabled 设为 0，" +
+                        "删除 /data/system/hyperextend_bootguard 后重启。",
+                )
+            }
             CardDivider()
             CardActionRow(
                 label = "解除自动熔断",
-                enabled = !fuseResetting,
                 onClick = {
-                    if (fuseResetting) return@CardActionRow
                     if (!HyperSettings.requestFrameworkFuseReset(context)) {
                         fuseResetMessage = "解除请求写入失败，请查看模块日志。"
                         return@CardActionRow
                     }
-                    fuseResetMessage = "解除请求已保存；请手动重启设备生效，自动防砖仍保持开启。"
+                    fuseResetMessage = "已保存，请手动重启设备；自动防砖仍开启。"
                 },
             )
             fuseResetMessage?.let { HintText(it) }

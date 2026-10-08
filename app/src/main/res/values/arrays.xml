@@ -32,5 +32,6 @@
         <item>system</item>
         <item>com.miui.screenshot</item>
         <item>com.milink.service</item>
+        <item>com.miui.mishare.connectivity</item>
     </string-array>
 </resources>

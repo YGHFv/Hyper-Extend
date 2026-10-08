@@ -47,19 +47,16 @@ internal object ScreenshotClipboard {
     }
 
     private fun installWithContext(loader: ClassLoader, app: Context): Int {
-        // Obfuscated names are only valid for the inspected host release. Fail closed on updates.
-        @Suppress("DEPRECATION")
-        val version = app.packageManager.getPackageInfo(app.packageName, 0).versionName
-        if (version != "RELEASE-1.6.3.38-09051623") {
-            ModuleLog.warn("screenshot_clipboard: unsupported screenshot version $version; skipped")
-            return 0
-        }
+        // Match the known target signature, not the host's version string.
         val util = Reflect.loadClass(loader, "com.miui.screenshot.util.Util") ?: return 0
         val gate = util.declaredMethods.singleOrNull {
             it.name == "o" && Modifier.isStatic(it.modifiers) &&
                 it.returnType == Boolean::class.javaPrimitiveType &&
                 it.parameterTypes.contentEquals(arrayOf(Context::class.java))
-        } ?: return 0
+        } ?: run {
+            ModuleLog.warn("screenshot_clipboard: target signature missing or ambiguous; skipped")
+            return 0
+        }
         val write = ClipboardManager::class.java.getDeclaredMethod("setPrimaryClip", ClipData::class.java)
         if (!HookRuntime.hook(write, "screenshot_clipboard/publishGuard") { chain ->
                 if (replay.get() == true) {

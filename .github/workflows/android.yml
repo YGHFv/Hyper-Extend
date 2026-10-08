@@ -78,8 +78,8 @@ jobs:
               -dname "CN=Android Debug,O=Android,C=US"
           fi
 
-      - name: 组装 Release
-        run: ./gradlew :app:assembleRelease --no-daemon --stacktrace
+      - name: 测试并组装 Release
+        run: ./gradlew :app:testDebugUnitTest :app:assembleRelease --no-daemon --stacktrace
 
       - name: 上传 APK
         uses: actions/upload-artifact@v4

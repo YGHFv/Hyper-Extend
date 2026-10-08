@@ -74,6 +74,19 @@ class HookSettings internal constructor(private val prefs: SharedPreferences?) {
     /** 读一个字符串设置。缺省是空串 —— 所有的字符串项语义都是「空 = 未配置」，
      * 于是调用方不用区分「没这个键」和「值是空」，一条 `isBlank()` 就够。 */
     fun string(key: String): String = prefs?.getString(key, "") ?: ""
+
+    /**
+     * 读一个数值型配置（滑块）。
+     *
+     * 目录里的数值配置按**字符串**存（见 `core/FeatureCatalog` 的 [HyperSlider]），
+     * 所以这里解析一次十进制。解析不出来（用户从没进过界面、值被写坏）时按 [fallback] ——
+     * 也就是目录里登记的那个默认值，与界面显示的默认值同一个出处。
+     *
+     * 越界一律夹回区间：滑块的区间是界面给的，而它可能随版本收窄，
+     * 老设置里的旧取值落在区间外时，直接拿来用就是「宿主自己读了都不认识的一个数」。
+     */
+    fun number(key: String, fallback: Int, min: Int = Int.MIN_VALUE, max: Int = Int.MAX_VALUE): Int =
+        string(key).toIntOrNull()?.coerceIn(min, max) ?: fallback
     /** 读内部控制用的长整型令牌；设置类型异常时按缺省值处理。 */
     fun long(key: String, default: Long = 0L): Long = runCatching {
         prefs?.getLong(key, default) ?: default

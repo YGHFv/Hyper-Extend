@@ -160,6 +160,13 @@ internal object HookRuntime {
         remotePreferences = null
     }
 
+    /** A caller may already contain an inlined copy of a method we are about to hook. */
+    fun deoptimize(target: Executable, label: String): Boolean {
+        val success = Reflect.attempt { module?.deoptimize(target) } == true
+        if (!success) ModuleLog.warn("deoptimize failed: $label")
+        return success
+    }
+
     /**
      * 装一个 hook。方法（[Method]）与构造函数（[Constructor]）都收 ——
      * libxposed 的 `hook` / `deoptimize` 本来就只接受 [Executable] 这一个类型，两者通吃。

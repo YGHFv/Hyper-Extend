@@ -18,11 +18,19 @@ import io.github.YGHFv.HyperExtend.core.NFC_IMAGE_KEY
 import io.github.YGHFv.HyperExtend.hook.feature.GestureLineHider
 import io.github.YGHFv.HyperExtend.hook.feature.ScreenshotClipboard
 import io.github.YGHFv.HyperExtend.hook.feature.MilinkClipboardGuard
+import io.github.YGHFv.HyperExtend.hook.feature.mishare.MiShareReceiveGuard
 import io.github.YGHFv.HyperExtend.hook.feature.NativeNotifyIcon
 import io.github.YGHFv.HyperExtend.hook.feature.NfcCardFace
 import io.github.YGHFv.HyperExtend.hook.feature.PasskeyFix
 import io.github.YGHFv.HyperExtend.hook.feature.RotationSuggestionHider
 import io.github.YGHFv.HyperExtend.hook.feature.WallpaperMonetFix
+import io.github.YGHFv.HyperExtend.hook.feature.statusbar.ScreenshotStatusBar
+import io.github.YGHFv.HyperExtend.hook.feature.statusbar.StatusBarBatteryStyle
+import io.github.YGHFv.HyperExtend.hook.feature.statusbar.StatusBarClock
+import io.github.YGHFv.HyperExtend.hook.feature.statusbar.StatusBarGestures
+import io.github.YGHFv.HyperExtend.hook.feature.statusbar.StatusBarIcons
+import io.github.YGHFv.HyperExtend.hook.feature.statusbar.StatusBarMobile
+import io.github.YGHFv.HyperExtend.hook.feature.statusbar.StatusBarNetworkSpeed
 import java.util.concurrent.ConcurrentHashMap
 
 /**
@@ -66,11 +74,23 @@ internal object HookDispatcher {
      */
     private fun hostTask(packageName: String): HostTask? = when (packageName) {
         "com.miui.screenshot" -> { loader, settings ->
-            if (settings.isOn("screenshot_clipboard")) "screenshot_clipboard=${ScreenshotClipboard.install(loader)}"
-            else "no feature enabled"
+            val parts = mutableListOf<String>()
+            if (settings.isOn("screenshot_clipboard")) {
+                parts += "screenshot_clipboard=${ScreenshotClipboard.install(loader)}"
+            }
+            // 「截屏时隐藏状态栏」的发送端住在这里（接收端在 SystemUI），
+            // 两个作用域都开了才是一个完整的功能。
+            if (settings.isOn("status_bar_screenshot_hide")) {
+                parts += "status_bar_screenshot_hide=${ScreenshotStatusBar.installScreenshot(loader, settings)}"
+            }
+            parts.joinToString(",").ifEmpty { "no feature enabled" }
         }
         "com.milink.service" -> { loader, settings ->
             if (settings.isOn("milink_clipboard_guard")) "milink_clipboard_guard=${MilinkClipboardGuard.install(loader)}"
+            else "no feature enabled"
+        }
+        "com.miui.mishare.connectivity" -> { loader, settings ->
+            if (settings.isOn("mishare_receive_guard")) "mishare_receive_guard=${MiShareReceiveGuard.install(loader)}"
             else "no feature enabled"
         }
         HostPlatform.SYSTEMUI -> { loader, settings -> installSystemUi(loader, settings) }
@@ -165,7 +185,13 @@ internal object HookDispatcher {
         return summary
     }
 
-    /** SystemUI 进程：手势横条、壁纸取色、通知图标三个功能共用这一个进程。 */
+    /**
+     * SystemUI 进程。
+     *
+     * 这里是全模块功能最集中的一处：手势横条、壁纸取色、通知图标、以及「状态栏」那一整页
+     * （图标、电池、移动网络、网速、时钟、双击锁屏、截屏时隐藏）都住在同一个进程里。
+     * 它们互相之间没有依赖，各自 [HookSettings.isOn] 一次即可 —— 谁被打开谁装。
+     */
     private fun installSystemUi(loader: ClassLoader, settings: HookSettings): String {
         // 非小米 ROM 上这三个功能的靶子要么不存在、要么同名不同义，一律不装（见 HostPlatform 注释）。
         if (!HostPlatform.isXiaomiRom(loader)) {
@@ -185,6 +211,27 @@ internal object HookDispatcher {
         }
         if (settings.isOn("rotation_suggestion")) {
             parts += "rotation_suggestion=${RotationSuggestionHider.install(loader)}"
+        }
+        if (settings.isOn("status_bar_icons")) {
+            parts += "status_bar_icons=${StatusBarIcons.install(loader, settings)}"
+        }
+        if (settings.isOn("status_bar_battery_style")) {
+            parts += "status_bar_battery_style=${StatusBarBatteryStyle.install(loader, settings)}"
+        }
+        if (settings.isOn("status_bar_mobile")) {
+            parts += "status_bar_mobile=${StatusBarMobile.install(loader, settings)}"
+        }
+        if (settings.isOn("status_bar_network_speed")) {
+            parts += "status_bar_network_speed=${StatusBarNetworkSpeed.install(loader, settings)}"
+        }
+        if (settings.isOn("status_bar_clock")) {
+            parts += "status_bar_clock=${StatusBarClock.install(loader, settings)}"
+        }
+        if (settings.isOn("status_bar_double_tap")) {
+            parts += "status_bar_double_tap=${StatusBarGestures.install(loader, settings)}"
+        }
+        if (settings.isOn("status_bar_screenshot_hide")) {
+            parts += "status_bar_screenshot_hide=${ScreenshotStatusBar.installSystemUi(loader, settings)}"
         }
         return if (parts.isEmpty()) "no feature enabled" else parts.joinToString(",")
     }

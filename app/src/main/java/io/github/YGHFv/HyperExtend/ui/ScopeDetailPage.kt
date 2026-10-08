@@ -37,7 +37,11 @@ import io.github.YGHFv.HyperExtend.core.HyperScope
 import io.github.YGHFv.HyperExtend.core.ProcessRestarter
 import io.github.YGHFv.HyperExtend.core.RestartKind
 import io.github.YGHFv.HyperExtend.core.RestartResult
-import io.github.YGHFv.HyperExtend.core.featuresOfScope
+import io.github.YGHFv.HyperExtend.core.ScopeFeatureGroup
+import io.github.YGHFv.HyperExtend.core.featureGroupsOfScope
+import io.github.YGHFv.HyperExtend.core.featuresOfScopePage
+import io.github.YGHFv.HyperExtend.core.hasDetailPage
+import io.github.YGHFv.HyperExtend.core.isFeatureActive
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -92,16 +96,26 @@ private sealed interface RestartUi {
 @Composable
 internal fun ScopeDetailPage(
     scope: HyperScope,
+    switches: Map<String, Boolean>,
     strings: Map<String, String>,
+    onSwitch: (String, Boolean) -> Unit,
     onOpenFeature: (HyperFeature) -> Unit,
+    onOpenGroup: (ScopeFeatureGroup) -> Unit,
     onBack: () -> Unit,
+    group: ScopeFeatureGroup? = null,
 ) {
     val context = LocalContext.current
     val scrollBehavior = MiuixScrollBehavior()
     val scrollState = rememberScrollState()
     val coroutineScope = rememberCoroutineScope()
 
-    val features = remember(scope.id) { featuresOfScope(scope.id) }
+    val features = remember(scope.id, group) { featuresOfScopePage(scope.id, group) }
+    val groups = remember(scope.id, group) {
+        if (group == null) featureGroupsOfScope(scope.id) else emptyList()
+    }
+    val (detailFeatures, switchFeatures) = remember(features) { features.partition { it.hasDetailPage } }
+    val hasEntries = groups.isNotEmpty() || detailFeatures.isNotEmpty()
+    val mixed = hasEntries && switchFeatures.isNotEmpty()
     // 走共用助手而不是在这里直接查 PackageManager：它是跨进程调用，不该发生在组合阶段
     // （理由见 HyperUiKit.rememberInstalledScopes）。只有一个宿主也照样用它 ——
     // 两套写法并存的结果是「哪天有人给这一页加了第二个宿主」时又得改一次结构。
@@ -142,7 +156,7 @@ internal fun ScopeDetailPage(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = scope.title,
+                title = group?.title ?: scope.title,
                 scrollBehavior = scrollBehavior,
                 navigationIcon = {
                     IconButton(onClick = onBack, backgroundColor = Color.Transparent) {
@@ -170,7 +184,11 @@ internal fun ScopeDetailPage(
                 .padding(vertical = 4.dp),
         ) {
             SettingsCard {
-                InfoRow(label = "进程", value = scope.process)
+                if (group != null) {
+                    InfoRow(label = "作用域", value = scope.title)
+                } else {
+                    InfoRow(label = "进程", value = scope.process)
+                }
                 if (!installed) {
                     CardDivider()
                     HintText(
@@ -187,26 +205,45 @@ internal fun ScopeDetailPage(
                 onCancel = { restart = RestartUi.Idle },
             )
 
-            GroupTitle("功能")
-            SettingsCard {
-                features.forEachIndexed { index, item ->
-                    if (index > 0) RowDivider()
-                    val configKey = item.configKey
-                    FeatureRow(
-                        title = item.title,
-                        summary = item.summary,
-                        onClick = { onOpenFeature(item) },
-                        // 开关统一住在功能详情页（二级页面）：列表页只负责进入。
-                        // 配置型功能没有「开/关」可言（见 HyperFeature.configKey），
-                        // 状态写「未配置／已配置」，让用户知道点进去是去配置的。
-                        statusText = configKey?.let { key ->
-                            if (strings[key].orEmpty().isBlank()) {
-                                "未配置"
-                            } else {
-                                "已配置"
-                            }
-                        },
-                    )
+            if (hasEntries) {
+                GroupTitle(if (mixed) "功能设置" else "功能")
+                SettingsCard {
+                    groups.forEachIndexed { index, item ->
+                        if (index > 0) RowDivider()
+                        val children = remember(scope.id, item) { featuresOfScopePage(scope.id, item) }
+                        val enabled = children.count { isFeatureActive(it, switches, strings) }
+                        FeatureRow(
+                            title = item.title,
+                            summary = item.summary,
+                            statusText = "已启用 $enabled / ${children.size}",
+                            onClick = { onOpenGroup(item) },
+                        )
+                    }
+                    detailFeatures.forEachIndexed { index, item ->
+                        if (index > 0 || groups.isNotEmpty()) RowDivider()
+                        FeaturePreference(
+                            feature = item,
+                            switches = switches,
+                            strings = strings,
+                            onSwitch = onSwitch,
+                            onOpenFeature = onOpenFeature,
+                        )
+                    }
+                }
+            }
+            if (switchFeatures.isNotEmpty()) {
+                GroupTitle(if (mixed) "快捷开关" else "功能")
+                SettingsCard {
+                    switchFeatures.forEachIndexed { index, item ->
+                        if (index > 0) RowDivider()
+                        FeaturePreference(
+                            feature = item,
+                            switches = switches,
+                            strings = strings,
+                            onSwitch = onSwitch,
+                            onOpenFeature = onOpenFeature,
+                        )
+                    }
                 }
             }
             Spacer(Modifier.height(16.dp))

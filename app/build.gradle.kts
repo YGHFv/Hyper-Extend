@@ -15,8 +15,8 @@ android {
         // 基准平台是澎湃 OS 4（Android 16），targetSdk 停在 35 是刻意的：
         // 模块本体没有需要 36/37 行为变更的功能，抬上去只会多引入一层前台服务与通知的限制。
         targetSdk = 35
-        versionCode = 1
-        versionName = "0.1.0"
+        versionCode = 2
+        versionName = "0.1.1"
     }
 
     compileOptions {
@@ -67,6 +67,7 @@ android {
 }
 
 dependencies {
+    testImplementation("junit:junit:4.13.2")
     // 模块主界面：miuix（HyperOS 风格 Compose UI 库）+ activity-compose 提供的 setContent。
     implementation("androidx.activity:activity-compose:1.13.0")
     implementation("top.yukonga.miuix.kmp:miuix-ui-android:0.9.4")

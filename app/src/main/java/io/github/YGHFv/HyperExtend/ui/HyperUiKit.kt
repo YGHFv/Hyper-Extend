@@ -17,6 +17,7 @@ import android.graphics.Bitmap
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -40,17 +41,22 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import io.github.YGHFv.HyperExtend.core.HostApps
+import io.github.YGHFv.HyperExtend.core.HyperFeature
 import io.github.YGHFv.HyperExtend.core.HyperScope
+import io.github.YGHFv.HyperExtend.core.hasDetailPage
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import top.yukonga.miuix.kmp.basic.Card
@@ -60,6 +66,7 @@ import top.yukonga.miuix.kmp.basic.SmallTitle
 import top.yukonga.miuix.kmp.basic.Text
 import top.yukonga.miuix.kmp.icon.MiuixIcons
 import top.yukonga.miuix.kmp.icon.extended.ChevronForward
+import top.yukonga.miuix.kmp.preference.SwitchPreference
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 /**
@@ -111,10 +118,8 @@ internal fun SettingsCard(
 /**
  * 一个功能入口行：左侧标题 + 说明，右侧箭头，**整行可点**。
  *
- * 开关不在这里 —— 作用域页只负责「列出有哪些功能」，拨开关的事在功能详情页
- * （二级页面）里做。这样每一级页面只有一种交互（列表页 = 进入，详情页 = 开关/配置），
- * 用户不用同时判断「这行是拨的还是点的」。配置型功能（NFC 卡面）的「已配置」状态
- * 用 [statusText] 表达，与其它行保持同一结构。
+ * 用于分组和多选项功能；单开关功能由 [FeaturePreference] 直接呈现开关。
+ * 配置型功能（NFC 卡面）的「已配置」状态用 [statusText] 表达。
  */
 @Composable
 internal fun FeatureRow(
@@ -166,6 +171,38 @@ internal fun FeatureRow(
     }
 }
 
+/** Scope lists and search results share the same control/entry decision. */
+@Composable
+internal fun FeaturePreference(
+    feature: HyperFeature,
+    switches: Map<String, Boolean>,
+    strings: Map<String, String>,
+    onSwitch: (String, Boolean) -> Unit,
+    onOpenFeature: (HyperFeature) -> Unit,
+    summary: String = feature.summary,
+) {
+    if (feature.hasDetailPage) {
+        FeatureRow(
+            title = feature.title,
+            summary = summary,
+            onClick = { onOpenFeature(feature) },
+            statusText = feature.configKey?.let { key ->
+                if (strings[key].isNullOrBlank()) "未配置" else "已配置"
+            },
+        )
+    } else {
+        SwitchPreference(
+            title = feature.title,
+            summary = summary,
+            checked = switches[feature.id] == true,
+            onCheckedChange = { onSwitch(feature.id, it) },
+        )
+        feature.requirement?.takeIf { it.isNotBlank() }?.let {
+            HintText(it, color = MiuixTheme.colorScheme.error, horizontalPadding = 16.dp)
+        }
+    }
+}
+
 /**
  * 一行「从若干选项里选一个」。
  *
@@ -201,15 +238,151 @@ internal fun ChoiceRow(
         onSelectedIndexChange = onSelect,
     )
 }
+
+/**
+ * 一行「拖一个数」。
+ *
+ * 用标题 + 当前值的两栏排法（而不是把值塞进标题）：值是这一行唯一会变的东西，
+ * 固定在右边才能让用户拖动时眼睛不用跟着数字跑。
+ *
+ * 显示的字由 [format] 从**当前拖动值**算出来（而不是由调用方传一个固定字符串），
+ * 否则拖的时候数字不动，看起来像卡住了。[onFinished] 才写设置：每移动一格写一次 prefs
+ * 并投影给框架，是几十次毫无意义的跨进程握手。
+ */
+@Composable
+internal fun NumberRow(
+    title: String,
+    summary: String?,
+    value: Float,
+    valueRange: ClosedFloatingPointRange<Float>,
+    steps: Int,
+    format: (Float) -> String,
+    onFinished: (Float) -> Unit,
+) {
+    var draft by remember(value) { mutableStateOf(value) }
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 12.dp),
+    ) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Column(modifier = Modifier.weight(1f)) {
+                Text(title)
+                if (!summary.isNullOrBlank()) {
+                    Spacer(Modifier.height(3.dp))
+                    SecondaryText(summary)
+                }
+            }
+            Spacer(Modifier.width(12.dp))
+            Text(format(draft))
+        }
+        Spacer(Modifier.height(4.dp))
+        top.yukonga.miuix.kmp.basic.Slider(
+            value = draft,
+            onValueChange = { draft = it },
+            onValueChangeFinished = { onFinished(draft) },
+            valueRange = valueRange,
+            steps = steps,
+            modifier = Modifier.fillMaxWidth(),
+        )
+    }
+}
+
+/**
+ * 一行「填一串文本」。
+ *
+ * ## 为什么不是「边打字边存」
+ *
+ * 设置每写一次都会投影一遍给框架（见 `config/HyperSettings.syncToFramework`），
+ * 那是跨进程的。空格、退格、拼音候选都会触发一次改动，边打边存等于把一次输入放大成
+ * 十几次跨进程握手。所以这里编辑的是**草稿**，真正的写入只发生在两处：
+ * 焦点离开这一行，或点右边的「保存」。
+ *
+ * ## 为什么草稿用 `remember(value)` 而不是 `remember(key)`
+ *
+ * 键用 `value`：外部把值改掉（导入备份、恢复默认）时草稿要跟着走，否则界面上显示的还是
+ * 用户上一次敲进去的那串、而设置里已经是另一个值 —— 这种「显示的和实际的不一致」
+ * 是用户最难自己发现的一类问题。
+ */
+@Composable
+internal fun TextInputRow(
+    title: String,
+    summary: String?,
+    value: String,
+    placeholder: String,
+    onCommit: (String) -> Unit,
+) {
+    var draft by remember(value) { mutableStateOf(value) }
+    var committed by remember(value) { mutableStateOf(value) }
+    val dirty = draft != committed
+    val commit = {
+        if (dirty) {
+            committed = draft
+            onCommit(draft)
+        }
+    }
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 12.dp),
+    ) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Column(modifier = Modifier.weight(1f)) {
+                Text(title)
+                if (!summary.isNullOrBlank()) {
+                    Spacer(Modifier.height(3.dp))
+                    SecondaryText(summary)
+                }
+            }
+            if (dirty) {
+                Spacer(Modifier.width(12.dp))
+                Text(
+                    text = "保存",
+                    color = MiuixTheme.colorScheme.primary,
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(8.dp))
+                        .clickable(onClick = commit)
+                        .padding(horizontal = 8.dp, vertical = 4.dp),
+                )
+            }
+        }
+        Spacer(Modifier.height(8.dp))
+        BasicTextField(
+            value = draft,
+            onValueChange = { draft = it },
+            singleLine = true,
+            textStyle = TextStyle(
+                color = MiuixTheme.colorScheme.onSurface,
+                fontSize = 15.sp,
+            ),
+            cursorBrush = SolidColor(MiuixTheme.colorScheme.primary),
+            modifier = Modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(10.dp))
+                .background(MiuixTheme.colorScheme.secondaryContainer.copy(alpha = 0.5f))
+                .padding(horizontal = 12.dp, vertical = 10.dp)
+                // 焦点离开这一行就是「我改完了」的自然信号，不需要用户再去找按钮。
+                .onFocusChanged { state -> if (!state.isFocused) commit() },
+            decorationBox = { inner ->
+                Box {
+                    if (draft.isEmpty()) SecondaryText(placeholder)
+                    inner()
+                }
+            },
+        )
+    }
+}
 @Composable
 internal fun InfoRow(label: String, value: String, valueColor: Color? = null) {
     val color = valueColor ?: MiuixTheme.colorScheme.onSurfaceVariantSummary
     Column(Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 12.dp)) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Text(label, modifier = Modifier.weight(1f))
+        Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+            // Measure the label first so a long value cannot squeeze it into vertical text.
+            Text(label)
             if (value.length <= LONG_VALUE_THRESHOLD) {
                 Spacer(Modifier.width(12.dp))
-                Text(value, color = color)
+                Text(value, modifier = Modifier.weight(1f), color = color, textAlign = TextAlign.End)
             }
         }
         if (value.length > LONG_VALUE_THRESHOLD) {

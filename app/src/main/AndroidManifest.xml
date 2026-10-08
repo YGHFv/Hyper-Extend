@@ -34,6 +34,7 @@
         <package android:name="com.android.systemui" />
         <package android:name="com.miui.screenshot" />
         <package android:name="com.milink.service" />
+        <package android:name="com.miui.mishare.connectivity" />
         <intent>
             <action android:name="android.service.credentials.CredentialProviderService" />
         </intent>
