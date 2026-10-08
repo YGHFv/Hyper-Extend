@@ -58,6 +58,8 @@ PIN 乱序、锁屏双击/提示、生物识别能力、通知静音/小窗/渠�
 其中颜色与焦点应用名单在功能详情中配置。**全量迁移尚未完成，当前验证为 MT 宿主代码核验与本地构建测试，未做设备验收。**
 源码直接参考 [HyperCeiler](https://github.com/ReChronoRain/HyperCeiler)；详见 [迁移记录与待办](docs/systemui-migration.md)。
 
+**2026-10-09 审查警告：当前安装构建的非默认网速样式存在 SystemUI 崩溃风险，暂勿启用。** 同时查出截屏状态栏恢复、网速间隔、电池交换和时钟等迁移缺陷，尚未修复。详见 [完整性审查与修复清单](docs/migration-completeness-audit.md)；安装成功不代表这些功能通过验收。
+
 续迁移增加指定应用通知展开、展开悬浮通知超时收起，以及运营商“隐藏名称”模式（其他模式仍待迁移）。
 另接入 [HyperVolumeANC](https://github.com/zhhhyyyyyy/HyperVolumeANC) 的分应用音量入口，默认关闭，
 需同时勾选 `com.android.systemui` 和 `com.miui.misound` 并重启两个宿主。

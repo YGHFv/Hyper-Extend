@@ -3,6 +3,8 @@
   "revision": "5e4686069dd7ab1f3697e256d5fc7d68fb73e317",
   "scope": "All system_ui*.xml keys plus the old-control-center SystemUI hook configured in system_settings.xml; includes navigation/dependency rows, not all are hooks. External settings-app half is not claimed migrated.",
   "verification": "Static host-code checks and local tests only. No device acceptance yet.",
+  "completenessAudit": "docs/migration-completeness-audit.md",
+  "statusNote": "implemented_static_verified applies only to the named local scope, not full upstream parity. defect_confirmed_static means an exposed option has a source/host-contract defect; see its auditFindings for triggering conditions. Unreviewed rows remain needs_audit_existing_partial or pending.",
   "items": [
     {
       "page": "system_ui_control_center",
@@ -89,8 +91,12 @@
       "key": "prefs_key_system_ui_control_center_redirect_notice",
       "title": "重定向通知设置",
       "kind": "SwitchPreference",
-      "status": "implemented_static_verified",
-      "target": "notification_channel_settings"
+      "status": "partially_implemented_static_verified",
+      "target": "notification_channel_settings",
+      "auditFindings": [
+        "P04"
+      ],
+      "boundary": "Package/channel/UID redirect and fallback are present; upstream conversation shortcutId is not forwarded."
     },
     {
       "page": "system_ui_control_center",
@@ -179,6 +185,9 @@
       "kind": "fan.preference.DropDownPreference",
       "status": "partially_implemented_static_verified",
       "target": "control_center_hide_carrier",
+      "auditFindings": [
+        "P03"
+      ],
       "boundary": "Hide-all mode only. Separator removal, device-name substitution and HD indicator behavior remain pending. Privacy indicators are unchanged."
     },
     {
@@ -330,9 +339,12 @@
       "key": "prefs_key_system_ui_control_center_media_control_media_button_layout_switch",
       "title": "启用布局修改",
       "kind": "SwitchPreference",
-      "status": "implemented_static_verified",
+      "status": "partially_implemented_static_verified",
       "target": "media_card_layout",
-      "boundary": "Notification-center normal layout only; flip tiny screen and dynamic island remain unchanged. Button bitmap sizes, background and progress styles are pending."
+      "boundary": "Notification-center normal layout only; flip tiny screen and dynamic island remain unchanged. Button bitmap sizes, background and progress styles are pending.",
+      "auditFindings": [
+        "P01"
+      ]
     },
     {
       "page": "system_ui_control_center_media_cards",
@@ -411,7 +423,8 @@
       "kind": "SwitchPreference",
       "status": "implemented_static_verified",
       "target": "media_card_text_size",
-      "boundary": "Notification-center normal layout only; flip tiny screen and dynamic island remain unchanged. Button bitmap sizes, background and progress styles are pending."
+      "boundary": "Notification-center normal layout only; flip tiny screen and dynamic island remain unchanged. Button bitmap sizes, background and progress styles are pending.",
+      "referenceNote": "Mapped from the upstream XML text-size switch. MediaViewSize.kt reads a different key, system_ui_control_center_media_control_text_size; this is an upstream XML/hook discrepancy, not evidence that the local switch is disconnected."
     },
     {
       "page": "system_ui_control_center_media_cards",
@@ -1349,8 +1362,11 @@
       "key": "prefs_key_system_ui_status_bar_battery_style_change_location",
       "title": "交换电池图标与百分比位置",
       "kind": "SwitchPreference",
-      "status": "needs_audit_existing_partial",
-      "target": null
+      "status": "defect_confirmed_static",
+      "target": "status_bar_battery_style.change_location",
+      "auditFindings": [
+        "F04"
+      ]
     },
     {
       "page": "system_ui_status_bar_battery_styles",
@@ -2365,16 +2381,22 @@
       "key": "prefs_key_system_ui_statusbar_network_speed_update_spacings",
       "title": "网速更新间隔",
       "kind": "SeekBarPreferenceCompat",
-      "status": "needs_audit_existing_partial",
-      "target": null
+      "status": "defect_confirmed_static",
+      "target": "status_bar_network_speed.update_spacing",
+      "auditFindings": [
+        "F03"
+      ]
     },
     {
       "page": "system_ui_status_bar_network_speed_indicator",
       "key": "prefs_key_system_ui_statusbar_network_speed_style",
       "title": "网速指示器样式",
       "kind": "fan.preference.DropDownPreference",
-      "status": "needs_audit_existing_partial",
-      "target": null
+      "status": "defect_confirmed_static",
+      "target": "status_bar_network_speed.style",
+      "auditFindings": [
+        "F01"
+      ]
     },
     {
       "page": "system_ui_status_bar_network_speed_indicator",
@@ -2477,32 +2499,44 @@
       "key": "prefs_key_system_ui_statusbar_clock_editor_p",
       "title": "状态栏日期时钟格式",
       "kind": "EditTextPreference",
-      "status": "needs_audit_existing_partial",
-      "target": null
+      "status": "defect_confirmed_static",
+      "target": "status_bar_clock.editor_p",
+      "auditFindings": [
+        "F06"
+      ]
     },
     {
       "page": "system_ui_status_bar_new_clock_indicator",
       "key": "prefs_key_system_ui_statusbar_clock_editor_s",
       "title": "状态栏时钟格式",
       "kind": "EditTextPreference",
-      "status": "needs_audit_existing_partial",
-      "target": null
+      "status": "defect_confirmed_static",
+      "target": "status_bar_clock.editor_s",
+      "auditFindings": [
+        "F06"
+      ]
     },
     {
       "page": "system_ui_status_bar_new_clock_indicator",
       "key": "prefs_key_system_ui_statusbar_clock_editor_b",
       "title": "通知中心大时钟格式",
       "kind": "EditTextPreference",
-      "status": "needs_audit_existing_partial",
-      "target": null
+      "status": "defect_confirmed_static",
+      "target": "status_bar_clock.editor_b",
+      "auditFindings": [
+        "F06"
+      ]
     },
     {
       "page": "system_ui_status_bar_new_clock_indicator",
       "key": "prefs_key_system_ui_statusbar_clock_editor_n",
       "title": "通知中心迷你时钟格式",
       "kind": "EditTextPreference",
-      "status": "needs_audit_existing_partial",
-      "target": null
+      "status": "defect_confirmed_static",
+      "target": "status_bar_clock.editor_n",
+      "auditFindings": [
+        "F06"
+      ]
     },
     {
       "page": "system_ui_status_bar_new_clock_indicator",
@@ -2549,24 +2583,33 @@
       "key": "prefs_key_system_ui_statusbar_clock_left_margin_1",
       "title": "左侧间距",
       "kind": "SeekBarPreferenceCompat",
-      "status": "needs_audit_existing_partial",
-      "target": null
+      "status": "defect_confirmed_static",
+      "target": "status_bar_clock.left_margin",
+      "auditFindings": [
+        "F05"
+      ]
     },
     {
       "page": "system_ui_status_bar_new_clock_indicator_1",
       "key": "prefs_key_system_ui_statusbar_clock_right_margin_1",
       "title": "右侧间距",
       "kind": "SeekBarPreferenceCompat",
-      "status": "needs_audit_existing_partial",
-      "target": null
+      "status": "defect_confirmed_static",
+      "target": "status_bar_clock.right_margin",
+      "auditFindings": [
+        "F05"
+      ]
     },
     {
       "page": "system_ui_status_bar_new_clock_indicator_1",
       "key": "prefs_key_system_ui_statusbar_clock_vertical_offset_1",
       "title": "上下偏移量",
       "kind": "SeekBarPreferenceCompat",
-      "status": "needs_audit_existing_partial",
-      "target": null
+      "status": "defect_confirmed_static",
+      "target": "status_bar_clock.vertical_offset",
+      "auditFindings": [
+        "F05"
+      ]
     },
     {
       "page": "system_ui_status_bar_new_clock_indicator_1",
@@ -2701,8 +2744,12 @@
       "key": "prefs_key_system_control_center_unlock_old",
       "title": "解锁控制中心样式",
       "kind": "SwitchPreference",
-      "status": "implemented_static_verified",
-      "target": "control_center_unlock_old"
+      "status": "partially_implemented_static_verified",
+      "target": "control_center_unlock_old",
+      "auditFindings": [
+        "P02"
+      ],
+      "boundary": "SystemUI force flag only. The upstream Settings-app selector unlock is not migrated; enabling this alone may leave no style selector."
     }
   ]
 }
