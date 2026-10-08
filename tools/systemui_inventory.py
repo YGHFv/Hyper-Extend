@@ -8,6 +8,20 @@ from pathlib import Path
 
 ANDROID = "{http://schemas.android.com/apk/res/android}"
 
+AUDIT_DEFECTS = {
+    "prefs_key_system_ui_statusbar_network_speed_style": ("status_bar_network_speed.style", ["F01"]),
+    "prefs_key_system_ui_statusbar_network_speed_update_spacings": ("status_bar_network_speed.update_spacing", ["F03"]),
+    "prefs_key_system_ui_status_bar_battery_style_change_location": ("status_bar_battery_style.change_location", ["F04"]),
+    **{
+        f"prefs_key_system_ui_statusbar_clock_{key}_1": (f"status_bar_clock.{key}", ["F05"])
+        for key in ("left_margin", "right_margin", "vertical_offset")
+    },
+    **{
+        f"prefs_key_system_ui_statusbar_clock_editor_{key}": (f"status_bar_clock.editor_{key}", ["F06"])
+        for key in ("s", "b", "n", "p")
+    },
+}
+
 
 def main():
     parser = argparse.ArgumentParser()
@@ -92,13 +106,29 @@ def main():
                 items[-1]["boundary"] = "Notification-center normal layout only; flip tiny screen and dynamic island remain unchanged. Button bitmap sizes, background and progress styles are pending."
             if key == "prefs_key_system_ui_control_center_hide_operator":
                 items[-1].update(status="partially_implemented_static_verified", target="control_center_hide_carrier",
+                    auditFindings=["P03"],
                     boundary="Hide-all mode only. Separator removal, device-name substitution and HD indicator behavior remain pending. Privacy indicators are unchanged.")
+            if key == "prefs_key_system_ui_control_center_media_control_media_button_layout_switch":
+                items[-1].update(status="partially_implemented_static_verified", auditFindings=["P01"])
+            if key == "prefs_key_system_control_center_unlock_old":
+                items[-1].update(status="partially_implemented_static_verified", auditFindings=["P02"],
+                    boundary="SystemUI force flag only. The upstream Settings-app selector unlock is not migrated; enabling this alone may leave no style selector.")
+            if key == "prefs_key_system_ui_control_center_media_control_media_button_size_switch":
+                items[-1]["referenceNote"] = "Mapped from the upstream XML text-size switch. MediaViewSize.kt reads a different key, system_ui_control_center_media_control_text_size; this is an upstream XML/hook discrepancy, not evidence that the local switch is disconnected."
+            if key == "prefs_key_system_ui_control_center_redirect_notice":
+                items[-1].update(status="partially_implemented_static_verified", auditFindings=["P04"],
+                    boundary="Package/channel/UID redirect and fallback are present; upstream conversation shortcutId is not forwarded.")
+            if key in AUDIT_DEFECTS:
+                target, findings = AUDIT_DEFECTS[key]
+                items[-1].update(status="defect_confirmed_static", target=target, auditFindings=findings)
     revision = subprocess.check_output(["git", "-C", str(args.reference), "rev-parse", "HEAD"], text=True).strip()
     payload = {
         "reference": "https://github.com/ReChronoRain/HyperCeiler",
         "revision": revision,
         "scope": "All system_ui*.xml keys plus the old-control-center SystemUI hook configured in system_settings.xml; includes navigation/dependency rows, not all are hooks. External settings-app half is not claimed migrated.",
         "verification": "Static host-code checks and local tests only. No device acceptance yet.",
+        "completenessAudit": "docs/migration-completeness-audit.md",
+        "statusNote": "implemented_static_verified applies only to the named local scope, not full upstream parity. defect_confirmed_static means an exposed option has a source/host-contract defect; see its auditFindings for triggering conditions. Unreviewed rows remain needs_audit_existing_partial or pending.",
         "items": items,
     }
     args.output.parent.mkdir(parents=True, exist_ok=True)

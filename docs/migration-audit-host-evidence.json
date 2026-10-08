@@ -1,0 +1,63 @@
+{
+  "host": {
+    "packageName": "com.android.systemui",
+    "versionName": "17.03.260226.r",
+    "versionCode": 202602260
+  },
+  "verification": "Read-only MT MCP evidence for the 2026-10-09 completeness audit of beb0fda. These assertions record host contracts, not successful module behavior or device acceptance.",
+  "evidence": [
+    {
+      "finding": "F01",
+      "locator": "dex_method:Lcom/android/systemui/statusbar/policy/NetworkSpeedController;->updateText([Ljava/lang/String;)V",
+      "contains": [
+        "const/4 v3, 0x1",
+        "aget-object v4, p1, v3",
+        "->networkSpeedUnit:Ljava/lang/String;"
+      ]
+    },
+    {
+      "finding": "F03",
+      "locator": "dex_class:Lcom/android/systemui/statusbar/policy/NetworkSpeedController$5;",
+      "contains": [
+        "const v4, 0x30d41",
+        "const v0, 0x186a4",
+        "->mBgHandler:Lcom/android/systemui/statusbar/policy/NetworkSpeedController$5;",
+        "const-wide/16 v5, 0xfa0",
+        "instance-of v0, p1, Ljava/lang/Long;",
+        "->updateText([Ljava/lang/String;)V"
+      ]
+    },
+    {
+      "finding": "F04",
+      "locator": "axml:res/layout/battery_digital_view.xml",
+      "contains": [
+        "<FrameLayout android:id=\"@7F0B0180\"",
+        "android:id=\"@7F0B0185\"",
+        "android:id=\"@7F0B0187\"",
+        "android:id=\"@7F0B0186\""
+      ]
+    },
+    {
+      "finding": "F06",
+      "locator": "dex_class:Lcom/android/systemui/statusbar/policy/MiuiStatusBarClockController;",
+      "contains": [
+        "->mCalendar:Lmiuix/pickerwidget/date/Calendar;",
+        "->registerCallback(Lcom/android/keyguard/KeyguardUpdateMonitorCallback;)V"
+      ]
+    },
+    {
+      "finding": "F06",
+      "locator": "dex_class:Lcom/android/systemui/statusbar/policy/MiuiStatusBarClockController$1;",
+      "contains": [
+        ".method public final onTimeChanged()V",
+        "->updateTime$1()V"
+      ]
+    }
+  ],
+  "resourceFiles": [
+    {
+      "locator": "resource:0x7f0e0052",
+      "path": "res/layout/battery_digital_view.xml"
+    }
+  ]
+}

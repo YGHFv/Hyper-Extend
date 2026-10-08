@@ -203,11 +203,9 @@ internal object HookRuntime {
             }
             // 链式里的每一步都必须在 hook 之前设完（见 setId 的注释），intercept 是最后一步。
             instance.hook(target)
-                // ID 必须在 hook 之前设：API 102 里「同一个方法挂两次」是硬错误，
-                // 而带 ID 的挂载是**替换**语义 —— 热重载之后同一个 label 会覆盖上一代那个，
-                // 于是即使旧句柄没撤干净（见 HyperXposedEntry#releaseOldHooks），
-                // 重新挂载也不会被框架拒绝。ID 用 label 而不是自己编序号：
-                // 它唯一需要满足的性质就是「同一个挂载点在每一代代码里都一样」。
+                // API 102 scopes IDs by module and executable. Reusing the same ID
+                // atomically replaces that hook; distinct IDs can coexist on one method.
+                // Stable labels let hot reload replace the previous generation.
                 .setId(label)
                 // We contain module failures ourselves. Host exceptions must not trigger framework replay.
                 .setExceptionMode(XposedInterface.ExceptionMode.PASSTHROUGH)
