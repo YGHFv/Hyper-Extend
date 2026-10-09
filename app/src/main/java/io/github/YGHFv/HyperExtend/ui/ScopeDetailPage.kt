@@ -53,7 +53,6 @@ import top.yukonga.miuix.kmp.basic.TopAppBar
 import top.yukonga.miuix.kmp.icon.MiuixIcons
 import top.yukonga.miuix.kmp.icon.extended.Back
 import top.yukonga.miuix.kmp.icon.extended.Refresh
-import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 /**
  * 「让改动生效」的状态机。
@@ -191,10 +190,7 @@ internal fun ScopeDetailPage(
                 }
                 if (!installed) {
                     CardDivider()
-                    HintText(
-                        "未安装此应用，相关功能暂不可用。",
-                        color = MiuixTheme.colorScheme.error,
-                    )
+                    HintText("未安装此应用，相关功能暂不可用。")
                 }
             }
 
@@ -296,15 +292,14 @@ private fun RestartStatusCard(
 
             is RestartUi.Done -> HintText(state.message)
 
-            is RestartUi.Failed -> HintText(state.message, color = MiuixTheme.colorScheme.error)
+            is RestartUi.Failed -> HintText(state.message)
 
             is RestartUi.ConfirmReboot -> {
                 if (state.reason.isNotBlank()) {
-                    HintText(state.reason, color = MiuixTheme.colorScheme.error)
+                    HintText(state.reason)
                 }
                 HintText(
                     "系统框架只能随设备重启生效。重启会立刻中断当前所有操作，确认要继续吗？",
-                    color = MiuixTheme.colorScheme.error,
                 )
                 CardActionRow(label = "确认重启设备", danger = true, onClick = onConfirmReboot)
                 CardDivider()

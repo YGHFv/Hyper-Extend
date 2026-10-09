@@ -43,7 +43,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableIntStateOf
@@ -63,7 +62,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import io.github.YGHFv.HyperExtend.config.HyperSettings
 import io.github.YGHFv.HyperExtend.core.FEATURES
-import io.github.YGHFv.HyperExtend.core.FrameworkBridge
 import io.github.YGHFv.HyperExtend.core.HyperScope
 import io.github.YGHFv.HyperExtend.core.NfcCardImage
 import io.github.YGHFv.HyperExtend.core.ScopeFeatureGroup
@@ -74,7 +72,6 @@ import io.github.YGHFv.HyperExtend.core.entryGroup
 import io.github.YGHFv.HyperExtend.core.featureById
 import io.github.YGHFv.HyperExtend.core.featuresOfScope
 import io.github.YGHFv.HyperExtend.core.hasDetailPage
-import io.github.YGHFv.HyperExtend.core.isFeatureActive
 import io.github.YGHFv.HyperExtend.core.scopeById
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.basic.IconButton
@@ -565,7 +562,7 @@ private fun MainTabsContent(
 }
 
 /**
- * 首页：模块状态 + 按作用域收纳的入口行。
+ * 首页：按作用域收纳的入口行；模块状态仅在关于页展示。
  *
  * 入口行的顺序、标题、图标、启用数全部从 [SCOPES] / [FEATURES] 派生 ——
  * 这个文件里没有任何一个功能名、应用名或开关 id 是写死的。
@@ -582,9 +579,6 @@ private fun HomeTab(
     val scrollState = rememberScrollState()
     val entries = remember { entryScopes() }
     val installed = rememberInstalledScopes(entries)
-    // 收集状态流而不是在组合期读一次布尔值：后者拿不到「框架随后绑上」这个变化，
-    // 界面就会停在最初那次读到的值上（表现为红色「未连接」一直不变）。
-    val serviceReady by FrameworkBridge.connected.collectAsState()
 
     Column(
         modifier = Modifier
@@ -595,33 +589,6 @@ private fun HomeTab(
             .padding(bottom = padding.calculateBottomPadding())
             .padding(vertical = 4.dp),
     ) {
-        GroupTitle("模块状态")
-        SettingsCard {
-            InfoRow(
-                label = "框架服务",
-                value = if (serviceReady) "已连接" else "未连接",
-                valueColor = if (serviceReady) null else MiuixTheme.colorScheme.error,
-            )
-            InfoRow(
-                label = "已启用功能",
-                // 判据与作用域页、搜索页共用同一个函数（见 isFeatureActive）：
-                // 各写一遍的话，NFC 卡面这种「配了才生效」的功能在三处会得出三个结论。
-                value = "${FEATURES.count { isFeatureActive(it, switches, strings) }} / ${FEATURES.size}",
-            )
-            if (!serviceReady) {
-                CardDivider()
-                HintText(
-                    if (FrameworkBridge.hasEverConnected()) {
-                        "框架服务暂时断开：设置仍保存在本地，等框架重新绑定后会自动同步回去。"
-                    } else {
-                        "框架服务未连接：开关仍会保存，但被注入的进程读不到它们。" +
-                            "请确认已在 LSPosed 中启用本模块。"
-                    },
-                    color = MiuixTheme.colorScheme.error,
-                )
-            }
-        }
-
         GroupTitle("作用域")
         SettingsCard {
             entries.forEachIndexed { index, scope ->

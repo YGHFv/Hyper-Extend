@@ -23,7 +23,7 @@ import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -59,6 +59,7 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import io.github.YGHFv.HyperExtend.core.FeatureExtra
@@ -124,8 +125,7 @@ private val THUMB_WIDTH = 104.dp
  * 来源与许可保留在源码及文档，「关于」页统一展示开源项目致谢，
  * 生效范围则由作用域页的入口与右下角的提示表达。
  *
- * 唯一被留下的「硬前提」是 [HyperFeature.requirement]（例如通行密钥需要 GMS）——
- * 它是**动作的前提**，不写出来用户会一直试。它不再包卡片，就是一行提示。
+ * 功能前提说明保留在目录元数据中，不在设置界面重复展示。
  *
  * ## 配置型功能为什么把开关放在最上面
  *
@@ -218,11 +218,6 @@ internal fun FeatureDetailPage(
                     .padding(bottom = padding.calculateBottomPadding())
                     .padding(vertical = 4.dp),
             ) {
-                val requirement = feature.requirement
-                if (!requirement.isNullOrBlank()) {
-                    HintText(requirement, color = MiuixTheme.colorScheme.error, horizontalPadding = 28.dp)
-                }
-
                 if (configKey == null) {
                     GroupTitle("总开关")
                     SettingsCard {
@@ -350,9 +345,7 @@ internal fun FeatureDetailPage(
                             onSelect = { onString(MONET_SCHEME_KEY, it) },
                         )
 
-                        FeatureExtra.PASSKEY_DEFAULT_APP -> PasskeyAppSection(
-                            enabled = switches[feature.id] == true,
-                        )
+                        FeatureExtra.PASSKEY_DEFAULT_APP -> PasskeyAppSection()
 
                         FeatureExtra.NOTIFY_ICON_LIBRARY -> NotifyIconLibrarySection(
                             switches = switches,
@@ -382,9 +375,8 @@ internal fun FeatureDetailPage(
  *
  * ## 左格显示什么
  *
- * 优先显示模块自己保存的那份副本（用户选过的图）；没选过时退而显示**钱包自带的那张**
- * （由注入侧捕获回来，见 [WalletCardFace]）；两者都没有才显示「钱包自带」四个字。
- * 这是「读到钱包自带卡面」这个需求的落点：以前这一格永远只有那四个字。
+ * 显示钱包自带的卡面（由注入侧捕获回来，见 [WalletCardFace]），右格显示独立保存的替换图。
+ * 点击右格选图；已有替换图时长按右格，仅清除此卡的映射，不影响钱包原图或其他卡片。
  *
  * ## 为什么用系统相册选择器而不是自己写文件浏览
  *
@@ -392,10 +384,6 @@ internal fun FeatureDetailPage(
  * 也不需要本模块申请 `READ_MEDIA_IMAGES`：用户选中的那个 Uri 由系统临时授权给本应用，
  * 我们读它一次、把字节复制进自己的私有目录（见 [NfcCardImage.import]），之后就与相册无关了。
  *
- * ## 改完为什么还要点右上角
- *
- * 配置值是在宿主**重新加载模块时**读进内存的（见 `hook/feature/NfcCardFace`），
- * 所以这里保存完只代表「已经存好了」。提示语里明说这一步，用户才不会以为没生效。
  */
 @Composable
 private fun CardFacePicker(
@@ -410,10 +398,7 @@ private fun CardFacePicker(
     var busy by remember { mutableStateOf(false) }
     var message by remember { mutableStateOf<String?>(null) }
 
-    // 选图次数。**必须有它**：给宿主的地址是一个固定的 content:// （provider 只有一个出口），
-    // 换图之后设置里那个字符串一模一样，而 `File` 的 equals 比的又只是路径 ——
-    // 只拿它们当 key，换完图左边那格会停在上一张上，看起来像「选图没生效」。
-    // 下拉刷新带来的 revision 变化同样要走这里，否则「刷新了但图没变」。
+    // Explicit revisions also refresh previews when the backing image changes during a reload.
     var pickRevision by remember { mutableIntStateOf(0) }
     val effectiveRevision = pickRevision + revision
 
@@ -441,7 +426,7 @@ private fun CardFacePicker(
             outcome.onSuccess { uri ->
                 pickRevision++
                 onPick(uri)
-                message = "已保存，重启钱包生效。"
+                message = "已保存替换卡面。"
             }.onFailure {
                 message = "选图失败：${it.message ?: it.javaClass.simpleName}"
             }
@@ -452,6 +437,14 @@ private fun CardFacePicker(
     }
 
     val current = walletFace
+    val hasReplacement = stored.isNotBlank()
+    val clearReplacement: (() -> Unit)? = if (hasReplacement && !busy) {
+        {
+            onClear()
+            pickRevision++
+            message = "已清除替换卡面。"
+        }
+    } else null
 
     Row(
         modifier = Modifier
@@ -502,10 +495,17 @@ private fun CardFacePicker(
                     .height(SLOT_HEIGHT)
                     .clip(SLOT_SHAPE)
                     .background(MiuixTheme.colorScheme.secondaryContainer.copy(alpha = 0.5f))
-                    .clickable(enabled = !busy, onClick = launchPicker),
+                    .combinedClickable(
+                        enabled = !busy,
+                        role = Role.Button,
+                        onClickLabel = "选择替换卡面",
+                        onLongClickLabel = if (clearReplacement != null) "清除此卡的替换卡面" else null,
+                        onLongClick = clearReplacement,
+                        onClick = launchPicker,
+                    ),
                 contentAlignment = Alignment.Center,
             ) {
-                if (bitmap != null) {
+                if (hasReplacement && bitmap != null) {
                     Image(bitmap = bitmap!!, contentDescription = "此卡自定义卡面",
                         modifier = Modifier.fillMaxSize(), contentScale = ContentScale.Crop)
                 } else Column(horizontalAlignment = Alignment.CenterHorizontally) {
@@ -536,36 +536,14 @@ private fun CardFacePicker(
             }
             Spacer(Modifier.height(6.dp))
             SecondaryText(
-                text = "点击替换",
+                text = if (hasReplacement) "点击替换 · 长按清除" else "点击替换",
                 modifier = Modifier.fillMaxWidth(),
                 textAlign = TextAlign.Center,
             )
         }
     }
 
-    // 一行状态：临时消息（成功/失败）优先，没有消息时报当前状态。
-    val state = message ?: if (stored.isBlank()) {
-        ""
-    } else {
-        "重启钱包后生效"
-    }
-    if (state.isNotBlank()) HintText(state, color = if (message != null) MiuixTheme.colorScheme.primary else null)
-
-    if (file != null || stored.isNotBlank()) {
-        CardDivider()
-        CardActionRow(
-            label = "恢复默认卡面",
-            danger = true,
-            enabled = !busy,
-            onClick = {
-                // 复制进来的副本也一起删掉：留着它只会让「已清除」和「磁盘上还有一张图」
-                // 这两件事各说各话。授权也同时撤销（见 NfcCardImage.clear）。
-                pickRevision++
-                onClear()
-                message = "已恢复默认，重启钱包生效。"
-            },
-        )
-    }
+    message?.let { HintText(it, color = MiuixTheme.colorScheme.primary) }
 }
 
 // ------------------------------------------------------------------ 附加选择器
@@ -606,7 +584,7 @@ private fun MonetSchemeSection(selected: String, onSelect: (String) -> Unit) {
  * 那个键属于受保护设置，普通应用没有写权限，所以这一步走 root。
  */
 @Composable
-private fun PasskeyAppSection(enabled: Boolean) {
+private fun PasskeyAppSection() {
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
     var reload by remember { mutableIntStateOf(0) }
@@ -658,12 +636,6 @@ private fun PasskeyAppSection(enabled: Boolean) {
             )
         }
         message?.let { HintText(it, color = MiuixTheme.colorScheme.primary) }
-        if (!enabled) {
-            HintText(
-                "请先启用通行密钥功能。",
-                color = MiuixTheme.colorScheme.error,
-            )
-        }
         HintText("修改默认应用需要 root 权限。")
     }
 }

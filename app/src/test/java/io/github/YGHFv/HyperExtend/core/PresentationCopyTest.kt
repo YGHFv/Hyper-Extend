@@ -37,4 +37,9 @@ class PresentationCopyTest {
         assertTrue(guard.requirement.contains("目标方法不匹配时跳过"))
         assertEquals(listOf("systemui", "screenshot"), featureById("status_bar_screenshot_hide")!!.scopes)
     }
+
+    @Test fun volumeReferenceHasOneAcknowledgementWithItsRepositoryLink() {
+        val project = OPEN_SOURCE_PROJECTS.single { it.name == "HyperVolumeANC" }
+        assertEquals("https://github.com/zhhhyyyyyy/HyperVolumeANC", project.url)
+    }
 }

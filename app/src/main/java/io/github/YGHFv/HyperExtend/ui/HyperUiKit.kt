@@ -197,9 +197,6 @@ internal fun FeaturePreference(
             checked = switches[feature.id] == true,
             onCheckedChange = { onSwitch(feature.id, it) },
         )
-        feature.requirement?.takeIf { it.isNotBlank() }?.let {
-            HintText(it, color = MiuixTheme.colorScheme.error, horizontalPadding = 16.dp)
-        }
     }
 }
 
@@ -419,8 +416,7 @@ internal fun SecondaryText(
 /**
  * 卡片内的说明文字。
  *
- * `color` 只在「这条说明是个错误」时传 error 色 —— 字号不变，错误靠颜色表达，
- * 免得同一张卡片里冒出第二种小字大小。
+ * 默认使用次要文字颜色，操作反馈可用主题主色强调，不将说明渲染成红字。
  */
 @Composable
 internal fun HintText(text: String, color: Color? = null, horizontalPadding: Dp = 16.dp) {
@@ -523,7 +519,6 @@ internal fun ScopeEntryRow(
                 } else {
                     "未安装 —— 这台设备上没有它"
                 },
-                color = if (installed) null else MiuixTheme.colorScheme.error,
             )
         }
         Spacer(Modifier.width(8.dp))

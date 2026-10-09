@@ -15,6 +15,7 @@ internal val OPEN_SOURCE_PROJECTS = listOf(
     OpenSourceProject("MIUINativeNotifyIcon", "https://github.com/fankes/MIUINativeNotifyIcon"),
     OpenSourceProject("Android Notification Icon Project", "https://github.com/BetterAndroid/android-notification-icon-project"),
     OpenSourceProject("HyperWallpaperMonet", "https://github.com/PengDingkang/HyperWallpaperMonet"),
+    OpenSourceProject("HyperVolumeANC", "https://github.com/zhhhyyyyyy/HyperVolumeANC"),
     OpenSourceProject("HyperPasskey", "https://github.com/Howard20181/HyperPasskey"),
     OpenSourceProject("DIY NFC", "https://github.com/Xposed-Modules-Repo/com.zhizi42.diymiuicard"),
     OpenSourceProject("AndroidX", "https://github.com/androidx/androidx"),

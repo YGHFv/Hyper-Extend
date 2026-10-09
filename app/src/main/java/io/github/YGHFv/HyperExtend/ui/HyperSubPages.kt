@@ -261,12 +261,11 @@ internal fun AboutTab(
             )
             InfoRow(label = "构建时间", value = BUILD_TIME_DISPLAY)
             InfoRow(label = "设置摘要", value = HyperSettings.describe(context))
-            // 与首页同样收集状态流：读一次布尔值拿不到「框架稍后绑上」这个变化。
+            // 收集状态流，确保框架稍后绑定时状态同步更新。
             val connected by FrameworkBridge.connected.collectAsState()
             InfoRow(
                 label = "框架服务",
                 value = if (connected) "已连接" else "未连接",
-                valueColor = if (connected) null else MiuixTheme.colorScheme.error,
             )
         }
 
