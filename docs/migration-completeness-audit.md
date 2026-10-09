@@ -1,15 +1,17 @@
 # Migration completeness audit - 2026-10-09
 
-## Repair follow-up (0.1.3 installed, hosts not reloaded)
+## Repair follow-up (0.1.3 installed, acceptance pending)
 
 The F01-F06 defects below describe `beb0fda` / installed 0.1.2. They are preserved
 as historical evidence, **not the status of current source**. Repairs, regression
 coverage, explicit implementation differences and remaining device checks are in
 [migration-repair-0.1.3.md](migration-repair-0.1.3.md). The replacement APK has not
 been loaded into existing hosts by a requested restart/reload. Installation of
-0.1.3 succeeded at 13:25:22 on the same day, with matching APK hash and unchanged
-host PIDs; no feature toggle or functional acceptance was performed. The old-code
-risk warning still applies to existing hosts until controlled load/acceptance.
+0.1.3 succeeded at 13:25:22 on the same day, with matching APK hash. PIDs were
+unchanged immediately afterwards; later SystemUI and MiSound restarted with
+SIGNALED/status-15 exit records. Cause is unknown; the agent issued no restart
+or reload command. No feature toggle or functional acceptance was performed;
+see the deployment observation in `migration-repair-build.json`.
 
 ## Result and deployment state (historical)
 

@@ -6,9 +6,14 @@
   because ADB had no device. After reconnection, `adb install -r` succeeded at
   13:25:22 (Asia/Shanghai); package manager confirms `0.1.3` / `4`, and installed
   APK SHA-256 matches the tested artifact. Source repair was pushed as `42d49da`.
-- SystemUI, MiSound, screenshot and system_server PIDs were identical before and
-  after installation (4990 / 10157 / 10463 / 3641 respectively). No host restart,
-  hot reload, switch/scope change or functional device acceptance was performed.
+- Before and immediately after installation, SystemUI/MiSound/screenshot/system_server
+  PIDs were 4990 / 10157 / 10463 / 3641. Later verification at 13:27 found
+  10165 / 13301 / 10463 / 3641. Exit-info records SystemUI at 13:25:51.887 and
+  MiSound at 13:26:03.270 as `SIGNALED`, status 15. Cause is not established;
+  **no restart/reload command was issued by the agent**. Unchanged-PID statements
+  apply only to the immediate check, not the whole observation interval.
+- No switch/scope change or functional acceptance was performed. PID replacement
+  alone does not establish which hooks loaded or that the fixes work on device.
 - Source version: `0.1.3` / versionCode `4`, repairing the `beb0fda` implementation
   audited in `676b3cc`. The original audit remains a historical record.
 - **The code-repair phase did not deploy. The later user-requested installation
