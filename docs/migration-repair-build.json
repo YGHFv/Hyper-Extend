@@ -25,7 +25,6 @@
     "installed": true,
     "installAttemptedAt": "2026-10-09T13:25:22+08:00",
     "installResult": "adb install -r: Success; package manager confirms 0.1.3 / 4",
-    "hostRestarted": false,
     "hotReloaded": false,
     "settingsChanged": false,
     "installedApkHashMatches": true,
@@ -33,11 +32,38 @@
       "at": "2026-10-09T13:22:42+08:00",
       "result": "no devices/emulators found"
     },
-    "hostPidsBeforeAndAfter": {
+    "hostRestartRequestedByAgent": false,
+    "hostPidsBeforeAndImmediatelyAfter": {
       "com.android.systemui": 4990,
       "com.miui.misound": 10157,
       "com.miui.screenshot": 10463,
       "system_server": 3641
+    },
+    "laterObservation": {
+      "at": "2026-10-09T13:27:22+08:00",
+      "pids": {
+        "com.android.systemui": 10165,
+        "com.miui.misound": 13301,
+        "com.miui.screenshot": 10463,
+        "system_server": 3641
+      },
+      "exits": [
+        {
+          "package": "com.android.systemui",
+          "oldPid": 4990,
+          "time": "2026-10-09T13:25:51.887+08:00",
+          "reason": "SIGNALED",
+          "status": 15
+        },
+        {
+          "package": "com.miui.misound",
+          "oldPid": 10157,
+          "time": "2026-10-09T13:26:03.270+08:00",
+          "reason": "SIGNALED",
+          "status": 15
+        }
+      ],
+      "cause": "not established; no agent restart/reload command was issued"
     }
   },
   "deviceAcceptance": "pending"
