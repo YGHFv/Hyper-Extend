@@ -1,5 +1,16 @@
 # HyperVolumeANC 分应用音量入口迁移
 
+## 0.1.3 修复：面板局部模糊
+
+用户确认卡片布局已正确，但缺少音量条式模糊。复查发现旧代码仅接受
+`setBlurRadius(int)` / `setCornerRadius(float)`，参考代码同时兼容 int/float
+及四角圆角重载；旧代码任何一步失败就换成半透明纯色卡片。
+本次补齐重载兼容、`setWillNotDraw(false)`、每个 ViewRoot 的 Drawable 缓存、
+跨窗口模糊开关监听及 detach 清理；配置/布局改变时更新圆角和底色，不模糊整屏。
+MiSound 的面板窗口原生 flags `0x1048106` 已包含硬件加速，不盲目修改窗口模式。
+系统主动关闭模糊或接口确实不可用时仍保留明确记录的半透明降级，**不算模糊验收成功**。
+本轮未安装或重启，视觉效果需在后续受控加载后验收，详见 `migration-repair-0.1.3.md`。
+
 ## 状态：已接入实验性实现，未完成验收
 
 - 上游：<https://github.com/zhhhyyyyyy/HyperVolumeANC>，`636ce289457ed10f149c033e3b723cdfc62838aa`，Apache-2.0。

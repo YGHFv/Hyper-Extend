@@ -16,7 +16,7 @@ class MediaCardSettingsTest {
         assertTrue(layout.options.all { !it.defaultEnabled })
         assertTrue(layout.hasDetailPage && text.hasDetailPage)
         (layout.config + text.config).forEach { assertTrue(CONFIG_KEYS.contains(it.key)) }
-        assertEquals(listOf(MediaCardSettings.titleMargin, MediaCardSettings.artistMargin), layout.config.filterIsInstance<HyperSlider>())
+        assertEquals(listOf(MediaCardSettings.titleMargin, MediaCardSettings.artistMargin, MediaCardSettings.buttonSize, MediaCardSettings.customButtonSize), layout.config.filterIsInstance<HyperSlider>())
         assertEquals(listOf(MediaCardSettings.titleSize, MediaCardSettings.artistSize, MediaCardSettings.timeSize), text.config)
     }
 

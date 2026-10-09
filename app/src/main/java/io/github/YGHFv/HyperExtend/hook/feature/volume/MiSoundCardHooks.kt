@@ -34,8 +34,11 @@ import io.github.YGHFv.HyperExtend.hook.HookRuntime
 import io.github.YGHFv.HyperExtend.hook.Reflect
 import java.lang.ref.WeakReference
 import java.util.WeakHashMap
+import java.util.function.Consumer
+import androidx.annotation.RequiresApi
 
 /** Only MiSound 260903; every obfuscated target is recorded in the evidence manifest. */
+@RequiresApi(33)
 internal object MiSoundCardHooks {
     private val cards = WeakHashMap<ViewGroup, WeakReference<Card>>()
 
@@ -175,6 +178,11 @@ internal object MiSoundCardHooks {
         private var radius = 0f
         private var windowWidth = 0
         private var windowHeight = 0
+        private var blurDrawable: Drawable? = null
+        private var fallbackDrawable: GradientDrawable? = null
+        private var blurManager: WindowManager? = null
+        private var blurWarningLogged = false
+        private val blurListener = Consumer<Boolean> { Reflect.attempt { applyBlur() } }
         val transition = AppVolumeCardTransition()
 
         companion object {
@@ -259,6 +267,7 @@ internal object MiSoundCardHooks {
                     dot.backgroundTintList = android.content.res.ColorStateList.valueOf(color)
                 }
             }
+            if (body.isAttachedToWindow) applyBlur()
         }
 
         fun show() {
@@ -276,31 +285,54 @@ internal object MiSoundCardHooks {
             return transition.close()
         }
 
-        override fun onViewAttachedToWindow(view: View) { transition.reset(); Reflect.attempt { layout(); applyBlur() } }
+        override fun onViewAttachedToWindow(view: View) {
+            transition.reset()
+            Reflect.attempt {
+                if (blurManager == null) {
+                    val manager = body.context.getSystemService(WindowManager::class.java)
+                    manager.addCrossWindowBlurEnabledListener(body.context.mainExecutor, blurListener)
+                    blurManager = manager
+                }
+                layout()
+                applyBlur()
+            }
+        }
         override fun onViewDetachedFromWindow(view: View) {
             transition.reset()
             windowWidth = 0; windowHeight = 0
             body.clearAnimation(); pager.clearAnimation()
+            blurManager?.let { Reflect.attempt { it.removeCrossWindowBlurEnabledListener(blurListener) } }
+            blurManager = null
+            body.background = null
+            blurDrawable = null
+            fallbackDrawable = null
         }
 
         private fun applyBlur() {
+            if (!body.isAttachedToWindow) return
             val night = root.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
             val blur = runCatching {
-                val viewRoot = View::class.java.getDeclaredMethod("getViewRootImpl").apply { isAccessible = true }.invoke(body)
-                val drawable = viewRoot.javaClass.getMethod("createBackgroundBlurDrawable").invoke(viewRoot) as Drawable
-                drawable.javaClass.getMethod("setBlurRadius", Int::class.javaPrimitiveType).invoke(drawable, 100)
-                drawable.javaClass.getMethod("setCornerRadius", Float::class.javaPrimitiveType).invoke(drawable, radius)
-                drawable.javaClass.getMethod("setColor", Int::class.javaPrimitiveType)
-                    .invoke(drawable, if (night) 0x801E1E22.toInt() else 0x77626262)
+                check(blurManager?.isCrossWindowBlurEnabled != false) { "System cross-window blur disabled" }
+                val drawable = blurDrawable ?: run {
+                    val viewRoot = View::class.java.getDeclaredMethod("getViewRootImpl").apply { isAccessible = true }.invoke(body)
+                    viewRoot.javaClass.getMethod("createBackgroundBlurDrawable").apply { isAccessible = true }
+                        .invoke(viewRoot) as Drawable
+                }.also { blurDrawable = it }
+                BlurDrawableApi.configure(drawable, 100f, radius, if (night) 0x801E1E22.toInt() else 0x77626262)
+                drawable.alpha = 255
                 drawable
             }.getOrElse {
-                ModuleLog.warn("app_volume card blur unavailable; using rounded translucent background")
-                GradientDrawable().apply {
+                if (!blurWarningLogged) {
+                    blurWarningLogged = true
+                    ModuleLog.error("app_volume card blur unavailable; translucent fallback (not material parity)", it)
+                }
+                (fallbackDrawable ?: GradientDrawable().also { fallbackDrawable = it }).apply {
                     setColor(if (night) 0xD01E1E22.toInt() else 0xCC454548.toInt())
                     cornerRadius = radius
                 }
             }
-            body.background = blur
+            if (body.background !== blur) body.background = blur
+            body.setWillNotDraw(false)
         }
     }
 

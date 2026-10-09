@@ -94,10 +94,9 @@ internal object HookDispatcher {
             if (settings.isOn("screenshot_clipboard")) {
                 parts += "screenshot_clipboard=${ScreenshotClipboard.install(loader)}"
             }
-            // 「截屏时隐藏状态栏」的发送端住在这里（接收端在 SystemUI），
-            // 两个作用域都开了才是一个完整的功能。
+            // Native capture-layer exclusion runs entirely in the screenshot host.
             if (settings.isOn("status_bar_screenshot_hide")) {
-                parts += "status_bar_screenshot_hide=${ScreenshotStatusBar.installScreenshot(loader, settings)}"
+                parts += "status_bar_screenshot_hide=${ScreenshotStatusBar.installScreenshot(loader)}"
             }
             parts.joinToString(",").ifEmpty { "no feature enabled" }
         }
@@ -111,7 +110,10 @@ internal object HookDispatcher {
         }
         HostPlatform.SYSTEMUI -> { loader, settings -> installSystemUi(loader, settings) }
         HostPlatform.TSM_CLIENT -> { loader, settings -> installNfcCardFace(loader, settings) }
-        HostPlatform.SETTINGS,
+        HostPlatform.SETTINGS -> { loader, settings ->
+            (ControlCenterHooks.installSettings(loader, settings) +
+                PasskeyFix.installPackage(packageName, loader, settings)).joinToString()
+        }
         HostPlatform.SECURITY_CENTER,
         HostPlatform.XIAOMI_SCANNER,
         -> { loader, settings -> PasskeyFix.installPackage(packageName, loader, settings) }
@@ -253,9 +255,6 @@ internal object HookDispatcher {
         }
         if (settings.isOn("status_bar_double_tap")) {
             parts += "status_bar_double_tap=${StatusBarGestures.install(loader, settings)}"
-        }
-        if (settings.isOn("status_bar_screenshot_hide")) {
-            parts += "status_bar_screenshot_hide=${ScreenshotStatusBar.installSystemUi(loader, settings)}"
         }
         return if (parts.isEmpty()) "no feature enabled" else parts.joinToString(",")
     }

@@ -16,8 +16,10 @@
 package io.github.YGHFv.HyperExtend.hook.feature.statusbar
 
 import android.graphics.Typeface
+import android.os.Build
 import android.util.TypedValue
 import android.view.ViewGroup
+import android.view.View
 import android.widget.TextView
 import io.github.YGHFv.HyperExtend.core.ModuleLog
 import io.github.YGHFv.HyperExtend.hook.HookRuntime
@@ -65,7 +67,7 @@ internal object StatusBarBatteryStyle {
     /** 电量百分比被「状态栏图标」那一页整体隐藏了 —— 位置交换与字号就都没有意义了。 */
     private const val OPT_BATTERY_PERCENT_HIDDEN = "status_bar_icons.battery_percent"
 
-    private val REFRESH_METHODS = arrayOf("onBatteryStyleChanged", "updateAll", "updateChargeAndText")
+    private val REFRESH_METHODS = arrayOf("onBatteryStyleChanged", "updateAll", "updateChargeAndText", "onAttachedToWindow")
 
     fun install(loader: ClassLoader, settings: HookSettings): Int {
         val wantsChangeLocation = settings.isOn(OPT_CHANGE_LOCATION)
@@ -134,7 +136,7 @@ internal object StatusBarBatteryStyle {
         val percent = Reflect.readField(target, "mBatteryPercentView") as? TextView ?: return
         val mark = Reflect.readField(target, "mBatteryPercentMarkView") as? TextView
 
-        if (style.changeLocation) changeLocation(percent, mark)
+        if (style.changeLocation) changeLocation(target)
         if (!style.custom) return
 
         val fontSize = style.fontSize * 0.5f
@@ -173,19 +175,26 @@ internal object StatusBarBatteryStyle {
         }
     }
 
-    /**
-     * 把「数字 + 百分号」整体挪到所在容器的第一位 —— 也就是与电池图标换了个位置。
-     *
-     * 判据是「第一位是不是已经是它」：这三条刷新路径在一次充电里会被走到很多次，
-     * 每次都无条件重排会让视图反复从布局里摘掉再加回去（动画与焦点都会受影响）。
-     */
-    private fun changeLocation(percent: TextView, mark: TextView?) {
-        val parent = percent.parent as? ViewGroup ?: return
-        if (parent.getChildAt(0) === percent) return
-        parent.removeView(percent)
-        if (mark != null) parent.removeView(mark)
-        parent.addView(percent, 0)
-        if (mark != null) parent.addView(mark, 1)
+    /** OS4 has sibling icon/percentage groups, with a charging indicator between them. */
+    private fun changeLocation(target: Any) {
+        val icon = Reflect.readField(target, "mBatteryDigitalView") as? View ?: return
+        val percent = Reflect.readField(target, "mBatteryPercentContainer") as? View ?: return
+        val parent = icon.parent as? ViewGroup ?: return
+        if (percent.parent !== parent) return
+        val iconIndex = parent.indexOfChild(icon)
+        val percentIndex = parent.indexOfChild(percent)
+        if (!BatteryOrderPolicy.shouldSwap(iconIndex, percentIndex)) return
+        val iconParams = icon.layoutParams
+        val percentParams = percent.layoutParams
+        if (Build.VERSION.SDK_INT >= 29) parent.suppressLayout(true)
+        try {
+            parent.removeViewAt(percentIndex)
+            parent.removeViewAt(iconIndex)
+            parent.addView(percent, iconIndex, percentParams)
+            parent.addView(icon, percentIndex, iconParams)
+        } finally {
+            if (Build.VERSION.SDK_INT >= 29) parent.suppressLayout(false)
+        }
     }
 
     /** 参考项目里「小于 7.5dp 就不动」那条门限：再小的字没人看得见，只是把布局弄乱。 */

@@ -737,12 +737,11 @@ val STATUS_BAR_FEATURES: List<HyperFeature> = listOf(
         id = "status_bar_screenshot_hide",
         title = "截屏时隐藏状态栏",
         summary = "截图不显示时间、电量和通知图标",
-        // 两个宿主：截屏应用负责在拍照前后发广播，系统界面负责把状态栏藏起来/放回去。
-        // 入口按第一个写着的（系统界面）显示 —— 用户是在「系统界面」里找到这个开关的。
+        // Keep the entry on the SystemUI page; capture itself only needs the screenshot host.
         scopes = listOf("systemui", "screenshot"),
         origin = "西米露 / HyperCeiler · HideStatusBarBeforeScreenshot",
         license = "AGPL-3.0",
         defaultEnabled = false,
-        requirement = "需同时启用系统界面与截屏作用域。",
+        requirement = "需启用截屏作用域。OS4 原生取图时排除状态栏图层，不改变屏幕上状态栏的可见性；背屏和不支持图层排除的旧宿主保持原样。待真机验收。",
     ),
 ).map { it.copy(group = ScopeFeatureGroup.STATUS_BAR) }

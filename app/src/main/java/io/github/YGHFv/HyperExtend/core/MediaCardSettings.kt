@@ -17,6 +17,13 @@ object MediaCardSettings {
     const val TITLE_SIZE = "$TEXT_SIZE.title"
     const val ARTIST_SIZE = "$TEXT_SIZE.artist"
     const val TIME_SIZE = "$TEXT_SIZE.time"
+    const val BUTTON_SIZE = "$LAYOUT.button_size"
+    const val CUSTOM_BUTTON_SIZE = "$LAYOUT.custom_button_size"
+
+    val buttonSize = HyperSlider(BUTTON_SIZE, "主要操作图标大小", 50, 200, 140, unit = " px",
+        summary = "140 为系统默认；只缩放图标，不缩小触摸区域")
+    val customButtonSize = HyperSlider(CUSTOM_BUTTON_SIZE, "自定义操作图标大小", 50, 200, 140, unit = " px",
+        summary = "140 为跟随主要操作；保留原生动画与点击行为")
 
     val titleMargin = HyperSlider(TITLE_MARGIN, "标题顶部间距", 0, 480, 210, divisor = 10, unit = " dp",
         summary = "21.0 dp 为不覆盖系统值")

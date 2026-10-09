@@ -8,12 +8,30 @@ package io.github.YGHFv.HyperExtend.hook.feature.systemui
 import android.content.Context
 import android.content.Intent
 import android.os.UserHandle
+import android.os.Build
 import android.provider.Settings
+import android.service.notification.StatusBarNotification
 import io.github.YGHFv.HyperExtend.hook.HookRuntime
 import io.github.YGHFv.HyperExtend.hook.HookSettings
 import io.github.YGHFv.HyperExtend.hook.Reflect
 
 internal object ControlCenterHooks {
+    private val menuNotification = ThreadLocal<StatusBarNotification?>()
+
+    fun installSettings(loader: ClassLoader, settings: HookSettings): List<String> = buildList {
+        installSystemUiFeature(settings, "control_center_unlock_old") {
+            val type = Reflect.loadClass(loader, "com.android.settings.utils.StatusBarUtils")
+                ?: return@installSystemUiFeature 0
+            val method = type.getDeclaredMethod("isForceUseControlPanel", Context::class.java)
+            if (!HookRuntime.hookReturning(method, "control_center_unlock_old/settingsSelector", false)) return@installSystemUiFeature 0
+            Reflect.loadClass(loader, "com.android.settings.NotificationControlCenterSettings")?.let { screen ->
+                for (name in listOf("setupControlCenter", "onCreate", "updateControlCenterExpandCard")) {
+                    Reflect.findMethods(screen, name).forEach { HookRuntime.deoptimize(it, "control_center_unlock_old/selectorCaller") }
+                }
+            }
+            1
+        }
+    }
     fun install(loader: ClassLoader, settings: HookSettings): List<String> = buildList {
         installSystemUiFeature(settings, "control_center_auto_collapse") { autoCollapse(loader) }
         installSystemUiFeature(settings, "control_center_unlock_old") { unlockOld(loader) }
@@ -64,7 +82,25 @@ internal object ControlCenterHooks {
         val method = NotificationHooks.resolve(loader, SystemUiTargets.notificationSettings) ?: return 0
         val launch = Context::class.java.getDeclaredMethod("startActivityAsUser", Intent::class.java, UserHandle::class.java)
         val userForUid = UserHandle::class.java.getDeclaredMethod("getUserHandleForUid", Int::class.javaPrimitiveType)
-        return if (HookRuntime.hook(method, "notification_channel_settings/startAppNotificationSettings") { chain ->
+        launch.isAccessible = true
+        userForUid.isAccessible = true
+        val clickType = Reflect.loadClass(loader,
+            "com.android.systemui.statusbar.notification.row.MiuiNotificationMenuRow\$\$ExternalSyntheticLambda5")
+        val click = clickType?.getDeclaredMethod("onClick", android.view.View::class.java)
+        val rowField = clickType?.let { Reflect.findField(it, "f\$0") }
+        val notification = rowField?.type?.let { Reflect.findField(it, "mSbn") }
+        var count = 0
+        if (click != null && notification != null && HookRuntime.hook(click, "notification_channel_settings/menuContext") { chain ->
+                val previous = menuNotification.get()
+                try {
+                    val row = rowField.get(chain.thisObject)
+                    menuNotification.set(notification.get(row) as? StatusBarNotification)
+                    chain.proceed()
+                } finally {
+                    if (previous == null) menuNotification.remove() else menuNotification.set(previous)
+                }
+            }) count++
+        if (HookRuntime.hook(method, "notification_channel_settings/startAppNotificationSettings") { chain ->
                 val context = chain.args[0] as? Context
                 val pkg = chain.args[1] as? String
                 val uid = chain.args[3] as? Int
@@ -77,6 +113,11 @@ internal object ControlCenterHooks {
                             putExtra(Settings.EXTRA_APP_PACKAGE, pkg)
                             putExtra(Settings.EXTRA_CHANNEL_ID, channel)
                             putExtra("app_uid", uid)
+                            val sbn = menuNotification.get()
+                            val shortcut = if (Build.VERSION.SDK_INT >= 30) NotificationChannelPolicy.conversation(
+                                pkg, uid, channel, sbn?.packageName, sbn?.uid,
+                                sbn?.notification?.channelId, sbn?.notification?.shortcutId) else null
+                            if (Build.VERSION.SDK_INT >= 30 && shortcut != null) putExtra(Settings.EXTRA_CONVERSATION_ID, shortcut)
                         }
                         launch.invoke(context, intent, userForUid.invoke(null, uid))
                         true
@@ -85,6 +126,7 @@ internal object ControlCenterHooks {
                 // Failure/empty channel falls back to the original app settings. The menu
                 // still performs its own modal dismissal and panel collapse afterwards.
                 if (opened) null else chain.proceed()
-            }) 1 else 0
+            }) count++
+        return count
     }
 }

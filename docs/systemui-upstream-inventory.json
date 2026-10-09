@@ -1,10 +1,10 @@
 {
   "reference": "https://github.com/ReChronoRain/HyperCeiler",
   "revision": "5e4686069dd7ab1f3697e256d5fc7d68fb73e317",
-  "scope": "All system_ui*.xml keys plus the old-control-center SystemUI hook configured in system_settings.xml; includes navigation/dependency rows, not all are hooks. External settings-app half is not claimed migrated.",
+  "scope": "All system_ui*.xml keys plus the old-control-center SystemUI hook configured in system_settings.xml; includes navigation/dependency rows, not all are hooks. Includes the Settings-app old-style selector gate.",
   "verification": "Static host-code checks and local tests only. No device acceptance yet.",
   "completenessAudit": "docs/migration-completeness-audit.md",
-  "statusNote": "implemented_static_verified applies only to the named local scope, not full upstream parity. defect_confirmed_static means an exposed option has a source/host-contract defect; see its auditFindings for triggering conditions. Unreviewed rows remain needs_audit_existing_partial or pending.",
+  "statusNote": "implemented_static_verified applies only to the named local scope, not full upstream parity. repaired_static_pending_device means the recorded defect has a source repair and regression coverage but no live acceptance; see repairedFindings and docs/migration-repair-0.1.3.md. Unreviewed rows remain needs_audit_existing_partial or pending.",
   "items": [
     {
       "page": "system_ui_control_center",
@@ -91,12 +91,12 @@
       "key": "prefs_key_system_ui_control_center_redirect_notice",
       "title": "重定向通知设置",
       "kind": "SwitchPreference",
-      "status": "partially_implemented_static_verified",
+      "status": "repaired_static_pending_device",
       "target": "notification_channel_settings",
-      "auditFindings": [
+      "repairedFindings": [
         "P04"
       ],
-      "boundary": "Package/channel/UID redirect and fallback are present; upstream conversation shortcutId is not forwarded."
+      "boundary": "Menu-scoped shortcutId is forwarded only for matching package, UID and channel; Mi Push and app-settings fallback retained. Device acceptance pending."
     },
     {
       "page": "system_ui_control_center",
@@ -341,7 +341,7 @@
       "kind": "SwitchPreference",
       "status": "partially_implemented_static_verified",
       "target": "media_card_layout",
-      "boundary": "Notification-center normal layout only; flip tiny screen and dynamic island remain unchanged. Button bitmap sizes, background and progress styles are pending.",
+      "boundary": "Notification-center normal layout only; flip tiny screen and dynamic island remain unchanged. Native drawable scaling covers common and semantic bindings; animated drawables and touch targets are retained. Background and progress styles are pending.",
       "auditFindings": [
         "P01"
       ]
@@ -353,7 +353,7 @@
       "kind": "SwitchPreference",
       "status": "implemented_static_verified",
       "target": "media_card_layout.left_aligned",
-      "boundary": "Notification-center normal layout only; flip tiny screen and dynamic island remain unchanged. Button bitmap sizes, background and progress styles are pending."
+      "boundary": "Notification-center normal layout only; flip tiny screen and dynamic island remain unchanged. Native drawable scaling covers common and semantic bindings; animated drawables and touch targets are retained. Background and progress styles are pending."
     },
     {
       "page": "system_ui_control_center_media_cards",
@@ -362,7 +362,7 @@
       "kind": "SwitchPreference",
       "status": "implemented_static_verified",
       "target": "media_card_layout.hide_seamless",
-      "boundary": "Notification-center normal layout only; flip tiny screen and dynamic island remain unchanged. Button bitmap sizes, background and progress styles are pending."
+      "boundary": "Notification-center normal layout only; flip tiny screen and dynamic island remain unchanged. Native drawable scaling covers common and semantic bindings; animated drawables and touch targets are retained. Background and progress styles are pending."
     },
     {
       "page": "system_ui_control_center_media_cards",
@@ -371,7 +371,7 @@
       "kind": "fan.preference.DropDownPreference",
       "status": "implemented_static_verified",
       "target": "media_card_layout.album",
-      "boundary": "Notification-center normal layout only; flip tiny screen and dynamic island remain unchanged. Button bitmap sizes, background and progress styles are pending."
+      "boundary": "Notification-center normal layout only; flip tiny screen and dynamic island remain unchanged. Native drawable scaling covers common and semantic bindings; animated drawables and touch targets are retained. Background and progress styles are pending."
     },
     {
       "page": "system_ui_control_center_media_cards",
@@ -380,7 +380,7 @@
       "kind": "fan.preference.DropDownPreference",
       "status": "implemented_static_verified",
       "target": "media_card_layout.order",
-      "boundary": "Notification-center normal layout only; flip tiny screen and dynamic island remain unchanged. Button bitmap sizes, background and progress styles are pending."
+      "boundary": "Notification-center normal layout only; flip tiny screen and dynamic island remain unchanged. Native drawable scaling covers common and semantic bindings; animated drawables and touch targets are retained. Background and progress styles are pending."
     },
     {
       "page": "system_ui_control_center_media_cards",
@@ -389,7 +389,7 @@
       "kind": "SeekBarPreferenceCompat",
       "status": "implemented_static_verified",
       "target": "media_card_layout.title_margin",
-      "boundary": "Notification-center normal layout only; flip tiny screen and dynamic island remain unchanged. Button bitmap sizes, background and progress styles are pending."
+      "boundary": "Notification-center normal layout only; flip tiny screen and dynamic island remain unchanged. Native drawable scaling covers common and semantic bindings; animated drawables and touch targets are retained. Background and progress styles are pending."
     },
     {
       "page": "system_ui_control_center_media_cards",
@@ -398,23 +398,25 @@
       "kind": "SeekBarPreferenceCompat",
       "status": "implemented_static_verified",
       "target": "media_card_layout.artist_margin",
-      "boundary": "Notification-center normal layout only; flip tiny screen and dynamic island remain unchanged. Button bitmap sizes, background and progress styles are pending."
+      "boundary": "Notification-center normal layout only; flip tiny screen and dynamic island remain unchanged. Native drawable scaling covers common and semantic bindings; animated drawables and touch targets are retained. Background and progress styles are pending."
     },
     {
       "page": "system_ui_control_center_media_cards",
       "key": "prefs_key_system_ui_control_center_media_control_media_button",
       "title": "固有动作按钮大小",
       "kind": "SeekBarPreferenceCompat",
-      "status": "pending",
-      "target": null
+      "status": "implemented_static_verified",
+      "target": "media_card_layout.button_size",
+      "boundary": "Notification-center normal layout only; flip tiny screen and dynamic island remain unchanged. Native drawable scaling covers common and semantic bindings; animated drawables and touch targets are retained. Background and progress styles are pending."
     },
     {
       "page": "system_ui_control_center_media_cards",
       "key": "prefs_key_system_ui_control_center_media_control_media_button_custom",
       "title": "自定义动作按钮大小",
       "kind": "SeekBarPreferenceCompat",
-      "status": "pending",
-      "target": null
+      "status": "implemented_static_verified",
+      "target": "media_card_layout.custom_button_size",
+      "boundary": "Notification-center normal layout only; flip tiny screen and dynamic island remain unchanged. Native drawable scaling covers common and semantic bindings; animated drawables and touch targets are retained. Background and progress styles are pending."
     },
     {
       "page": "system_ui_control_center_media_cards",
@@ -423,7 +425,7 @@
       "kind": "SwitchPreference",
       "status": "implemented_static_verified",
       "target": "media_card_text_size",
-      "boundary": "Notification-center normal layout only; flip tiny screen and dynamic island remain unchanged. Button bitmap sizes, background and progress styles are pending.",
+      "boundary": "Notification-center normal layout only; flip tiny screen and dynamic island remain unchanged. Native drawable scaling covers common and semantic bindings; animated drawables and touch targets are retained. Background and progress styles are pending.",
       "referenceNote": "Mapped from the upstream XML text-size switch. MediaViewSize.kt reads a different key, system_ui_control_center_media_control_text_size; this is an upstream XML/hook discrepancy, not evidence that the local switch is disconnected."
     },
     {
@@ -433,7 +435,7 @@
       "kind": "SeekBarPreferenceCompat",
       "status": "implemented_static_verified",
       "target": "media_card_text_size.title",
-      "boundary": "Notification-center normal layout only; flip tiny screen and dynamic island remain unchanged. Button bitmap sizes, background and progress styles are pending."
+      "boundary": "Notification-center normal layout only; flip tiny screen and dynamic island remain unchanged. Native drawable scaling covers common and semantic bindings; animated drawables and touch targets are retained. Background and progress styles are pending."
     },
     {
       "page": "system_ui_control_center_media_cards",
@@ -442,7 +444,7 @@
       "kind": "SeekBarPreferenceCompat",
       "status": "implemented_static_verified",
       "target": "media_card_text_size.artist",
-      "boundary": "Notification-center normal layout only; flip tiny screen and dynamic island remain unchanged. Button bitmap sizes, background and progress styles are pending."
+      "boundary": "Notification-center normal layout only; flip tiny screen and dynamic island remain unchanged. Native drawable scaling covers common and semantic bindings; animated drawables and touch targets are retained. Background and progress styles are pending."
     },
     {
       "page": "system_ui_control_center_media_cards",
@@ -451,7 +453,7 @@
       "kind": "SeekBarPreferenceCompat",
       "status": "implemented_static_verified",
       "target": "media_card_text_size.time",
-      "boundary": "Notification-center normal layout only; flip tiny screen and dynamic island remain unchanged. Button bitmap sizes, background and progress styles are pending."
+      "boundary": "Notification-center normal layout only; flip tiny screen and dynamic island remain unchanged. Native drawable scaling covers common and semantic bindings; animated drawables and touch targets are retained. Background and progress styles are pending."
     },
     {
       "page": "system_ui_control_center_media_cards",
@@ -1362,9 +1364,9 @@
       "key": "prefs_key_system_ui_status_bar_battery_style_change_location",
       "title": "交换电池图标与百分比位置",
       "kind": "SwitchPreference",
-      "status": "defect_confirmed_static",
+      "status": "repaired_static_pending_device",
       "target": "status_bar_battery_style.change_location",
-      "auditFindings": [
+      "repairedFindings": [
         "F04"
       ]
     },
@@ -2381,9 +2383,9 @@
       "key": "prefs_key_system_ui_statusbar_network_speed_update_spacings",
       "title": "网速更新间隔",
       "kind": "SeekBarPreferenceCompat",
-      "status": "defect_confirmed_static",
+      "status": "repaired_static_pending_device",
       "target": "status_bar_network_speed.update_spacing",
-      "auditFindings": [
+      "repairedFindings": [
         "F03"
       ]
     },
@@ -2392,9 +2394,9 @@
       "key": "prefs_key_system_ui_statusbar_network_speed_style",
       "title": "网速指示器样式",
       "kind": "fan.preference.DropDownPreference",
-      "status": "defect_confirmed_static",
+      "status": "repaired_static_pending_device",
       "target": "status_bar_network_speed.style",
-      "auditFindings": [
+      "repairedFindings": [
         "F01"
       ]
     },
@@ -2499,9 +2501,9 @@
       "key": "prefs_key_system_ui_statusbar_clock_editor_p",
       "title": "状态栏日期时钟格式",
       "kind": "EditTextPreference",
-      "status": "defect_confirmed_static",
+      "status": "repaired_static_pending_device",
       "target": "status_bar_clock.editor_p",
-      "auditFindings": [
+      "repairedFindings": [
         "F06"
       ]
     },
@@ -2510,9 +2512,9 @@
       "key": "prefs_key_system_ui_statusbar_clock_editor_s",
       "title": "状态栏时钟格式",
       "kind": "EditTextPreference",
-      "status": "defect_confirmed_static",
+      "status": "repaired_static_pending_device",
       "target": "status_bar_clock.editor_s",
-      "auditFindings": [
+      "repairedFindings": [
         "F06"
       ]
     },
@@ -2521,9 +2523,9 @@
       "key": "prefs_key_system_ui_statusbar_clock_editor_b",
       "title": "通知中心大时钟格式",
       "kind": "EditTextPreference",
-      "status": "defect_confirmed_static",
+      "status": "repaired_static_pending_device",
       "target": "status_bar_clock.editor_b",
-      "auditFindings": [
+      "repairedFindings": [
         "F06"
       ]
     },
@@ -2532,9 +2534,9 @@
       "key": "prefs_key_system_ui_statusbar_clock_editor_n",
       "title": "通知中心迷你时钟格式",
       "kind": "EditTextPreference",
-      "status": "defect_confirmed_static",
+      "status": "repaired_static_pending_device",
       "target": "status_bar_clock.editor_n",
-      "auditFindings": [
+      "repairedFindings": [
         "F06"
       ]
     },
@@ -2583,9 +2585,9 @@
       "key": "prefs_key_system_ui_statusbar_clock_left_margin_1",
       "title": "左侧间距",
       "kind": "SeekBarPreferenceCompat",
-      "status": "defect_confirmed_static",
+      "status": "repaired_static_pending_device",
       "target": "status_bar_clock.left_margin",
-      "auditFindings": [
+      "repairedFindings": [
         "F05"
       ]
     },
@@ -2594,9 +2596,9 @@
       "key": "prefs_key_system_ui_statusbar_clock_right_margin_1",
       "title": "右侧间距",
       "kind": "SeekBarPreferenceCompat",
-      "status": "defect_confirmed_static",
+      "status": "repaired_static_pending_device",
       "target": "status_bar_clock.right_margin",
-      "auditFindings": [
+      "repairedFindings": [
         "F05"
       ]
     },
@@ -2605,9 +2607,9 @@
       "key": "prefs_key_system_ui_statusbar_clock_vertical_offset_1",
       "title": "上下偏移量",
       "kind": "SeekBarPreferenceCompat",
-      "status": "defect_confirmed_static",
+      "status": "repaired_static_pending_device",
       "target": "status_bar_clock.vertical_offset",
-      "auditFindings": [
+      "repairedFindings": [
         "F05"
       ]
     },
@@ -2744,12 +2746,12 @@
       "key": "prefs_key_system_control_center_unlock_old",
       "title": "解锁控制中心样式",
       "kind": "SwitchPreference",
-      "status": "partially_implemented_static_verified",
+      "status": "repaired_static_pending_device",
       "target": "control_center_unlock_old",
-      "auditFindings": [
+      "repairedFindings": [
         "P02"
       ],
-      "boundary": "SystemUI force flag only. The upstream Settings-app selector unlock is not migrated; enabling this alone may leave no style selector."
+      "boundary": "SystemUI force flag and Settings selector gate are both hooked. User chooses the style; Lite/policy restrictions are retained. Device acceptance pending."
     }
   ]
 }

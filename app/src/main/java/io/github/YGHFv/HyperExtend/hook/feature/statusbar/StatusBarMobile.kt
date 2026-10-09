@@ -83,7 +83,7 @@ internal object StatusBarMobile {
             return 0
         }
 
-        val ok = HookRuntime.hookAfter(bind, "$FEATURE/MiuiMobileIconBinder#bind") { chain, original ->
+        val ok = HookRuntime.hook(bind, "$FEATURE/MiuiMobileIconBinder#bind") { chain ->
             // 第三个参数就是这一条 SIM 的视图模型（见 MiuiMobileIconBinder#bind 的签名）。
             val viewModel = chain.args.getOrNull(2)
             if (viewModel != null) {
@@ -92,7 +92,8 @@ internal object StatusBarMobile {
                     for (field in ROAMING_FIELDS) replaceOnce(viewModel, field, hidden)
                 }
             }
-            original
+            // Attached views may collect synchronously inside bind; replace before that happens.
+            chain.proceed()
         }
         return if (ok) 1 else 0
     }

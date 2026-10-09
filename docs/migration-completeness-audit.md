@@ -1,6 +1,15 @@
 # Migration completeness audit - 2026-10-09
 
-## Result and deployment state
+## Repair follow-up (source 0.1.3, not deployed)
+
+The F01-F06 defects below describe `beb0fda` / installed 0.1.2. They are preserved
+as historical evidence, **not the status of current source**. Repairs, regression
+coverage, explicit implementation differences and remaining device checks are in
+[migration-repair-0.1.3.md](migration-repair-0.1.3.md). The replacement APK has not
+been installed; no host restart or feature toggle was performed. The old APK's
+risk warning still applies until a controlled update/load/acceptance.
+
+## Result and deployment state (historical)
 
 **The volume entry was not an isolated incomplete migration. Do not treat the
 current migration list, a successful build, or a nonzero hook count as acceptance.**

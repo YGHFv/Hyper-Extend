@@ -12,7 +12,8 @@ class SystemUiFeaturesTest {
         assertEquals(28, SYSTEM_UI_FEATURES.size)
         SYSTEM_UI_FEATURES.forEach { feature ->
             assertFalse(feature.defaultEnabled)
-            assertEquals(listOf("systemui"), feature.scopes)
+            assertEquals(if (feature.id == "control_center_unlock_old") listOf("systemui", "settings")
+                else listOf("systemui"), feature.scopes)
             assertEquals(feature.config.isNotEmpty() || feature.options.isNotEmpty(), feature.hasDetailPage)
             assertNotNull(feature.entryGroup)
             assertTrue(feature.requirement!!.contains("重启系统界面"))

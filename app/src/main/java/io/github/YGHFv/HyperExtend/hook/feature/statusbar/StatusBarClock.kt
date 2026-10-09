@@ -71,7 +71,7 @@ internal object StatusBarClock {
     private const val DEFAULT_VERTICAL_OFFSET = 12
 
     fun install(loader: ClassLoader, settings: HookSettings): Int {
-        val style = Style(
+        val style = ClockStyle(
             bold = settings.isOn(OPT_BOLD),
             size = settings.number(KEY_SIZE, DEFAULT_SIZE, 0, 200),
             left = settings.number(KEY_LEFT, 0, 0, 500),
@@ -85,7 +85,7 @@ internal object StatusBarClock {
             put("pad_clock", settings.string(KEY_FORMAT_P))
         }.filterValues { it.isNotBlank() }
 
-        if (!style.bold && style.size == DEFAULT_SIZE && formats.isEmpty()) return 0
+        if (!style.changed && formats.isEmpty()) return 0
 
         val clock = Reflect.loadClass(loader, CLOCK_CLASS) ?: run {
             ModuleLog.warn("$FEATURE: $CLOCK_CLASS not found")
@@ -96,30 +96,42 @@ internal object StatusBarClock {
             return 0
         }
 
+        val ticker = ClockSecondsTicker { apply(it, style, formats) }
+        var count = 0
         val ok = HookRuntime.hookAfter(updateTime, "$FEATURE/MiuiClock#updateTime") { chain, original ->
             apply(chain.thisObject, style, formats)
             original
         }
-        return if (ok) 1 else 0
+        if (ok) count++
+        if (formats.values.any(ClockTickPolicy::needsSeconds)) {
+            if (HookRuntime.hookAfter(Reflect.findMethod(clock, "onAttachedToWindow"), "$FEATURE/attach") { chain, original ->
+                    (chain.thisObject as? TextView)?.let { view ->
+                        val name = view.resources.getResourceEntryName(view.id)
+                        if (formats[name]?.let(ClockTickPolicy::needsSeconds) == true) ticker.attach(view)
+                    }
+                    original
+                }) count++
+            if (HookRuntime.hookAfter(Reflect.findMethod(clock, "onDetachedFromWindow"), "$FEATURE/detach") { chain, original ->
+                    (chain.thisObject as? TextView)?.let(ticker::detach)
+                    original
+                }) count++
+        }
+        return count
     }
 
-    private class Style(
-        val bold: Boolean,
-        val size: Int,
-        val left: Int,
-        val right: Int,
-        val vertical: Int,
-    )
-
-    private fun apply(target: Any?, style: Style, formats: Map<String, String>) {
+    private fun apply(target: Any?, style: ClockStyle, formats: Map<String, String>) {
         val clock = target as? TextView ?: return
+        if (Looper.myLooper() != Looper.getMainLooper()) {
+            clock.post { apply(clock, style, formats) }
+            return
+        }
         val name = Reflect.attempt { clock.resources.getResourceEntryName(clock.id) } ?: return
 
-        if (name == STATUSBAR_CLOCK_NAME) applyStatusBarStyle(clock, style)
+        if (name == STATUSBAR_CLOCK_NAME && style.changed) applyStatusBarStyle(clock, style)
         formats[name]?.let { applyFormat(clock, it) }
     }
 
-    private fun applyStatusBarStyle(clock: TextView, style: Style) {
+    private fun applyStatusBarStyle(clock: TextView, style: ClockStyle) {
         if (style.bold) clock.typeface = Typeface.DEFAULT_BOLD
         if (style.size != DEFAULT_SIZE) {
             clock.setTextSize(TypedValue.COMPLEX_UNIT_DIP, style.size.toFloat())
@@ -147,6 +159,7 @@ internal object StatusBarClock {
      */
     private fun applyFormat(clock: TextView, pattern: String) {
         val controller = Reflect.readField(clock, "mMiuiStatusBarClockController") ?: return
+        if (Reflect.readField(controller, "mDemoMode") == true) return
         val calendar = Reflect.readField(controller, "mCalendar") ?: return
         val format = Reflect.firstMethod(calendar.javaClass, "format") { it.parameterCount == 3 } ?: return
         Reflect.callWith(calendar, "setTimeInMillis", System.currentTimeMillis())

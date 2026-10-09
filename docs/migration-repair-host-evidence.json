@@ -1,0 +1,151 @@
+{
+  "host": {
+    "packageName": "com.android.systemui",
+    "versionName": "17.03.260226.r",
+    "versionCode": 202602260
+  },
+  "verification": "Read-only host contracts for 0.1.3 repairs; no live feature acceptance. Original audit IDs are preserved.",
+  "evidence": [
+    {
+      "finding": "F01",
+      "locator": "dex_method:Lcom/android/systemui/statusbar/policy/NetworkSpeedController;->updateText([Ljava/lang/String;)V",
+      "contains": [
+        "const/4 v3, 0x1",
+        "aget-object v4, p1, v3",
+        "->networkSpeedUnit:Ljava/lang/String;"
+      ]
+    },
+    {
+      "finding": "F03",
+      "locator": "dex_class:Lcom/android/systemui/statusbar/policy/NetworkSpeedController$5;",
+      "contains": [
+        "const v4, 0x30d41",
+        "const v0, 0x186a4",
+        "->mBgHandler:Lcom/android/systemui/statusbar/policy/NetworkSpeedController$5;",
+        "const-wide/16 v5, 0xfa0",
+        "instance-of v0, p1, Ljava/lang/Long;",
+        "->updateText([Ljava/lang/String;)V"
+      ]
+    },
+    {
+      "finding": "F04",
+      "locator": "axml:res/layout/battery_digital_view.xml",
+      "contains": [
+        "<FrameLayout android:id=\"@7F0B0180\"",
+        "android:id=\"@7F0B0185\"",
+        "android:id=\"@7F0B0187\"",
+        "android:id=\"@7F0B0186\""
+      ]
+    },
+    {
+      "finding": "F06",
+      "locator": "dex_class:Lcom/android/systemui/statusbar/policy/MiuiStatusBarClockController;",
+      "contains": [
+        "->mCalendar:Lmiuix/pickerwidget/date/Calendar;",
+        "->registerCallback(Lcom/android/keyguard/KeyguardUpdateMonitorCallback;)V"
+      ]
+    },
+    {
+      "finding": "F06",
+      "locator": "dex_class:Lcom/android/systemui/statusbar/policy/MiuiStatusBarClockController$1;",
+      "contains": [
+        ".method public final onTimeChanged()V",
+        "->updateTime$1()V"
+      ]
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/views/MiuiClock;->onAttachedToWindow()V",
+      "contains": [
+        "->mClockListeners:Ljava/util/ArrayList;",
+        "->updateTime()V"
+      ]
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/views/MiuiClock;->onDetachedFromWindow()V",
+      "contains": [
+        "->remove(Ljava/lang/Object;)Z"
+      ]
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/views/MiuiBatteryMeterView;->onAttachedToWindow()V",
+      "contains": [
+        ".method public final onAttachedToWindow()V"
+      ]
+    },
+    {
+      "locator": "dex_class:Lcom/android/systemui/statusbar/notification/row/MiuiNotificationMenuRow$$ExternalSyntheticLambda5;",
+      "contains": [
+        "->mSbn:Lcom/android/systemui/statusbar/notification/ExpandedNotification;",
+        "->startAppNotificationSettings(Landroid/content/Context;Ljava/lang/String;Ljava/lang/String;ILjava/lang/String;)V",
+        "->animExitModal$default"
+      ]
+    },
+    {
+      "locator": "dex_class:Lcom/android/systemui/statusbar/notification/mediacontrol/MiuiMediaActionButtonUtils;",
+      "contains": [
+        ".method public final bindButtonsCommon(Landroid/widget/ImageButton;Lcom/android/systemui/media/controls/shared/model/MediaAction;Lcom/android/systemui/media/controls/ui/animation/AnimationBindHandler;)V",
+        "->setImageDrawable(Landroid/graphics/drawable/Drawable;)V",
+        "->play:Landroid/widget/ImageButton;",
+        "->prev:Landroid/widget/ImageButton;",
+        "->next:Landroid/widget/ImageButton;",
+        "->island:Z"
+      ]
+    },
+    {
+      "locator": "dex_class:Lcom/android/systemui/statusbar/notification/mediacontrol/MiuiMediaActionButtonUtils$$ExternalSyntheticLambda0;",
+      "contains": [
+        "->bindButtonsCommon(Landroid/widget/ImageButton;Lcom/android/systemui/media/controls/shared/model/MediaAction;Lcom/android/systemui/media/controls/ui/animation/AnimationBindHandler;)V",
+        "MiuiMediaActionButtonUtils$updateButtonDelay$1;"
+      ]
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/notification/mediacontrol/MiuiMediaViewControllerImpl;->bindButtonCommon(Landroid/widget/ImageButton;Lcom/android/systemui/media/controls/shared/model/MediaAction;)V",
+      "contains": [
+        "->setImageDrawable(Landroid/graphics/drawable/Drawable;)V",
+        "->setOnClickListener(Landroid/view/View$OnClickListener;)V"
+      ]
+    },
+    {
+      "locator": "dex_class:Lcom/android/systemui/statusbar/pipeline/mobile/ui/binder/MiuiMobileIconBinder;",
+      "contains": [
+        "->repeatWhenAttached$default"
+      ]
+    },
+    {
+      "locator": "dex_class:Lcom/android/systemui/statusbar/views/NetworkSpeedView;",
+      "contains": [
+        ".method public final updateResources$15()V",
+        "->mNetworkSpeedNumberText:Landroid/widget/TextView;",
+        "->mNetworkSpeedUnitText:Landroid/widget/TextView;"
+      ]
+    }
+  ],
+  "resourceFiles": [
+    {
+      "locator": "resource:0x7f0e0052",
+      "path": "res/layout/battery_digital_view.xml"
+    }
+  ],
+  "resourceNames": [
+    {
+      "name": "controls_media_button_prev",
+      "type": "string",
+      "locator": "resource:0x7f14043d"
+    },
+    {
+      "name": "controls_media_button_next",
+      "type": "string",
+      "locator": "resource:0x7f14043a"
+    },
+    {
+      "name": "controls_media_button_play",
+      "type": "string",
+      "locator": "resource:0x7f14043c"
+    },
+    {
+      "name": "controls_media_button_pause",
+      "type": "string",
+      "locator": "resource:0x7f14043b"
+    }
+  ]
+}
