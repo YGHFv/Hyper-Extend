@@ -304,7 +304,6 @@ private fun PersonalizationPage(ui: UiPrefs.UiState, onUi: (UiPrefs.UiState) -> 
     if (actualState != null && !actualState.hidden && actualState.style.key != ui.iconStyle) {
         HintText(
             "实际生效的配色是「${actualState.style.label}」，与这里的记录不一致 —— 重新选一次即可修正。",
-            color = MiuixTheme.colorScheme.error,
         )
     }
     HintText(

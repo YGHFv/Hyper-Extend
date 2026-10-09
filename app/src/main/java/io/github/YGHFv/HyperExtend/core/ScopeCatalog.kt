@@ -56,15 +56,52 @@ enum class RestartKind {
  *
  * 系统框架排在最前：它是整机所有应用的宿主，影响面最大，凡是「同时作用于系统框架和其他应用」
  * 的功能，入口也归到它下面（见 [entryScope]），所以它天然该是列表第一项。
+ * 系统界面第二，其后依次为系统管理、常用系统工具、互联服务和独立应用。
  *
  * 这个顺序**只影响排序**，不影响功能归属 —— 归属由各功能自己的 `scopes` 顺序决定。
  */
 val SCOPES: List<HyperScope> = listOf(
     HyperScope(
+        id = "system_server",
+        title = "系统框架",
+        summary = "整机所有应用的宿主进程，凭据会话等系统级服务都在这里",
+        process = "system",
+        restartKind = RestartKind.REBOOT,
+        iconPackage = "android",
+    ),
+    HyperScope(
+        id = "systemui",
+        title = "系统界面",
+        summary = "状态栏、通知面板、锁屏，以及屏幕底部的手势横条",
+        process = "com.android.systemui",
+        restartKind = RestartKind.KILL,
+    ),
+    HyperScope(
+        id = "settings",
+        title = "系统设置",
+        summary = "设置里的凭据提供方、自动填充等条目",
+        process = "com.android.settings",
+        restartKind = RestartKind.FORCE_STOP,
+    ),
+    HyperScope(
+        id = "securitycenter",
+        title = "安全中心",
+        summary = "权限、隐私与凭据相关配置的守门人",
+        process = "com.miui.securitycenter",
+        restartKind = RestartKind.FORCE_STOP,
+    ),
+    HyperScope(
         id = "screenshot",
         title = "截屏",
         summary = "截图保存与自动复制到剪贴板",
         process = "com.miui.screenshot",
+        restartKind = RestartKind.KILL,
+    ),
+    HyperScope(
+        id = "misound",
+        title = "音质音效",
+        summary = "系统分应用音量面板；入口设置归于系统界面",
+        process = "com.miui.misound",
         restartKind = RestartKind.KILL,
     ),
     HyperScope(
@@ -82,46 +119,10 @@ val SCOPES: List<HyperScope> = listOf(
         restartKind = RestartKind.KILL,
     ),
     HyperScope(
-        id = "system_server",
-        title = "系统框架",
-        summary = "整机所有应用的宿主进程，凭据会话等系统级服务都在这里",
-        process = "system",
-        restartKind = RestartKind.REBOOT,
-        iconPackage = "android",
-    ),
-    HyperScope(
-        id = "systemui",
-        title = "系统界面",
-        summary = "状态栏、通知面板、锁屏，以及屏幕底部的手势横条",
-        process = "com.android.systemui",
-        restartKind = RestartKind.KILL,
-    ),
-    HyperScope(
-        id = "misound",
-        title = "音质音效",
-        summary = "系统分应用音量面板；入口设置归于系统界面",
-        process = "com.miui.misound",
-        restartKind = RestartKind.KILL,
-    ),
-    HyperScope(
         id = "tsmclient",
         title = "小米智能卡",
         summary = "公交卡、门禁卡的刷卡界面与卡面",
         process = "com.miui.tsmclient",
-        restartKind = RestartKind.FORCE_STOP,
-    ),
-    HyperScope(
-        id = "settings",
-        title = "系统设置",
-        summary = "设置里的凭据提供方、自动填充等条目",
-        process = "com.android.settings",
-        restartKind = RestartKind.FORCE_STOP,
-    ),
-    HyperScope(
-        id = "securitycenter",
-        title = "安全中心",
-        summary = "权限、隐私与凭据相关配置的守门人",
-        process = "com.miui.securitycenter",
         restartKind = RestartKind.FORCE_STOP,
     ),
     HyperScope(
