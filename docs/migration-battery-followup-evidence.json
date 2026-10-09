@@ -1,0 +1,126 @@
+{
+    "recordedAt":  "2026-10-09T19:53:15.0371031+08:00",
+    "sourceBaseline":  "ff6e093",
+    "findings":  [
+                     "F07",
+                     "F08"
+                 ],
+    "verification":  "Local source and policy tests with cached host evidence only. No fresh MT query, device execution or acceptance in this pass.",
+    "cachedHost":  {
+                       "packageName":  "com.android.systemui",
+                       "versionName":  "17.03.260226.r",
+                       "versionCode":  202602260
+                   },
+    "snapshots":  [
+                      {
+                          "path":  ".workbuddy/tmp/mt-systemui/audit-battery.smali",
+                          "locator":  "dex_class:Lcom/android/systemui/statusbar/views/MiuiBatteryMeterView;",
+                          "rawSha256":  "484230e850c1bf309b1fb38d884398b41ebad57b5b77ebca8525d9dfa32c5205",
+                          "utf8LfSha256":  "c1c7f5b2c83a69f4e0f6125c9ac531a174bae2dc5436944970b1372d4f6e138b",
+                          "checkedFragments":  [
+                                                   ".field public final mHollowBatteryIconView:Lcom/android/systemui/statusbar/views/MiuiHollowBatteryMeterIconView;",
+                                                   ".method public final onBatteryStyleChanged(I)V",
+                                                   ".method public final updateAll()V",
+                                                   ".method public final updateChargeAndText()V",
+                                                   ".method public final onAttachedToWindow()V",
+                                                   "-\u003esetTextSize(IF)V"
+                                               ]
+                      },
+                      {
+                          "path":  ".workbuddy/tmp/mt-systemui/audit-battery-layout.xml",
+                          "locator":  "axml:res/layout/battery_digital_view.xml",
+                          "rawSha256":  "0f3966e9caae77761b2e560a6e4bb7da661f436d1dd0aff4573cdf0115b80d40",
+                          "utf8LfSha256":  "dcb436f95989a4e078cb42a5a3460c327c0f9ba381fd2019c154242436af6865",
+                          "checkedFragments":  [
+                                                   "\u003cFrameLayout android:id=\"@7F0B0180\"",
+                                                   "MiuiHollowBatteryMeterIconView",
+                                                   "android:id=\"@7F0B054C\"",
+                                                   "android:id=\"@7F0B0185\"",
+                                                   "android:id=\"@7F0B0187\"",
+                                                   "android:id=\"@7F0B0186\""
+                                               ]
+                      }
+                  ],
+    "previousLayoutVerification":  {
+                                       "localRecord":  ".workbuddy/tmp/mt-systemui/repair-evidence-refresh.json",
+                                       "sha256":  "dcb436f95989a4e078cb42a5a3460c327c0f9ba381fd2019c154242436af6865",
+                                       "normalizedLocalMatch":  true,
+                                       "note":  "Only layout normalized text is matched to this prior remote hash. The full battery class is hashed locally, not claimed remotely reverified."
+                                   },
+    "validation":  {
+                       "testDebugUnitTest":  {
+                                                 "tests":  199,
+                                                 "failures":  0,
+                                                 "errors":  0,
+                                                 "skipped":  0
+                                             },
+                       "newBatteryPolicyTests":  8,
+                       "assembleRelease":  "passed",
+                       "lintVitalRelease":  "passed",
+                       "apksignerVerify":  "passed (v2; one signer)",
+                       "fullLintDebug":  {
+                                             "status":  "failed",
+                                             "errors":  22,
+                                             "warnings":  173,
+                                             "hints":  2,
+                                             "errorFilesUnchangedThisPass":  [
+                                                                                 "app/src/main/java/io/github/YGHFv/HyperExtend/hook/feature/statusbar/MobileSignalVisibility.kt",
+                                                                                 "app/src/main/java/io/github/YGHFv/HyperExtend/hook/feature/systemui/NotificationHooks.kt",
+                                                                                 "app/src/main/java/io/github/YGHFv/HyperExtend/hook/feature/volume/AppVolumeEntryHooks.kt",
+                                                                                 "app/src/main/java/io/github/YGHFv/HyperExtend/hook/feature/volume/SystemUiAppVolumePanel.kt",
+                                                                                 "app/src/main/java/io/github/YGHFv/HyperExtend/hook/feature/WallpaperColorRepair.kt",
+                                                                                 "app/src/main/java/io/github/YGHFv/HyperExtend/hook/feature/WallpaperMonetFix.kt",
+                                                                                 "app/src/main/java/io/github/YGHFv/HyperExtend/ui/SettingsActivity.kt",
+                                                                                 "local.properties"
+                                                                             ],
+                                             "batteryFindings":  "No errors; three pre-existing style suggestions on unchanged swap code."
+                                         },
+                       "diffCheck":  "passed"
+                   },
+    "artifact":  {
+                     "versionName":  "0.1.3",
+                     "versionCode":  4,
+                     "path":  "app/build/outputs/apk/release/app-release.apk",
+                     "bytes":  2507466,
+                     "sha256":  "7d30225519767cd3438d519cc5c055814fb6052d93d340f51603fcef220b489e",
+                     "note":  "Installed in the subsequent user-requested deployment; see deploymentFollowup. Earlier source-phase exclusions are retained in deploymentThisPass."
+                 },
+    "deploymentThisPass":  {
+                               "installed":  false,
+                               "hostRestarted":  false,
+                               "hotReloaded":  false,
+                               "settingsChanged":  false,
+                               "scopesChanged":  false,
+                               "pushed":  false,
+                               "deviceAcceptance":  "pending"
+                           },
+    "deploymentFollowup":  {
+                               "installStartedAt":  "2026-10-09T19:55:51.8344432+08:00",
+                               "verifiedAt":  "2026-10-09T19:55:53.8945990+08:00",
+                               "installResult":  "Performing Streamed Install\nSuccess",
+                               "installedApkSha256":  "7d30225519767cd3438d519cc5c055814fb6052d93d340f51603fcef220b489e",
+                               "installedApkHashMatches":  true,
+                               "packageInfo":  [
+                                                   "versionCode=4 minSdk=26 targetSdk=35",
+                                                   "versionName=0.1.3",
+                                                   "lastUpdateTime=2026-10-09 19:55:51"
+                                               ],
+                               "hostPidsBefore":  {
+                                                      "com.android.systemui":  "15807",
+                                                      "com.miui.misound":  "1648",
+                                                      "com.miui.screenshot":  "10463",
+                                                      "system_server":  "3641"
+                                                  },
+                               "hostPidsImmediatelyAfter":  {
+                                                                "com.android.systemui":  "15807",
+                                                                "com.miui.misound":  "1648",
+                                                                "com.miui.screenshot":  "10463",
+                                                                "system_server":  "3641"
+                                                            },
+                               "hostRestartRequestedByAgent":  false,
+                               "hotReloaded":  false,
+                               "settingsChanged":  false,
+                               "scopesChanged":  false,
+                               "deviceAcceptance":  "pending"
+                           }
+}

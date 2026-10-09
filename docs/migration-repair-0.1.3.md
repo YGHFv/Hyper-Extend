@@ -1,5 +1,13 @@
 # Migration repair - 0.1.3
 
+## Subsequent battery repair
+
+The installed artifact and 153-test result recorded here precede the F07/F08
+battery combination repair. See [battery follow-up](migration-battery-followup.md)
+for the new source/test evidence and the later user-requested 19:55:51 installation
+with matching hash. The existing build/deployment manifest is not overwritten.
+No host restart or feature acceptance is included.
+
 ## Deployment and acceptance
 
 - Follow-up deployment on 2026-10-09: initial installation at 13:22 failed

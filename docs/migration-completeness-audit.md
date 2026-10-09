@@ -1,5 +1,16 @@
 # Migration completeness audit - 2026-10-09
 
+## Battery combination follow-up (installed; acceptance pending)
+
+Review of `ff6e093` confirmed two further P2 defects: F07 omitted the OS4 hollow
+battery view when hiding icons; F08 allowed custom font callbacks to restore
+hidden percent/mark text. Both are repaired locally with combination policy
+tests. See [battery follow-up](migration-battery-followup.md). This follow-up
+uses cached host evidence and adds no feature. A later user-requested installation
+succeeded at 19:55:51 with matching APK hash; no restart/reload or functional
+acceptance was performed. Earlier deployment records and F01-F06 findings below
+remain historical, not new tests.
+
 ## Repair follow-up (0.1.3 installed, acceptance pending)
 
 The F01-F06 defects below describe `beb0fda` / installed 0.1.2. They are preserved

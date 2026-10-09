@@ -12,6 +12,12 @@ AUDIT_REPAIRS = {
     "prefs_key_system_ui_statusbar_network_speed_style": ("status_bar_network_speed.style", ["F01"]),
     "prefs_key_system_ui_statusbar_network_speed_update_spacings": ("status_bar_network_speed.update_spacing", ["F03"]),
     "prefs_key_system_ui_status_bar_battery_style_change_location": ("status_bar_battery_style.change_location", ["F04"]),
+    "prefs_key_system_ui_status_bar_battery_icon": ("status_bar_icons.battery_icon", ["F07"]),
+    "prefs_key_system_ui_status_bar_battery_percent": ("status_bar_icons.battery_percent", ["F08"]),
+    "prefs_key_system_ui_status_bar_battery_percent_mark": ("status_bar_icons.battery_percent_mark", ["F08"]),
+    "prefs_key_system_ui_status_bar_battery_style_enable_custom": ("status_bar_battery_style.custom", ["F08"]),
+    "prefs_key_system_ui_status_bar_battery_style_font_size": ("status_bar_battery_style.font_size", ["F08"]),
+    "prefs_key_system_ui_status_bar_battery_style_font_mark_size": ("status_bar_battery_style.font_mark_size", ["F08"]),
     **{
         f"prefs_key_system_ui_statusbar_clock_{key}_1": (f"status_bar_clock.{key}", ["F05"])
         for key in ("left_margin", "right_margin", "vertical_offset")
@@ -123,6 +129,8 @@ def main():
             if key in AUDIT_REPAIRS:
                 target, findings = AUDIT_REPAIRS[key]
                 items[-1].update(status="repaired_static_pending_device", target=target, repairedFindings=findings)
+                if any(finding in {"F07", "F08"} for finding in findings):
+                    items[-1]["boundary"] = "Battery visibility/font composition repair; cached OS4 host evidence and local policy tests only. Hook ordering, rendering and lifecycle device acceptance pending; see docs/migration-battery-followup.md."
     revision = subprocess.check_output(["git", "-C", str(args.reference), "rev-parse", "HEAD"], text=True).strip()
     payload = {
         "reference": "https://github.com/ReChronoRain/HyperCeiler",
