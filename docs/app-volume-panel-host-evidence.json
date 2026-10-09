@@ -1,0 +1,227 @@
+{
+  "host": {
+    "packageName": "miui.systemui.plugin",
+    "versionName": "18.3.2.22.0",
+    "versionCode": 183022200
+  },
+  "evidence": [
+    {
+      "locator": "dex_method:Lcom/android/systemui/miui/volume/MiuiVolumeDialogRes;->getMarginTop(Landroid/content/Context;ZZII)I",
+      "contains": [
+        "->o3_miui_volume_background_margin_top_expanded:I",
+        "->getWideFoldMarginTop(Landroid/content/Context;Z)I",
+        "sub-int/2addr p3, p4"
+      ]
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/miui/volume/MiuiVolumeDialogRes;->getMarginRight(Landroid/content/Context;ZZ)I",
+      "contains": [
+        "->miui_volume_offset_end_expand:I"
+      ]
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/miui/volume/MiuiVolumeDialogRes;->getHeight(Landroid/content/Context;ZZ)I",
+      "contains": [
+        "->o3_miui_volume_background_height_expanded:I"
+      ]
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/miui/volume/MiuiVolumeDialogRes;->getBgRadius(Landroid/content/Context;)I",
+      "contains": [
+        "->o3_miui_volume_bg_radius:I"
+      ]
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/miui/volume/MiuiVolumeDialogRes;->getBgWithContentPadding(Landroid/content/Context;Z)I",
+      "contains": [
+        "->miui_volume_background_padding:I"
+      ]
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/miui/volume/VolumeColumnRes;->getWidth(Landroid/content/Context;ZZZ)I",
+      "contains": [
+        "->o3_miui_volume_notify_width:I",
+        "->o3_miui_volume_expend_width:I"
+      ]
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/miui/volume/VolumeColumnRes;->getHeight(Landroid/content/Context;ZZ)I",
+      "contains": [
+        "->o3_miui_volume_expend_height:I"
+      ]
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/miui/volume/VolumeColumnRes;->getMarginRight(Landroid/content/Context;ZZZI)I",
+      "contains": [
+        "->miui_volume_column_margin_horizontal_expanded:I"
+      ]
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/miui/volume/MiuiVolumeDialogMotion;->getInsetRight()I",
+      "contains": [
+        "->getSafeInsetRight()I",
+        "->getStableInsetRight()I"
+      ]
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/miui/volume/MiuiVolumeDialogMotion;->provideDisplayMetrics()Landroid/util/DisplayMetrics;",
+      "contains": [
+        "->getRealMetrics(Landroid/util/DisplayMetrics;)V"
+      ]
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/miui/volume/MiuiVolumeDialogMotion;->updateExpandBgSize()V",
+      "contains": [
+        "->getMarginTop(Landroid/content/Context;ZZII)I",
+        "->getInsetRight()I",
+        "->topMargin:I"
+      ]
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/miui/volume/MiuiVolumeDialogMotion$6;->onPreDraw()Z",
+      "contains": [
+        "->calculateToViewValues()V",
+        "->expand(ZLmiuix/animation/listener/TransitionListener;)V"
+      ]
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/miui/volume/VolumeExpandCollapsedAnimator;->expand(ZLmiuix/animation/listener/TransitionListener;)V",
+      "contains": [
+        "->getEASE_EXPAND_SIZE_LAYERED()",
+        "->getEASE_EXPAND_POSITION_LAYERED()",
+        "->getEASE_EXPAND_COLOR_LAYERED()"
+      ]
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/miui/volume/VolumeExpandCollapsedAnimator;->collapse(ZLmiuix/animation/listener/TransitionListener;)V",
+      "contains": [
+        "->getEASE_COLLAPSE_SIZE_LAYERED()",
+        "->getEASE_COLLAPSE_POSITION_LAYERED()",
+        "->getEASE_COLLAPSE_COLOR_LAYERED()"
+      ]
+    },
+    {
+      "locator": "dex_method:Lmiui/systemui/animation/FolmeUtilsExtKt$EASE_EXPAND_SIZE_LAYERED$2;->invoke()Lmiuix/animation/utils/EaseManager$EaseStyle;",
+      "contains": [
+        "->getTransitionResponseFactor()F",
+        "->spring(FF)Lmiuix/animation/utils/EaseManager$EaseStyle;"
+      ]
+    },
+    {
+      "locator": "dex_method:Lmiui/systemui/animation/FolmeUtilsExtKt$EASE_EXPAND_POSITION_LAYERED$2;->invoke()Lmiuix/animation/utils/EaseManager$EaseStyle;",
+      "contains": [
+        "->getTransitionResponseFactor()F",
+        "->spring(FF)Lmiuix/animation/utils/EaseManager$EaseStyle;"
+      ]
+    },
+    {
+      "locator": "dex_method:Lmiui/systemui/animation/FolmeUtilsExtKt$EASE_EXPAND_COLOR_LAYERED$2;->invoke()Lmiuix/animation/utils/EaseManager$EaseStyle;",
+      "contains": [
+        "->getTransitionResponseFactor()F",
+        "->spring(FF)Lmiuix/animation/utils/EaseManager$EaseStyle;"
+      ]
+    },
+    {
+      "locator": "dex_method:Lmiui/systemui/animation/FolmeUtilsExtKt$EASE_COLLAPSE_SIZE_LAYERED$2;->invoke()Lmiuix/animation/utils/EaseManager$EaseStyle;",
+      "contains": [
+        "->getTransitionResponseFactor()F",
+        "->spring(FF)Lmiuix/animation/utils/EaseManager$EaseStyle;"
+      ]
+    },
+    {
+      "locator": "dex_method:Lmiui/systemui/animation/FolmeUtilsExtKt$EASE_COLLAPSE_POSITION_LAYERED$2;->invoke()Lmiuix/animation/utils/EaseManager$EaseStyle;",
+      "contains": [
+        "->getTransitionResponseFactor()F",
+        "->spring(FF)Lmiuix/animation/utils/EaseManager$EaseStyle;"
+      ]
+    },
+    {
+      "locator": "dex_method:Lmiui/systemui/animation/FolmeUtilsExtKt$EASE_COLLAPSE_COLOR_LAYERED$2;->invoke()Lmiuix/animation/utils/EaseManager$EaseStyle;",
+      "contains": [
+        "->getTransitionResponseFactor()F",
+        "->spring(FF)Lmiuix/animation/utils/EaseManager$EaseStyle;"
+      ]
+    },
+    {
+      "locator": "dex_method:Lmiuix/animation/FolmeEase;->spring(FFF)Lmiuix/animation/utils/EaseManager$EaseStyle;",
+      "contains": [
+        "const/4 v0, -0x2",
+        "->getStyle(I[F)Lmiuix/animation/utils/EaseManager$EaseStyle;"
+      ]
+    },
+    {
+      "locator": "dex_class:Lmiuix/animation/utils/EaseManager$EaseStyle;",
+      "contains": [
+        ".field public volatile factors:[D",
+        ".field public final style:I"
+      ]
+    }
+  ],
+  "resourceNames": [
+    {
+      "name": "o3_miui_volume_background_margin_top_expanded",
+      "type": "dimen",
+      "locator": "resource:0x7f070ac2"
+    },
+    {
+      "name": "o3_miui_volume_background_height_expanded",
+      "type": "dimen",
+      "locator": "resource:0x7f070ac0"
+    },
+    {
+      "name": "miui_volume_offset_end_expand",
+      "type": "dimen",
+      "locator": "resource:0x7f070647"
+    },
+    {
+      "name": "miui_volume_background_padding",
+      "type": "dimen",
+      "locator": "resource:0x7f070604"
+    },
+    {
+      "name": "o3_miui_volume_bg_radius",
+      "type": "dimen",
+      "locator": "resource:0x7f070ac3"
+    },
+    {
+      "name": "o3_miui_volume_expend_width",
+      "type": "dimen",
+      "locator": "resource:0x7f070ac8"
+    },
+    {
+      "name": "o3_miui_volume_expend_height",
+      "type": "dimen",
+      "locator": "resource:0x7f070ac7"
+    },
+    {
+      "name": "o3_miui_volume_notify_width",
+      "type": "dimen",
+      "locator": "resource:0x7f070acf"
+    },
+    {
+      "name": "miui_volume_column_margin_horizontal_expanded",
+      "type": "dimen",
+      "locator": "resource:0x7f070612"
+    },
+    {
+      "name": "miui_volume_column_width",
+      "type": "dimen",
+      "locator": "resource:0x7f070615"
+    },
+    {
+      "name": "miui_volume_column_height",
+      "type": "dimen",
+      "locator": "resource:0x7f07060e"
+    },
+    {
+      "name": "o3_miui_volume_background_margin_top",
+      "type": "dimen",
+      "locator": "resource:0x7f070ac1"
+    },
+    {
+      "name": "miui_volume_offset_end",
+      "type": "dimen",
+      "locator": "resource:0x7f070645"
+    }
+  ]
+}

@@ -1,0 +1,84 @@
+{
+  "host": {
+    "packageName": "com.miui.misound",
+    "versionCode": 260903,
+    "workspaceId": "yglu33cw"
+  },
+  "checkedAt": "2026-10-09",
+  "scope": "Read-only static evidence, not device runtime acceptance",
+  "evidence": [
+    {
+      "locator": "dex_method:Lcom/miui/misound/playervolume/VolumeUIService;->onStartCommand(Landroid/content/Intent;II)I",
+      "contains": [
+        "isStreamMute",
+        "->B()V",
+        "->t()V"
+      ],
+      "sha256": "62793b75ce9755b8fa2c53959d3c53ae28cd13347d1bad638dd43e07cc18fb7e"
+    },
+    {
+      "locator": "dex_method:Lcom/miui/misound/playervolume/a;->t()V",
+      "contains": [
+        "->E()V",
+        "postDelayed"
+      ],
+      "sha256": "16152ca861f8898529513ba3a8e7c8d5a3239d0b4c4e537bb9a8f3d32abe8028"
+    },
+    {
+      "locator": "dex_method:Lcom/miui/misound/playervolume/f;->a(Landroid/content/Context;)Ljava/util/List;",
+      "contains": [
+        "AudioPlaybackConfiguration",
+        "getClientUid"
+      ],
+      "sha256": "387c96e02b7390957a479eab10164385b2ebe5715130c7e273a736ebbf558c28"
+    },
+    {
+      "locator": "dex_method:Lcom/miui/misound/playervolume/a$h;-><init>(Lcom/miui/misound/playervolume/a;Landroid/media/AudioPlaybackConfiguration;)V",
+      "contains": [
+        "->d()V"
+      ],
+      "sha256": "e692cd689b38f0babb153d4fc1bbd1d642be91483f527a489e34703c6ab80905"
+    },
+    {
+      "locator": "dex_method:Lcom/miui/misound/playervolume/a$h$a;->onProgressChanged(Landroid/widget/SeekBar;IZ)V",
+      "contains": [
+        "->i:Ljava/lang/reflect/Method;",
+        "Method;->invoke",
+        "Handler;->post"
+      ],
+      "sha256": "6a6eb3a3fd8591661f877205a991150367e83415c4d4e11c3cd1f98b4bb698d8"
+    },
+    {
+      "locator": "dex_method:Lcom/miui/misound/playervolume/a;->D(Landroid/view/View;)V",
+      "contains": [
+        "removeView"
+      ],
+      "sha256": "50b900dbc4bdf5d19c185ec6422f792faa1ed0c98bd9b5c0db3e82ce3805d61e"
+    },
+    {
+      "locator": "dex_method:Lcom/miui/misound/playervolume/a$h;->d()V",
+      "contains": [
+        "->b()Landroid/graphics/drawable/Drawable;",
+        "->c()F"
+      ],
+      "sha256": "cabd6f8eb4e80fd6e870591b2074b47254fe6ab830a5c30d5fb986e0c1bcbfea"
+    },
+    {
+      "locator": "dex_method:Lcom/miui/misound/playervolume/a$h;->b()Landroid/graphics/drawable/Drawable;",
+      "contains": [
+        "getNameForUid",
+        "getApplicationIcon"
+      ],
+      "sha256": "3a9d4601c9839045f17254b6c6c115d8070ac7e89a6a71e8fcd94a81f1ac11d1"
+    },
+    {
+      "locator": "dex_method:Lcom/miui/misound/playervolume/a;->w(Ljava/lang/String;F)V",
+      "contains": [
+        "ContentValues",
+        "Lj/c;->w",
+        "Lj/c;->o"
+      ],
+      "sha256": "925ac3727787aadf5e8b1126dae72528062f131429cc149585ac1a714f62e3c5"
+    }
+  ]
+}

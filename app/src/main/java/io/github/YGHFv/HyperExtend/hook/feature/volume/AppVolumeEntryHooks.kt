@@ -32,6 +32,7 @@ import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.Toast
 import io.github.YGHFv.HyperExtend.core.AppVolumeSettings
 import io.github.YGHFv.HyperExtend.core.ModuleLog
 import io.github.YGHFv.HyperExtend.hook.HookRuntime
@@ -48,12 +49,15 @@ internal object AppVolumeEntryHooks {
     private val conflicts = listOf("tag_app_volume_entry_root", "hypervolumeanc:app-volume-entry")
     private val states = WeakHashMap<ViewGroup, WeakReference<Entry>>()
 
+    fun ownsExpandedPanel(dialog: View): Boolean =
+        (dialog as? ViewGroup)?.let { states[it]?.get()?.panel?.active(it) } == true
+
     fun installPlugin(loader: ClassLoader): Int {
         if (Build.VERSION.SDK_INT < 33) return 0
         val dialog = Class.forName(PREFIX + "MiuiVolumeDialogView", false, loader)
         val controller = Class.forName(PREFIX + "VolumePanelViewController", false, loader)
         val showPanel = controller.getDeclaredMethod("showVolumePanelH", Int::class.javaPrimitiveType)
-        val dismiss = controller.getDeclaredMethod("dismissH", Int::class.javaPrimitiveType).apply { isAccessible = true }
+        val panel = SystemUiAppVolumePanel.install(loader)
         val show = dialog.getDeclaredMethod("showH", Runnable::class.java)
         val hide = dialog.getDeclaredMethod("dismissH", Boolean::class.javaPrimitiveType, Runnable::class.java)
         val finish = dialog.getDeclaredMethod("lambda\$dismissH\$0", Runnable::class.java)
@@ -80,9 +84,12 @@ internal object AppVolumeEntryHooks {
                 Reflect.attempt { states[chain.thisObject]?.get()?.beginDismiss() }
                 chain.proceed()
             }) count++
-        if (HookRuntime.hookAfter(finish, "app_volume/finish/$suffix") { chain, original ->
-                states[chain.thisObject]?.get()?.finishDismiss()
-                original
+        if (HookRuntime.hook(finish, "app_volume/finish/$suffix") { chain ->
+                // Restore before the controller's completion callback reparents its native columns.
+                Reflect.attempt { (chain.thisObject as? ViewGroup)?.let(panel::finishDismiss) }
+                val result = chain.proceed()
+                Reflect.attempt { states[chain.thisObject]?.get()?.finishDismiss() }
+                result
             }) count++
         // Both synchronous expand and asynchronous pre-draw show pass through apply().
         if (HookRuntime.hook(apply, "app_volume/nativeState/$suffix") { chain ->
@@ -90,6 +97,7 @@ internal object AppVolumeEntryHooks {
                 Reflect.attempt { entry?.restoreMargin() }
                 val result = chain.proceed()
                 Reflect.attempt { entry?.update() }
+                Reflect.attempt { (chain.args[0] as? ViewGroup)?.let(panel::afterNativeState) }
                 result
             }) count++
         if (HookRuntime.hook(layout, "app_volume/layout/$suffix") { chain ->
@@ -97,6 +105,7 @@ internal object AppVolumeEntryHooks {
                 Reflect.attempt { entry?.restoreMargin() }
                 val result = chain.proceed()
                 Reflect.attempt { entry?.update() }
+                Reflect.attempt { (chain.thisObject as? ViewGroup)?.let(panel::afterNativeState) }
                 result
             }) count++
         // Do not create any rows if a lifecycle/geometry interceptor failed to install.
@@ -112,14 +121,16 @@ internal object AppVolumeEntryHooks {
         if (HookRuntime.hook(showPanel, "app_volume/controller/$suffix") { chain ->
                 Reflect.attempt {
                     val host = Reflect.readField(chain.thisObject, "mVolumeView") as? ViewGroup
-                    host?.let { entry(it, dismiss, flip)?.controller = WeakReference(chain.thisObject!!) }
+                    host?.let { entry(it, panel, flip)?.controller = WeakReference(chain.thisObject!!) }
                 }
                 chain.proceed()
             }) count++
-        return count
+        return count + panel.hookCount
     }
 
-    private fun entry(dialog: ViewGroup, dismiss: Method, flip: Method): Entry? {
+    private fun entry(dialog: ViewGroup, panel: SystemUiAppVolumePanel, flip: Method): Entry? {
+        if (!panel.available()) return null
+        if (dialog.context.packageManager.getPackageInfo(PLUGIN, 0).longVersionCode != 183022200L) return null
         states[dialog]?.get()?.let { return it }
         if (dialog.findViewWithTag<View>(TAG) != null) return null
         if (conflicts.any { dialog.findViewWithTag<View>(it) != null }) return null
@@ -145,7 +156,7 @@ internal object AppVolumeEntryHooks {
             reidentify(row)
             row.tag = TAG
             row.visibility = View.GONE
-            val state = Entry(dialog, row, click, icon, dismiss, flip, helper)
+            val state = Entry(dialog, row, click, icon, panel, flip, helper)
             state.style()
             standard.accessibilityDelegate = null
             standard.importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS
@@ -171,7 +182,7 @@ internal object AppVolumeEntryHooks {
 
     private class Entry(
         val dialog: ViewGroup, val row: ViewGroup, val click: View, val icon: ImageView,
-        val dismiss: Method, val flip: Method, val helper: Any,
+        val panel: SystemUiAppVolumePanel, val flip: Method, val helper: Any,
     ) : View.OnAttachStateChangeListener, ViewTreeObserver.OnPreDrawListener {
         var controller: WeakReference<Any>? = null
         var height = 0
@@ -180,6 +191,10 @@ internal object AppVolumeEntryHooks {
         private var wanted = false
         private var registered = false
         private var observer: ViewTreeObserver? = null
+        private var nativeOpening = false
+        private var pendingLayout: ViewTreeObserver.OnPreDrawListener? = null
+        private var pendingSession: String? = null
+        private var layoutTimeout: Runnable? = null
         private val main = Handler(Looper.getMainLooper())
         private val broadcasts = Handler(Looper.getMainLooper())
         private val audio = dialog.context.getSystemService(AudioManager::class.java)
@@ -208,18 +223,22 @@ internal object AppVolumeEntryHooks {
         }
 
         fun show() {
+            cancelNativeOpen()
             lifecycle.show()
             style()
             update()
         }
 
         fun beginDismiss() {
+            cancelNativeOpen()
+            panel.beginDismiss(dialog)
             lifecycle.dismiss()
             main.removeCallbacksAndMessages(null)
             click.isEnabled = false
         }
 
         fun finishDismiss() {
+            cancelNativeOpen()
             lifecycle.detach()
             main.removeCallbacksAndMessages(null)
             wanted = false
@@ -236,7 +255,8 @@ internal object AppVolumeEntryHooks {
         fun update() {
             if (!lifecycle.dismissing) {
                 val expanded = Reflect.callWith(dialog, "isExpanded") as? Boolean ?: true
-                wanted = AppVolumePolicy.visible(lifecycle.visible && controller?.get() != null, expanded,
+                wanted = AppVolumePolicy.visible(lifecycle.visible && controller?.get() != null &&
+                    !nativeOpening && !panel.active(dialog), expanded,
                     MediaPlayback.locked(dialog.context), MediaPlayback.active(dialog.context),
                     conflicts.any { dialog.findViewWithTag<View>(it) != null })
             }
@@ -290,37 +310,110 @@ internal object AppVolumeEntryHooks {
             val token = lifecycle.beginRequest() ?: return
             runCatching {
                 dialog.context.startForegroundService(Intent().setClassName(AppVolumeSettings.PACKAGE, AppVolumeSettings.SERVICE)
-                    .putExtra("streamType", 3).putExtra("flags", 0))
+                    .putExtra("streamType", 3).putExtra("flags", 0).putExtra(AppVolumeBridge.DATA_ONLY, true))
                 click.isEnabled = false
                 // Ordered broadcasts may never return while the destination is frozen.
-                main.postDelayed({ if (lifecycle.accepts(token)) { lifecycle.cancelRequest(); Reflect.attempt { update() } } }, 2000)
+                main.postDelayed({ if (lifecycle.accepts(token)) failOpen("timeout") }, 2000)
                 requestOpen(token, 0)
-            }.onFailure { lifecycle.cancelRequest(); ModuleLog.error("app_volume start failed; native volume retained", it) }
+            }.onFailure {
+                ModuleLog.error("app_volume start failed; native volume retained", it)
+                failOpen("service_start")
+            }
         }
 
         private fun requestOpen(token: Int, attempt: Int) {
             main.postDelayed({
                 if (!lifecycle.accepts(token) || !row.isAttachedToWindow || MediaPlayback.locked(dialog.context)) return@postDelayed
                 runCatching {
-                    dialog.context.sendOrderedBroadcast(Intent(AppVolumeSettings.ACTION).setPackage(AppVolumeSettings.PACKAGE)
-                        .addFlags(Intent.FLAG_RECEIVER_FOREGROUND), null, object : BroadcastReceiver() {
+                    val intent = AppVolumeBridge.request(AppVolumeBridge.QUERY)
+                    dialog.context.sendOrderedBroadcast(intent, null, object : BroadcastReceiver() {
                         override fun onReceive(context: Context, intent: Intent) {
-                            if (!lifecycle.accepts(token) || MediaPlayback.locked(context)) return
-                            if (resultCode == Activity.RESULT_OK) {
+                            val extras = getResultExtras(false)
+                            val reason = AppVolumeBridge.failureReason(extras)
+                            val data = if (resultCode == Activity.RESULT_OK) AppVolumeBridge.decode(extras) else null
+                            if (!lifecycle.accepts(token) || MediaPlayback.locked(context)) {
+                                data?.let { AppVolumeClient.end(context, it.token) }
+                                return
+                            }
+                            if (data != null) {
+                                ModuleLog.info("app_volume query accepted: apps=${data.apps.size}; requesting official expansion")
                                 lifecycle.cancelRequest()
-                                // Controller clears timeouts/mShowing and supplies the required non-null callback.
-                                Reflect.attempt { controller?.get()?.let { dismiss.invoke(it, 8) } }
-                            } else if (attempt < 5 && row.isAttachedToWindow) {
+                                nativeOpening = true
+                                restoreMargin()
+                                row.visibility = View.GONE
+                                // Let layout remove the extra row before the native anchor is captured.
+                                postOnNextLayout(data)
+                            } else if ((reason == null || reason == "unavailable" || reason == "busy") && attempt < 5 && row.isAttachedToWindow) {
                                 requestOpen(token, attempt + 1)
                             } else {
-                                lifecycle.cancelRequest()
-                                Reflect.attempt { update() }
-                                ModuleLog.warn("app_volume receiver unavailable or native panel refused; volume retained")
+                                failOpen(reason ?: "unavailable")
                             }
                         }
                     }, broadcasts, Activity.RESULT_CANCELED, null, null)
-                }.onFailure { lifecycle.cancelRequest(); ModuleLog.error("app_volume request failed", it) }
+                }.onFailure { ModuleLog.error("app_volume request failed", it); failOpen("request_error") }
             }, 150)
+        }
+
+        private fun failOpen(reason: String) {
+            lifecycle.cancelRequest()
+            ModuleLog.warn("app_volume open failed: $reason; native volume retained")
+            Reflect.attempt { update() }
+            if (!lifecycle.visible || lifecycle.dismissing || !row.isAttachedToWindow || MediaPlayback.locked(dialog.context)) return
+            val message = when (reason) {
+                "no_apps" -> "暂无可调节的播放应用（不支持共享 UID 或其他用户应用）"
+                "disabled" -> "请先在音质音效中开启分应用音量功能"
+                "native_busy" -> "请先关闭原音质音效面板后重试"
+                "native_expand" -> "官方音量面板未能展开，请重试并查看模块日志"
+                else -> "分应用音量暂不可用，请确认双作用域已启用并重启两个宿主"
+            }
+            Reflect.attempt { Toast.makeText(dialog.context, message, Toast.LENGTH_SHORT).show() }
+        }
+
+        private fun cancelNativeOpen() {
+            pendingLayout?.let { if (dialog.viewTreeObserver.isAlive) dialog.viewTreeObserver.removeOnPreDrawListener(it) }
+            layoutTimeout?.let(main::removeCallbacks)
+            pendingSession?.let { AppVolumeClient.end(dialog.context, it) }
+            pendingLayout = null
+            pendingSession = null
+            layoutTimeout = null
+            nativeOpening = false
+        }
+
+        private fun postOnNextLayout(data: AppVolumeBridge.Snapshot) {
+            pendingSession = data.token
+            val listener = object : ViewTreeObserver.OnPreDrawListener {
+                override fun onPreDraw(): Boolean {
+                    if (dialog.viewTreeObserver.isAlive) dialog.viewTreeObserver.removeOnPreDrawListener(this)
+                    if (pendingLayout !== this || pendingSession != data.token) return true
+                    pendingLayout = null
+                    pendingSession = null
+                    layoutTimeout?.let(main::removeCallbacks)
+                    layoutTimeout = null
+                    val target = controller?.get()
+                    val accepted = runCatching {
+                        lifecycle.visible && !lifecycle.dismissing && dialog.isAttachedToWindow &&
+                            !MediaPlayback.locked(dialog.context) && target != null &&
+                            panel.open(dialog, target, data, ended = { Reflect.attempt { update() } },
+                                failed = { failOpen("native_expand") })
+                    }.onFailure { ModuleLog.error("app_volume official expansion failed", it) }.getOrDefault(false)
+                    nativeOpening = false
+                    if (!accepted) {
+                        AppVolumeClient.end(dialog.context, data.token)
+                        failOpen("native_expand")
+                    }
+                    Reflect.attempt { update() }
+                    return !accepted
+                }
+            }
+            pendingLayout = listener
+            dialog.viewTreeObserver.addOnPreDrawListener(listener)
+            dialog.requestLayout()
+            layoutTimeout = Runnable {
+                if (pendingLayout === listener) {
+                    cancelNativeOpen()
+                    failOpen("layout_timeout")
+                }
+            }.also { main.postDelayed(it, 1000) }
         }
     }
 

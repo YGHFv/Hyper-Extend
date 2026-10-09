@@ -13,6 +13,13 @@ class PluginAppearanceTest {
         assertTrue(collapsedFooterVisible(true, true))
     }
 
+    @Test fun appPanelHidesFooterButTheNextOfficialExpansionRestoresIt() {
+        assertFalse(collapsedFooterVisible(true, true, appPanel = true))
+        assertFalse(collapsedFooterVisible(false, true, appPanel = true))
+        assertTrue(collapsedFooterVisible(true, true, appPanel = false))
+        assertFalse(collapsedFooterVisible(true, false, appPanel = false))
+    }
+
     @Test fun pluginFeaturesAreOptInAndExplicitlyAwaitDeviceAcceptance() {
         for (id in listOf("control_center_hide_edit", "volume_hide_collapsed_footer")) {
             val feature = featureById(id)!!
