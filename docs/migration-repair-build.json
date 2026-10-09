@@ -1,0 +1,33 @@
+{
+  "versionName": "0.1.3",
+  "versionCode": 4,
+  "apk": "app/build/outputs/apk/release/app-release.apk",
+  "bytes": 2491082,
+  "sha256": "9338293c9273a785264f8b0bf4165194ba98d29d31dcecb438bc725b4ef11013",
+  "validation": {
+    "testDebugUnitTest": {
+      "tests": 153,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "assembleRelease": "passed",
+    "apksignerVerify": "passed",
+    "fullLintDebug": {
+      "status": "failed",
+      "errors": 20,
+      "warnings": 140,
+      "hints": 2,
+      "note": "Remaining errors in unchanged legacy sources/local.properties; see repair report."
+    }
+  },
+  "deployment": {
+    "installed": false,
+    "installAttemptedAt": "2026-10-09T13:22:42+08:00",
+    "installResult": "adb install -r failed: no devices/emulators found",
+    "hostRestarted": false,
+    "hotReloaded": false,
+    "settingsChanged": false
+  },
+  "deviceAcceptance": "pending"
+}

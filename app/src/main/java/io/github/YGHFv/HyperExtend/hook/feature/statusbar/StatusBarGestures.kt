@@ -23,19 +23,15 @@ import io.github.YGHFv.HyperExtend.core.ModuleLog
 import io.github.YGHFv.HyperExtend.hook.HookRuntime
 import io.github.YGHFv.HyperExtend.hook.HookSettings
 import io.github.YGHFv.HyperExtend.hook.Reflect
-import kotlin.math.abs
+import android.view.ViewConfiguration
+import android.view.accessibility.AccessibilityManager
+import io.github.YGHFv.HyperExtend.hook.feature.systemui.DoubleTapTracker
 
 /** 「双击状态栏锁屏」。作用域：com.android.systemui。 */
 internal object StatusBarGestures {
 
     private const val FEATURE = "status_bar_double_tap"
     private const val STATUS_BAR_VIEW = "com.android.systemui.statusbar.phone.MiuiPhoneStatusBarView"
-
-    /** 两次点击的间隔上限。与参考项目一致：再慢就不像「双击」了。 */
-    private const val DOUBLE_TAP_TIMEOUT_MS = 250L
-
-    /** 两次点击的位移上限（像素）。超过它算两下，不算双击 —— 否则滑动通知栏会误锁屏。 */
-    private const val TOUCH_SLOP_PX = 100f
 
     fun install(loader: ClassLoader, settings: HookSettings): Int {
         val view = Reflect.loadClass(loader, STATUS_BAR_VIEW) ?: run {
@@ -53,38 +49,29 @@ internal object StatusBarGestures {
         return if (ok) 1 else 0
     }
 
-    /**
-     * 给状态栏视图挂双击监听。
-     *
-     * 用 `setOnTouchListener` 而不是自己写手势检测：它在**子视图没有消费这次事件**时才会
-     * 收到回调（状态栏上的时钟、图标都是子视图），于是「双击空白处锁屏」天然成立，
-     * 而点通知图标、下拉通知栏这些操作一点不受影响。
-     * 返回 false 也同样是刻意的：事件继续走正常流程，我们只是**顺带**看了一眼。
-     */
+    /** Observe completed taps without consuming the native shade gesture. */
     private fun attach(target: Any?) {
         val view = target as? View ?: return
         if (view.getTag(TAG_MARKER) != null) return
         view.setTag(TAG_MARKER, true)
 
-        var lastTime = 0L
-        var lastX = 0f
-        var lastY = 0f
+        val configuration = ViewConfiguration.get(view.context)
+        val tracker = DoubleTapTracker(configuration.scaledDoubleTapSlop.toFloat(),
+            ViewConfiguration.getDoubleTapTimeout().toLong(), configuration.scaledTouchSlop.toFloat())
+        val accessibility = view.context.getSystemService(AccessibilityManager::class.java)
+        view.addOnAttachStateChangeListener(object : View.OnAttachStateChangeListener {
+            override fun onViewAttachedToWindow(view: View) { tracker.reset() }
+            override fun onViewDetachedFromWindow(view: View) { tracker.reset() }
+        })
         view.setOnTouchListener { touched, event ->
-            if (event.actionMasked != MotionEvent.ACTION_DOWN) return@setOnTouchListener false
-            val now = System.currentTimeMillis()
-            val doubled = now - lastTime < DOUBLE_TAP_TIMEOUT_MS &&
-                abs(event.x - lastX) < TOUCH_SLOP_PX &&
-                abs(event.y - lastY) < TOUCH_SLOP_PX
-            if (doubled) {
-                lastTime = 0L
-                goToSleep(touched.context)
-            } else {
-                lastTime = now
-                lastX = event.x
-                lastY = event.y
+            if (accessibility?.isTouchExplorationEnabled == true || event.pointerCount != 1) {
+                tracker.reset()
+            } else when (event.actionMasked) {
+                MotionEvent.ACTION_DOWN -> tracker.down(event.eventTime, event.x, event.y)
+                MotionEvent.ACTION_MOVE -> tracker.move(event.x, event.y)
+                MotionEvent.ACTION_UP -> if (tracker.up(event.eventTime, event.x, event.y)) goToSleep(touched.context)
+                MotionEvent.ACTION_CANCEL, MotionEvent.ACTION_POINTER_DOWN -> tracker.reset()
             }
-            // 触摸监听的存在会让无障碍服务认为这一行不可点，补一个 click 事件。
-            touched.performClick()
             false
         }
     }
@@ -110,5 +97,5 @@ internal object StatusBarGestures {
     }
 
     /** 视图标记：同一个状态栏视图只挂一次（`onFinishInflate` 可能被走到多次）。 */
-    private val TAG_MARKER = "hyperextend.double_tap".hashCode()
+    private const val TAG_MARKER = 0x7e480102
 }

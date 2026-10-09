@@ -1,0 +1,55 @@
+{
+  "verification": "Local source/host snapshots, not current-device execution. Paths are ignored local artifacts; hashes permit matching independent copies.",
+  "hosts": [
+    {
+      "package": "com.android.settings",
+      "versionCode": 37,
+      "versionName": "17",
+      "minSdk": 37
+    },
+    {
+      "package": "com.miui.screenshot",
+      "versionCode": 10603038,
+      "versionName": "RELEASE-1.6.3.38-09051623",
+      "minSdk": 34
+    }
+  ],
+  "snapshots": [
+    {
+      "path": ".workbuddy/tmp/host2/Settings.apk",
+      "sha256": "4774deb4c6fb1a9c00b25d7bf35087b3c7bb7c7860a790b72a8742dad5abd342"
+    },
+    {
+      "path": ".workbuddy/tmp/MIUIScreenshot.apk",
+      "sha256": "1871bd224a1732e135fd0f3c436495eef9ac7a46b8ddfe44356d71b60e11c6e9"
+    },
+    {
+      "path": ".workbuddy\\tmp\\mt-systemui\\repair-StatusBarUtils.java",
+      "sha256": "ebe1fb7f18955d98204e6bd74795cc9d6addb0bce4ad080c62c9c3973ad814bf"
+    },
+    {
+      "path": ".workbuddy\\tmp\\mt-systemui\\repair-NotificationControlCenterSettings.java",
+      "sha256": "0b067a3f23c1f154a7de103463bf5b2e3402b20eb90d1f733dd0a68936116d78"
+    },
+    {
+      "path": ".workbuddy\\tmp\\mt-systemui\\repair-ControlCenterSettings.java",
+      "sha256": "5b616ad2a82cab17efafeec384ed139737b059e731621781066d00c5d091de66"
+    },
+    {
+      "path": ".workbuddy/tmp/screenshot-java/sources/com/miui/screenshot/core/util/DisplayCapture.java",
+      "sha256": "fe92d529c7f7b30ad46b4e21628459a59dec2c448b07044ad83f1cbf0c232655"
+    },
+    {
+      "path": ".workbuddy/tmp/screenshot-java/sources/d1/C0493c.java",
+      "sha256": "ef833bcd646cfcbc669c70e5f14a775c11fa63b11e44b9ab34601f276ae36f85"
+    },
+    {
+      "path": ".workbuddy/tmp/screenshot-java/sources/d1/d.java",
+      "sha256": "5d372878413bde01af747e5639db81b1fed3a6dcf25978228f0aa121ab025e38"
+    },
+    {
+      "path": ".workbuddy\\tmp\\mt-systemui\\repair-misound-window.smali",
+      "sha256": "08060ad957900690e6f86b30a3fc89a8b9e7bfbcb82debefb602e3d1ee824032"
+    }
+  ]
+}

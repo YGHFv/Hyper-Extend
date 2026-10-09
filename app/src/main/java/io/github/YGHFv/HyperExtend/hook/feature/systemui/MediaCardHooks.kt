@@ -80,7 +80,7 @@ internal object MediaCardHooks {
                 original
             }
         }
-        return count
+        return count + MediaButtonSizing.install(loader, settings)
     }
 
     private fun textSize(loader: ClassLoader, settings: HookSettings): Int {

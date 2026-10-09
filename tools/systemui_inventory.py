@@ -8,7 +8,7 @@ from pathlib import Path
 
 ANDROID = "{http://schemas.android.com/apk/res/android}"
 
-AUDIT_DEFECTS = {
+AUDIT_REPAIRS = {
     "prefs_key_system_ui_statusbar_network_speed_style": ("status_bar_network_speed.style", ["F01"]),
     "prefs_key_system_ui_statusbar_network_speed_update_spacings": ("status_bar_network_speed.update_spacing", ["F03"]),
     "prefs_key_system_ui_status_bar_battery_style_change_location": ("status_bar_battery_style.change_location", ["F04"]),
@@ -43,6 +43,8 @@ def main():
         "prefs_key_system_ui_control_center_auto_clean_expand_notification": "notification_expanded_timeout",
         "prefs_key_system_ui_control_center_expand_notification_show_time": "notification_expanded_timeout.delay",
         "prefs_key_system_ui_control_center_media_control_media_button_layout_switch": "media_card_layout",
+        "prefs_key_system_ui_control_center_media_control_media_button": "media_card_layout.button_size",
+        "prefs_key_system_ui_control_center_media_control_media_button_custom": "media_card_layout.custom_button_size",
         "prefs_key_system_ui_control_center_media_control_media_button_actions_left_aligned": "media_card_layout.left_aligned",
         "prefs_key_system_ui_control_center_media_control_media_button_hide_seamless": "media_card_layout.hide_seamless",
         "prefs_key_system_ui_control_center_media_control_media_album_mode": "media_card_layout.album",
@@ -103,7 +105,7 @@ def main():
                 "target": target,
             })
             if target and target.startswith("media_card_"):
-                items[-1]["boundary"] = "Notification-center normal layout only; flip tiny screen and dynamic island remain unchanged. Button bitmap sizes, background and progress styles are pending."
+                items[-1]["boundary"] = "Notification-center normal layout only; flip tiny screen and dynamic island remain unchanged. Native drawable scaling covers common and semantic bindings; animated drawables and touch targets are retained. Background and progress styles are pending."
             if key == "prefs_key_system_ui_control_center_hide_operator":
                 items[-1].update(status="partially_implemented_static_verified", target="control_center_hide_carrier",
                     auditFindings=["P03"],
@@ -111,24 +113,24 @@ def main():
             if key == "prefs_key_system_ui_control_center_media_control_media_button_layout_switch":
                 items[-1].update(status="partially_implemented_static_verified", auditFindings=["P01"])
             if key == "prefs_key_system_control_center_unlock_old":
-                items[-1].update(status="partially_implemented_static_verified", auditFindings=["P02"],
-                    boundary="SystemUI force flag only. The upstream Settings-app selector unlock is not migrated; enabling this alone may leave no style selector.")
+                items[-1].update(status="repaired_static_pending_device", repairedFindings=["P02"],
+                    boundary="SystemUI force flag and Settings selector gate are both hooked. User chooses the style; Lite/policy restrictions are retained. Device acceptance pending.")
             if key == "prefs_key_system_ui_control_center_media_control_media_button_size_switch":
                 items[-1]["referenceNote"] = "Mapped from the upstream XML text-size switch. MediaViewSize.kt reads a different key, system_ui_control_center_media_control_text_size; this is an upstream XML/hook discrepancy, not evidence that the local switch is disconnected."
             if key == "prefs_key_system_ui_control_center_redirect_notice":
-                items[-1].update(status="partially_implemented_static_verified", auditFindings=["P04"],
-                    boundary="Package/channel/UID redirect and fallback are present; upstream conversation shortcutId is not forwarded.")
-            if key in AUDIT_DEFECTS:
-                target, findings = AUDIT_DEFECTS[key]
-                items[-1].update(status="defect_confirmed_static", target=target, auditFindings=findings)
+                items[-1].update(status="repaired_static_pending_device", repairedFindings=["P04"],
+                    boundary="Menu-scoped shortcutId is forwarded only for matching package, UID and channel; Mi Push and app-settings fallback retained. Device acceptance pending.")
+            if key in AUDIT_REPAIRS:
+                target, findings = AUDIT_REPAIRS[key]
+                items[-1].update(status="repaired_static_pending_device", target=target, repairedFindings=findings)
     revision = subprocess.check_output(["git", "-C", str(args.reference), "rev-parse", "HEAD"], text=True).strip()
     payload = {
         "reference": "https://github.com/ReChronoRain/HyperCeiler",
         "revision": revision,
-        "scope": "All system_ui*.xml keys plus the old-control-center SystemUI hook configured in system_settings.xml; includes navigation/dependency rows, not all are hooks. External settings-app half is not claimed migrated.",
+        "scope": "All system_ui*.xml keys plus the old-control-center SystemUI hook configured in system_settings.xml; includes navigation/dependency rows, not all are hooks. Includes the Settings-app old-style selector gate.",
         "verification": "Static host-code checks and local tests only. No device acceptance yet.",
         "completenessAudit": "docs/migration-completeness-audit.md",
-        "statusNote": "implemented_static_verified applies only to the named local scope, not full upstream parity. defect_confirmed_static means an exposed option has a source/host-contract defect; see its auditFindings for triggering conditions. Unreviewed rows remain needs_audit_existing_partial or pending.",
+        "statusNote": "implemented_static_verified applies only to the named local scope, not full upstream parity. repaired_static_pending_device means the recorded defect has a source repair and regression coverage but no live acceptance; see repairedFindings and docs/migration-repair-0.1.3.md. Unreviewed rows remain needs_audit_existing_partial or pending.",
         "items": items,
     }
     args.output.parent.mkdir(parents=True, exist_ok=True)

@@ -16,7 +16,6 @@
 
 package io.github.YGHFv.HyperExtend.hook.feature.statusbar
 
-import android.content.Context
 import android.graphics.Typeface
 import android.net.TrafficStats
 import android.util.TypedValue
@@ -28,30 +27,11 @@ import io.github.YGHFv.HyperExtend.core.ModuleLog
 import io.github.YGHFv.HyperExtend.hook.HookRuntime
 import io.github.YGHFv.HyperExtend.hook.HookSettings
 import io.github.YGHFv.HyperExtend.hook.Reflect
-import java.util.Locale
+import android.os.Handler
+import android.os.Message
+import java.util.WeakHashMap
 
-/**
- * 「网速指示器」。作用域：com.android.systemui。
- *
- * ## 为什么自己算速率
- *
- * 系统那个指示器只显示一个总速率，样式也是固定的；要「上下行分开」「双排」「隐藏慢速」，
- * 就必须自己拿到两个方向的速度。做法是拦下控制器的刷新入口
- * （`NetworkSpeedController#updateText`），把算好的字符串塞进它的参数 ——
- * 之后显示、布局、动画全都还是走系统那一套，只是内容换成了我们的。
- *
- * 速率本身用 `TrafficStats` 的累计字节数做差：两次数值之间隔了多久，就除以多久。
- * 两条纪律：**间隔太短不采样**（刷新回调可能连着来，差值会被噪声淹没）、
- * **间隔太长按上限截断**（设备刚息屏又亮起时，用一个几分钟的间隔去除，会得到一个荒谬的小值）。
- *
- * ## 与参考项目的差异
- *
- * - 参考项目逐网卡累加流量（过滤掉虚拟网卡与回环），这里直接用 `TrafficStats` 的全局计数。
- *   多算了虚拟网卡那部分，换来的是不需要 `NetworkInterface` 枚举与逐个反射调用 ——
- *   在一个每两秒跑一次的路径上，这个取舍是值得的。
- * - 「网速更新间隔」不靠消息 id 硬编码：那个 id（参考项目里的 200001）是宿主内部常量，
- *   我们改成**自校准** —— 哪条消息在处理过程中触发了 `updateText`，那条就是该重排的消息。
- */
+/** Host text remains a two-slot number/unit pair; only the background queue is rescheduled. */
 internal object StatusBarNetworkSpeed {
 
     private const val FEATURE = "status_bar_network_speed"
@@ -78,16 +58,6 @@ internal object StatusBarNetworkSpeed {
     private const val CONTROLLER = "com.android.systemui.statusbar.policy.NetworkSpeedController"
     private const val SPEED_VIEW = "com.android.systemui.statusbar.views.NetworkSpeedView"
 
-    private const val KB = 1024.0
-    private const val MB = KB * 1024.0
-    private const val GB = MB * 1024.0
-
-    /** 两次采样之间的最短间隔：比它更短的差值全是噪声。 */
-    private const val MIN_SAMPLE_NANOS = 150_000_000L
-
-    /** 采样间隔的上限：息屏再亮起时用它兜住，免得算出一个荒谬的小速率。 */
-    private const val MAX_SAMPLE_NANOS = 10_000_000_000L
-
     /** 单位后缀里那几个字符。开了「隐藏 *b/s 单位」就按它们裁掉。 */
     private val UNIT_CHARS = listOf("/", "B", "s", "'", "วิ")
 
@@ -95,15 +65,7 @@ internal object StatusBarNetworkSpeed {
     private val VIEW_RESTYLE_METHODS =
         arrayOf("onFinishInflate", "onDensityOrFontScaleChanged", "onMiuiThemeChanged", "updateResources\$15")
 
-    private var lastSampleNanos = 0L
-    private var lastTxBytes = 0L
-    private var lastRxBytes = 0L
-    private var txSpeed = 0L
-    private var rxSpeed = 0L
-
-    /** 本次 `handleMessage` 里有没有走到 `updateText` —— 见 [installUpdateInterval]。 */
-    @Volatile
-    private var updateTextSeen = false
+    private val samplers = WeakHashMap<Any, NetworkSpeedSampler>()
 
     fun install(loader: ClassLoader, settings: HookSettings): Int {
         val config = Config.of(settings)
@@ -122,127 +84,22 @@ internal object StatusBarNetworkSpeed {
             ModuleLog.warn("$FEATURE: $CONTROLLER not found")
             return 0
         }
-        val updateText = Reflect.findMethods(controller, "updateText", 1).firstOrNull() ?: run {
+        val updateText = Reflect.firstMethod(controller, "updateText") {
+            it.parameterTypes.contentEquals(arrayOf(Array<String>::class.java))
+        } ?: run {
             ModuleLog.warn("$FEATURE: NetworkSpeedController#updateText(String[]) is gone")
             return 0
         }
         val ok = HookRuntime.hook(updateText, "$FEATURE/NetworkSpeedController#updateText") { chain ->
-            // 只是「顺带算一次」，context 取不到就原样放行 —— 没有它也能算，只是算不出单位文案。
-            val context = Reflect.readField(chain.thisObject, "mContext") as? Context
-            updateTextSeen = true
-            val replacement = buildSpeedText(context, config)
+            val owner = chain.thisObject ?: return@hook chain.proceed()
+            val speeds = synchronized(samplers) {
+                samplers.getOrPut(owner) { NetworkSpeedSampler() }.sample(
+                    System.nanoTime(), TrafficStats.getTotalTxBytes(), TrafficStats.getTotalRxBytes())
+            }
+            val replacement = NetworkSpeedText.render(speeds.first, speeds.second, config.text)
             if (replacement == null) chain.proceed() else chain.proceed(arrayOf<Any?>(replacement))
         }
         return if (ok) 1 else 0
-    }
-
-    /**
-     * 算出要交给宿主的那两个字符串，返回 null 表示「这次不改」。
-     *
-     * 返回 null 只在一种情况下发生：样式是「默认」且这次不算慢速 —— 那时系统自己那套
-     * （一个速率、固定样式）就是用户要的，我们只负责在需要隐藏的时候把它抹掉。
-     */
-    @Synchronized
-    private fun buildSpeedText(context: Context?, config: Config): Array<String>? {
-        val (tx, rx) = sample()
-        val txLow = tx < config.lowLevel
-        val rxLow = rx < config.lowLevel
-
-        if (config.style == STYLE_DEFAULT) {
-            val allLow = config.hide && (tx + rx) < config.lowLevel
-            return if (allLow) arrayOf("", "") else null
-        }
-
-        val txText = if (config.hide && !config.hideAll && txLow) {
-            ""
-        } else {
-            withArrow(format(tx, config), arrow(config.icon, up = true, low = txLow), config.swap)
-        }
-        val rxText = if (config.hide && !config.hideAll && rxLow) {
-            ""
-        } else {
-            withArrow(format(rx, config), arrow(config.icon, up = false, low = rxLow), config.swap)
-        }
-        val total = format(tx + rx, config)
-        val allLow = config.hide && config.hideAll && txLow && rxLow
-
-        return when (config.style) {
-            // 值和单位单行 / 双排：都只显示总速率（双排的那个换行在 format 里）。
-            STYLE_VALUE_UNIT_SINGLE, STYLE_VALUE_UNIT_TWO_LINE ->
-                arrayOf(if (config.hide && (tx + rx) < config.lowLevel) "" else total)
-            STYLE_TX_RX_SINGLE ->
-                arrayOf(if (allLow) "" else if (rxText.isNotEmpty()) "$txText $rxText" else txText)
-            else -> arrayOf(if (allLow) "" else "$txText\n$rxText")
-        }
-    }
-
-    /**
-     * 取一次速率（字节/秒）。
-     *
-     * 同步是必需的：`updateText` 与采样状态是一对多的关系（主线程、后台 handler 都可能走到），
-     * 两次采样交叉执行会得到「上一次的差值算在上一次的间隔上」这种错位。
-     */
-    @Synchronized
-    private fun sample(): Pair<Long, Long> {
-        val now = System.nanoTime()
-        val tx = TrafficStats.getTotalTxBytes()
-        val rx = TrafficStats.getTotalRxBytes()
-
-        if (lastSampleNanos == 0L) {
-            lastSampleNanos = now
-            lastTxBytes = tx
-            lastRxBytes = rx
-            return 0L to 0L
-        }
-
-        var interval = now - lastSampleNanos
-        if (interval < MIN_SAMPLE_NANOS) return txSpeed to rxSpeed
-        if (interval > MAX_SAMPLE_NANOS) interval = MAX_SAMPLE_NANOS
-
-        lastSampleNanos = now
-        val deltaTx = (tx - lastTxBytes).coerceAtLeast(0L)
-        val deltaRx = (rx - lastRxBytes).coerceAtLeast(0L)
-        lastTxBytes = tx
-        lastRxBytes = rx
-
-        val seconds = interval / 1_000_000_000.0
-        txSpeed = (deltaTx / seconds).toLong()
-        rxSpeed = (deltaRx / seconds).toLong()
-        return txSpeed to rxSpeed
-    }
-
-    private fun withArrow(value: String, arrow: String, swap: Boolean): String =
-        if (swap) "$arrow$value" else "$value$arrow"
-
-    /**
-     * 指示器图标那一档（`1` 无图标、`2` 上下行箭头……）。
-     *
-     * 低速时用空心那一个 —— 与参考项目一致：图标本身就是「快 / 慢」的第二重表达。
-     */
-    private fun arrow(icon: Int, up: Boolean, low: Boolean): String = when (icon) {
-        2 -> if (up) (if (low) "△" else "▲") else (if (low) "▽" else "▼")
-        3 -> if (up) (if (low) " ▵" else " ▴") else (if (low) " ▿" else " ▾")
-        4 -> if (up) (if (low) " ☖" else " ☗") else (if (low) " ⛉" else " ⛊")
-        5 -> if (up) "↑" else "↓"
-        6 -> if (up) "⇧" else "⇩"
-        else -> ""
-    }
-
-    /** 字节数 → 显示文案。双排样式（2）把单位换到第二行。 */
-    private fun format(bytes: Long, config: Config): String {
-        val value: Double
-        val unit: Char
-        when {
-            bytes >= GB -> { value = bytes / GB; unit = 'G' }
-            bytes >= MB -> { value = bytes / MB; unit = 'M' }
-            else -> { value = bytes / KB; unit = 'K' }
-        }
-        val number = if (value < 100.0) String.format(Locale.US, "%.1f", value) else String.format(Locale.US, "%.0f", value)
-        return if (config.style == STYLE_VALUE_UNIT_TWO_LINE) {
-            "$number\n$unit${config.unitSuffix}"
-        } else {
-            "$number$unit${config.unitSuffix}"
-        }
     }
 
     // ------------------------------------------------------------------ 视图样式
@@ -277,7 +134,7 @@ internal object StatusBarNetworkSpeed {
 
         val single = arrayOf(number, unit)
         if (config.style != STYLE_DEFAULT) {
-            // 自定义样式下，数值与单位都在同一个字符串里（见 format），原来的单位视图必须让位。
+            // Custom text includes its unit, but still supplies the host's empty second slot.
             unit?.visibility = View.GONE
             if (config.style == STYLE_VALUE_UNIT_TWO_LINE || config.style == STYLE_TX_RX_TWO_LINE) {
                 number.isSingleLine = false
@@ -362,40 +219,27 @@ internal object StatusBarNetworkSpeed {
 
     // ------------------------------------------------------------------ 更新间隔
 
-    /**
-     * 「网速更新间隔」。
-     *
-     * 宿主的刷新节奏由它自己往后台 handler 上排队的一串消息决定，消息 id 是内部常量
-     * （参考项目写死成 200001）。这里不写死：谁在处理过程中触发了 `updateText`，
-     * 谁就是那张「该重排的消息」—— 拦下处理完的那一刻，把它按新的间隔重排一次。
-     */
     private fun installUpdateInterval(loader: ClassLoader, config: Config): Int {
         if (config.updateIntervalMs == DEFAULT_UPDATE_INTERVAL_MS) return 0
         val controller = Reflect.loadClass(loader, CONTROLLER) ?: return 0
-        val handlers = controller.declaredClasses.filter { android.os.Handler::class.java.isAssignableFrom(it) }
-        if (handlers.isEmpty()) {
-            ModuleLog.warn("$FEATURE: NetworkSpeedController has no Handler subclass — interval skipped")
-            return 0
-        }
-        var installed = 0
-        for (handler in handlers) {
-            val handle = Reflect.findMethods(handler, "handleMessage", 1).firstOrNull() ?: continue
-            val ok = HookRuntime.hook(handle, "$FEATURE/${handler.simpleName}#handleMessage") { chain ->
-                updateTextSeen = false
-                val result = chain.proceed()
-                if (updateTextSeen) reschedule(chain.thisObject, chain.args.getOrNull(0), config)
+        // R8 merges UI and background handlers into $5 and strips MemberClasses.
+        val bg = Reflect.findField(controller, "mBgHandler") ?: return 0
+        if (!Handler::class.java.isAssignableFrom(bg.type)) return 0
+        val handle = Reflect.findMethod(bg.type, "handleMessage", Message::class.java) ?: return 0
+        val owner = Reflect.findField(bg.type, "this\$0") ?: return 0
+        val hidden = Reflect.findField(controller, "mIsStatusBarHidden") ?: return 0
+        return if (HookRuntime.hookAfter(handle, "$FEATURE/backgroundSample") { chain, result ->
+                val handler = chain.thisObject as? Handler
+                val message = chain.args[0] as? Message
+                val host = owner.get(handler)
+                if (handler != null && host != null && NetworkSpeedSchedule.shouldReschedule(
+                        message?.what ?: -1, bg.get(host) === handler, hidden.getBoolean(host),
+                        handler.hasMessages(NetworkSpeedSchedule.SAMPLE))) {
+                    handler.removeMessages(NetworkSpeedSchedule.SAMPLE)
+                    handler.sendEmptyMessageDelayed(NetworkSpeedSchedule.SAMPLE, config.updateIntervalMs)
+                }
                 result
-            }
-            if (ok) installed++
-        }
-        return installed
-    }
-
-    private fun reschedule(handler: Any?, message: Any?, config: Config) {
-        if (handler == null || message == null) return
-        val what = (Reflect.readField(message, "what") as? Int) ?: return
-        Reflect.callWith(handler, "removeMessages", what)
-        Reflect.callWith(handler, "sendEmptyMessageDelayed", what, config.updateIntervalMs)
+            }) 1 else 0
     }
 
     // ------------------------------------------------------------------ 设置快照
@@ -420,6 +264,7 @@ internal object StatusBarNetworkSpeed {
         val verticalOffset: Int,
         val updateIntervalMs: Long,
     ) {
+        val text = NetworkSpeedText.Options(style, icon, hide, hideAll, swap, lowLevel, unitSuffix)
         companion object {
             fun of(settings: HookSettings): Config = Config(
                 style = settings.number(KEY_STYLE, 0, 0, 4),
@@ -438,7 +283,7 @@ internal object StatusBarNetworkSpeed {
                 leftMargin = settings.number(KEY_LEFT_MARGIN, 0, 0, 200).toFloat(),
                 rightMargin = settings.number(KEY_RIGHT_MARGIN, 0, 0, 200).toFloat(),
                 verticalOffset = settings.number(KEY_VERTICAL_OFFSET, 40, 0, 800),
-                updateIntervalMs = settings.number(KEY_UPDATE_SPACING, 40, 0, 1000) * 100L,
+                updateIntervalMs = settings.number(KEY_UPDATE_SPACING, 40, 10, 100) * 100L,
             )
         }
     }

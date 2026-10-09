@@ -159,6 +159,14 @@
         "orientation=\"horizontal\"",
         "wrap_content"
       ]
+    },
+    {
+      "locator": "dex_class:Lcom/miui/misound/playervolume/f;",
+      "contains": [
+        ".method public static b(Z)Landroid/view/WindowManager$LayoutParams;",
+        "const p0, 0x1048106",
+        "->flags:I"
+      ]
     }
   ],
   "resourceFiles": [
