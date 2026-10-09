@@ -1375,8 +1375,12 @@
       "key": "prefs_key_system_ui_status_bar_battery_style_enable_custom",
       "title": "启用修改",
       "kind": "SwitchPreference",
-      "status": "needs_audit_existing_partial",
-      "target": null
+      "status": "repaired_static_pending_device",
+      "target": "status_bar_battery_style.custom",
+      "repairedFindings": [
+        "F08"
+      ],
+      "boundary": "Battery visibility/font composition repair; cached OS4 host evidence and local policy tests only. Hook ordering, rendering and lifecycle device acceptance pending; see docs/migration-battery-followup.md."
     },
     {
       "page": "system_ui_status_bar_battery_styles",
@@ -1391,16 +1395,24 @@
       "key": "prefs_key_system_ui_status_bar_battery_style_font_size",
       "title": "电量百分比字体大小",
       "kind": "SeekBarPreferenceCompat",
-      "status": "needs_audit_existing_partial",
-      "target": null
+      "status": "repaired_static_pending_device",
+      "target": "status_bar_battery_style.font_size",
+      "repairedFindings": [
+        "F08"
+      ],
+      "boundary": "Battery visibility/font composition repair; cached OS4 host evidence and local policy tests only. Hook ordering, rendering and lifecycle device acceptance pending; see docs/migration-battery-followup.md."
     },
     {
       "page": "system_ui_status_bar_battery_styles",
       "key": "prefs_key_system_ui_status_bar_battery_style_font_mark_size",
       "title": "电量百分比符号字体大小",
       "kind": "SeekBarPreferenceCompat",
-      "status": "needs_audit_existing_partial",
-      "target": null
+      "status": "repaired_static_pending_device",
+      "target": "status_bar_battery_style.font_mark_size",
+      "repairedFindings": [
+        "F08"
+      ],
+      "boundary": "Battery visibility/font composition repair; cached OS4 host evidence and local policy tests only. Hook ordering, rendering and lifecycle device acceptance pending; see docs/migration-battery-followup.md."
     },
     {
       "page": "system_ui_status_bar_battery_styles",
@@ -1679,16 +1691,24 @@
       "key": "prefs_key_system_ui_status_bar_battery_percent",
       "title": "隐藏电量百分比",
       "kind": "SwitchPreference",
-      "status": "needs_audit_existing_partial",
-      "target": null
+      "status": "repaired_static_pending_device",
+      "target": "status_bar_icons.battery_percent",
+      "repairedFindings": [
+        "F08"
+      ],
+      "boundary": "Battery visibility/font composition repair; cached OS4 host evidence and local policy tests only. Hook ordering, rendering and lifecycle device acceptance pending; see docs/migration-battery-followup.md."
     },
     {
       "page": "system_ui_status_bar_icon_manage_new",
       "key": "prefs_key_system_ui_status_bar_battery_percent_mark",
       "title": "隐藏电量百分比符号",
       "kind": "SwitchPreference",
-      "status": "needs_audit_existing_partial",
-      "target": null
+      "status": "repaired_static_pending_device",
+      "target": "status_bar_icons.battery_percent_mark",
+      "repairedFindings": [
+        "F08"
+      ],
+      "boundary": "Battery visibility/font composition repair; cached OS4 host evidence and local policy tests only. Hook ordering, rendering and lifecycle device acceptance pending; see docs/migration-battery-followup.md."
     },
     {
       "page": "system_ui_status_bar_icon_manage_new",
@@ -1703,8 +1723,12 @@
       "key": "prefs_key_system_ui_status_bar_battery_icon",
       "title": "隐藏电池图标",
       "kind": "SwitchPreference",
-      "status": "needs_audit_existing_partial",
-      "target": null
+      "status": "repaired_static_pending_device",
+      "target": "status_bar_icons.battery_icon",
+      "repairedFindings": [
+        "F07"
+      ],
+      "boundary": "Battery visibility/font composition repair; cached OS4 host evidence and local policy tests only. Hook ordering, rendering and lifecycle device acceptance pending; see docs/migration-battery-followup.md."
     },
     {
       "page": "system_ui_status_bar_icon_manage_new",

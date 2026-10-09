@@ -64,9 +64,6 @@ internal object StatusBarBatteryStyle {
 
     private const val BATTERY_VIEW = "com.android.systemui.statusbar.views.MiuiBatteryMeterView"
 
-    /** 电量百分比被「状态栏图标」那一页整体隐藏了 —— 位置交换与字号就都没有意义了。 */
-    private const val OPT_BATTERY_PERCENT_HIDDEN = "status_bar_icons.battery_percent"
-
     private val REFRESH_METHODS = arrayOf("onBatteryStyleChanged", "updateAll", "updateChargeAndText", "onAttachedToWindow")
 
     fun install(loader: ClassLoader, settings: HookSettings): Int {
@@ -81,8 +78,10 @@ internal object StatusBarBatteryStyle {
 
         // 设置在整个进程生命周期里读一次就够：改完开关本来就要重启系统界面（见 HookDispatcher）。
         // 把值先取出来，拦截体里就只剩纯几何计算，不必每次刷新都碰一遍设置代理。
+        val visibility = BatteryVisibilityPolicy.from(settings)
         val style = Style(
-            changeLocation = wantsChangeLocation && !settings.isOn(OPT_BATTERY_PERCENT_HIDDEN),
+            visibility = visibility,
+            changeLocation = wantsChangeLocation && !visibility.hidePercent,
             custom = wantsCustom,
             bold = settings.isOn(OPT_BOLD),
             fontSize = settings.number(KEY_FONT_SIZE, DEFAULT_FONT_SIZE, 0, 200),
@@ -117,9 +116,10 @@ internal object StatusBarBatteryStyle {
      * 一次算好的样式。
      *
      * 除布尔量外都是**滑块的存储值**（整数），显示值 = 存储值 / 2 —— 与界面上的
-     * 「一个显示单位等于两个存储单位」严格对应，换算只发生在 [apply] 里一处。
+     * 「一个显示单位等于两个存储单位」严格对应；字号由共用策略换算，边距在 [apply] 换算。
      */
     private class Style(
+        val visibility: BatteryVisibilityPolicy,
         val changeLocation: Boolean,
         val custom: Boolean,
         val bold: Boolean,
@@ -139,17 +139,16 @@ internal object StatusBarBatteryStyle {
         if (style.changeLocation) changeLocation(target)
         if (!style.custom) return
 
-        val fontSize = style.fontSize * 0.5f
-        if (fontSize > MIN_USEFUL_FONT_SIZE) {
-            percent.setTextSize(TypedValue.COMPLEX_UNIT_DIP, fontSize)
+        style.visibility.percentSizeDp(style.fontSize)?.let { size ->
+            percent.setTextSize(TypedValue.COMPLEX_UNIT_DIP, size)
         }
-        val fontSizeMark = style.fontSizeMark * 0.5f
-        if (mark != null && fontSizeMark > MIN_USEFUL_FONT_SIZE) {
-            mark.setTextSize(TypedValue.COMPLEX_UNIT_DIP, fontSizeMark)
+        style.visibility.markSizeDp(style.fontSizeMark)?.let { size ->
+            mark?.setTextSize(TypedValue.COMPLEX_UNIT_DIP, size)
         }
+        if (style.visibility.hidePercent) return
         if (style.bold) {
             percent.typeface = Typeface.DEFAULT_BOLD
-            mark?.typeface = Typeface.DEFAULT_BOLD
+            if (!style.visibility.hidesMark) mark?.typeface = Typeface.DEFAULT_BOLD
         }
 
         val density = percent.resources.displayMetrics.density
@@ -196,9 +195,6 @@ internal object StatusBarBatteryStyle {
             if (Build.VERSION.SDK_INT >= 29) parent.suppressLayout(false)
         }
     }
-
-    /** 参考项目里「小于 7.5dp 就不动」那条门限：再小的字没人看得见，只是把布局弄乱。 */
-    private const val MIN_USEFUL_FONT_SIZE = 7.5f
 
     /** 百分号偏移量的基准值（参考项目里那个写死的 8）。 */
     private const val MARK_OFFSET_BASELINE = 8

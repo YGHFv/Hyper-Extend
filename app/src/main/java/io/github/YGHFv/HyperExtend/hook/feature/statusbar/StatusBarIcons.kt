@@ -47,10 +47,6 @@ internal object StatusBarIcons {
 
     private const val OPT_NOTIFICATION_MAX = "status_bar_icons.notification_icon_max"
     private const val KEY_NOTIFICATION_MAX = "status_bar_icons.notification_icon_max_value"
-    private const val OPT_BATTERY_PERCENT = "status_bar_icons.battery_percent"
-    private const val OPT_BATTERY_MARK = "status_bar_icons.battery_percent_mark"
-    private const val OPT_BATTERY_CHARGING = "status_bar_icons.battery_charging"
-    private const val OPT_BATTERY_ICON = "status_bar_icons.battery_icon"
     private const val OPT_HIDE_MUTE = "status_bar_icons.hide_mute"
     private const val OPT_HIDE_SPEAKERPHONE = "status_bar_icons.hide_speakerphone"
     private const val OPT_HIDE_RECORD = "status_bar_icons.hide_call_record"
@@ -176,22 +172,20 @@ internal object StatusBarIcons {
      * 三个更新入口都挂：`onBatteryStyleChanged` 管样式切换、`updateAll` 管整体刷新、
      * `updateChargeAndText` 管充电与文字刷新。只挂其中一个的话，用户会看到
      * 「刚改设置时好了，插上充电器又回来了」这种时好时坏的现象。
+     * 重新附着时也补一次，与字号钩子的生命周期入口保持一致。
      */
     private fun installBattery(loader: ClassLoader, settings: HookSettings): Int {
-        val wantsAnything = settings.isOn(OPT_BATTERY_ICON) ||
-            settings.isOn(OPT_BATTERY_PERCENT) ||
-            settings.isOn(OPT_BATTERY_MARK) ||
-            settings.isOn(OPT_BATTERY_CHARGING)
-        if (!wantsAnything) return 0
+        val visibility = BatteryVisibilityPolicy.from(settings)
+        if (!visibility.hidesAnything) return 0
         val view = Reflect.loadClass(loader, BATTERY_VIEW) ?: run {
             ModuleLog.warn("$FEATURE: $BATTERY_VIEW not found — battery icons skipped")
             return 0
         }
         var installed = 0
-        for (name in arrayOf("onBatteryStyleChanged", "updateAll", "updateChargeAndText")) {
+        for (name in arrayOf("onBatteryStyleChanged", "updateAll", "updateChargeAndText", "onAttachedToWindow")) {
             val method = Reflect.findMethods(view, name).firstOrNull() ?: continue
             val ok = HookRuntime.hookAfter(method, "$FEATURE/MiuiBatteryMeterView#$name") { chain, original ->
-                applyBatteryVisibility(chain.thisObject, settings)
+                applyBatteryVisibility(chain.thisObject, visibility)
                 original
             }
             if (ok) installed++
@@ -199,25 +193,13 @@ internal object StatusBarIcons {
         return installed
     }
 
-    private fun applyBatteryVisibility(target: Any?, settings: HookSettings) {
+    private fun applyBatteryVisibility(target: Any?, visibility: BatteryVisibilityPolicy) {
         if (target == null) return
-        if (settings.isOn(OPT_BATTERY_ICON)) {
-            (Reflect.readField(target, "mBatteryIconView") as? View)?.visibility = View.GONE
-            // 数字样式的电池主体是另一个 View，不一起藏会剩下一个空壳。
-            if (Reflect.readField(target, "mBatteryStyle") == 1) {
-                (Reflect.readField(target, "mBatteryDigitalView") as? View)?.visibility = View.GONE
-            }
+        for (field in visibility.hiddenViewFields(Reflect.readField(target, "mBatteryStyle") as? Int)) {
+            (Reflect.readField(target, field) as? View)?.visibility = View.GONE
         }
-        if (settings.isOn(OPT_BATTERY_PERCENT) || settings.isOn(OPT_BATTERY_MARK)) {
-            (Reflect.readField(target, "mBatteryPercentMarkView") as? TextView)?.textSize = 0f
-        }
-        if (settings.isOn(OPT_BATTERY_PERCENT)) {
-            (Reflect.readField(target, "mBatteryPercentView") as? TextView)?.textSize = 0f
-            // 本机 OS4 上这个字段已经没有了（百分比改由别处绘制），取不到就跳过。
-            (Reflect.readField(target, "mBatteryTextDigitView") as? TextView)?.textSize = 0f
-        }
-        if (settings.isOn(OPT_BATTERY_CHARGING)) {
-            (Reflect.readField(target, "mBatteryChargingView") as? View)?.visibility = View.GONE
+        for (field in visibility.hiddenTextFields()) {
+            (Reflect.readField(target, field) as? TextView)?.textSize = 0f
         }
     }
 
