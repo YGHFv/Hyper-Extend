@@ -1,13 +1,15 @@
 # Migration completeness audit - 2026-10-09
 
-## Repair follow-up (source 0.1.3, not deployed)
+## Repair follow-up (0.1.3 installed, hosts not reloaded)
 
 The F01-F06 defects below describe `beb0fda` / installed 0.1.2. They are preserved
 as historical evidence, **not the status of current source**. Repairs, regression
 coverage, explicit implementation differences and remaining device checks are in
 [migration-repair-0.1.3.md](migration-repair-0.1.3.md). The replacement APK has not
-been installed; no host restart or feature toggle was performed. The old APK's
-risk warning still applies until a controlled update/load/acceptance.
+been loaded into existing hosts by a requested restart/reload. Installation of
+0.1.3 succeeded at 13:25:22 on the same day, with matching APK hash and unchanged
+host PIDs; no feature toggle or functional acceptance was performed. The old-code
+risk warning still applies to existing hosts until controlled load/acceptance.
 
 ## Result and deployment state (historical)
 

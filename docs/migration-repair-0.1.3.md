@@ -2,17 +2,21 @@
 
 ## Deployment and acceptance
 
-- Follow-up installation requested on 2026-10-09: `adb install -r` at 13:22
-  (Asia/Shanghai) failed with `no devices/emulators found`. Device listing,
-  reconnect and mDNS discovery found no target. The APK remains **not installed**;
-  this does not prevent committing/pushing the source repair at the user's request.
+- Follow-up deployment on 2026-10-09: initial installation at 13:22 failed
+  because ADB had no device. After reconnection, `adb install -r` succeeded at
+  13:25:22 (Asia/Shanghai); package manager confirms `0.1.3` / `4`, and installed
+  APK SHA-256 matches the tested artifact. Source repair was pushed as `42d49da`.
+- SystemUI, MiSound, screenshot and system_server PIDs were identical before and
+  after installation (4990 / 10157 / 10463 / 3641 respectively). No host restart,
+  hot reload, switch/scope change or functional device acceptance was performed.
 - Source version: `0.1.3` / versionCode `4`, repairing the `beb0fda` implementation
   audited in `676b3cc`. The original audit remains a historical record.
-- **No APK installation, host restart, hot reload, feature enablement, LSPosed
-  scope change or device failure injection was performed in this repair.**
-- The previously installed 0.1.2 APK is not repaired by editing this checkout.
-  Its non-default network-speed risk still applies. Do not use it to validate
-  the fix. A controlled replacement/load is a separate operation.
+- **The code-repair phase did not deploy. The later user-requested installation
+  above does not include host restart, hot reload, feature enablement, LSPosed
+  scope change or device failure injection.**
+- The on-disk 0.1.2 APK has been replaced, but already-running injected hosts
+  are not guaranteed to load the new code until a controlled reload/restart.
+  Do not enable custom network styles or treat installation as fix acceptance.
 - Source fixes and local tests are complete for the confirmed F01-F06 defects.
   Android lifecycle/rendering/audio acceptance is still pending. This is not a
   claim that all upstream features or all 336 preference rows are migrated.
@@ -114,8 +118,8 @@ notification-icon rendering.
 
 APK: `app/build/outputs/apk/release/app-release.apk`, version `0.1.3` / `4`.
 Final build hash/size are recorded in `migration-repair-build.json`.
-The subsequent user request authorizes committing/pushing this repair. Installation
-is still pending reconnection; no host restart or functional acceptance is included.
+The subsequent user request authorized source commit/push and the successful
+installation recorded above. No host restart or functional acceptance is included.
 
 ```powershell
 python tools/systemui_inventory.py .workbuddy/refsrc/HyperCeiler
