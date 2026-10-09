@@ -40,16 +40,21 @@ class AppVolumePolicyTest {
         assertEquals(150, margin)
         assertEquals(200, AppVolumePolicy.margin(margin, 50, 0))
     }
-    @Test fun featureIsOptInCrossScopeAndExplicitlyUnverified() {
+    @Test fun featureIsOptInCrossScopeAndReportsLimitedDeviceAcceptance() {
         val feature = featureById(AppVolumeSettings.FEATURE)!!
         assertFalse(feature.defaultEnabled)
         assertEquals(listOf("systemui", "misound"), feature.scopes)
         assertEquals("systemui", feature.entryScope!!.id)
         assertEquals("com.miui.misound", scopeById("misound")!!.process)
-        assertTrue(feature.requirement!!.contains("尚未真机验收"))
+        assertTrue(feature.requirement!!.contains("当前适配设备已确认使用正常"))
+        assertTrue(feature.requirement.contains("仍需完整回归"))
         assertTrue(feature.requirement.contains("不含降噪"))
+        assertTrue(feature.requirement.contains("直接使用官方展开/关闭动画"))
         assertTrue(feature.requirement.contains("隐藏原生悬浮球"))
-        assertTrue(feature.requirement.contains("局部毛玻璃卡片"))
+        assertTrue(feature.requirement.contains("不自动解除总静音"))
+        assertTrue(feature.requirement.contains("保留原生媒体总音量列"))
+        assertTrue(feature.requirement.contains("隐藏静音、勿扰和定时快捷按钮"))
+        assertTrue(feature.requirement.contains("共享 UID"))
         assertFalse(feature.requirement.contains("仅迁移入口"))
         assertEquals("Apache-2.0", feature.license)
     }

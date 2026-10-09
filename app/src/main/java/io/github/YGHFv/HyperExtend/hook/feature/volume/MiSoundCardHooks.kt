@@ -19,12 +19,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.ViewOutlineProvider
 import android.view.WindowManager
-import android.view.animation.AccelerateInterpolator
-import android.view.animation.AlphaAnimation
-import android.view.animation.Animation
-import android.view.animation.AnimationSet
-import android.view.animation.DecelerateInterpolator
-import android.view.animation.TranslateAnimation
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.SeekBar
@@ -41,6 +35,10 @@ import androidx.annotation.RequiresApi
 @RequiresApi(33)
 internal object MiSoundCardHooks {
     private val cards = WeakHashMap<ViewGroup, WeakReference<Card>>()
+
+    fun prepareOpen(root: View?, style: AppVolumePanelStyle?) {
+        cards[root]?.get()?.prepare(style)
+    }
 
     fun install(loader: ClassLoader, controller: Class<*>): Int {
         val adapter = Class.forName(controller.name + "\$i", false, loader)
@@ -93,6 +91,7 @@ internal object MiSoundCardHooks {
                             WindowManager.LayoutParams.FLAG_DIM_BEHIND).inv()
                         lp.dimAmount = 0f
                         lp.setBlurBehindRadius(0)
+                        lp.windowAnimations = 0
                     }
                 }
                 chain.proceed()
@@ -112,16 +111,13 @@ internal object MiSoundCardHooks {
                 if (!supported(host) || status.getInt(host) != 5000) return@hook chain.proceed()
                 val current = card(host) ?: return@hook chain.proceed()
                 if (!current.root.isAttachedToWindow) return@hook chain.proceed()
-                val queue = handler.get(host) as Handler
-                val token = current.hide()
-                // Use native window cleanup, but never let an old completion close a new panel.
-                val scheduled = queue.postDelayed({
+                status.setInt(host, 301)
+                current.hide { token ->
+                    // Use native cleanup only after the morph finishes, never on an old generation.
                     Reflect.attempt {
                         if (current.transition.accepts(token) && status.getInt(host) == 301 && page.get(host) === current.root) cleanup.invoke(host)
                     }
-                }, 200)
-                if (!scheduled) return@hook chain.proceed()
-                status.setInt(host, 301)
+                }
                 null
             }) count++
         if (HookRuntime.hookAfter(ctor, "app_volume/card/pages") { chain, result ->
@@ -178,12 +174,22 @@ internal object MiSoundCardHooks {
         private var radius = 0f
         private var windowWidth = 0
         private var windowHeight = 0
+        private var requestedStyle: AppVolumePanelStyle? = null
+        private var panelStyle: AppVolumePanelStyle? = null
+        private var styleWarningLogged = false
+        private val motion = AppVolumeCardMotion(body)
         private var blurDrawable: Drawable? = null
         private var fallbackDrawable: GradientDrawable? = null
         private var blurManager: WindowManager? = null
         private var blurWarningLogged = false
         private val blurListener = Consumer<Boolean> { Reflect.attempt { applyBlur() } }
         val transition = AppVolumeCardTransition()
+
+        fun prepare(style: AppVolumePanelStyle?) {
+            requestedStyle = style
+            panelStyle = null
+            motion.cancel()
+        }
 
         companion object {
             fun create(host: Any, root: ViewGroup): Card? {
@@ -216,22 +222,39 @@ internal object MiSoundCardHooks {
             val host = controller.get() ?: return
             val context = root.context
             val metrics = context.resources.displayMetrics
+            val real = NativeVolumePanelStyle.displayMetrics(root)
+            @Suppress("DEPRECATION")
+            val display = root.display ?: context.getSystemService(WindowManager::class.java).defaultDisplay
+            fun AppVolumePanelStyle.current() = matches(real.widthPixels, real.heightPixels, real.densityDpi, display.rotation, display.displayId)
+            val style = requestedStyle?.takeIf { it.current() } ?: panelStyle?.takeIf { it.current() }
+                ?: NativeVolumePanelStyle.fallback(root)
+            if (requestedStyle != null && requestedStyle?.current() != true) requestedStyle = null
+            if (panelStyle != null && panelStyle != style) motion.cancel()
+            panelStyle = style
+            val availableWidth = windowWidth.takeIf { it > 0 } ?: metrics.widthPixels
+            val availableHeight = windowHeight.takeIf { it > 0 } ?: metrics.heightPixels
+            val origin = IntArray(2)
+            if (root.isAttachedToWindow) root.getLocationOnScreen(origin)
+            val targetTop = style?.localTop(origin[1], availableHeight, 0) ?: (availableHeight * .22f).toInt()
+            val targetRight = style?.localRight(origin[0], availableWidth, 0) ?: (16 * metrics.density).toInt()
             val geometry = AppVolumeCardGeometry.calculate(
-                windowWidth.takeIf { it > 0 } ?: metrics.widthPixels,
-                windowHeight.takeIf { it > 0 } ?: metrics.heightPixels, metrics.density, columns)
-            (root as LinearLayout).gravity = Gravity.RIGHT or Gravity.CENTER_VERTICAL
+                (availableWidth - targetRight).coerceAtLeast(1),
+                (availableHeight - targetTop).coerceAtLeast(1), metrics.density, columns, style)
+            (root as LinearLayout).gravity = Gravity.RIGHT or Gravity.TOP
+            root.setPadding(0, 0, 0, 0)
             root.clipChildren = false
             root.clipToPadding = false
             root.setBackgroundColor(Color.TRANSPARENT)
             body.gravity = Gravity.CENTER
             body.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply {
-                gravity = Gravity.RIGHT or Gravity.CENTER_VERTICAL
-                rightMargin = geometry.endMargin
+                gravity = Gravity.RIGHT or Gravity.TOP
+                rightMargin = targetRight
+                topMargin = targetTop
             }
             body.setPadding(geometry.horizontalPadding, geometry.padding, geometry.horizontalPadding, geometry.padding)
             body.isClickable = true
             body.isFocusable = true
-            radius = 28 * metrics.density
+            radius = style?.radius?.toFloat() ?: 28 * metrics.density
             body.outlineProvider = object : ViewOutlineProvider() {
                 override fun getOutline(view: View, outline: Outline) {
                     outline.setRoundRect(0, 0, view.width, view.height, radius)
@@ -268,21 +291,33 @@ internal object MiSoundCardHooks {
                 }
             }
             if (body.isAttachedToWindow) applyBlur()
+            body.measure(View.MeasureSpec.makeMeasureSpec(availableWidth, View.MeasureSpec.AT_MOST),
+                View.MeasureSpec.makeMeasureSpec(availableHeight, View.MeasureSpec.AT_MOST))
+            (body.layoutParams as LinearLayout.LayoutParams).let { lp ->
+                lp.topMargin = style?.localTop(origin[1], availableHeight, body.measuredHeight)
+                    ?: targetTop.coerceAtMost((availableHeight - body.measuredHeight).coerceAtLeast(0))
+                lp.rightMargin = style?.localRight(origin[0], availableWidth, body.measuredWidth) ?: targetRight
+                body.layoutParams = lp
+            }
         }
 
         fun show() {
+            if (requestedStyle == null && !styleWarningLogged) {
+                styleWarningLogged = true
+                ModuleLog.warn("app_volume no native snapshot: ${if (panelStyle == null) "bounded top fallback, no morph" else "resource-only geometry/base springs"}")
+            }
             transition.reset()
             pager.clearAnimation()
             body.clearAnimation()
             applyBlur()
-            body.startAnimation(slide(true))
+            motion.show { panelStyle }
         }
 
-        fun hide(): Int {
+        fun hide(complete: (Int) -> Unit) {
             pager.clearAnimation()
             body.clearAnimation()
-            body.startAnimation(slide(false))
-            return transition.close()
+            val token = transition.close()
+            motion.hide(panelStyle) { complete(token) }
         }
 
         override fun onViewAttachedToWindow(view: View) {
@@ -301,6 +336,8 @@ internal object MiSoundCardHooks {
             transition.reset()
             windowWidth = 0; windowHeight = 0
             body.clearAnimation(); pager.clearAnimation()
+            motion.cancel()
+            requestedStyle = null; panelStyle = null
             blurManager?.let { Reflect.attempt { it.removeCrossWindowBlurEnabledListener(blurListener) } }
             blurManager = null
             body.background = null
@@ -357,12 +394,4 @@ internal object MiSoundCardHooks {
         }
     }
 
-    private fun slide(enter: Boolean): Animation = AnimationSet(true).apply {
-        addAnimation(TranslateAnimation(Animation.RELATIVE_TO_SELF, if (enter) 1f else 0f,
-            Animation.RELATIVE_TO_SELF, if (enter) 0f else 1f, Animation.RELATIVE_TO_SELF, 0f, Animation.RELATIVE_TO_SELF, 0f))
-        addAnimation(AlphaAnimation(if (enter) 0f else 1f, if (enter) 1f else 0f))
-        duration = if (enter) 220 else 200
-        interpolator = if (enter) DecelerateInterpolator(1.8f) else AccelerateInterpolator(1.8f)
-        fillAfter = !enter
-    }
 }

@@ -8,6 +8,7 @@ package io.github.YGHFv.HyperExtend.hook.feature.systemui
 import android.view.View
 import io.github.YGHFv.HyperExtend.hook.HookRuntime
 import io.github.YGHFv.HyperExtend.hook.Reflect
+import io.github.YGHFv.HyperExtend.hook.feature.volume.AppVolumeEntryHooks
 import java.util.WeakHashMap
 
 internal object PluginAppearanceHooks {
@@ -42,13 +43,19 @@ internal object PluginAppearanceHooks {
                 val requested = chain.args[0] == true
                 footerRequested[host] = requested
                 val expanded = Reflect.callWith(host, "isExpanded") as? Boolean ?: return@hookAfter original
-                (ringer.get(host) as View).visibility = if (collapsedFooterVisible(requested, expanded)) View.VISIBLE else View.GONE
+                val appPanel = AppVolumeEntryHooks.ownsExpandedPanel(host)
+                (ringer.get(host) as View).visibility = when {
+                    collapsedFooterVisible(requested, expanded, appPanel) -> View.VISIBLE
+                    appPanel -> View.INVISIBLE
+                    else -> View.GONE
+                }
                 original
             }) count++
         if (HookRuntime.hookAfter(expand, "$id/expand/$suffix") { chain, original ->
                 val host = chain.thisObject as View
                 val requested = footerRequested[host]
-                if (chain.args[0] == false) (ringer.get(host) as View).visibility = View.GONE
+                if (AppVolumeEntryHooks.ownsExpandedPanel(host)) (ringer.get(host) as View).visibility = View.INVISIBLE
+                else if (chain.args[0] == false) (ringer.get(host) as View).visibility = View.GONE
                 else if (requested != null) (ringer.get(host) as View).visibility = if (requested) View.VISIBLE else View.GONE
                 original
             }) count++
@@ -56,4 +63,5 @@ internal object PluginAppearanceHooks {
     }
 }
 
-internal fun collapsedFooterVisible(hostRequested: Boolean, expanded: Boolean): Boolean = hostRequested && expanded
+internal fun collapsedFooterVisible(hostRequested: Boolean, expanded: Boolean, appPanel: Boolean = false): Boolean =
+    hostRequested && expanded && !appPanel
