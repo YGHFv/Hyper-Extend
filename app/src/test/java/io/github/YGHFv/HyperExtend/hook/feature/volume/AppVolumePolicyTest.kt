@@ -81,6 +81,47 @@ class AppVolumePolicyTest {
         assertEquals(300, geometry.restore(230))
     }
 
+    @Test fun landscapeCentersTheEntryAndNativeControlsTogether() {
+        val geometry = AppVolumeGeometry()
+        val nativeHeight = 650
+        val displayHeight = 940
+        val rowHeight = 120
+        val nativeTop = (displayHeight - nativeHeight) / 2
+        val top = geometry.refresh(nativeTop, rowHeight, true, centered = true)
+        assertEquals(60, geometry.offset)
+        assertEquals(displayHeight / 2, top + (nativeHeight + rowHeight) / 2)
+        assertEquals(nativeTop, geometry.restore(top))
+    }
+
+    @Test fun landscapeRequiresRoomForHalfTheRowNotTheWholeRow() {
+        assertEquals(25, AppVolumePolicy.offset(30, 50, true, centered = true))
+        assertEquals(0, AppVolumePolicy.offset(24, 50, true, centered = true))
+        assertEquals(0, AppVolumePolicy.offset(30, 50, true, centered = false))
+        assertEquals(0, AppVolumePolicy.offset(30, 50, false, centered = true))
+        assertEquals(0, AppVolumePolicy.offset(30, 0, true, centered = true))
+        assertEquals(0, AppVolumePolicy.offset(30, -1, true, centered = true))
+    }
+
+    @Test fun centeredOddRowHeightsRoundUpAndCanRestore() {
+        val geometry = AppVolumeGeometry()
+        assertEquals(24, geometry.refresh(50, 51, true, centered = true))
+        assertEquals(26, geometry.offset)
+        assertEquals(50, geometry.restore(24))
+    }
+
+    @Test fun orientationChangesDoNotAccumulateFullAndHalfOffsets() {
+        val geometry = AppVolumeGeometry()
+        var margin = geometry.refresh(200, 50, true)
+        assertEquals(150, margin)
+        repeat(10) { margin = geometry.refresh(margin, 50, true, centered = true) }
+        assertEquals(175, margin)
+        assertEquals(200, geometry.restore(margin))
+        margin = geometry.refresh(90, 70, true, centered = true)
+        assertEquals(55, margin)
+        assertEquals(90, geometry.refresh(margin, 70, false, centered = true))
+        assertEquals(0, geometry.offset)
+    }
+
     @Test fun dismissAndReshowRejectStaleBroadcastSuccess() {
         val state = AppVolumeLifecycle()
         assertNull(state.beginRequest())

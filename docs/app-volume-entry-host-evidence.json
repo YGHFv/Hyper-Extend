@@ -1,0 +1,83 @@
+{
+  "host": {
+    "packageName": "miui.systemui.plugin",
+    "versionCode": 183022200,
+    "workspaceId": "gqbnd0ih"
+  },
+  "checkedAt": "2026-10-10",
+  "scope": "Read-only static evidence for collapsed entry animation targets and landscape centering. Not device runtime acceptance.",
+  "evidence": [
+    {
+      "locator": "dex_method:Lcom/android/systemui/miui/volume/VolumePanelViewController$3;->getVolumeContainer()Landroid/view/View;",
+      "contains": [
+        "->isExpanded()Z",
+        "->e0(Lcom/android/systemui/miui/volume/VolumePanelViewController;)Landroid/view/ViewGroup;"
+      ]
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/miui/volume/VolumePanelViewController;->e0(Lcom/android/systemui/miui/volume/VolumePanelViewController;)Landroid/view/ViewGroup;",
+      "contains": [
+        "->mVolumeContentView:Landroid/view/ViewGroup;"
+      ]
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/miui/volume/VolumePanelViewController;->initAnimListener(Lcom/android/systemui/miui/volume/VolumeColumn;)V",
+      "contains": [
+        "R$id;->bg_blur:I",
+        "R$id;->dnd_layout:I",
+        "R$id;->ringer_layout:I",
+        "->setSeekBarAnimListener"
+      ]
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/miui/volume/VolumePanelViewController$3;->setScale(FF)V",
+      "contains": [
+        "->getVolumeContainer()Landroid/view/View;",
+        "->setScaleX(F)V",
+        "->setScaleY(F)V",
+        "->val$mDndButton:Landroid/view/View;"
+      ]
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/miui/volume/VolumePanelViewController$3;->setVolY(FF)V",
+      "contains": [
+        "->getVolumeContainer()Landroid/view/View;",
+        "->getTranslationY()F",
+        "->setTranslationY(F)V"
+      ]
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/miui/volume/VolumePanelViewController$3;->resetView()V",
+      "contains": [
+        "->getVolumeContainer()Landroid/view/View;",
+        "->setTranslationY(F)V",
+        "->setScaleX(F)V",
+        "->setScaleY(F)V"
+      ]
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/miui/volume/VolumeShowHideAnimator;->initView(Landroid/view/View;Landroid/view/View;Landroid/view/View;)Lcom/android/systemui/miui/volume/VolumeShowHideAnimator;",
+      "contains": [
+        "R$id;->volume_dialog_container:I",
+        "->mVolumeContainer:Landroid/view/View;",
+        "R$id;->dnd_layout:I"
+      ]
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/miui/volume/MiuiVolumeDialogRes;->getMarginTop(Landroid/content/Context;ZZII)I",
+      "contains": [
+        "DeviceUtils;->isWideFoldDevice()Z",
+        "Configuration;->orientation:I",
+        "sub-int/2addr p3, p4",
+        "shr-int/lit8 p0, p3, 0x1"
+      ]
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/miui/volume/MiuiVolumeDialogMotion;->getCollapsedStates()Lcom/android/systemui/miui/ViewStateGroup;",
+      "contains": [
+        "->heightPixels:I",
+        "->getMarginTop(Landroid/content/Context;ZZII)I"
+      ]
+    }
+  ]
+}

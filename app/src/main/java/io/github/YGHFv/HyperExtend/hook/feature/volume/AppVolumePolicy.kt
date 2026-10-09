@@ -14,8 +14,10 @@ internal object AppVolumePolicy {
     fun visible(dialog: Boolean, expanded: Boolean, locked: Boolean, playing: Boolean, conflict: Boolean): Boolean =
         dialog && !expanded && !locked && playing && !conflict
 
-    fun offset(baseMargin: Int, rowHeight: Int, visible: Boolean): Int =
-        if (visible && rowHeight > 0 && baseMargin >= rowHeight) rowHeight else 0
+    fun offset(baseMargin: Int, rowHeight: Int, visible: Boolean, centered: Boolean = false): Int {
+        val shift = if (centered) rowHeight / 2 + rowHeight % 2 else rowHeight
+        return if (visible && rowHeight > 0 && baseMargin >= shift) shift else 0
+    }
 
     fun margin(current: Int, oldOffset: Int, newOffset: Int): Int = current + oldOffset - newOffset
 }
@@ -27,9 +29,9 @@ internal class AppVolumeGeometry {
 
     fun restore(current: Int): Int = (current + offset).also { offset = 0 }
 
-    fun refresh(current: Int, height: Int, visible: Boolean): Int {
+    fun refresh(current: Int, height: Int, visible: Boolean, centered: Boolean = false): Int {
         val base = current + offset
-        offset = AppVolumePolicy.offset(base, height, visible)
+        offset = AppVolumePolicy.offset(base, height, visible, centered)
         return base - offset
     }
 }
