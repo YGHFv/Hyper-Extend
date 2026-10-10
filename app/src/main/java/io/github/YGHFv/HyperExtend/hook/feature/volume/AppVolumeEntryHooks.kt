@@ -35,8 +35,11 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.Toast
 import io.github.YGHFv.HyperExtend.core.AppVolumeSettings
+import io.github.YGHFv.HyperExtend.core.AppVolumeButtonPosition
 import io.github.YGHFv.HyperExtend.core.ModuleLog
 import io.github.YGHFv.HyperExtend.hook.HookRuntime
+import io.github.YGHFv.HyperExtend.hook.HookSettings
+import io.github.YGHFv.HyperExtend.hook.SafeModeRuntime
 import io.github.YGHFv.HyperExtend.hook.Reflect
 import java.lang.ref.WeakReference
 import java.lang.reflect.Method
@@ -53,8 +56,9 @@ internal object AppVolumeEntryHooks {
     fun ownsExpandedPanel(dialog: View): Boolean =
         (dialog as? ViewGroup)?.let { states[it]?.get()?.panel?.active(it) } == true
 
-    fun installPlugin(loader: ClassLoader): Int {
+    fun installPlugin(loader: ClassLoader, settings: HookSettings): Int {
         if (Build.VERSION.SDK_INT < 33) return 0
+        val position = AppVolumeButtonPosition.fromVariant(settings.string(AppVolumeSettings.POSITION))
         val dialog = Class.forName(PREFIX + "MiuiVolumeDialogView", false, loader)
         val controller = Class.forName(PREFIX + "VolumePanelViewController", false, loader)
         val showPanel = controller.getDeclaredMethod("showVolumePanelH", Int::class.javaPrimitiveType)
@@ -97,7 +101,7 @@ internal object AppVolumeEntryHooks {
         // Both synchronous expand and asynchronous pre-draw show pass through apply().
         if (HookRuntime.hook(apply, "app_volume/nativeState/$suffix") { chain ->
                 val entry = states[chain.args[0]]?.get()
-                Reflect.attempt { entry?.restoreMargin() }
+                Reflect.attempt { entry?.restoreNativeLayout() }
                 val result = chain.proceed()
                 Reflect.attempt { entry?.update() }
                 Reflect.attempt { (chain.args[0] as? ViewGroup)?.let(panel::afterNativeState) }
@@ -105,7 +109,7 @@ internal object AppVolumeEntryHooks {
             }) count++
         if (HookRuntime.hook(layout, "app_volume/layout/$suffix") { chain ->
                 val entry = states[chain.thisObject]?.get()
-                Reflect.attempt { entry?.restoreMargin() }
+                Reflect.attempt { entry?.restoreNativeLayout() }
                 val result = chain.proceed()
                 Reflect.attempt { entry?.update() }
                 Reflect.attempt { (chain.thisObject as? ViewGroup)?.let(panel::afterNativeState) }
@@ -124,14 +128,15 @@ internal object AppVolumeEntryHooks {
         if (HookRuntime.hook(showPanel, "app_volume/controller/$suffix") { chain ->
                 Reflect.attempt {
                     val host = Reflect.readField(chain.thisObject, "mVolumeView") as? ViewGroup
-                    host?.let { entry(it, panel, flip, wideFold)?.bindController(chain.thisObject!!) }
+                    host?.let { entry(it, panel, flip, wideFold, position)?.bindController(chain.thisObject!!) }
                 }
                 chain.proceed()
             }) count++
         return count + panel.hookCount
     }
 
-    private fun entry(dialog: ViewGroup, panel: SystemUiAppVolumePanel, flip: Method, wideFold: Boolean): Entry? {
+    private fun entry(dialog: ViewGroup, panel: SystemUiAppVolumePanel, flip: Method, wideFold: Boolean,
+        position: AppVolumeButtonPosition): Entry? {
         if (!panel.available()) return null
         if (dialog.context.packageManager.getPackageInfo(PLUGIN, 0).longVersionCode != 183022200L) return null
         states[dialog]?.get()?.let { return it }
@@ -140,6 +145,15 @@ internal object AppVolumeEntryHooks {
         val host = Reflect.readField(dialog, "mRingerModeLayout") as? ViewGroup ?: return null
         if (Reflect.readField(host, "mNeedShowDialog") != true || flip.invoke(null) == true) return null
         return Reflect.attempt {
+            val silent = find(host, "ringer_layout")
+            val dnd = find(host, "dnd_layout")
+            val buttons = silent?.parent as? LinearLayout
+            if (position.inFooter && (buttons == null || dnd?.parent !== buttons)) return@attempt null
+            val container = if (position.inFooter) buttons!! else dialog
+            val index = AppVolumePlacementPolicy.insertionIndex(position,
+                buttons?.indexOfChild(silent) ?: -1, buttons?.indexOfChild(dnd) ?: -1)
+            if (index < 0) return@attempt null
+            val anchor = if (position.targetsSilent) silent else dnd
             val id = resource(dialog.context, "layout", "miui_ringer_mode_layout")
             if (id == 0) return@attempt null
             val row = LayoutInflater.from(dialog.context).inflate(id, dialog, false) as ViewGroup
@@ -159,12 +173,13 @@ internal object AppVolumeEntryHooks {
             reidentify(row)
             row.tag = TAG
             row.visibility = View.GONE
-            val state = Entry(dialog, row, click, icon, panel, flip, helper, wideFold)
+            val state = Entry(dialog, row, click, icon, panel, flip, helper, wideFold, position, host,
+                buttons, anchor, if (position.replacesNative) anchor else null)
             state.style()
             standard.accessibilityDelegate = null
             standard.importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS
             standard.isFocusable = false
-            click.contentDescription = "分应用音量"
+            click.contentDescription = "多应用音量调节"
             click.importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_YES
             click.isFocusable = true
             click.accessibilityDelegate = object : View.AccessibilityDelegate() {
@@ -175,7 +190,7 @@ internal object AppVolumeEntryHooks {
                 }
             }
             click.setOnClickListener { state.open() }
-            dialog.addView(row, 0, LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, state.height))
+            container.addView(row, index, LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, state.height))
             states[dialog] = WeakReference(state)
             row.addOnAttachStateChangeListener(state)
             if (row.isAttachedToWindow) state.onViewAttachedToWindow(row)
@@ -186,12 +201,21 @@ internal object AppVolumeEntryHooks {
     private class Entry(
         val dialog: ViewGroup, val row: ViewGroup, val click: View, val icon: ImageView,
         val panel: SystemUiAppVolumePanel, val flip: Method, val helper: Any, val wideFold: Boolean,
+        val position: AppVolumeButtonPosition, val footer: ViewGroup, val buttons: LinearLayout?,
+        val anchor: View?, val replaced: View?,
     ) : View.OnAttachStateChangeListener, ViewTreeObserver.OnPreDrawListener {
         private var controller: WeakReference<Any>? = null
         private var motionSource: View? = null
         var height = 0
         private val geometry = AppVolumeGeometry()
+        private val replacement = AppVolumeReplacementState()
         private val motion = AppVolumeEntryMotion()
+        private val parentMotion = AppVolumeEntryMotion()
+        private val footerHeight = AppVolumeFooterHeight()
+        private val footerFrame = buttons?.parent as? View
+        private val footerFrameLayout = View.OnLayoutChangeListener { _, _, top, _, bottom, _, _, _, _ ->
+            footerHeight.onLayout(bottom - top)
+        }
         private val lifecycle = AppVolumeLifecycle()
         private var wanted = false
         private var registered = false
@@ -228,7 +252,11 @@ internal object AppVolumeEntryHooks {
             icon.setImageDrawable(EqualizerDrawable())
             icon.imageTintList = ColorStateList.valueOf(Color.WHITE)
             icon.visibility = View.VISIBLE
-            height = click.layoutParams.height.coerceAtLeast(1) + dimension(dialog.context, "miui_volume_footer_margin_top", 10)
+            val gap = if (position.replacesNative) 0 else dimension(dialog.context, "miui_volume_footer_margin_top", 10)
+            height = click.layoutParams.height.coerceAtLeast(1) + gap
+            // Existing rows have a spacer before DND; put the new gap after our row,
+            // except below DND where it must precede the button instead.
+            row.setPadding(0, if (position == AppVolumeButtonPosition.BELOW_DND) gap else 0, 0, 0)
             row.layoutParams?.let { it.height = height; row.layoutParams = it }
         }
 
@@ -252,7 +280,7 @@ internal object AppVolumeEntryHooks {
             lifecycle.detach()
             main.removeCallbacksAndMessages(null)
             wanted = false
-            restoreMargin()
+            restoreNativeLayout()
             row.visibility = View.GONE
             resetMotion()
         }
@@ -263,29 +291,81 @@ internal object AppVolumeEntryHooks {
             if (lp.topMargin != target) { lp.topMargin = target; dialog.layoutParams = lp }
         }
 
+        private fun restoreReplacement() {
+            replaced?.let { target ->
+                val visibility = replacement.restore(target.visibility, View.GONE)
+                if (target.visibility != visibility) target.visibility = visibility
+            }
+        }
+
+        fun restoreNativeLayout() {
+            restoreMargin()
+            restoreReplacement()
+            resizeFooter(null)
+        }
+
+        private fun resizeFooter(added: Int?) {
+            if (!position.inFooter || position.replacesNative) return
+            val frame = buttons?.parent as? View ?: return
+            val params = frame.layoutParams ?: return
+            val target = if (added == null) footerHeight.restore(params.height) else footerHeight.apply(params.height, added)
+            if (params.height != target) { params.height = target; frame.layoutParams = params }
+        }
+
         fun update() {
             if (!lifecycle.dismissing) {
                 val expanded = Reflect.callWith(dialog, "isExpanded") as? Boolean ?: true
-                wanted = AppVolumePolicy.visible(lifecycle.visible && controller?.get() != null && motionSource != null &&
+                wanted = AppVolumePolicy.visible(!SafeModeRuntime.blocked && lifecycle.visible && controller?.get() != null && motionSource != null &&
                     !nativeOpening && !panel.active(dialog), expanded,
                     MediaPlayback.locked(dialog.context), MediaPlayback.active(dialog.context),
                     conflicts.any { dialog.findViewWithTag<View>(it) != null })
             }
             if (!wanted) lifecycle.cancelRequest()
+            updatePlacement()
+        }
+
+        private fun updatePlacement() {
             val lp = dialog.layoutParams as? FrameLayout.LayoutParams ?: return
             val vertical = lp.gravity and Gravity.VERTICAL_GRAVITY_MASK
             val topAnchored = vertical == Gravity.TOP || vertical == 0 || lp.gravity == -1
             // Ordinary landscape margins center the native height; include only half the added row.
             val centered = !wideFold && dialog.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
-            val target = geometry.refresh(lp.topMargin, height, wanted && topAnchored && flip.invoke(null) != true, centered)
-            if (!lifecycle.dismissing) row.visibility = if (geometry.offset > 0) View.VISIBLE else View.GONE
-            click.isEnabled = wanted && !lifecycle.opening && !lifecycle.dismissing
+            val eligible = wanted && topAnchored && flip.invoke(null) != true && !SafeModeRuntime.blocked
+            val visible: Boolean
+            val target: Int
+            if (!position.inFooter) {
+                target = geometry.refresh(lp.topMargin, height, eligible, centered)
+                visible = geometry.offset > 0
+            } else {
+                val added = if (position.replacesNative) 0 else height
+                val base = lp.topMargin + geometry.offset
+                val nativeHeight = dialog.height - footerHeight.measuredExtra
+                val parentHeight = (dialog.parent as? View)?.height ?: 0
+                val nativeVisible = anchor?.let { replacement.nativeVisibility(it.visibility, View.GONE) == View.VISIBLE } == true
+                visible = eligible && !nativeOpening && !panel.active(dialog) &&
+                    Reflect.callWith(dialog, "isExpanded") == false &&
+                    footer.visibility == View.VISIBLE && buttons?.orientation == LinearLayout.VERTICAL &&
+                    anchor?.parent === buttons && nativeVisible &&
+                    AppVolumePlacementPolicy.footerFits(base, nativeHeight, added, parentHeight - lp.bottomMargin, centered)
+                target = geometry.refresh(lp.topMargin, added, visible && centered, centered = true)
+            }
+            if (!lifecycle.dismissing) {
+                row.visibility = if (visible) View.VISIBLE else View.GONE
+                resizeFooter(if (visible) height else null)
+                if (visible) replaced?.let {
+                    val next = replacement.hide(it.visibility, View.GONE)
+                    if (it.visibility != next) it.visibility = next
+                }
+                else restoreReplacement()
+            }
+            click.isEnabled = visible && !lifecycle.opening && !lifecycle.dismissing
             if (lp.topMargin != target) { lp.topMargin = target; dialog.layoutParams = lp }
         }
 
         override fun onViewAttachedToWindow(v: View) {
             if (registered) return
             observer = dialog.viewTreeObserver.also { it.addOnPreDrawListener(this) }
+            footerFrame?.addOnLayoutChangeListener(footerFrameLayout)
             Reflect.attempt { audio?.registerAudioPlaybackCallback(callback, main) }
             registered = true
             Reflect.attempt { update() }
@@ -296,11 +376,17 @@ internal object AppVolumeEntryHooks {
             Reflect.attempt { audio?.unregisterAudioPlaybackCallback(callback) }
             Reflect.attempt { observer?.takeIf { it.isAlive }?.removeOnPreDrawListener(this) }
             observer = null
+            footerFrame?.removeOnLayoutChangeListener(footerFrameLayout)
             registered = false
         }
 
         override fun onPreDraw(): Boolean {
             Reflect.attempt {
+                if (SafeModeRuntime.blocked) {
+                    finishDismiss()
+                    return@attempt
+                }
+                if (position.inFooter && !lifecycle.dismissing) updatePlacement()
                 if (row.visibility == View.VISIBLE) {
                     if (MediaPlayback.locked(dialog.context)) {
                         lifecycle.cancelRequest()
@@ -318,24 +404,30 @@ internal object AppVolumeEntryHooks {
         }
 
         private fun syncMotion() {
-            motion.reset()
-            var source = motionSource
-            while (source != null && source !== dialog) {
-                val parent = source.parent as? View ?: break
-                motion.include(
-                    (source.left - parent.scrollX).toFloat(), (source.top - parent.scrollY).toFloat(),
-                    source.pivotX, source.pivotY, source.scaleX, source.scaleY,
-                    source.translationX, source.translationY, source.alpha,
-                )
-                source = parent
+            fun sample(start: View?, into: AppVolumeEntryMotion): Boolean {
+                into.reset()
+                var source = start
+                while (source != null && source !== dialog) {
+                    val parent = source.parent as? View ?: return false
+                    into.include(
+                        (source.left - parent.scrollX).toFloat(), (source.top - parent.scrollY).toFloat(),
+                        source.pivotX, source.pivotY, source.scaleX, source.scaleY,
+                        source.translationX, source.translationY, source.alpha,
+                    )
+                    source = parent
+                }
+                return source === dialog
             }
-            if (source !== dialog) { resetMotion(); return }
+            if (!sample(motionSource, motion) || !sample(row.parent as? View, parentMotion)) { resetMotion(); return }
             // Use the visible capsule center, not the row center (which includes the bottom gap).
             row.pivotX = click.left + click.width / 2f
             row.pivotY = click.top + click.height / 2f
-            row.scaleX = motion.scaleX; row.scaleY = motion.scaleY; row.alpha = motion.alpha
-            row.translationX = motion.translationX(row.left + row.pivotX - dialog.scrollX)
-            row.translationY = motion.translationY(row.top + row.pivotY - dialog.scrollY)
+            val parent = row.parent as? View ?: return
+            val residual = motion.relativeTo(parentMotion,
+                row.left + row.pivotX - parent.scrollX, row.top + row.pivotY - parent.scrollY)
+            if (residual == null) { resetMotion(); row.alpha = 0f; return }
+            row.scaleX = residual.scaleX; row.scaleY = residual.scaleY; row.alpha = residual.alpha
+            row.translationX = residual.translationX; row.translationY = residual.translationY
         }
 
         fun open() {
@@ -373,7 +465,7 @@ internal object AppVolumeEntryHooks {
                                 ModuleLog.info("app_volume query accepted: apps=${data.apps.size}; requesting official expansion")
                                 lifecycle.cancelRequest()
                                 nativeOpening = true
-                                restoreMargin()
+                                restoreNativeLayout()
                                 row.visibility = View.GONE
                                 // Let layout remove the extra row before the native anchor is captured.
                                 postOnNextLayout(data)

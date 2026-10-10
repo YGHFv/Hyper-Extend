@@ -42,8 +42,10 @@ import io.github.libxposed.api.XposedModuleInterface.SystemServerStartingParam
  *
  */
 class HyperXposedEntry : XposedModule() {
+    private var systemServerProcess = false
 
     override fun onModuleLoaded(param: ModuleLoadedParam) {
+        systemServerProcess = param.isSystemServer
         HookRuntime.attach(this)
         runCatching {
             ModuleLog.entry(
@@ -75,7 +77,8 @@ class HyperXposedEntry : XposedModule() {
         runCatching {
             // system_server 里首个包回调已被 onSystemServerStarting 取代；真走到这里说明该 ROM
             // 走了另一条路径，记一笔但不重复装 hook（PasskeyFix 自己幂等，这里只是省一次无用功）。
-            if (isSystemServerProcess()) {
+            // SystemUI and Settings may also share UID 1000; UID alone is not a process identity.
+            if (systemServerProcess) {
                 ModuleLog.info("packageReady in system_server: ${param.packageName} (no-op)")
                 return
             }
@@ -108,6 +111,7 @@ class HyperXposedEntry : XposedModule() {
             ModuleLog.warn("system_server settings unavailable — framework hooks skipped")
             return
         }
+        if (SafeModeRuntime.begin("system", null, settings)) return
         if (BootLoopGuard.shouldSkipSystemServerHooks(settings, countRestart = true)) {
             ModuleLog.warn("system_server hooks skipped (framework hook fuse engaged)")
             return
@@ -120,10 +124,6 @@ class HyperXposedEntry : XposedModule() {
 
     private fun hasCapability(capability: Long): Boolean =
         runCatching { (this as XposedInterface).frameworkProperties and capability != 0L }
-            .getOrDefault(false)
-
-    private fun isSystemServerProcess(): Boolean =
-        runCatching { android.os.Process.myUid() == android.os.Process.SYSTEM_UID }
             .getOrDefault(false)
 
     /**

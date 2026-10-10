@@ -1,0 +1,48 @@
+{
+  "recordedAt": "2026-10-10T18:33:17.154829+08:00",
+  "tests": {
+    "tests": 439,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "build": "successful",
+  "log": "build/panels-importance-build.log",
+  "apk": {
+    "path": "app/build/outputs/apk/release/app-release.apk",
+    "versionName": "0.1.3",
+    "versionCode": 4,
+    "bytes": 2679749,
+    "sha256": "a99bca1796d3a07fac735fa1ac2a41fb1574d1b4c993e41e6cf04769711d1f8c",
+    "r8": true
+  },
+  "settingsEvidence": {
+    "manifest": "docs/notification-importance-settings-evidence.json",
+    "refresh": ".workbuddy/tmp/importance-settings-refresh.json",
+    "definedMembers": 35,
+    "bodyFiles": 5,
+    "source": "Read-only adb pull from current device, local DEX/JADX; not MT",
+    "verified": true
+  },
+  "inventory": {
+    "pending": 87,
+    "implemented_static_verified": 89,
+    "repaired_static_pending_device": 19,
+    "partially_implemented_static_verified": 8,
+    "covered_by_existing_feature_per_user": 1,
+    "already_supported_by_current_host": 1,
+    "needs_audit_existing_partial": 132
+  },
+  "diffCheck": "passed; existing CRLF normalization warnings only",
+  "installed": false,
+  "restartedOrReloadedHost": false,
+  "changedFeatureScopeChannelSimNetwork": false,
+  "runtimeAcceptance": false,
+  "visualAcceptance": false,
+  "fullLint": "Not rerun; prior 22 known errors are not claimed fixed.",
+  "apkStringChecks": [
+    "notification_importance/settingsResume",
+    "findIndexOfValue",
+    "notification_importance: Settings importance listener bound (server read-back enabled)"
+  ]
+}

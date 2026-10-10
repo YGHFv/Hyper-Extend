@@ -1,0 +1,77 @@
+{
+  "host": {
+    "packageName": "com.android.systemui",
+    "versionName": "17.03.260226.r",
+    "versionCode": 202602260
+  },
+  "verification": "Candidate contracts only. No custom media background implementation or runtime acceptance is claimed.",
+  "evidence": [
+    {
+      "locator": "dex_class:Lcom/android/systemui/statusbar/notification/style/view/MediaViewBinder;",
+      "contains": [
+        "repeatWhenAttached$default"
+      ],
+      "sha256": "85f0c0aa26d163e869f1a18656abece6dab9ddc266eb0efaa7ddee3a2401749f"
+    },
+    {
+      "locator": "dex_class:Lcom/android/systemui/statusbar/notification/style/view/MediaViewBinder$bind$1$1;",
+      "contains": [
+        "onBackgroundUpdateEvents",
+        "isShowingKeyguardNotification",
+        "isLightWallPaper"
+      ],
+      "sha256": "239668f414251fcfaefd8817f4969a18a842a2d6ee6bb3307f1699f74ca2ffac"
+    },
+    {
+      "locator": "dex_class:Lcom/android/systemui/statusbar/notification/style/view/MediaViewBinder$bind$1$1$invokeSuspend$$inlined$combine$1$3;",
+      "contains": [
+        "mWillDoAodAnim:Z",
+        "mediaViewEffectsMap",
+        "->clear(Ljava/lang/Object;)V",
+        "->apply(Ljava/lang/Object;Landroid/content/Context;)V"
+      ],
+      "sha256": "7952acf2e2d117070fd03a2c2fb5f92ec0e0a183764da6491153e8ccfd663d90"
+    },
+    {
+      "locator": "dex_class:Lcom/android/systemui/statusbar/notification/style/vieweffect/NotificationViewEffectHelper;",
+      "contains": [
+        "mediaViewEffectsMap",
+        "MediaViewGlassFullAodEffect"
+      ],
+      "sha256": "fa2107ebe508f293fb2c232f3cf8e75fbca098d996e7118b7d72ebeea11ebef8"
+    },
+    {
+      "locator": "dex_class:Lcom/android/systemui/statusbar/notification/style/vieweffect/MediaViewNormalEffect;",
+      "contains": [
+        "->mediaBg:Landroid/widget/ImageView;",
+        "->setBackground(Landroid/graphics/drawable/Drawable;)V"
+      ],
+      "sha256": "353066573f3fff4b866544b1e54b20631dd1e50d8ccd50c43a6ea5c69c469458"
+    },
+    {
+      "locator": "dex_class:Lcom/android/systemui/statusbar/notification/style/vieweffect/MediaViewBlurEffect;",
+      "contains": [
+        "applyElementViewBlend",
+        "->setMiViewMaterialTypeCompat",
+        "->clearMiBackgroundBlendColorCompat"
+      ],
+      "sha256": "4f43f3d342531cc1c9bba11c4b953cbb51f6ba803173a1b2e7a1837243b9debc"
+    },
+    {
+      "locator": "dex_class:Lcom/android/systemui/statusbar/notification/style/vieweffect/MediaViewGlassEffect;",
+      "contains": [
+        "->setMiGlassCompat",
+        "->setMiViewMaterialTypeCompat"
+      ],
+      "sha256": "1388e732ff3f65e4f353450273bfdb3719f5d2d594efc692c1e0d193fa8caed1"
+    },
+    {
+      "locator": "dex_class:Lcom/android/systemui/statusbar/notification/style/vieweffect/MediaViewGlassFullAodEffect;",
+      "contains": [
+        "->mediaBg:Landroid/widget/ImageView;",
+        "->apply("
+      ],
+      "sha256": "9786fe57c26bd00f35fea542cdab7a06a557cc46fdbeaaf066712ffc49ff68ff"
+    }
+  ]
+}

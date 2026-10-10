@@ -1,0 +1,115 @@
+{
+  "host": {
+    "packageName": "com.android.systemui",
+    "versionName": "17.03.260226.r",
+    "versionCode": 202602260
+  },
+  "verification": "Read-only clock, calendar, header sizing and role layout contracts; device acceptance deferred until migration completion.",
+  "evidence": [
+    {
+      "locator": "dex_class:Lcom/android/systemui/statusbar/views/MiuiClock;",
+      "contains": [
+        ".method public final updateTime()V",
+        "->mClockMode:I",
+        "->setContentDescription(Ljava/lang/CharSequence;)V",
+        "->setText(Ljava/lang/CharSequence;)V",
+        ".method public final updateClockVisibility()V"
+      ],
+      "sha256": "469c39c9895021852fb2d9a298ede1a8887200b52fa02a713db07a7c456b86f3"
+    },
+    {
+      "locator": "dex_class:Lcom/android/systemui/statusbar/policy/MiuiStatusBarClockController;",
+      "contains": [
+        ".field public mDemoMode:Z",
+        ".field public mIs24:Z",
+        ".field public final mCalendar:",
+        "->updateTime()V",
+        "->updateFontSize(Landroid/widget/TextView;I)V"
+      ],
+      "sha256": "0e755779283b1f84305e7e5d3eab610f5173202ef23f587f4b7baf9d921bba08"
+    },
+    {
+      "locator": "dex_class:Lcom/android/systemui/statusbar/policy/MiuiStatusBarClockController$1;",
+      "contains": [
+        "->setTimeZone(Ljava/util/TimeZone;)V",
+        "->mCurrentUserId:I"
+      ],
+      "sha256": "e6e4e134dad3393fba15174db0ed47c309d715fdc77edb565ba9c05d9bd1ada9"
+    },
+    {
+      "locator": "dex_class:Lcom/android/systemui/statusbar/views/MiuiNotificationHeaderClock;",
+      "contains": [
+        ".super Lcom/android/systemui/statusbar/views/MiuiClock;",
+        "->getScaleX()F",
+        "->setTextColor(I)V"
+      ],
+      "sha256": "5a5b512e49cbddbf7c4df74981b994b089ae5225236eabd077441601816eec19"
+    },
+    {
+      "locator": "dex_class:Lcom/android/systemui/qs/MiuiNotificationHeaderView;",
+      "contains": [
+        "->mBigTime:Lcom/android/systemui/statusbar/views/MiuiNotificationHeaderClock;",
+        "->setTextSize(IF)V"
+      ],
+      "sha256": "68a4526c82e9df0f8801d94f8ea6c47ccd389ed8efb9b1401535bbc8e277dcb5"
+    },
+    {
+      "locator": "dex_method:Lmiuix/pickerwidget/date/Calendar;->format(Landroid/content/Context;Ljava/lang/CharSequence;)Ljava/lang/String;",
+      "contains": [
+        ".method public final format(Landroid/content/Context;Ljava/lang/CharSequence;)Ljava/lang/String;"
+      ],
+      "sha256": "173d386f8dad5b477c8da7a7f14153aae1c2b1de95de0aad8a2e2e2c5259b012"
+    },
+    {
+      "locator": "dex_method:Lmiuix/pickerwidget/date/Calendar;->getTimeInMillis()J",
+      "contains": [
+        "->mMillisecond:J"
+      ],
+      "sha256": "76cdc9438b229355524a6622dee1aaac3492756c0899f989c6273ef64c01a015"
+    },
+    {
+      "locator": "dex_method:Lmiuix/pickerwidget/date/Calendar;->setTimeInMillis(J)V",
+      "contains": [
+        "->mMillisecond:J",
+        "->compute()V"
+      ],
+      "sha256": "d9e016cd8a68baa42998abb6a19a327080e64cab0fe647cd3af801b4648aa316"
+    },
+    {
+      "locator": "axml:res/layout/pad_clock.xml",
+      "contains": [
+        "@7F0B08CF",
+        "android:singleLine=\"true\"",
+        "MiuiClockMode=\"date_24\""
+      ],
+      "sha256": "c136460f05c135296e95362953610a965fc04715d4236969536c11045e5bc8a7"
+    }
+  ],
+  "resourceNames": [
+    {
+      "name": "clock",
+      "type": "id",
+      "locator": "resource:0x7f0b027d"
+    },
+    {
+      "name": "big_time",
+      "type": "id",
+      "locator": "resource:0x7f0b0196"
+    },
+    {
+      "name": "date_time",
+      "type": "id",
+      "locator": "resource:0x7f0b0354"
+    },
+    {
+      "name": "horizontal_time",
+      "type": "id",
+      "locator": "resource:0x7f0b0556"
+    },
+    {
+      "name": "pad_clock",
+      "type": "id",
+      "locator": "resource:0x7f0b08cf"
+    }
+  ]
+}

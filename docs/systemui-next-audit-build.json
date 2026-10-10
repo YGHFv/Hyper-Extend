@@ -1,0 +1,363 @@
+{
+  "recordedAt": "2026-10-10T05:48:30.634911+00:00",
+  "verification": "Local JVM tests, R8 Release build, and read-only MT contracts only. No device runtime acceptance.",
+  "command": ".\\gradlew.bat :app:testDebugUnitTest :app:assembleRelease --console=plain",
+  "log": "build/systemui-next-audit-build.log",
+  "build": "successful",
+  "tests": {
+    "tests": 283,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "testSuites": [
+    {
+      "name": "io.github.YGHFv.HyperExtend.core.DualRowSignalSettingsTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "io.github.YGHFv.HyperExtend.core.FeaturePresentationTest",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "io.github.YGHFv.HyperExtend.core.MediaCardSettingsTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "io.github.YGHFv.HyperExtend.core.MobileSignalSettingsTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "io.github.YGHFv.HyperExtend.core.MobileTypeTextSettingsTest",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "io.github.YGHFv.HyperExtend.core.PresentationCopyTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "io.github.YGHFv.HyperExtend.core.SafeModeCallerPolicyTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "io.github.YGHFv.HyperExtend.core.SafeModePolicyTest",
+      "tests": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "io.github.YGHFv.HyperExtend.core.ScopeCatalogTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "io.github.YGHFv.HyperExtend.core.ScopeFeatureGroupTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "io.github.YGHFv.HyperExtend.core.SystemUiCustomSettingsTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "io.github.YGHFv.HyperExtend.core.SystemUiFeaturesTest",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "io.github.YGHFv.HyperExtend.hook.BootFusePolicyTest",
+      "tests": 11,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "io.github.YGHFv.HyperExtend.hook.feature.mishare.MiShareDestinationPolicyTest",
+      "tests": 22,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "io.github.YGHFv.HyperExtend.hook.feature.mishare.MiShareTargetsTest",
+      "tests": 8,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "io.github.YGHFv.HyperExtend.hook.feature.statusbar.BatteryVisibilityPolicyTest",
+      "tests": 8,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "io.github.YGHFv.HyperExtend.hook.feature.statusbar.DualRowSignalPaddingTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "io.github.YGHFv.HyperExtend.hook.feature.statusbar.DualRowSignalPolicyTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "io.github.YGHFv.HyperExtend.hook.feature.statusbar.MobileSignalPolicyTest",
+      "tests": 8,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "io.github.YGHFv.HyperExtend.hook.feature.statusbar.NetworkSpeedPolicyTest",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "io.github.YGHFv.HyperExtend.hook.feature.statusbar.StateFlowFactoryTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "io.github.YGHFv.HyperExtend.hook.feature.statusbar.StatusBarPoliciesTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "io.github.YGHFv.HyperExtend.hook.feature.systemui.DoubleTapTrackerTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "io.github.YGHFv.HyperExtend.hook.feature.systemui.LockScreenHintPolicyTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "io.github.YGHFv.HyperExtend.hook.feature.systemui.MediaLayoutPolicyTest",
+      "tests": 8,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "io.github.YGHFv.HyperExtend.hook.feature.systemui.MediaProgressPolicyTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "io.github.YGHFv.HyperExtend.hook.feature.systemui.MigrationRepairPoliciesTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "io.github.YGHFv.HyperExtend.hook.feature.systemui.NotificationAlertPolicyTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "io.github.YGHFv.HyperExtend.hook.feature.systemui.NotificationExpansionTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "io.github.YGHFv.HyperExtend.hook.feature.systemui.NotificationImportancePolicyTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "io.github.YGHFv.HyperExtend.hook.feature.systemui.PinPermutationTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "io.github.YGHFv.HyperExtend.hook.feature.systemui.PluginAppearanceTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "io.github.YGHFv.HyperExtend.hook.feature.systemui.SystemUiTargetsTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "io.github.YGHFv.HyperExtend.hook.feature.systemui.TemporaryListOverrideTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "io.github.YGHFv.HyperExtend.hook.feature.volume.AppVolumeBridgePolicyTest",
+      "tests": 20,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "io.github.YGHFv.HyperExtend.hook.feature.volume.AppVolumeCardGeometryTest",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "io.github.YGHFv.HyperExtend.hook.feature.volume.AppVolumeEntryMotionTest",
+      "tests": 10,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "io.github.YGHFv.HyperExtend.hook.feature.volume.AppVolumeExpandedLayoutTest",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "io.github.YGHFv.HyperExtend.hook.feature.volume.AppVolumeFooterHeightTest",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "io.github.YGHFv.HyperExtend.hook.feature.volume.AppVolumePanelStyleTest",
+      "tests": 11,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "io.github.YGHFv.HyperExtend.hook.feature.volume.AppVolumePlacementPolicyTest",
+      "tests": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "io.github.YGHFv.HyperExtend.hook.feature.volume.AppVolumePolicyTest",
+      "tests": 14,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "io.github.YGHFv.HyperExtend.hook.feature.volume.BlurDrawableApiTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "io.github.YGHFv.HyperExtend.hook.HookInvocationTest",
+      "tests": 8,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "io.github.YGHFv.HyperExtend.hook.HookSettingsSafetyTest",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  ],
+  "apk": {
+    "path": "app/build/outputs/apk/release/app-release.apk",
+    "versionName": "0.1.3",
+    "versionCode": 4,
+    "bytes": 2646981,
+    "sha256": "b56761c2a437ea25207ea515df0af1e7c7303db8320dfb39a49d820723922a72",
+    "r8": true
+  },
+  "gitDiffCheck": "passed",
+  "inventoryReproducible": true,
+  "inventoryRows": 337,
+  "inventoryStatuses": {
+    "pending": 98,
+    "implemented_static_verified": 50,
+    "repaired_static_pending_device": 18,
+    "partially_implemented_static_verified": 4,
+    "covered_by_existing_feature_per_user": 1,
+    "already_supported_by_current_host": 1,
+    "needs_audit_existing_partial": 164,
+    "partially_implemented_pending_settings_host": 1
+  },
+  "evidence": {
+    "mobileTypeCodeTargets": 6,
+    "dualRowAndNotificationCodeLayoutTargets": 14,
+    "volumeCodeLayoutTargets": 6,
+    "resourceNameMappings": 8,
+    "resourceFileMappings": 1,
+    "recordedHashesMatchRefresh": true
+  },
+  "fullLint": "Not rerun; prior full run reported 22 known errors. Release vital lint is not full lint.",
+  "installed": false,
+  "restartedOrReloadedHost": false,
+  "changedFeatureOrSimState": false
+}

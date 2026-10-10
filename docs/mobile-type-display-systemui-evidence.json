@@ -1,0 +1,180 @@
+{
+  "host": {
+    "packageName": "com.android.systemui",
+    "versionName": "17.03.260226.r",
+    "versionCode": 202602260
+  },
+  "verification": "Read-only contracts for mobile-type display modes and per-binding relays. Device acceptance deferred until migration completion.",
+  "evidence": [
+    {
+      "locator": "dex_class:Lcom/android/systemui/statusbar/pipeline/mobile/ui/binder/MiuiMobileIconBinder;",
+      "contains": [
+        ".method public static final bind(",
+        "->setTextAppearance(I)V",
+        "->updateMobileTypeLayoutParams("
+      ],
+      "sha256": "4f60447bfbf42fe21b021de25e221eec89ee9f077fdadde193902e0bfdf1c8e3"
+    },
+    {
+      "locator": "dex_class:Lcom/android/systemui/statusbar/pipeline/mobile/ui/viewmodel/MiuiMobileIconViewModel;",
+      "contains": [
+        ".method public abstract getMobileTypeVisible()",
+        ".method public abstract getMobileTypeSingleVisible()",
+        ".method public abstract getShowSpecial5GIcon()"
+      ],
+      "sha256": "2f8a8e4927623eb6ce3e01913e5be4915df850fcd591c3047ca903a757d8b650"
+    },
+    {
+      "locator": "dex_class:Lcom/android/systemui/statusbar/pipeline/mobile/ui/viewmodel/MiuiMobileIconVMImpl;",
+      "contains": [
+        ".field public vmProvider:",
+        ".field public originIconInteractor:",
+        ".field public iconInteractor:"
+      ],
+      "sha256": "0d8449eeeea5ba40ab015c8dcd477b29d7ea177f32f12cc694ac9e3ed3ecebfd"
+    },
+    {
+      "locator": "dex_class:Lcom/android/systemui/statusbar/pipeline/mobile/domain/interactor/MiuiMobileIconInteractorImpl;",
+      "contains": [
+        ".field public serviceState:",
+        ".field public wifiAvailable:",
+        ".field public sateliteEnable:"
+      ],
+      "sha256": "03755bbae1f2a67da04298247177b10d4737fe802c765e78cf32e66140a0d315"
+    },
+    {
+      "locator": "dex_class:Lcom/android/systemui/statusbar/pipeline/mobile/domain/interactor/MobileIconInteractorImpl;",
+      "contains": [
+        ".method public final isDataConnected()Lkotlinx/coroutines/flow/Flow;"
+      ],
+      "sha256": "f35f8914a7991c4e9545a36aed9e0ff258395d05833bf7bd84bf5e5c727cd7bc"
+    },
+    {
+      "locator": "dex_method:Lcom/miui/systemui/statusbar/mobile/MobileUtils;->isInService(Landroid/telephony/ServiceState;)Z",
+      "contains": [
+        "->getState()I",
+        "->getDataRegistrationState()I",
+        "->getNetworkRegistrationInfo(II)"
+      ],
+      "sha256": "71969debd7d77f455e8d2d6a6c09dab5537ae6111e62341637648f534fa2efda"
+    },
+    {
+      "locator": "dex_class:Lcom/android/systemui/statusbar/pipeline/mobile/ui/binder/MiuiMobileIconBinder$bind$1$1$15;",
+      "contains": [
+        "->getMobileTypeVisible()",
+        "->collect("
+      ],
+      "sha256": "d6978c0e85d39d17a17938d26b978df6f6449827ef00439844938fd861d4d36a"
+    },
+    {
+      "locator": "dex_class:Lcom/android/systemui/statusbar/pipeline/mobile/ui/binder/MiuiMobileIconBinder$bind$1$1$13$1;",
+      "contains": [
+        "->setVisibility(I)V"
+      ],
+      "sha256": "7719c9537e8137e42fd7a2b3e3f5b69b162da36426b427f8004da296b6ce2543"
+    },
+    {
+      "locator": "dex_class:Lcom/android/systemui/statusbar/pipeline/mobile/ui/binder/MiuiMobileIconBinder$bind$1$1$18;",
+      "contains": [
+        "->getMobileTypeSingleVisible()",
+        "->getSatelliteVisible()",
+        "->isVisible()"
+      ],
+      "sha256": "7b7a8916087429ce3d4fe91a0abea931a318ec9729cbcee9d5d43f96bd740e54"
+    },
+    {
+      "locator": "dex_class:Lcom/android/systemui/statusbar/pipeline/mobile/ui/binder/MiuiMobileIconBinder$bind$1$1$18$1;",
+      "contains": [
+        "->getFirst()",
+        "->getSecond()"
+      ],
+      "sha256": "d8496852b10ecbbd053868baaf9ab27cdb315e4c1f652cfa711fb12c224c9a66"
+    },
+    {
+      "locator": "dex_class:Lcom/android/systemui/statusbar/pipeline/mobile/ui/binder/MiuiMobileIconBinder$bind$1$1$3$2;",
+      "contains": [
+        "->setChildVisible(Landroid/view/View;Z)V"
+      ],
+      "sha256": "e932fe2cbec44c48e574a78db3767afe20186763a47fc5206d19fab43b52ce67"
+    },
+    {
+      "locator": "dex_class:Lcom/android/systemui/statusbar/pipeline/mobile/ui/binder/MiuiMobileIconBinder$bind$1$1$14;",
+      "contains": [
+        "->getShowSpecial5GIcon()"
+      ],
+      "sha256": "f27b65a118c0a0502bf883e9b3bacdb4a626a022b51893c9ee7b8feeffdc5239"
+    },
+    {
+      "locator": "dex_class:Lcom/android/systemui/statusbar/views/MobileSignalAnimatorContainer;",
+      "contains": [
+        ".method public final onViewRemoved(Landroid/view/View;)V",
+        ".method public final onViewAdded(Landroid/view/View;)V",
+        "->setTag(ILjava/lang/Object;)V"
+      ],
+      "sha256": "6ff12569b2b4e6130d1eac6ecfee01a71e3656810ab002bb8c2070ba197536b8"
+    },
+    {
+      "locator": "dex_class:Lcom/android/systemui/statusbar/pipeline/mobile/ui/binder/MiuiMobileIconBinder$bind$1$1$22$1;",
+      "contains": [
+        "->setText(Ljava/lang/CharSequence;)V",
+        "->measure()V",
+        "->updateMobileTypeLayoutParams("
+      ],
+      "sha256": "84d07c60313b0a60a91def8d29f4cf17eaadcc754d6848b615cdc4a089d4ea9a"
+    },
+    {
+      "locator": "dex_class:Lcom/miui/systemui/statusbar/views/MobileTypeDrawable;",
+      "contains": [
+        "->measureText(Ljava/lang/String;)F",
+        "->invalidateSelf()V"
+      ],
+      "sha256": "537e80de8e57c94882951b2371b96b17c3ba34086de7d4b215de1ba9b85e8731"
+    },
+    {
+      "locator": "dex_class:Lcom/android/systemui/util/kotlin/JavaAdapterKt;",
+      "contains": [
+        "->repeatWhenAttached$default("
+      ],
+      "sha256": "8de2e6710f9d7d782812b05db5bd72dda3f719b6a1def8a2425ab19ca0d080fa"
+    },
+    {
+      "locator": "dex_class:Lcom/android/systemui/util/kotlin/JavaAdapterKt$collectFlow$1;",
+      "contains": [
+        "->CREATED:Landroidx/lifecycle/Lifecycle$State;",
+        "->repeatOnLifecycle("
+      ],
+      "sha256": "d36a7e9748846557c9d6aebbc9c5c768cfae1963276aa9f4917ea14f020de78f"
+    },
+    {
+      "locator": "axml:res/layout/status_bar_mobile_signal_group_inner.xml",
+      "contains": [
+        "@7F0B07A2",
+        "@7F0B07A0",
+        "@7F0B0797"
+      ],
+      "sha256": "a21003b52a9a44231bbe244a2b0c33ab2d209da186531f6d1e2fbbe1e2139f97"
+    }
+  ],
+  "resourceNames": [
+    {
+      "name": "mobile_type",
+      "type": "id",
+      "locator": "resource:0x7f0b07a0"
+    },
+    {
+      "name": "mobile_type_single",
+      "type": "id",
+      "locator": "resource:0x7f0b07a2"
+    },
+    {
+      "name": "mobile_signal_container",
+      "type": "id",
+      "locator": "resource:0x7f0b0797"
+    },
+    {
+      "name": "mobile_group",
+      "type": "id",
+      "locator": "resource:0x7f0b078d"
+    }
+  ]
+}

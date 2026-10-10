@@ -75,7 +75,7 @@ def main():
             "workspaceId": args.workspace, "editSessionId": "", "locator": evidence["locator"],
             "limit": 2000, "maxChars": 131072, "startLine": 0, "startColumn": 0,
         })
-        if data.get("pagination", {}).get("hasMore"):
+        if data.get("pagination", {}).get("hasMore") or data.get("truncated"):
             raise RuntimeError(f"Incomplete text: {evidence['locator']}")
         text = data["textWindow"]["text"]
         missing = [fragment for fragment in evidence["contains"] if fragment not in text]
@@ -111,8 +111,22 @@ def main():
             raise RuntimeError(f"Resource file mapping changed: {resource}: {data}")
         resource_files.append(resource)
         print("verified resource file", resource["path"])
+    resource_values = []
+    for resource in manifest.get("resourceValues", []):
+        data = session.tool("mt_apk_resource_read", {
+            "workspaceId": args.workspace, "editSessionId": "",
+            "reads": [{"locator": resource["locator"], "variant": resource["variant"]}],
+            "maxValueChars": 4096, "maxValueXmlChars": 32768, "maxItemsPerValue": 50, "resolveDepth": 0,
+        })
+        values = data["results"]
+        if (len(values) != 1 or values[0].get("errorCode") or values[0].get("valueTruncated")
+                or values[0].get("valueKind") != resource["valueKind"] or values[0].get("value") != resource["value"]):
+            raise RuntimeError(f"Resource value changed: {resource}: {data}")
+        resource_values.append(resource)
+        print("verified resource value", resource["locator"], resource["variant"])
     args.output.parent.mkdir(parents=True, exist_ok=True)
-    args.output.write_text(json.dumps({"host": host, "verified": verified, "resources": resources, "resourceFiles": resource_files}, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    args.output.write_text(json.dumps({"host": host, "verified": verified, "resources": resources, "resourceFiles": resource_files,
+                                       "resourceValues": resource_values}, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     print(f"Verified {len(verified)} host code targets. This is not a device runtime test.")
     if resources:
         print(f"Verified {len(resources)} resource name/id mappings.")

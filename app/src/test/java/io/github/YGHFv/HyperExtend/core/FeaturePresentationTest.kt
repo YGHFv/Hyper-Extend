@@ -48,21 +48,19 @@ class FeaturePresentationTest {
         assertTrue(searchFeatures("原生通知图标").first().feature.hasDetailPage)
     }
 
-    @Test fun mixedPagesKeepEachTypeInCatalogOrder() {
+    @Test fun panelsMixSwitchesAndEntriesByFunctionNotControlType() {
         val features = featuresOfScopePage("systemui", ScopeFeatureGroup.STATUS_BAR)
-        val (details, switches) = features.partition { it.hasDetailPage }
-        assertEquals(6, details.size)
-        assertEquals(listOf("status_bar_double_tap", "status_bar_screenshot_hide"), switches.map { it.id })
-        assertEquals(features.map { it.id }, (details + switches).map { it.id })
-        assertEquals(features.size, (details + switches).distinctBy { it.id }.size)
+        val panels = featurePanels(features)
+        val icons = panels.entries.single { it.key.panel == FeaturePanel.ICONS }.value
+        assertTrue(icons.any { it.hasDetailPage })
+        assertTrue(icons.any { !it.hasDetailPage })
+        assertEquals(listOf("native_notify_icon", "status_bar_icons", "status_bar_screenshot_hide"), icons.map { it.id })
+        assertEquals(features.map { it.id }.sorted(), panels.values.flatten().map { it.id }.sorted())
     }
 
-    @Test fun singleTypePagesDoNotNeedAnEmptySection() {
-        val (details, switches) = featuresOfScopePage("mishare").partition { it.hasDetailPage }
-        assertTrue(details.isEmpty())
-        assertEquals(listOf("mishare_receive_guard"), switches.map { it.id })
-        val (cardDetails, cardSwitches) = featuresOfScopePage("tsmclient").partition { it.hasDetailPage }
-        assertEquals(1, cardDetails.size)
-        assertTrue(cardSwitches.isEmpty())
+    @Test fun singleFeatureStillHasSemanticPanelAndNoEmptySection() {
+        assertEquals(listOf(FeaturePanel.TRANSFER), featurePanels(featuresOfScopePage("mishare")).keys.map { it.panel })
+        assertEquals(listOf(FeaturePanel.CARD), featurePanels(featuresOfScopePage("tsmclient")).keys.map { it.panel })
+        assertTrue(featurePanels(emptyList()).isEmpty())
     }
 }

@@ -1,0 +1,43 @@
+{
+  "host": {
+    "packageName": "miui.systemui.plugin",
+    "versionCode": 183022200
+  },
+  "verification": "Read-only MT contracts for 2026-10-10 continuation. Settings APK is unavailable; no Settings verification or live acceptance claimed.",
+  "evidence": [
+    {
+      "locator": "dex_method:Lcom/android/systemui/miui/volume/MiuiRingerModeLayout$RingerButtonHelper;->isSuperBlurSupported()Z",
+      "contains": [
+        "->getDefaultPluginTheme()Z",
+        "->isLowEndDevice()Z"
+      ]
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/miui/volume/VolumeColumnRes;->getSliderBackgroundResId(Landroid/view/View;ZZ)I",
+      "contains": [
+        "->getDefaultPluginTheme()Z",
+        "->isLowEndDevice()Z"
+      ]
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/miui/volume/MiuiVolumeDialogMotion;->updateExpandBgState()V",
+      "contains": [
+        "->getDefaultPluginTheme()Z",
+        "->isLowEndDevice()Z"
+      ]
+    },
+    {
+      "locator": "dex_method:Lmiui/systemui/util/ThemeUtils;->getDefaultPluginTheme()Z",
+      "contains": [
+        "->defaultPluginTheme:Z"
+      ]
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/miui/volume/Util;->isSupportBlurS()Z",
+      "contains": [
+        "const/4 v0, 0x1",
+        "return v0"
+      ]
+    }
+  ]
+}

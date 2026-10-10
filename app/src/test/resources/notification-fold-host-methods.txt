@@ -1,0 +1,9 @@
+Lcom/android/systemui/statusbar/notification/utils/NotificationUtil;->canCustomFold(Lcom/android/systemui/statusbar/notification/collection/NotificationEntry;)Z
+Lcom/android/systemui/statusbar/notification/utils/NotificationUtil;->shouldIgnoreEntry(Lcom/android/systemui/statusbar/notification/collection/NotificationEntry;)Z
+Lcom/android/systemui/statusbar/notification/row/MiuiNotificationMenuRow;->createMenuViews(Z)V
+Lcom/android/systemui/statusbar/notification/row/MiuiNotificationMenuRow;->createMenu(Landroid/view/ViewGroup;)V
+Lcom/android/systemui/statusbar/notification/row/MiuiNotificationMenuRow;->onNotificationUpdated()V
+Lcom/android/systemui/statusbar/notification/collection/coordinator/FoldCoordinator$collectionListener$1;->onEntryAdded(Lcom/android/systemui/statusbar/notification/collection/NotificationEntry;)V
+Lcom/android/systemui/statusbar/notification/collection/coordinator/FoldCoordinator$collectionListener$1;->onEntryUpdated(Lcom/android/systemui/statusbar/notification/collection/NotificationEntry;)V
+Lcom/android/systemui/statusbar/notification/collection/coordinator/FoldCoordinator$shadeExpansionListener$1;->onPanelExpansionChanged$1(Lcom/android/systemui/shade/ShadeExpansionChangeEvent;)V
+Lcom/android/systemui/statusbar/notification/collection/coordinator/FoldCoordinator$alarmScheduler$2$1$onReceive$1;->run()V

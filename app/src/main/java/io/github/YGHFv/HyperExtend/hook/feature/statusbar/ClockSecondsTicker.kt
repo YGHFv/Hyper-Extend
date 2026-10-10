@@ -12,6 +12,7 @@ import android.os.Looper
 import android.os.PowerManager
 import android.widget.TextView
 import io.github.YGHFv.HyperExtend.hook.Reflect
+import io.github.YGHFv.HyperExtend.hook.SafeModeRuntime
 import java.util.WeakHashMap
 
 /** One boundary-aligned task for all attached clocks; no screen-off polling. */
@@ -51,7 +52,7 @@ internal class ClockSecondsTicker(private val update: (TextView) -> Unit) {
     private fun refresh() {
         handler.removeCallbacks(tick)
         clocks.keys.removeAll { !it.isAttachedToWindow }
-        if (clocks.isEmpty()) {
+        if (clocks.isEmpty() || SafeModeRuntime.blocked) {
             context?.let { Reflect.attempt { it.unregisterReceiver(receiver) } }
             context = null
             return

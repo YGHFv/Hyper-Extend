@@ -1,0 +1,42 @@
+{
+  "recordedAt": "2026-10-10T08:31:34.035381+00:00",
+  "tests": {
+    "tests": 389,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "build": "successful",
+  "log": "build/lockscreen-charging-build.log",
+  "apk": {
+    "path": "app/build/outputs/apk/release/app-release.apk",
+    "versionName": "0.1.3",
+    "versionCode": 4,
+    "bytes": 2679749,
+    "sha256": "f0d6ec762f24a725b9cf05f7c39869a6ec42c6fabb18d4505ad590c1be82142f",
+    "r8": true
+  },
+  "evidence": {
+    "manifest": "docs/lockscreen-charging-systemui-evidence.json",
+    "liveTargets": 21,
+    "refresh": ".workbuddy/tmp/mt-systemui/charging-verified.json",
+    "hashesMatch": true
+  },
+  "inventory": {
+    "pending": 89,
+    "implemented_static_verified": 88,
+    "repaired_static_pending_device": 18,
+    "partially_implemented_static_verified": 7,
+    "covered_by_existing_feature_per_user": 1,
+    "already_supported_by_current_host": 1,
+    "needs_audit_existing_partial": 132,
+    "partially_implemented_pending_settings_host": 1
+  },
+  "installed": false,
+  "deviceLastInstallation": "docs/migration-install-2026-10-10.json",
+  "restartedOrReloadedHost": false,
+  "changedFeatureScopeSimNetwork": false,
+  "runtimeAcceptance": false,
+  "fullLint": "Not rerun; 22 prior known errors are not claimed fixed.",
+  "changes": "One lockscreen charging-information feature with five mapped upstream preference rows; bounded native indication-area implementation, not complete SystemUI migration."
+}

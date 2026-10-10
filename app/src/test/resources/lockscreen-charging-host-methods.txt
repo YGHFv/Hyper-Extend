@@ -1,0 +1,7 @@
+Lcom/android/systemui/statusbar/KeyguardIndicationController;->setIndicationArea(Landroid/view/ViewGroup;)V
+Lcom/android/systemui/keyguard/KeyguardViewConfigurator;->start()V
+Lcom/android/systemui/keyguard/ui/binder/KeyguardIndicationAreaBinder;->bind(Landroid/view/ViewGroup;Lcom/android/systemui/keyguard/ui/viewmodel/KeyguardIndicationAreaViewModel;Lcom/android/systemui/statusbar/KeyguardIndicationController;)Lcom/android/systemui/util/kotlin/DisposableHandles;
+Lcom/android/systemui/keyguard/ui/binder/KeyguardIndicationAreaBinder$bind$1;->dispose()V
+Lcom/android/systemui/keyguard/KeyguardIndicationRotateTextViewController;->showIndication(I)V
+Lcom/android/systemui/statusbar/KeyguardIndicationController;->updateDeviceEntryIndication(Z)V
+Lcom/miui/utils/configs/MiuiConfigs;->isFlipTinyScreen(Landroid/content/Context;)Z

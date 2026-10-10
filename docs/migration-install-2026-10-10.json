@@ -1,0 +1,58 @@
+{
+  "recordedAt": "2026-10-10T07:43:51.631491+00:00",
+  "device": "4e2d9aa2",
+  "tests": {
+    "tests": 350,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "build": "successful",
+  "log": "build/migration-install-build.log",
+  "apk": {
+    "path": "app/build/outputs/apk/release/app-release.apk",
+    "versionName": "0.1.3",
+    "versionCode": 4,
+    "bytes": 2663365,
+    "sha256": "0cd44b28f94f520e6a4b4e776f84ebf652a503f010e1edfa21a522156c230a0f",
+    "r8": true
+  },
+  "processesBefore": [
+    "3641 system_server",
+    "14609 com.android.systemui",
+    "25455 com.miui.misound"
+  ],
+  "command": "adb -s 4e2d9aa2 install -r app/build/outputs/apk/release/app-release.apk",
+  "installed": true,
+  "restartedOrReloadedHost": false,
+  "changedFeatureScopeSimNetwork": false,
+  "runtimeAcceptance": false,
+  "fullLint": "Not rerun; 22 prior known errors remain; Release vital lint is not full lint.",
+  "installStdout": "Performing Streamed Install\nSuccess",
+  "installStderr": "",
+  "installExitCode": 0,
+  "installationFinishedAt": "2026-10-10T07:43:52.979056+00:00",
+  "installedApkPath": "/data/app/~~E-bQQUwDEtjkMHy-_OQtZQ==/io.github.YGHFv.HyperExtend-lSmu158S7pEaImIls-6AuA==/base.apk",
+  "installedSha256": "0cd44b28f94f520e6a4b4e776f84ebf652a503f010e1edfa21a522156c230a0f",
+  "hashesMatch": true,
+  "processesAfter": [
+    "3641 system_server",
+    "14609 com.android.systemui",
+    "25455 com.miui.misound"
+  ],
+  "sampledHostPidsUnchanged": true,
+  "packageVersionAndInstallTimes": [
+    "versionCode=4 minSdk=26 targetSdk=35",
+    "versionName=0.1.3",
+    "lastUpdateTime=2026-10-10 15:43:50",
+    "firstInstallTime=2026-10-01 23:59:10"
+  ],
+  "laterProcessCheck": {
+    "at": "2026-10-10T07:46:14.923355+00:00",
+    "processes": [
+      "3641 system_server",
+      "14609 com.android.systemui",
+      "25455 com.miui.misound"
+    ]
+  }
+}

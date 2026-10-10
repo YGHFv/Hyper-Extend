@@ -24,6 +24,8 @@ import io.github.YGHFv.HyperExtend.core.NFC_IMAGE_KEY
 import io.github.YGHFv.HyperExtend.core.NOTIFY_ICON_AUTO_TIME_KEY
 import io.github.YGHFv.HyperExtend.core.NOTIFY_ICON_SOURCE_KEY
 import io.github.YGHFv.HyperExtend.core.defaultEnabledOf
+import io.github.YGHFv.HyperExtend.core.SCOPES
+import io.github.YGHFv.HyperExtend.core.SafeModeKeys
 import org.json.JSONObject
 
 /**
@@ -57,20 +59,6 @@ object HyperSettings {
     const val KEY_SCHEMA = "schema_version"
 
     const val SCHEMA_VERSION = 1
-    /** 生成一次性的人工解除熔断请求；重置计数但不关闭自动防砖。 */
-    fun requestFrameworkFuseReset(context: Context): Boolean = runCatching {
-        val prefs = localPrefs(context)
-        val previous = prefs.getLong(FRAMEWORK_FUSE_RESET_KEY, 0L)
-        val token = maxOf(System.currentTimeMillis(), previous + 1L)
-        prefs.edit().putLong(FRAMEWORK_FUSE_RESET_KEY, token).apply()
-        syncToFramework(context)
-        ModuleLog.info("framework hook fuse reset requested: token=$token")
-        true
-    }.getOrElse {
-        ModuleLog.error("request framework hook fuse reset failed", it)
-        false
-    }
-
     /**
      * 字符串型设置。
      *
@@ -208,6 +196,7 @@ object HyperSettings {
      * 也就是连着投十几次，而每次 `read` 都要把 SharedPreferences 全表读出来 ——
      * 做成两次等于把这点开销翻倍，而这个函数跑的正是用户点完开关、盯着屏幕等反馈的那一刻。
      */
+    @Synchronized
     fun syncToFramework(context: Context) {
         val prefs = FrameworkBridge.remotePreferences(GROUP)
         if (prefs == null) {
@@ -225,6 +214,11 @@ object HyperSettings {
                 localPrefs(context).getLong(FRAMEWORK_FUSE_RESET_KEY, 0L),
             )
             editor.putInt(KEY_SCHEMA, SCHEMA_VERSION)
+            val safety = localPrefs(context)
+            SCOPES.forEach { scope ->
+                editor.putBoolean(SafeModeKeys.disabled(scope.id), safety.getBoolean(SafeModeKeys.disabled(scope.id), false))
+                editor.putLong(SafeModeKeys.reset(scope.id), safety.getLong(SafeModeKeys.reset(scope.id), 0))
+            }
             editor.apply()
             ModuleLog.info(
                 "settings projected to framework (${switches.size} switches, ${strings.size} strings)",

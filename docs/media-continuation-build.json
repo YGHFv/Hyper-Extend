@@ -1,0 +1,45 @@
+{
+  "recordedAt": "2026-10-10T08:07:35.705786+00:00",
+  "tests": {
+    "tests": 366,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "build": "successful",
+  "log": "build/media-continuation-build.log",
+  "apk": {
+    "path": "app/build/outputs/apk/release/app-release.apk",
+    "versionName": "0.1.3",
+    "versionCode": 4,
+    "bytes": 2663365,
+    "sha256": "c5161e35aae82998c09b23a8c5defce2f631142b4f81c8564ba894106b33e042",
+    "r8": true
+  },
+  "evidence": {
+    "manifest": "docs/media-background-systemui-evidence.json",
+    "liveTargets": 34,
+    "resourceNames": 7,
+    "resourceFiles": 1,
+    "resourceValues": 8,
+    "refresh": ".workbuddy/tmp/mt-systemui/media-continuation-verified.json",
+    "hashesMatch": true
+  },
+  "inventory": {
+    "pending": 94,
+    "implemented_static_verified": 83,
+    "repaired_static_pending_device": 18,
+    "partially_implemented_static_verified": 7,
+    "covered_by_existing_feature_per_user": 1,
+    "already_supported_by_current_host": 1,
+    "needs_audit_existing_partial": 132,
+    "partially_implemented_pending_settings_host": 1
+  },
+  "installed": false,
+  "deviceLastInstallation": "docs/migration-install-2026-10-10.json",
+  "restartedOrReloadedHost": false,
+  "changedFeatureScopeSimNetwork": false,
+  "runtimeAcceptance": false,
+  "fullLint": "Not rerun; 22 prior known errors are not claimed fixed.",
+  "changes": "Partial cover-only transition and shared media appearance lifecycle repairs. Not full media/SystemUI migration."
+}

@@ -87,6 +87,13 @@ internal object SystemUiTargets {
     val ignoreFold = SystemUiMethod(
         "com.android.systemui.statusbar.notification.utils.NotificationUtil", "shouldIgnoreEntry", "boolean", listOf(ENTRY), isStatic = true,
     )
+    val customFold = ignoreFold.copy(name = "canCustomFold")
+    const val NOTIFICATION_MENU = "com.android.systemui.statusbar.notification.row.MiuiNotificationMenuRow"
+    val foldMenuViews = SystemUiMethod(NOTIFICATION_MENU, "createMenuViews", "void", listOf("boolean"))
+    val foldMenuCallers = listOf(
+        SystemUiMethod(NOTIFICATION_MENU, "createMenu", "void", listOf("android.view.ViewGroup")),
+        SystemUiMethod(NOTIFICATION_MENU, "onNotificationUpdated", "void"),
+    )
     const val FOLD_COORDINATOR = "com.android.systemui.statusbar.notification.collection.coordinator.FoldCoordinator"
     val foldCallers = listOf(
         SystemUiMethod(FOLD_COORDINATOR + "\$collectionListener\$1", "onEntryAdded", "void", listOf(ENTRY)),
@@ -124,5 +131,5 @@ internal object SystemUiTargets {
         facePossible, fingerprintPossible, mediaAction, mediaActionRun,
         mediaLoadLayout, mediaUpdateLayout, mediaAttach, mediaSeamless, flipTinyScreen,
         mediaReinflate, mediaBoundsChanged,
-    ) + foldCallers
+    ) + foldCallers + customFold + foldMenuViews + foldMenuCallers
 }

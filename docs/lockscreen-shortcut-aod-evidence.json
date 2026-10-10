@@ -1,0 +1,237 @@
+{
+  "host": {
+    "packageName": "com.miui.aod",
+    "versionName": "DEV-2446.3.0.1-09042206",
+    "versionCode": 22446301
+  },
+  "verification": "Read-only exact current-host shortcut hide adapter evidence; not runtime acceptance.",
+  "evidence": [
+    {
+      "locator": "dex_method:Lcom/miui/keyguard/shortcuts/controller/ShortcutViewLayoutController;->updateShortcutView(Lcom/miui/keyguard/shortcuts/data/ShortcutEntity;Landroid/widget/ImageView;Landroid/view/View;)V",
+      "contains": [
+        ".method public final updateShortcutView(Lcom/miui/keyguard/shortcuts/data/ShortcutEntity;Landroid/widget/ImageView;Landroid/view/View;)V",
+        "->getDrawableWithAvailable()",
+        "->setVisibility(I)V"
+      ],
+      "sha256": "7ec8003edf5491e18ef283409ed7938a7216119bac9392c6c7931b4a76bd6fb7"
+    },
+    {
+      "locator": "dex_method:Lcom/miui/keyguard/shortcuts/controller/ShortcutViewLayoutController;->onShortcutDataChanged(Lcom/miui/keyguard/shortcuts/data/ShortcutEntity;Z)V",
+      "contains": [
+        ".method public onShortcutDataChanged(Lcom/miui/keyguard/shortcuts/data/ShortcutEntity;Z)V",
+        "->shortcutViewLeft:",
+        "->shortcutViewRight:",
+        "->updateShortcutView("
+      ],
+      "sha256": "5bae9f0a65573015f17711efe21aff3d1b37549ba19895de8591daa95783107f"
+    },
+    {
+      "locator": "dex_method:Lcom/miui/keyguard/shortcuts/controller/ShortcutViewLayoutController;-><init>(Landroid/content/Context;Landroid/content/Context;Landroid/view/ViewGroup;ZZLcom/miui/keyguard/shortcuts/controller/ShortcutViewLayoutController$ShortcutTipsAnimCallback;)V",
+      "contains": [
+        ".method public constructor <init>(Landroid/content/Context;Landroid/content/Context;Landroid/view/ViewGroup;ZZLcom/miui/keyguard/shortcuts/controller/ShortcutViewLayoutController$ShortcutTipsAnimCallback;)V",
+        "->shortcutViewLeftLayout:",
+        "->shortcutViewRightLayout:",
+        "->shortcutViewLeft:",
+        "->shortcutViewRight:",
+        "->addShortDataCallback("
+      ],
+      "sha256": "09c30641875dcdbae07cfc7d343a031dbf20410ecf07e36fc1c152cbc87437c8"
+    },
+    {
+      "locator": "dex_method:Lcom/miui/keyguard/shortcuts/controller/ShortcutMoveController;->isTouchOnIcon(Landroid/view/View;FF)Z",
+      "contains": [
+        ".method public final isTouchOnIcon(Landroid/view/View;FF)Z",
+        "->isShown()Z",
+        "->getAlpha()F"
+      ],
+      "sha256": "93e6d67ae51a6938fac6b1d2f31b579344df439a4869c31bcb24ca8be3f50699"
+    },
+    {
+      "locator": "dex_method:Lcom/miui/keyguard/shortcuts/controller/ShortcutMoveController;->initCommonTouchEvent(Landroid/view/MotionEvent;)V",
+      "contains": [
+        ".method public final initCommonTouchEvent(Landroid/view/MotionEvent;)V",
+        "->isTouchOnIcon(",
+        "->isLeftShortcutTouched:Z",
+        "->isRightShortcutTouched:Z"
+      ],
+      "sha256": "d93fa75cee48436af8d38724f54c23fce3db73b9b3aa299884e566a1f4e8eef0"
+    },
+    {
+      "locator": "dex_method:Lcom/miui/keyguard/shortcuts/controller/ShortcutMoveController;->onTouchEvent(Landroid/view/MotionEvent;)Z",
+      "contains": [
+        ".method public final onTouchEvent(Landroid/view/MotionEvent;)Z",
+        "->initCommonTouchEvent(",
+        "->onTouchUp()V"
+      ],
+      "sha256": "696f71eb917401fdac70e43c053c987a95252cb485e09ae12d282c1b60c19508"
+    },
+    {
+      "locator": "dex_method:Lcom/miui/keyguard/shortcuts/controller/ShortcutMoveController;->onTouchUp()V",
+      "contains": [
+        ".method public final onTouchUp()V",
+        "->updateSwipingInProgress(Z)V",
+        "->endTraceForMove()V"
+      ],
+      "sha256": "1ce29f482c3e5f12b7b3e25c8846690e8e6b91a2e6a9c7459316bd1f8bc11e21"
+    },
+    {
+      "locator": "dex_method:Lcom/miui/keyguard/shortcuts/controller/ShortcutMoveController;->updateShortcutLayoutVisibility(Z)V",
+      "contains": [
+        ".method public final updateShortcutLayoutVisibility(Z)V",
+        "->showIfDrawablePresent("
+      ],
+      "sha256": "760669c62cd5269a4d18ac63a6113a92a027b41ea27efd94395cffb05eaaeb9b"
+    },
+    {
+      "locator": "dex_method:Lcom/miui/keyguard/shortcuts/utils/ViewUtils;->showIfDrawablePresent(Landroid/widget/ImageView;)V",
+      "contains": [
+        ".method public final showIfDrawablePresent(Landroid/widget/ImageView;)V",
+        "->getDrawable()",
+        "->setVisibility(I)V"
+      ],
+      "sha256": "d200ed23c39376c8415a4f92ee23ca58a95229d8e58c09a1d3ab8c4e95dfb40d"
+    },
+    {
+      "locator": "dex_method:Lcom/miui/keyguard/shortcuts/controller/ShortcutViewLayoutController;->handleOnIconClick(Z)V",
+      "contains": [
+        ".method public final handleOnIconClick(Z)V",
+        "->getTalkbackEnabled()Z",
+        "->startShortcutActivity()Z",
+        "->resetOccludedMovedShortcut()V"
+      ],
+      "sha256": "e1edb6bf1284b374325047c06986a5829963092161aab8f04ccd8f1242db5306"
+    },
+    {
+      "locator": "dex_method:Lcom/miui/keyguard/shortcuts/controller/ShortcutViewLayoutController;->_init_$lambda$2(Lcom/miui/keyguard/shortcuts/controller/ShortcutViewLayoutController;Landroid/view/View;)V",
+      "contains": [
+        ".method public static final _init_$lambda$2(Lcom/miui/keyguard/shortcuts/controller/ShortcutViewLayoutController;Landroid/view/View;)V",
+        "->handleOnIconClick(Z)V",
+        "const/4 p1, 0x1"
+      ],
+      "sha256": "5de12bc427444a475c9583c31726127ae114773122437e041a9b9a36d503b743"
+    },
+    {
+      "locator": "dex_method:Lcom/miui/keyguard/shortcuts/controller/ShortcutViewLayoutController;->_init_$lambda$3(Lcom/miui/keyguard/shortcuts/controller/ShortcutViewLayoutController;Landroid/view/View;)V",
+      "contains": [
+        ".method public static final _init_$lambda$3(Lcom/miui/keyguard/shortcuts/controller/ShortcutViewLayoutController;Landroid/view/View;)V",
+        "->handleOnIconClick(Z)V",
+        "const/4 p1, 0x0"
+      ],
+      "sha256": "9734471caabf3aecdb00298335de05a3102fd711c74b0af8f1c7e1250e43fb7e"
+    },
+    {
+      "locator": "dex_method:Lcom/miui/keyguard/shortcuts/manager/ShortcutManager;->startShortcutActivity()Z",
+      "contains": [
+        ".method public final startShortcutActivity()Z",
+        "->shortcutDataLeft:",
+        "->shortcutDataRight:",
+        "->startActivity(Landroid/content/Context;)Z"
+      ],
+      "sha256": "a9f5f8f8235b766f1cf3eb1e4f7031f2b426830d7b1f691409cc52c3677236a4"
+    },
+    {
+      "locator": "dex_method:Lcom/miui/keyguard/shortcuts/manager/ShortcutManager;->isOccludedMovedShortcutLeft()Z",
+      "contains": [
+        ".method public final isOccludedMovedShortcutLeft()Z",
+        "->occludedMovedShortcut:",
+        "->LEFT:"
+      ],
+      "sha256": "bdb058915b40ca4a472027fd0ff2508f58a19d01c69b41b227c0f1a1024d6b55"
+    },
+    {
+      "locator": "dex_method:Lcom/miui/keyguard/shortcuts/manager/ShortcutManager;->isOccludedMovedShortcutRight()Z",
+      "contains": [
+        ".method public final isOccludedMovedShortcutRight()Z",
+        "->occludedMovedShortcut:",
+        "->RIGHT:"
+      ],
+      "sha256": "d81bc1c8e39180dd4fe170e339ae1019a6329d0e7e51e097bbd54fac47895763"
+    },
+    {
+      "locator": "dex_method:Lcom/miui/keyguard/shortcuts/controller/ShortcutOccludedAnimController$startShortcutActivity$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;",
+      "contains": [
+        ".method public final invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;",
+        "->startShortcutActivity()Z",
+        "->postDelayed("
+      ],
+      "sha256": "536b72d6fdbc3f3d269684428de499839aac7fe81bb30458439e4ed500de7799"
+    },
+    {
+      "locator": "dex_method:Lcom/miui/keyguard/shortcuts/controller/ShortcutViewLayoutController;->release()V",
+      "contains": [
+        ".method public final release()V",
+        "->removeShortDataCallback("
+      ],
+      "sha256": "cbf5cb4f71e3ba8bdf3b18fb5e8b630df9da50fcb83d6b9a435122e5a0b62ab1"
+    },
+    {
+      "locator": "dex_method:Lcom/miui/keyguard/shortcuts/ShortcutPluginImpl;->onDestroy()V",
+      "contains": [
+        ".method public onDestroy()V",
+        "->release()V"
+      ],
+      "sha256": "f02dfb2224fd71b7c2e336be677ce6dd65af6dad6fde2301758a47f63b4bd9e6"
+    },
+    {
+      "locator": "dex_method:Lcom/miui/keyguard/shortcuts/controller/ShortcutViewLayoutController$$ExternalSyntheticLambda0;->onClick(Landroid/view/View;)V",
+      "contains": [
+        ".method public final onClick(Landroid/view/View;)V",
+        "invoke-static {p0, p1}, Lcom/miui/keyguard/shortcuts/controller/ShortcutViewLayoutController;->$r8$lambda$gbgW4GChjSdmSVk91pzb3F1NSE4(Lcom/miui/keyguard/shortcuts/controller/ShortcutViewLayoutController;Landroid/view/View;)V"
+      ],
+      "sha256": "a288cc13031a049e71b8507524fc9d9a747cff1e97f0165937fa953950f2eb39"
+    },
+    {
+      "locator": "dex_method:Lcom/miui/keyguard/shortcuts/controller/ShortcutViewLayoutController$$ExternalSyntheticLambda1;->onClick(Landroid/view/View;)V",
+      "contains": [
+        ".method public final onClick(Landroid/view/View;)V",
+        "invoke-static {p0, p1}, Lcom/miui/keyguard/shortcuts/controller/ShortcutViewLayoutController;->$r8$lambda$BWvT4TlAHxG4sOJIfi8A5yKB0tQ(Lcom/miui/keyguard/shortcuts/controller/ShortcutViewLayoutController;Landroid/view/View;)V"
+      ],
+      "sha256": "363a2aad161b42149120b96d594f8aaa538b21d81e1a43b9df785199adff7d88"
+    },
+    {
+      "locator": "dex_method:Lcom/miui/keyguard/shortcuts/controller/ShortcutViewLayoutController;->$r8$lambda$gbgW4GChjSdmSVk91pzb3F1NSE4(Lcom/miui/keyguard/shortcuts/controller/ShortcutViewLayoutController;Landroid/view/View;)V",
+      "contains": [
+        ".method public static synthetic $r8$lambda$gbgW4GChjSdmSVk91pzb3F1NSE4(Lcom/miui/keyguard/shortcuts/controller/ShortcutViewLayoutController;Landroid/view/View;)V",
+        "invoke-static {p0, p1}, Lcom/miui/keyguard/shortcuts/controller/ShortcutViewLayoutController;->_init_$lambda$2(Lcom/miui/keyguard/shortcuts/controller/ShortcutViewLayoutController;Landroid/view/View;)V"
+      ],
+      "sha256": "7cc4a51d825678c720da7cd860320581b5edaecfcc360001a62c59bb611318f2"
+    },
+    {
+      "locator": "dex_method:Lcom/miui/keyguard/shortcuts/controller/ShortcutViewLayoutController;->$r8$lambda$BWvT4TlAHxG4sOJIfi8A5yKB0tQ(Lcom/miui/keyguard/shortcuts/controller/ShortcutViewLayoutController;Landroid/view/View;)V",
+      "contains": [
+        ".method public static synthetic $r8$lambda$BWvT4TlAHxG4sOJIfi8A5yKB0tQ(Lcom/miui/keyguard/shortcuts/controller/ShortcutViewLayoutController;Landroid/view/View;)V",
+        "invoke-static {p0, p1}, Lcom/miui/keyguard/shortcuts/controller/ShortcutViewLayoutController;->_init_$lambda$3(Lcom/miui/keyguard/shortcuts/controller/ShortcutViewLayoutController;Landroid/view/View;)V"
+      ],
+      "sha256": "25c6a5214b49995ae10e3a20ade373fe7266c347be77d741638a76bd3b3d5682"
+    },
+    {
+      "locator": "axml:res/Tmk.xml",
+      "contains": [
+        "<FrameLayout",
+        "<ImageView",
+        "android:importantForAccessibility=\"yes\"",
+        "@7F0B055C",
+        "@7F0B055E"
+      ],
+      "sha256": "f94cdc48ede550693f8dac439f2d1bf16bcc00a7bb55e601495f13a435bc35f6"
+    },
+    {
+      "locator": "axml:res/djZ.xml",
+      "contains": [
+        "<FrameLayout",
+        "android:clipChildren=\"false\""
+      ],
+      "sha256": "d45700a7524e348bfdc875638af8534e5d201c4c04f5a7756e70c4c524598817"
+    }
+  ],
+  "resourceFiles": [
+    {
+      "locator": "resource:0x7f0e027c",
+      "path": "res/Tmk.xml"
+    },
+    {
+      "locator": "resource:0x7f0e027d",
+      "path": "res/djZ.xml"
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "time": "2026-10-10T18:48:01.591209+08:00",
+  "tasks": [
+    ":app:testDebugUnitTest",
+    ":app:assembleRelease"
+  ],
+  "tests": {
+    "tests": 448,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "release": "R8 build successful",
+  "apk": {
+    "path": "app/build/outputs/apk/release/app-release.apk",
+    "bytes": 2696133,
+    "sha256": "ef684531b1126d8c178316645e15b6e9e6e4ad62bf6e5a060eacd59b3e815696",
+    "versionName": "0.1.3",
+    "versionCode": 4
+  },
+  "hostEvidence": {
+    "manifest": "docs/notification-fold-menu-evidence.json",
+    "verifiedTargets": 14
+  },
+  "log": "build/fold-menu-build.log",
+  "runtimeAcceptance": false,
+  "fullLint": "Not rerun; 22 pre-existing errors remain outside this task."
+}

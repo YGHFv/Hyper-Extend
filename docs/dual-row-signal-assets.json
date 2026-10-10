@@ -1,0 +1,666 @@
+{
+  "upstream": "HyperCeiler",
+  "license": "AGPL-3.0-or-later",
+  "assets": [
+    {
+      "source": "statusbar_signal_1_0.xml",
+      "target": "hyperextend_dual_1_0.xml",
+      "sourceSha256": "58c319059992b393b72ff3bd740bbc3b96c2f6fb3eacf1396d2e27e94cbb6851"
+    },
+    {
+      "source": "statusbar_signal_1_0_classic.xml",
+      "target": "hyperextend_dual_1_0_classic.xml",
+      "sourceSha256": "3eddb3fc300c21318f15a7e5cbde3ae5fb71a35fa43f3f787263501e117807cf"
+    },
+    {
+      "source": "statusbar_signal_1_0_dark.xml",
+      "target": "hyperextend_dual_1_0_dark.xml",
+      "sourceSha256": "9d94139cdc4b8c4e84dd47d13527d62001491118c44974f9ff96ac2e404c4f79"
+    },
+    {
+      "source": "statusbar_signal_1_0_dark_classic.xml",
+      "target": "hyperextend_dual_1_0_dark_classic.xml",
+      "sourceSha256": "b10c33e6ce00de0074ff782d33f2fb08524b34589d74068a2d23c44fbf7c7cc2"
+    },
+    {
+      "source": "statusbar_signal_1_0_dark_theme.webp",
+      "target": "hyperextend_dual_1_0_dark_theme.webp",
+      "sourceSha256": "e4ddb3c85a577958fa0463b60eedd9e9ee27161f32d16f6f9c0ca9f906380be9"
+    },
+    {
+      "source": "statusbar_signal_1_0_dark_thick.xml",
+      "target": "hyperextend_dual_1_0_dark_thick.xml",
+      "sourceSha256": "9aa2258aca233473ba60b9c1541e5b73e2ad80a02e5bc9f0f8d2f4c6f2d87ca5"
+    },
+    {
+      "source": "statusbar_signal_1_0_theme.webp",
+      "target": "hyperextend_dual_1_0_theme.webp",
+      "sourceSha256": "cea1b4dc4a128629fecb248231e5e3280437962eee3c56b6ac66940306898906"
+    },
+    {
+      "source": "statusbar_signal_1_0_thick.xml",
+      "target": "hyperextend_dual_1_0_thick.xml",
+      "sourceSha256": "c47c1b560efa27ac6405c8ee18909f59efa4bf67681a2b9b5bc00eac0933cb9a"
+    },
+    {
+      "source": "statusbar_signal_1_0_tint.xml",
+      "target": "hyperextend_dual_1_0_tint.xml",
+      "sourceSha256": "c9604c90e88870a272ea6474a0ba5d3250689475e02c553d030e5102df4a0738"
+    },
+    {
+      "source": "statusbar_signal_1_0_tint_classic.xml",
+      "target": "hyperextend_dual_1_0_tint_classic.xml",
+      "sourceSha256": "a5e3114c8c0dae19438f56ef7473bd22da13ba859e6735132c745adcfbd38f6e"
+    },
+    {
+      "source": "statusbar_signal_1_0_tint_thick.xml",
+      "target": "hyperextend_dual_1_0_tint_thick.xml",
+      "sourceSha256": "7f8831de462840b069bec4e8fe4ae90b29c6108a5bc3cfcdb676610e1e023bfd"
+    },
+    {
+      "source": "statusbar_signal_1_1.xml",
+      "target": "hyperextend_dual_1_1.xml",
+      "sourceSha256": "1d2f4b6ce39a10fa823f9e83c9538f7dec471b3c4bcf3bf90b05e0f45e38f2ea"
+    },
+    {
+      "source": "statusbar_signal_1_1_classic.xml",
+      "target": "hyperextend_dual_1_1_classic.xml",
+      "sourceSha256": "16aa984d58acc715c26a6454823cd13b311a523240d9596f2c692582e31b63d1"
+    },
+    {
+      "source": "statusbar_signal_1_1_dark.xml",
+      "target": "hyperextend_dual_1_1_dark.xml",
+      "sourceSha256": "ca7ddf2f2fd2e38ccb102af0ee0aa0fd3b8baf02e96a8f301a41500f2ae2537c"
+    },
+    {
+      "source": "statusbar_signal_1_1_dark_classic.xml",
+      "target": "hyperextend_dual_1_1_dark_classic.xml",
+      "sourceSha256": "189b04f42f0860fdc8099331902a111d7137ab44ddff527c04070f905e0a1caa"
+    },
+    {
+      "source": "statusbar_signal_1_1_dark_theme.webp",
+      "target": "hyperextend_dual_1_1_dark_theme.webp",
+      "sourceSha256": "d3c7f37a296afd21a2a36123627b2f449d97d7e30e282bd0e612cc0cc60df8c1"
+    },
+    {
+      "source": "statusbar_signal_1_1_dark_thick.xml",
+      "target": "hyperextend_dual_1_1_dark_thick.xml",
+      "sourceSha256": "d84387e490d03de52bfe1da6b3a4e02c38c1d8f3541b6651774c9d488974e936"
+    },
+    {
+      "source": "statusbar_signal_1_1_theme.webp",
+      "target": "hyperextend_dual_1_1_theme.webp",
+      "sourceSha256": "b4f483c9ba46cb39ce87e5574e16e7562d407ac857295f7db7860ce13cba5620"
+    },
+    {
+      "source": "statusbar_signal_1_1_thick.xml",
+      "target": "hyperextend_dual_1_1_thick.xml",
+      "sourceSha256": "a2833b174d51674ab8f7247087a070cfa978cea5918e427910bdd54cceb2b760"
+    },
+    {
+      "source": "statusbar_signal_1_1_tint.xml",
+      "target": "hyperextend_dual_1_1_tint.xml",
+      "sourceSha256": "55c4994dddb49aa437e1ab69d35bb4a2ee229782a2ed49b5e409c779143fa979"
+    },
+    {
+      "source": "statusbar_signal_1_1_tint_classic.xml",
+      "target": "hyperextend_dual_1_1_tint_classic.xml",
+      "sourceSha256": "44e158dcb99f13b1baba0d8074d3642233b8aa59ebc89ff87af7d3dcb45c707e"
+    },
+    {
+      "source": "statusbar_signal_1_1_tint_thick.xml",
+      "target": "hyperextend_dual_1_1_tint_thick.xml",
+      "sourceSha256": "ab5a685bd10ad00e4e7925b6ed514d44da83c43a2e65e1289ce2d67c47c98593"
+    },
+    {
+      "source": "statusbar_signal_1_2.xml",
+      "target": "hyperextend_dual_1_2.xml",
+      "sourceSha256": "1d2f4b6ce39a10fa823f9e83c9538f7dec471b3c4bcf3bf90b05e0f45e38f2ea"
+    },
+    {
+      "source": "statusbar_signal_1_2_classic.xml",
+      "target": "hyperextend_dual_1_2_classic.xml",
+      "sourceSha256": "16aa984d58acc715c26a6454823cd13b311a523240d9596f2c692582e31b63d1"
+    },
+    {
+      "source": "statusbar_signal_1_2_dark.xml",
+      "target": "hyperextend_dual_1_2_dark.xml",
+      "sourceSha256": "ca7ddf2f2fd2e38ccb102af0ee0aa0fd3b8baf02e96a8f301a41500f2ae2537c"
+    },
+    {
+      "source": "statusbar_signal_1_2_dark_classic.xml",
+      "target": "hyperextend_dual_1_2_dark_classic.xml",
+      "sourceSha256": "189b04f42f0860fdc8099331902a111d7137ab44ddff527c04070f905e0a1caa"
+    },
+    {
+      "source": "statusbar_signal_1_2_dark_theme.webp",
+      "target": "hyperextend_dual_1_2_dark_theme.webp",
+      "sourceSha256": "d3c7f37a296afd21a2a36123627b2f449d97d7e30e282bd0e612cc0cc60df8c1"
+    },
+    {
+      "source": "statusbar_signal_1_2_dark_thick.xml",
+      "target": "hyperextend_dual_1_2_dark_thick.xml",
+      "sourceSha256": "d84387e490d03de52bfe1da6b3a4e02c38c1d8f3541b6651774c9d488974e936"
+    },
+    {
+      "source": "statusbar_signal_1_2_theme.webp",
+      "target": "hyperextend_dual_1_2_theme.webp",
+      "sourceSha256": "b4f483c9ba46cb39ce87e5574e16e7562d407ac857295f7db7860ce13cba5620"
+    },
+    {
+      "source": "statusbar_signal_1_2_thick.xml",
+      "target": "hyperextend_dual_1_2_thick.xml",
+      "sourceSha256": "a2833b174d51674ab8f7247087a070cfa978cea5918e427910bdd54cceb2b760"
+    },
+    {
+      "source": "statusbar_signal_1_2_tint.xml",
+      "target": "hyperextend_dual_1_2_tint.xml",
+      "sourceSha256": "55c4994dddb49aa437e1ab69d35bb4a2ee229782a2ed49b5e409c779143fa979"
+    },
+    {
+      "source": "statusbar_signal_1_2_tint_classic.xml",
+      "target": "hyperextend_dual_1_2_tint_classic.xml",
+      "sourceSha256": "44e158dcb99f13b1baba0d8074d3642233b8aa59ebc89ff87af7d3dcb45c707e"
+    },
+    {
+      "source": "statusbar_signal_1_2_tint_thick.xml",
+      "target": "hyperextend_dual_1_2_tint_thick.xml",
+      "sourceSha256": "ab5a685bd10ad00e4e7925b6ed514d44da83c43a2e65e1289ce2d67c47c98593"
+    },
+    {
+      "source": "statusbar_signal_1_3.xml",
+      "target": "hyperextend_dual_1_3.xml",
+      "sourceSha256": "36d9e1c370c3675e615cfa886fdc123a6f52d3b588a54bcc71a24bb1a4c4b92c"
+    },
+    {
+      "source": "statusbar_signal_1_3_classic.xml",
+      "target": "hyperextend_dual_1_3_classic.xml",
+      "sourceSha256": "05beae6003b7e1ceb764e6efc4e5ffff594d96b8073aa8989d99c99a216e9dcc"
+    },
+    {
+      "source": "statusbar_signal_1_3_dark.xml",
+      "target": "hyperextend_dual_1_3_dark.xml",
+      "sourceSha256": "21d7e14c887a0bd7921e32a8e4f94663ec681c4843b6e736f263b89b1cb754d7"
+    },
+    {
+      "source": "statusbar_signal_1_3_dark_classic.xml",
+      "target": "hyperextend_dual_1_3_dark_classic.xml",
+      "sourceSha256": "df60dfff10374a7638801ed141acb691c39d346527585ce6bdc6ef328dc2f512"
+    },
+    {
+      "source": "statusbar_signal_1_3_dark_theme.webp",
+      "target": "hyperextend_dual_1_3_dark_theme.webp",
+      "sourceSha256": "ad99b39d219c1c392c29697327be9e8b16ad6c3894dea8d0b984439d3d0c7926"
+    },
+    {
+      "source": "statusbar_signal_1_3_dark_thick.xml",
+      "target": "hyperextend_dual_1_3_dark_thick.xml",
+      "sourceSha256": "f5111ff8a5b539623eb46783554591c4d99083846e81224efbf1e6b1f2dcc1fc"
+    },
+    {
+      "source": "statusbar_signal_1_3_theme.webp",
+      "target": "hyperextend_dual_1_3_theme.webp",
+      "sourceSha256": "c9b5df20f205deaaf5141626d7440ee4783604814403be5570978a11121b5639"
+    },
+    {
+      "source": "statusbar_signal_1_3_thick.xml",
+      "target": "hyperextend_dual_1_3_thick.xml",
+      "sourceSha256": "0e1351155ff1c68a4096dbe68a43839e30b40bc8ab28234c6e086332d923b514"
+    },
+    {
+      "source": "statusbar_signal_1_3_tint.xml",
+      "target": "hyperextend_dual_1_3_tint.xml",
+      "sourceSha256": "8c24120bd79e665cbb52f8a11bf23b7ad36af7d397f2911d29edb67a28abf64c"
+    },
+    {
+      "source": "statusbar_signal_1_3_tint_classic.xml",
+      "target": "hyperextend_dual_1_3_tint_classic.xml",
+      "sourceSha256": "57f40c144c0386e00edf0736bae2e3372dcf91c0ece79fb215df63b16ea9bbc2"
+    },
+    {
+      "source": "statusbar_signal_1_3_tint_thick.xml",
+      "target": "hyperextend_dual_1_3_tint_thick.xml",
+      "sourceSha256": "6623ba0063e08467ceb887e28f9e38d6846693eaf04c29eccf6bcb2eb937ab22"
+    },
+    {
+      "source": "statusbar_signal_1_4.xml",
+      "target": "hyperextend_dual_1_4.xml",
+      "sourceSha256": "f98350bb996b5f557d6a02fd583464250070e4809e95d45635ac583f4b2fe59e"
+    },
+    {
+      "source": "statusbar_signal_1_4_classic.xml",
+      "target": "hyperextend_dual_1_4_classic.xml",
+      "sourceSha256": "e145e490e73d5f2042aa04caf213f1e2f6915ab532cc35aa19014fbefe2d6962"
+    },
+    {
+      "source": "statusbar_signal_1_4_dark.xml",
+      "target": "hyperextend_dual_1_4_dark.xml",
+      "sourceSha256": "bc83540fe95c2f9d32fedb7647a8c9a402b8e1f4aadd8edd3b83584c9620ed62"
+    },
+    {
+      "source": "statusbar_signal_1_4_dark_classic.xml",
+      "target": "hyperextend_dual_1_4_dark_classic.xml",
+      "sourceSha256": "991a8a295f8c05ffb0e6d8f47420642b04e28f84bcbc106c9c268cb81ee58d63"
+    },
+    {
+      "source": "statusbar_signal_1_4_dark_theme.webp",
+      "target": "hyperextend_dual_1_4_dark_theme.webp",
+      "sourceSha256": "f7fe9bc2a727459f6ea4f4131176bc40218cc52e3b42159cb19ce4cd1ecbda37"
+    },
+    {
+      "source": "statusbar_signal_1_4_dark_thick.xml",
+      "target": "hyperextend_dual_1_4_dark_thick.xml",
+      "sourceSha256": "d6db91b19c93202e95844b715eb402684b0a965fe014ef22e7eb7108cdf3c15a"
+    },
+    {
+      "source": "statusbar_signal_1_4_theme.webp",
+      "target": "hyperextend_dual_1_4_theme.webp",
+      "sourceSha256": "dad4c7ac09aee09a2a657e88c1c553d2d62d0842ef928efe682438002114702a"
+    },
+    {
+      "source": "statusbar_signal_1_4_thick.xml",
+      "target": "hyperextend_dual_1_4_thick.xml",
+      "sourceSha256": "548b12577f0462e5709436d86d59253a63010f45bb56a9dfc2ecdc5d5b24cdc5"
+    },
+    {
+      "source": "statusbar_signal_1_4_tint.xml",
+      "target": "hyperextend_dual_1_4_tint.xml",
+      "sourceSha256": "8497de707911134c1e8a6ff3a277c15a813936a99910d43f706977658b6e0fa7"
+    },
+    {
+      "source": "statusbar_signal_1_4_tint_classic.xml",
+      "target": "hyperextend_dual_1_4_tint_classic.xml",
+      "sourceSha256": "6567c15132377a1e3e9d6685d3b9186c0b2b897b06dc1706c3ef5a1955e87028"
+    },
+    {
+      "source": "statusbar_signal_1_4_tint_thick.xml",
+      "target": "hyperextend_dual_1_4_tint_thick.xml",
+      "sourceSha256": "25c504b93d2958709d65b99674fc74d20c1b2f81eb74d611a0f1eca90b752627"
+    },
+    {
+      "source": "statusbar_signal_1_5.xml",
+      "target": "hyperextend_dual_1_5.xml",
+      "sourceSha256": "68b30b2da36be7a4928f35dc6a03ea45a67eee2f94acf615b947f18b5fbc6154"
+    },
+    {
+      "source": "statusbar_signal_1_5_classic.xml",
+      "target": "hyperextend_dual_1_5_classic.xml",
+      "sourceSha256": "e4a1cadd15f95d8503ad44e91975ffff8d2c524e870442ade1e7e0f81c1ba403"
+    },
+    {
+      "source": "statusbar_signal_1_5_dark.xml",
+      "target": "hyperextend_dual_1_5_dark.xml",
+      "sourceSha256": "7571f17bd248d00cc499adfabe7d08fbe83c1d5bd25e5b24dfe7b41525e76ffc"
+    },
+    {
+      "source": "statusbar_signal_1_5_dark_classic.xml",
+      "target": "hyperextend_dual_1_5_dark_classic.xml",
+      "sourceSha256": "ed929029cd500295d8b685092d991208fd699777bc00dab8a087cee2b9b866f9"
+    },
+    {
+      "source": "statusbar_signal_1_5_dark_theme.webp",
+      "target": "hyperextend_dual_1_5_dark_theme.webp",
+      "sourceSha256": "c2f70426dd71562ec4b882f092dea64a738c4a8b4c7ded22101bb37d2c0d9c4d"
+    },
+    {
+      "source": "statusbar_signal_1_5_dark_thick.xml",
+      "target": "hyperextend_dual_1_5_dark_thick.xml",
+      "sourceSha256": "050e59458318d74c8d3e1ce727b1c62283d1223f555731ceb7c40340685cbf7d"
+    },
+    {
+      "source": "statusbar_signal_1_5_theme.webp",
+      "target": "hyperextend_dual_1_5_theme.webp",
+      "sourceSha256": "9ce434c5815a9e4a3ce89837419ec1bd0896f05e12edb6ec92c5847bbdaffdef"
+    },
+    {
+      "source": "statusbar_signal_1_5_thick.xml",
+      "target": "hyperextend_dual_1_5_thick.xml",
+      "sourceSha256": "4b61ef4d729d05153beef9bf3bdff80d52e6d5fa23cc3a721d14493583fbc5ec"
+    },
+    {
+      "source": "statusbar_signal_1_5_tint.xml",
+      "target": "hyperextend_dual_1_5_tint.xml",
+      "sourceSha256": "ba23faa3e77b1c1debcf833588b1019c2a6af0153a0d46b7d9578c39439b6902"
+    },
+    {
+      "source": "statusbar_signal_1_5_tint_classic.xml",
+      "target": "hyperextend_dual_1_5_tint_classic.xml",
+      "sourceSha256": "bccc46d9acab648af6fa593dcb9fe8fbf028ce6739d9b67ead486d2f099c1e23"
+    },
+    {
+      "source": "statusbar_signal_1_5_tint_thick.xml",
+      "target": "hyperextend_dual_1_5_tint_thick.xml",
+      "sourceSha256": "6ec949df6ad98253f408b1877ee3737855831a7776ca178b38fab0105034e49e"
+    },
+    {
+      "source": "statusbar_signal_2_0.xml",
+      "target": "hyperextend_dual_2_0.xml",
+      "sourceSha256": "3780e4533b8098d00fa6d546458df6c8a21c17da703835a20d28d90440c097b9"
+    },
+    {
+      "source": "statusbar_signal_2_0_classic.xml",
+      "target": "hyperextend_dual_2_0_classic.xml",
+      "sourceSha256": "cff17ca6b9e9ce1e382517778c149327da0a17aae661c6bffc609c913cdd2aae"
+    },
+    {
+      "source": "statusbar_signal_2_0_dark.xml",
+      "target": "hyperextend_dual_2_0_dark.xml",
+      "sourceSha256": "82fe03dc800de909a9678a2061986ba2049d74ce64c4d3431688f242e673731f"
+    },
+    {
+      "source": "statusbar_signal_2_0_dark_classic.xml",
+      "target": "hyperextend_dual_2_0_dark_classic.xml",
+      "sourceSha256": "4786c1cb102c8d96f6bc4df306587e269dd51e201f126a561a3c7f1d8b5f69e8"
+    },
+    {
+      "source": "statusbar_signal_2_0_dark_theme.webp",
+      "target": "hyperextend_dual_2_0_dark_theme.webp",
+      "sourceSha256": "6a55abfec8a4fe273ea85ae71dae19bf16fb13ba489717565626abcf74068f53"
+    },
+    {
+      "source": "statusbar_signal_2_0_dark_thick.xml",
+      "target": "hyperextend_dual_2_0_dark_thick.xml",
+      "sourceSha256": "9343de7f334945fae0390dc366d2d79f6606542263ff32047a974cf25e9a85d0"
+    },
+    {
+      "source": "statusbar_signal_2_0_theme.webp",
+      "target": "hyperextend_dual_2_0_theme.webp",
+      "sourceSha256": "0ed511a3e3cea4c75d438c648d77a9008d56f7a490f6b5d68c71d8477b2b7b66"
+    },
+    {
+      "source": "statusbar_signal_2_0_thick.xml",
+      "target": "hyperextend_dual_2_0_thick.xml",
+      "sourceSha256": "cfc4ab469191fcec1b583af6e96376a1ea0abf759ae211d2a41da0974ce2b2d1"
+    },
+    {
+      "source": "statusbar_signal_2_0_tint.xml",
+      "target": "hyperextend_dual_2_0_tint.xml",
+      "sourceSha256": "c7f55c4860c8e87e0b5edc3eac5e42557c237b44d506299ea50ed5c0f6e2e5bb"
+    },
+    {
+      "source": "statusbar_signal_2_0_tint_classic.xml",
+      "target": "hyperextend_dual_2_0_tint_classic.xml",
+      "sourceSha256": "d11fffae2810772fe3e45e6e7341c9e40b649cd5bfcc729f917c83d33519660d"
+    },
+    {
+      "source": "statusbar_signal_2_0_tint_thick.xml",
+      "target": "hyperextend_dual_2_0_tint_thick.xml",
+      "sourceSha256": "56cef0f4dadb35d5063b580a4c37f8ecc0aec24a33a85609256b104594cb4e50"
+    },
+    {
+      "source": "statusbar_signal_2_1.xml",
+      "target": "hyperextend_dual_2_1.xml",
+      "sourceSha256": "2c48bd8b7edd56bc5b234ad6f1ddff5f0c3fd4128b9bfad5474a6039d10fe4c8"
+    },
+    {
+      "source": "statusbar_signal_2_1_classic.xml",
+      "target": "hyperextend_dual_2_1_classic.xml",
+      "sourceSha256": "c9d5164022940a4f403ef0d0f6e97a157738e105957590bd5dc991dd5fe1a815"
+    },
+    {
+      "source": "statusbar_signal_2_1_dark.xml",
+      "target": "hyperextend_dual_2_1_dark.xml",
+      "sourceSha256": "3c1d3bba331e9a72f2a4d6776decff808b2e470740a8ade40182aab0a97e1715"
+    },
+    {
+      "source": "statusbar_signal_2_1_dark_classic.xml",
+      "target": "hyperextend_dual_2_1_dark_classic.xml",
+      "sourceSha256": "a15ec59e3158c66b3cb10217122eebc5ceb65a89caa68b8eef80af8d9ce18e69"
+    },
+    {
+      "source": "statusbar_signal_2_1_dark_theme.webp",
+      "target": "hyperextend_dual_2_1_dark_theme.webp",
+      "sourceSha256": "01bddf939ff976226bb995747276365f2dcd1d25a418f073f680f157b79cdb9f"
+    },
+    {
+      "source": "statusbar_signal_2_1_dark_thick.xml",
+      "target": "hyperextend_dual_2_1_dark_thick.xml",
+      "sourceSha256": "b139278850de31126296370ce14cda1421caa43c380775adcb52de70cbfcc204"
+    },
+    {
+      "source": "statusbar_signal_2_1_theme.webp",
+      "target": "hyperextend_dual_2_1_theme.webp",
+      "sourceSha256": "e221da91a3807b67945f499a9ac782a7e18d9a03ea0bc53f50d82eeb938f5a0c"
+    },
+    {
+      "source": "statusbar_signal_2_1_thick.xml",
+      "target": "hyperextend_dual_2_1_thick.xml",
+      "sourceSha256": "d39e59ecce43b7376ed1a5a16e7b701cb57c6dbef9300b94bac57147e47a2b7e"
+    },
+    {
+      "source": "statusbar_signal_2_1_tint.xml",
+      "target": "hyperextend_dual_2_1_tint.xml",
+      "sourceSha256": "42fe5adb0dcc4d940854d015c32d5043f035652076ffa800faa68bcf0e2427b8"
+    },
+    {
+      "source": "statusbar_signal_2_1_tint_classic.xml",
+      "target": "hyperextend_dual_2_1_tint_classic.xml",
+      "sourceSha256": "0a0a7f95f28b2b3caca5fc0ee964d1daade08be433983fa27fa2bbca9b281c1d"
+    },
+    {
+      "source": "statusbar_signal_2_1_tint_thick.xml",
+      "target": "hyperextend_dual_2_1_tint_thick.xml",
+      "sourceSha256": "a24ecdd5ac96b4a861de07825a5fb24292100f978bd0fe79ddfd78d99dbeeaf2"
+    },
+    {
+      "source": "statusbar_signal_2_2.xml",
+      "target": "hyperextend_dual_2_2.xml",
+      "sourceSha256": "2c48bd8b7edd56bc5b234ad6f1ddff5f0c3fd4128b9bfad5474a6039d10fe4c8"
+    },
+    {
+      "source": "statusbar_signal_2_2_classic.xml",
+      "target": "hyperextend_dual_2_2_classic.xml",
+      "sourceSha256": "c9d5164022940a4f403ef0d0f6e97a157738e105957590bd5dc991dd5fe1a815"
+    },
+    {
+      "source": "statusbar_signal_2_2_dark.xml",
+      "target": "hyperextend_dual_2_2_dark.xml",
+      "sourceSha256": "3c1d3bba331e9a72f2a4d6776decff808b2e470740a8ade40182aab0a97e1715"
+    },
+    {
+      "source": "statusbar_signal_2_2_dark_classic.xml",
+      "target": "hyperextend_dual_2_2_dark_classic.xml",
+      "sourceSha256": "a15ec59e3158c66b3cb10217122eebc5ceb65a89caa68b8eef80af8d9ce18e69"
+    },
+    {
+      "source": "statusbar_signal_2_2_dark_theme.webp",
+      "target": "hyperextend_dual_2_2_dark_theme.webp",
+      "sourceSha256": "01bddf939ff976226bb995747276365f2dcd1d25a418f073f680f157b79cdb9f"
+    },
+    {
+      "source": "statusbar_signal_2_2_dark_thick.xml",
+      "target": "hyperextend_dual_2_2_dark_thick.xml",
+      "sourceSha256": "b139278850de31126296370ce14cda1421caa43c380775adcb52de70cbfcc204"
+    },
+    {
+      "source": "statusbar_signal_2_2_theme.webp",
+      "target": "hyperextend_dual_2_2_theme.webp",
+      "sourceSha256": "e221da91a3807b67945f499a9ac782a7e18d9a03ea0bc53f50d82eeb938f5a0c"
+    },
+    {
+      "source": "statusbar_signal_2_2_thick.xml",
+      "target": "hyperextend_dual_2_2_thick.xml",
+      "sourceSha256": "d39e59ecce43b7376ed1a5a16e7b701cb57c6dbef9300b94bac57147e47a2b7e"
+    },
+    {
+      "source": "statusbar_signal_2_2_tint.xml",
+      "target": "hyperextend_dual_2_2_tint.xml",
+      "sourceSha256": "42fe5adb0dcc4d940854d015c32d5043f035652076ffa800faa68bcf0e2427b8"
+    },
+    {
+      "source": "statusbar_signal_2_2_tint_classic.xml",
+      "target": "hyperextend_dual_2_2_tint_classic.xml",
+      "sourceSha256": "0a0a7f95f28b2b3caca5fc0ee964d1daade08be433983fa27fa2bbca9b281c1d"
+    },
+    {
+      "source": "statusbar_signal_2_2_tint_thick.xml",
+      "target": "hyperextend_dual_2_2_tint_thick.xml",
+      "sourceSha256": "a24ecdd5ac96b4a861de07825a5fb24292100f978bd0fe79ddfd78d99dbeeaf2"
+    },
+    {
+      "source": "statusbar_signal_2_3.xml",
+      "target": "hyperextend_dual_2_3.xml",
+      "sourceSha256": "dff3dcdd6c1a9bb59045b44229b6281bdcff661654315ecb831d8c2050b9bca6"
+    },
+    {
+      "source": "statusbar_signal_2_3_classic.xml",
+      "target": "hyperextend_dual_2_3_classic.xml",
+      "sourceSha256": "05faecec3e2732a3f10e7a9dff69600fd00416eb025a670bca520a2a350f46f1"
+    },
+    {
+      "source": "statusbar_signal_2_3_dark.xml",
+      "target": "hyperextend_dual_2_3_dark.xml",
+      "sourceSha256": "594e0e9240f156c4e0fdfbf04204ab2ae00c01450a2488225ecab3e8bc9967ac"
+    },
+    {
+      "source": "statusbar_signal_2_3_dark_classic.xml",
+      "target": "hyperextend_dual_2_3_dark_classic.xml",
+      "sourceSha256": "359027114e14e2078e8eab878bff0757b32336def9e4696aba2ce5db37ee9ae6"
+    },
+    {
+      "source": "statusbar_signal_2_3_dark_theme.webp",
+      "target": "hyperextend_dual_2_3_dark_theme.webp",
+      "sourceSha256": "1b6a8aff63520253583f415d5ee0e7aeeed33c3aa84ef0ca4b9c0e498ca861b7"
+    },
+    {
+      "source": "statusbar_signal_2_3_dark_thick.xml",
+      "target": "hyperextend_dual_2_3_dark_thick.xml",
+      "sourceSha256": "8ca04681cd93bebc6b6d770bca89ae80de8e2f10053a1454c35395a34219922f"
+    },
+    {
+      "source": "statusbar_signal_2_3_theme.webp",
+      "target": "hyperextend_dual_2_3_theme.webp",
+      "sourceSha256": "e7d74849316c1ba23b3bf0a1312470c553c694aff1ba744363a05fda69c0231d"
+    },
+    {
+      "source": "statusbar_signal_2_3_thick.xml",
+      "target": "hyperextend_dual_2_3_thick.xml",
+      "sourceSha256": "c4c862aea535995f29401f71d9bbbd0fcbcb211cce5684835511196c514f5b0a"
+    },
+    {
+      "source": "statusbar_signal_2_3_tint.xml",
+      "target": "hyperextend_dual_2_3_tint.xml",
+      "sourceSha256": "1909179091d3f8649a667d83e01dd94fcf782a5ebff5487857a3dd1956541a6e"
+    },
+    {
+      "source": "statusbar_signal_2_3_tint_classic.xml",
+      "target": "hyperextend_dual_2_3_tint_classic.xml",
+      "sourceSha256": "9a1a25e07081692f00cbb34bfdba86b40522e95d4e9fe64ae416ef1d8850c986"
+    },
+    {
+      "source": "statusbar_signal_2_3_tint_thick.xml",
+      "target": "hyperextend_dual_2_3_tint_thick.xml",
+      "sourceSha256": "b80c42785f65ebe7228c227694616112912a06e02d7689e47909af4713a9c378"
+    },
+    {
+      "source": "statusbar_signal_2_4.xml",
+      "target": "hyperextend_dual_2_4.xml",
+      "sourceSha256": "0d09a24ec14b6db32ace769e07847993e348facbebaa84331cda6c1ccb64a9dd"
+    },
+    {
+      "source": "statusbar_signal_2_4_classic.xml",
+      "target": "hyperextend_dual_2_4_classic.xml",
+      "sourceSha256": "459a4c1897cc9284df76387c4f9f246d39780486828d3911eb426726e8182aa3"
+    },
+    {
+      "source": "statusbar_signal_2_4_dark.xml",
+      "target": "hyperextend_dual_2_4_dark.xml",
+      "sourceSha256": "adb3b28472c677a5cd3648ca5226376dc4251e98e16a7b6428cd7226b040aa08"
+    },
+    {
+      "source": "statusbar_signal_2_4_dark_classic.xml",
+      "target": "hyperextend_dual_2_4_dark_classic.xml",
+      "sourceSha256": "4f6ad73f7b48d355a824f9bdde0bb7963cba8130354155612f5fffb43fdfadfa"
+    },
+    {
+      "source": "statusbar_signal_2_4_dark_theme.webp",
+      "target": "hyperextend_dual_2_4_dark_theme.webp",
+      "sourceSha256": "6d3f90600c3bae9dee8302bfb2a078a0a2083a83fd05bdaae8c9e5cbdfcb470a"
+    },
+    {
+      "source": "statusbar_signal_2_4_dark_thick.xml",
+      "target": "hyperextend_dual_2_4_dark_thick.xml",
+      "sourceSha256": "93ac5a425982841177b17bb736c0bddf757182c3cd89b4b36b7bd1c2bccaca4d"
+    },
+    {
+      "source": "statusbar_signal_2_4_theme.webp",
+      "target": "hyperextend_dual_2_4_theme.webp",
+      "sourceSha256": "b5821f8030914b80939f9e301f15403e7f4876307e924d0a6de445c0f6cc3bae"
+    },
+    {
+      "source": "statusbar_signal_2_4_thick.xml",
+      "target": "hyperextend_dual_2_4_thick.xml",
+      "sourceSha256": "b245dc89ed966839d4047a9bc07f4dcffe4358acf57349d161f7f2419550d88f"
+    },
+    {
+      "source": "statusbar_signal_2_4_tint.xml",
+      "target": "hyperextend_dual_2_4_tint.xml",
+      "sourceSha256": "6f04debb84295ad76fc2daa9e2f5dc2a653ec61fb3e060f5bd2488cc2e291816"
+    },
+    {
+      "source": "statusbar_signal_2_4_tint_classic.xml",
+      "target": "hyperextend_dual_2_4_tint_classic.xml",
+      "sourceSha256": "7f22439377dc2826ef9e020c113c3d95d2362b418b02f5606dbe2798183845f1"
+    },
+    {
+      "source": "statusbar_signal_2_4_tint_thick.xml",
+      "target": "hyperextend_dual_2_4_tint_thick.xml",
+      "sourceSha256": "52cb805cd13e5b7972cc4cb587a223fd1aef65c94efd9bb55fe41819cfde9ec1"
+    },
+    {
+      "source": "statusbar_signal_2_5.xml",
+      "target": "hyperextend_dual_2_5.xml",
+      "sourceSha256": "ba5eac2d52c62f65cd168e79879b96544e12c1b719950ca689f19f256dbf9b39"
+    },
+    {
+      "source": "statusbar_signal_2_5_classic.xml",
+      "target": "hyperextend_dual_2_5_classic.xml",
+      "sourceSha256": "9f0f1a51457d6e54b96108c95d7b4adb3ec345541b95abbf8f4c7951e81341b6"
+    },
+    {
+      "source": "statusbar_signal_2_5_dark.xml",
+      "target": "hyperextend_dual_2_5_dark.xml",
+      "sourceSha256": "7d2c2a2edbc6c2d7a04f31f2bf950ffa67919b26d48d9f80f8eec0f827eeb639"
+    },
+    {
+      "source": "statusbar_signal_2_5_dark_classic.xml",
+      "target": "hyperextend_dual_2_5_dark_classic.xml",
+      "sourceSha256": "44592ce5fa0aae0b0290635626a735ed1637416dc4e0acef33179422a551da9a"
+    },
+    {
+      "source": "statusbar_signal_2_5_dark_theme.webp",
+      "target": "hyperextend_dual_2_5_dark_theme.webp",
+      "sourceSha256": "dfce92e9c59d232209b086cf9de040551a7fdc092ce3e854ddce0e7c19f38a87"
+    },
+    {
+      "source": "statusbar_signal_2_5_dark_thick.xml",
+      "target": "hyperextend_dual_2_5_dark_thick.xml",
+      "sourceSha256": "cc81cb1188dabc82c5914f88695a8df1e82dc69fc983f754ad09c490c2f0800f"
+    },
+    {
+      "source": "statusbar_signal_2_5_theme.webp",
+      "target": "hyperextend_dual_2_5_theme.webp",
+      "sourceSha256": "1fca5fe2fb8786a663e31852872f99109ede37df00df6cae0ae911995e6e1061"
+    },
+    {
+      "source": "statusbar_signal_2_5_thick.xml",
+      "target": "hyperextend_dual_2_5_thick.xml",
+      "sourceSha256": "8dc1623219c85f404f8f9a858efbaa9e3790210da65e4d94b306a7ea1a652ea4"
+    },
+    {
+      "source": "statusbar_signal_2_5_tint.xml",
+      "target": "hyperextend_dual_2_5_tint.xml",
+      "sourceSha256": "051c24f18215cfbe78a8c72ca62ddec615bd16059e25c24333bdfa38fdbd5fa1"
+    },
+    {
+      "source": "statusbar_signal_2_5_tint_classic.xml",
+      "target": "hyperextend_dual_2_5_tint_classic.xml",
+      "sourceSha256": "3e70c1985348ed26e3865f454eae2125f47565d6a9ea10bf417ecc386ec09cf4"
+    },
+    {
+      "source": "statusbar_signal_2_5_tint_thick.xml",
+      "target": "hyperextend_dual_2_5_tint_thick.xml",
+      "sourceSha256": "b1ba7cd37f2363e97413a5501fa463a5b279e6ace611615dec2c8119027260cd"
+    }
+  ]
+}

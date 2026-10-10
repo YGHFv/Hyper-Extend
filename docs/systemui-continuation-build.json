@@ -1,0 +1,165 @@
+{
+  "date": "2026-10-10",
+  "versionName": "0.1.3",
+  "versionCode": 4,
+  "build": "testDebugUnitTest + assembleRelease passed",
+  "tests": {
+    "tests": 226,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "apk": {
+    "path": "app/build/outputs/apk/release/app-release.apk",
+    "bytes": 2540270,
+    "sha256": "4eed269dc37d3e9c268f1e6d257c7737f206795576035a38ab643a9c670304d9"
+  },
+  "mtChecks": [
+    {
+      "source": "continuation-refresh",
+      "host": "com.android.systemui",
+      "targets": 11,
+      "resources": 0,
+      "resourceFiles": 0
+    },
+    {
+      "source": "continuation-plugin-refresh",
+      "host": "miui.systemui.plugin",
+      "targets": 5,
+      "resources": 0,
+      "resourceFiles": 0
+    },
+    {
+      "source": "continuation-existing-refresh",
+      "host": "com.android.systemui",
+      "targets": 54,
+      "resources": 11,
+      "resourceFiles": 0
+    },
+    {
+      "source": "continuation-existing-plugin-refresh",
+      "host": "miui.systemui.plugin",
+      "targets": 42,
+      "resources": 10,
+      "resourceFiles": 2
+    }
+  ],
+  "lint": {
+    "status": "failed_existing_errors",
+    "errorCount": 22,
+    "errors": [
+      {
+        "id": "MissingPermission",
+        "file": "app/src/main/java/io/github/YGHFv/HyperExtend/hook/feature/statusbar/MobileSignalVisibility.kt",
+        "line": 157
+      },
+      {
+        "id": "MissingPermission",
+        "file": "app/src/main/java/io/github/YGHFv/HyperExtend/hook/feature/statusbar/MobileSignalVisibility.kt",
+        "line": 159
+      },
+      {
+        "id": "MissingPermission",
+        "file": "app/src/main/java/io/github/YGHFv/HyperExtend/hook/feature/statusbar/MobileSignalVisibility.kt",
+        "line": 197
+      },
+      {
+        "id": "MissingSuperCall",
+        "file": "app/src/main/java/io/github/YGHFv/HyperExtend/ui/SettingsActivity.kt",
+        "line": 179
+      },
+      {
+        "id": "NewApi",
+        "file": "app/src/main/java/io/github/YGHFv/HyperExtend/hook/feature/volume/AppVolumeEntryHooks.kt",
+        "line": 136
+      },
+      {
+        "id": "NewApi",
+        "file": "app/src/main/java/io/github/YGHFv/HyperExtend/hook/feature/statusbar/MobileSignalVisibility.kt",
+        "line": 150
+      },
+      {
+        "id": "NewApi",
+        "file": "app/src/main/java/io/github/YGHFv/HyperExtend/hook/feature/statusbar/MobileSignalVisibility.kt",
+        "line": 188
+      },
+      {
+        "id": "NewApi",
+        "file": "app/src/main/java/io/github/YGHFv/HyperExtend/hook/feature/statusbar/MobileSignalVisibility.kt",
+        "line": 188
+      },
+      {
+        "id": "NewApi",
+        "file": "app/src/main/java/io/github/YGHFv/HyperExtend/hook/feature/systemui/NotificationHooks.kt",
+        "line": 84
+      },
+      {
+        "id": "NewApi",
+        "file": "app/src/main/java/io/github/YGHFv/HyperExtend/ui/SettingsActivity.kt",
+        "line": 191
+      },
+      {
+        "id": "NewApi",
+        "file": "app/src/main/java/io/github/YGHFv/HyperExtend/hook/feature/volume/SystemUiAppVolumePanel.kt",
+        "line": 39
+      },
+      {
+        "id": "NewApi",
+        "file": "app/src/main/java/io/github/YGHFv/HyperExtend/hook/feature/WallpaperColorRepair.kt",
+        "line": 240
+      },
+      {
+        "id": "NewApi",
+        "file": "app/src/main/java/io/github/YGHFv/HyperExtend/hook/feature/WallpaperColorRepair.kt",
+        "line": 241
+      },
+      {
+        "id": "NewApi",
+        "file": "app/src/main/java/io/github/YGHFv/HyperExtend/hook/feature/WallpaperColorRepair.kt",
+        "line": 457
+      },
+      {
+        "id": "NewApi",
+        "file": "app/src/main/java/io/github/YGHFv/HyperExtend/hook/feature/WallpaperColorRepair.kt",
+        "line": 457
+      },
+      {
+        "id": "NewApi",
+        "file": "app/src/main/java/io/github/YGHFv/HyperExtend/hook/feature/WallpaperColorRepair.kt",
+        "line": 458
+      },
+      {
+        "id": "NewApi",
+        "file": "app/src/main/java/io/github/YGHFv/HyperExtend/hook/feature/WallpaperMonetFix.kt",
+        "line": 173
+      },
+      {
+        "id": "NewApi",
+        "file": "app/src/main/java/io/github/YGHFv/HyperExtend/hook/feature/WallpaperMonetFix.kt",
+        "line": 183
+      },
+      {
+        "id": "NewApi",
+        "file": "app/src/main/java/io/github/YGHFv/HyperExtend/hook/feature/WallpaperMonetFix.kt",
+        "line": 214
+      },
+      {
+        "id": "NewApi",
+        "file": "app/src/main/java/io/github/YGHFv/HyperExtend/hook/feature/WallpaperMonetFix.kt",
+        "line": 216
+      },
+      {
+        "id": "NewApi",
+        "file": "app/src/main/java/io/github/YGHFv/HyperExtend/hook/feature/WallpaperMonetFix.kt",
+        "line": 228
+      },
+      {
+        "id": "PropertyEscape",
+        "file": "local.properties",
+        "line": 1
+      }
+    ]
+  },
+  "device": "adb devices -l empty; no installation, process restart or runtime acceptance",
+  "settingsImportance": "source adapter only; current Settings APK unavailable in MT; not host verified"
+}

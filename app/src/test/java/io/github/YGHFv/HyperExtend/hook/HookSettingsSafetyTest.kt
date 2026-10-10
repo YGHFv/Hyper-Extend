@@ -36,11 +36,42 @@ class HookSettingsSafetyTest {
         assertTrue(settings(mapOf("passkey_fix" to true)).isOn("passkey_fix.system_server"))
         assertFalse(settings(mapOf("unknown" to true)).isOn("unknown"))
     }
+    @Test fun artworkTransitionRequiresExplicitOptionAndBackgroundParent() {
+        val parent = "media_card_background"; val option = "$parent.transition"
+        assertFalse(settings(mapOf(option to true)).isOn(option))
+        assertFalse(settings(mapOf(parent to true)).isOn(option))
+        assertTrue(settings(mapOf(parent to true, option to true)).isOn(option))
+    }
+    @Test fun chargingOptionsRequireTheParentAndAreNotEnabledOnUpgrade() {
+        val parent = "lockscreen_charging_info"
+        for (suffix in listOf("milliamps", "temperature", "custom_interval")) {
+            val option = "$parent.$suffix"
+            assertFalse(settings(mapOf(option to true)).isOn(option))
+            assertFalse(settings(mapOf(parent to true)).isOn(option))
+            assertTrue(settings(mapOf(parent to true, option to true)).isOn(option))
+        }
+    }
     @Test fun malformedPreferencesFailClosed() {
         val settings = settings(mapOf("passkey_fix" to "true", "test" to true, "token" to "1"))
         assertFalse(settings.isOn("passkey_fix"))
         assertEquals("", settings.string("test"))
         assertEquals(0, settings.number("test", 0))
         assertEquals(0L, settings.long("token"))
+    }
+
+    @Test fun safetyIsPerHostAndMissingSettingsFailClosed() {
+        val settings = settings(mapOf("safety.systemui.disabled" to true, "passkey_fix" to true))
+        assertTrue(settings.safeModeDisabled("systemui"))
+        assertFalse(settings.safeModeDisabled("settings"))
+        assertTrue(settings.isOn("passkey_fix"))
+        assertTrue(HookSettings(null).safeModeDisabled("systemui"))
+        assertTrue(settings(mapOf("safety.systemui.disabled" to "invalid")).safeModeDisabled("systemui"))
+    }
+
+    @Test fun hostRecoveryRetainsLegacyTokenWithoutResettingOtherHosts() {
+        val settings = settings(mapOf("safety.framework_fuse_reset" to 10L, "safety.systemui.reset" to 20L))
+        assertEquals(20L, settings.safeModeReset("systemui"))
+        assertEquals(10L, settings.safeModeReset("system_server"))
+        assertEquals(10L, settings.safeModeReset("settings"))
     }
 }

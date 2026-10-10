@@ -42,12 +42,12 @@ package io.github.YGHFv.HyperExtend.core
  *   等类在 OS4 的系统界面 dex 里一个都没有，整块能力已经换了实现。要做得先重新定位靶子。
  * - **电池信息卡片**（状态栏电量条里那行温度 / 电流 / 功率）：参考项目的入口是
  *   `com.miui.charge.ChargeUtils`，OS4 没有这个类。同样是先定位再迁移。
- * - **移动网络类型与双排图标**：「移动网络类型图标单独显示」「双排移动网络图标」
- *   「大网络类型图标」「自定义移动网络类型文本」尚未迁移。
+ * - **移动网络类型**：独立显示、显示策略和文字已接入原生绑定，待统一真机验收。
+ *   上游隐藏的「大网络类型图标」入口仍待确认适用性，不新增空壳开关。
  *   移动信号显示逻辑四档、隐藏 SIM 卡 1 / 2 已接入 OS4 可变状态流。
- * - **时钟的其余形态**：参考项目「时钟指示器」页还有「时钟样式」（状态栏时钟显示成两行
- *   日期）、「隐藏 Pad 日期时钟」、「禁用时钟同步」等；本模块只做了最常改的时钟格式，以及
- *   状态栏时钟本身的字号 / 加粗 / 位置。
+ *   双排移动网络图标已接入 OS4 原生绑定，尚待双卡设备视觉验收。
+ * - **时钟**：双行排列、各角色样式、平板日期隐藏与可选格式同步已接入；
+ *   当前仅静态核验，尚未统一真机验收。
  *
  * 另外两项**换成了做得成的形态**而不是原样照搬：
  * 图标页的「交换 WIFI 与移动网络」在 OS4 没有落脚点（`StatusBarIconList` 已经没有
@@ -463,6 +463,71 @@ val STATUS_BAR_FEATURES: List<HyperFeature> = listOf(
     ),
 
     HyperFeature(
+        id = MobileTypeDisplaySettings.FEATURE,
+        title = "移动网络类型显示",
+        summary = "设置类型显示逻辑、独立文字及字号与位置",
+        scopes = listOf("systemui"),
+        origin = "西米露 / HyperCeiler · MobileTypeSingle2Hook（OS4 适配）",
+        license = "AGPL-3.0",
+        defaultEnabled = false,
+        requirement = "沿用原生类型文字、测量与动画，不修改网络连接。无服务不保留旧类型；卫星与未知状态回退原生。独立显示关闭时字号与位置不生效；始终隐藏优先。与双排信号组合时由上网卡承载类型。待统一真机验收。",
+        options = listOf(
+            HyperOption(MobileTypeDisplaySettings.SEPARATE, "移动网络类型图标单独显示", defaultEnabled = false),
+            HyperOption(MobileTypeDisplaySettings.LEFT, "显示在信号左侧", "仅独立显示生效；关闭后显示在右侧", defaultEnabled = false),
+            HyperOption(MobileTypeDisplaySettings.BOLD, "加粗", "仅独立显示生效", defaultEnabled = false),
+        ),
+        config = listOf(
+            HyperChoice(MobileTypeDisplaySettings.MODE, "显示逻辑", entries = listOf(
+                ChoiceEntry("0", "默认"), ChoiceEntry("1", "始终显示"), ChoiceEntry("2", "非 WiFi 下显示"),
+                ChoiceEntry("3", "始终隐藏"), ChoiceEntry("4", "仅在移动数据连接时显示"),
+            ), summary = "始终显示仍要求有效蜂窝服务和非空类型；默认保留系统显隐条件"),
+            HyperSlider(MobileTypeDisplaySettings.SIZE, "字体大小", min = 18, max = 40, default = 27,
+                divisor = 2, unit = " dp", group = "独立显示"),
+            HyperSlider(MobileTypeDisplaySettings.LEFT_MARGIN, "左边距", min = 0, max = 16, default = 0,
+                divisor = 2, unit = " dp", group = "独立显示"),
+            HyperSlider(MobileTypeDisplaySettings.RIGHT_MARGIN, "右边距", min = 0, max = 16, default = 0,
+                divisor = 2, unit = " dp", group = "独立显示"),
+            HyperSlider(MobileTypeDisplaySettings.VERTICAL, "上下偏移量", min = -40, max = 40, default = 0,
+                divisor = 10, unit = " dp", group = "独立显示"),
+        ),
+    ),
+
+    HyperFeature(
+        id = DualRowSignalSettings.FEATURE,
+        title = "双排移动网络图标",
+        summary = "将双卡信号合并显示，可调整样式与位置",
+        scopes = listOf("systemui"),
+        origin = "西米露 / HyperCeiler · DualRowSignalHookV（OS4 适配）",
+        license = "AGPL-3.0",
+        defaultEnabled = false,
+        requirement = "需要两张有效 SIM 卡。移动信号显示逻辑须为默认，且不能隐藏任意 SIM 卡。上排为默认上网卡；单卡、飞行模式、卫星或未知信号状态恢复系统显示。已完成静态适配，双卡实机效果待验证。修改后重启系统界面生效。",
+        config = listOf(
+            HyperChoice(
+                key = DualRowSignalSettings.STYLE,
+                title = "图标样式",
+                entries = listOf(ChoiceEntry("", "默认"), ChoiceEntry("classic", "经典"),
+                    ChoiceEntry("thick", "粗体"), ChoiceEntry("theme", "主题")),
+            ),
+            HyperSlider(DualRowSignalSettings.SCALE, "图标大小", 70, 140, 100, unit = "%"),
+            HyperSlider(DualRowSignalSettings.LEFT, "左边距", -8, 8, 0, divisor = 2, unit = " dp"),
+            HyperSlider(DualRowSignalSettings.RIGHT, "右边距", -8, 8, 0, divisor = 2, unit = " dp"),
+            HyperSlider(DualRowSignalSettings.VERTICAL, "上下偏移量", -40, 40, 0, divisor = 10, unit = " dp"),
+        ),
+    ),
+
+    HyperFeature(
+        id = MobileTypeTextSettings.FEATURE,
+        title = "自定义移动网络类型文本",
+        summary = "替换信号旁的网络类型文字，不改变网络制式",
+        scopes = listOf("systemui"),
+        origin = "西米露 / HyperCeiler · MobileTypeTextCustom",
+        license = "AGPL-3.0",
+        defaultEnabled = false,
+        requirement = "只替换系统原本显示的网络类型名称，不强制显示隐藏的图标、不伪造信号或网络连接。留空恢复系统名称；最多 8 个字符，不支持换行或方向控制符。与双排图标可同时使用，文字跟随默认上网卡。修改后重启系统界面生效，待真机验收。",
+        config = listOf(HyperText(MobileTypeTextSettings.TEXT, "网络类型文本", placeholder = "例如 5G；留空跟随系统")),
+    ),
+
+    HyperFeature(
         id = "status_bar_network_speed",
         title = "网速指示器",
         summary = "调整网速样式、单位与刷新间隔",
@@ -639,88 +704,16 @@ val STATUS_BAR_FEATURES: List<HyperFeature> = listOf(
     ),
 
     HyperFeature(
-        id = "status_bar_clock",
+        id = ClockSettings.FEATURE,
         title = "时钟指示器",
-        summary = "调整时钟格式、字号与位置",
+        summary = "调整各处时钟格式、双行排列、字号与位置",
         scopes = listOf("systemui"),
         origin = "西米露 / HyperCeiler · StatusBarClockNew",
         license = "AGPL-3.0",
         defaultEnabled = false,
-        requirement = "使用 MIUI 时间格式，如 HH:mm、M/d E。",
-        options = listOf(
-            HyperOption(
-                id = "status_bar_clock.bold",
-                title = "加粗",
-                defaultEnabled = false,
-            ),
-        ),
-        config = listOf(
-            HyperSlider(
-                key = "status_bar_clock.size",
-                title = "时钟大小",
-                group = "状态栏时钟",
-                min = 7,
-                max = 20,
-                default = 12,
-                unit = " dp",
-            ),
-            HyperSlider(
-                key = "status_bar_clock.left_margin",
-                title = "左边距",
-                group = "状态栏时钟",
-                min = 0,
-                max = 40,
-                default = 0,
-                unit = " dp",
-            ),
-            HyperSlider(
-                key = "status_bar_clock.right_margin",
-                title = "右边距",
-                group = "状态栏时钟",
-                min = 0,
-                max = 40,
-                default = 0,
-                unit = " dp",
-            ),
-            HyperSlider(
-                key = "status_bar_clock.vertical_offset",
-                title = "上下偏移量",
-                group = "状态栏时钟",
-                min = 0,
-                max = 24,
-                default = 12,
-                divisor = 2,
-                unit = " dp",
-            ),
-            HyperText(
-                key = "status_bar_clock.editor_s",
-                title = "状态栏时钟格式",
-                summary = "留空使用系统格式",
-                group = "时钟格式",
-                placeholder = "HH:mm",
-            ),
-            HyperText(
-                key = "status_bar_clock.editor_b",
-                title = "通知中心大时钟格式",
-                summary = "留空使用系统格式",
-                group = "时钟格式",
-                placeholder = "HH:mm",
-            ),
-            HyperText(
-                key = "status_bar_clock.editor_n",
-                title = "通知中心迷你时钟格式",
-                summary = "留空使用系统格式",
-                group = "时钟格式",
-                placeholder = "M/d E",
-            ),
-            HyperText(
-                key = "status_bar_clock.editor_p",
-                title = "状态栏日期时钟格式",
-                summary = "仅限平板；留空使用系统格式",
-                group = "时钟格式",
-                placeholder = "M/d E",
-            ),
-        ),
+        requirement = "使用 MIUI 时间格式。大时钟默认保留独立格式，可显式同步状态栏时间行；横屏时钟只调整样式，不替换原生格式。平板日期设置仅作用于 pad_clock。统一真机验收前不视为功能通过。",
+        options = ClockSettings.options,
+        config = ClockSettings.config,
     ),
 
     HyperFeature(

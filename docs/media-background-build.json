@@ -1,0 +1,38 @@
+{
+  "recordedAt": "2026-10-10T07:38:29.885215+00:00",
+  "verification": "Partial migration; local tests/build and read-only MT evidence, not device acceptance.",
+  "build": "successful",
+  "command": ".\\gradlew.bat :app:testDebugUnitTest :app:assembleRelease --console=plain",
+  "log": "build/media-background-build.log",
+  "tests": {
+    "tests": 350,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "newTests": 15,
+  "apk": {
+    "path": "app/build/outputs/apk/release/app-release.apk",
+    "versionName": "0.1.3",
+    "versionCode": 4,
+    "bytes": 2663365,
+    "sha256": "48359f625b1dd3b463268fddc4a58ba1c2256d149be4b685d224be8491b5e02b",
+    "r8": true,
+    "featurePresentInReleaseDex": true
+  },
+  "evidence": {
+    "codeLayoutFieldTargets": 33,
+    "resourceNameMappings": 7,
+    "resourceFileMappings": 1,
+    "resourceVariantValues": 8,
+    "recordedHashesMatchRefresh": true,
+    "finalAdditionalClearAssertions": "Pass against exact-hash cached text; later repeated MT refresh refused connection (WinError 10061). Earlier live refresh succeeded."
+  },
+  "inventoryReproducible": true,
+  "gitDiffCheck": "passed",
+  "untrackedTextTrailingWhitespaceCheck": "passed",
+  "fullLint": "Not rerun; prior full lint has 22 known errors. Release vital lint is not full lint.",
+  "installed": false,
+  "restartedOrReloadedHost": false,
+  "changedNetworkSimOrFeatureState": false
+}

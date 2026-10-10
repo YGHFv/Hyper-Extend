@@ -48,6 +48,7 @@ class HyperExtendApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
+        io.github.YGHFv.HyperExtend.core.SafeModeSettings.refresh(this)
         registerXposedService()
         // 卡面图片的读权限补授一次。见 NfcCardImage.ensureGranted 的注释：
         // 它只在真的配过图时才做一次 binder 调用，成本可以忽略，

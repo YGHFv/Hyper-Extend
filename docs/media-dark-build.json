@@ -1,0 +1,36 @@
+{
+  "recordedAt": "2026-10-10T07:02:40.978210+00:00",
+  "verification": "Local tests/build and exact MT contracts only; unified device acceptance deferred until migration completion.",
+  "build": "successful",
+  "command": ".\\gradlew.bat :app:testDebugUnitTest :app:assembleRelease --console=plain",
+  "log": "build/media-dark-build.log",
+  "tests": {
+    "tests": 335,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "newTests": 16,
+  "apk": {
+    "path": "app/build/outputs/apk/release/app-release.apk",
+    "versionName": "0.1.3",
+    "versionCode": 4,
+    "bytes": 2663365,
+    "sha256": "57a422c97e90ae166b7c32f0667e6255d58e83bf85552c036677d7f970253477",
+    "r8": true
+  },
+  "evidence": {
+    "codeLayoutFieldTargets": 21,
+    "resourceNameMappings": 6,
+    "resourceFileMappings": 1,
+    "resourceVariantValues": 8,
+    "recordedHashesMatchRefresh": true
+  },
+  "inventoryReproducible": true,
+  "gitDiffCheck": "passed",
+  "untrackedTextTrailingWhitespaceCheck": "passed",
+  "fullLint": "Not rerun; prior full lint has 22 known errors; Release vital lint is not full lint.",
+  "installed": false,
+  "restartedOrReloadedHost": false,
+  "changedNetworkSimOrFeatureState": false
+}

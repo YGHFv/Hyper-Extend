@@ -1,0 +1,50 @@
+{
+  "recordedAt": "2026-10-10T17:02:25.346742+08:00",
+  "tests": {
+    "tests": 399,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "build": "successful",
+  "log": "build/lockscreen-shortcut-build.log",
+  "apk": {
+    "path": "app/build/outputs/apk/release/app-release.apk",
+    "versionName": "0.1.3",
+    "versionCode": 4,
+    "bytes": 2679749,
+    "sha256": "2b7d783e049e7bf3ef5760336202afdea7806d887d6bb9f66893c334d0ef263c",
+    "r8": true
+  },
+  "evidence": [
+    {
+      "manifest": "docs/lockscreen-shortcut-aod-evidence.json",
+      "refresh": ".workbuddy/tmp/mt-systemui/shortcut-aod-refresh.json",
+      "liveTargets": 24,
+      "hashesMatch": true
+    },
+    {
+      "manifest": "docs/lockscreen-shortcut-systemui-evidence.json",
+      "refresh": ".workbuddy/tmp/mt-systemui/shortcut-systemui-refresh.json",
+      "liveTargets": 5,
+      "hashesMatch": true
+    }
+  ],
+  "inventory": {
+    "pending": 87,
+    "implemented_static_verified": 89,
+    "repaired_static_pending_device": 18,
+    "partially_implemented_static_verified": 8,
+    "covered_by_existing_feature_per_user": 1,
+    "already_supported_by_current_host": 1,
+    "needs_audit_existing_partial": 132,
+    "partially_implemented_pending_settings_host": 1
+  },
+  "installed": false,
+  "deviceLastInstallation": "docs/migration-install-2026-10-10.json",
+  "restartedOrReloadedHost": false,
+  "changedFeatureScopeSimNetwork": false,
+  "runtimeAcceptance": false,
+  "fullLint": "Not rerun; 22 prior known errors are not claimed fixed.",
+  "changes": "Two independent hide-only lockscreen shortcut switches; left flashlight mode remains pending. No complete SystemUI migration claim."
+}

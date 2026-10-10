@@ -1,0 +1,91 @@
+{
+  "host": {
+    "packageName": "com.android.systemui",
+    "versionCode": 202602260
+  },
+  "verification": "Read-only MT contracts for 2026-10-10 continuation. Settings APK is unavailable; no Settings verification or live acceptance claimed.",
+  "evidence": [
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/notification/collection/coordinator/StackCoordinator;->getFlatNotifEntryList(Ljava/util/List;)Lkotlin/collections/builders/ListBuilder;",
+      "contains": [
+        "mUnmodifiableChildren:Ljava/util/List;",
+        "mSummary:",
+        "BundleEntry;->children:",
+        "->getFlatNotifEntryList(Ljava/util/List;)"
+      ]
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/notification/collection/coordinator/StackCoordinator;->calculateNotifStats(Ljava/util/List;)Lcom/android/systemui/statusbar/notification/data/model/NotifStats;",
+      "contains": [
+        "->getFlatNotifEntryList(Ljava/util/List;)",
+        "->isSensitiveStateActive()Z",
+        "->isClearable()Z",
+        "->bucket:I"
+      ]
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/statusbar/notification/collection/NotificationEntry;->mRanking:Landroid/service/notification/NotificationListenerService$Ranking;",
+      "contains": [
+        "Landroid/service/notification/NotificationListenerService$Ranking;"
+      ]
+    },
+    {
+      "locator": "dex_class:Lcom/android/systemui/statusbar/notification/collection/coordinator/StackCoordinator$attach$1;",
+      "contains": [
+        "->calculateNotifStats(Ljava/util/List;)",
+        "->setRenderedList(Ljava/util/List;)"
+      ]
+    },
+    {
+      "locator": "dex_method:Lmiuix/miuixbasewidget/widget/HyperProgressSeekBar;-><init>(Landroid/content/Context;Landroid/util/AttributeSet;I)V",
+      "contains": [
+        "mProgressHeight:I",
+        "mProgressSeekBarMinHeight:I",
+        "mProgressSeekBarMaxHeight:I",
+        "mDeviceLevel:I",
+        "uTrackSize"
+      ]
+    },
+    {
+      "locator": "dex_method:Lmiuix/miuixbasewidget/widget/HyperProgressSeekBar;->onDraw(Landroid/graphics/Canvas;)V",
+      "contains": [
+        "mDeviceLevel:I"
+      ]
+    },
+    {
+      "locator": "dex_method:Lmiuix/miuixbasewidget/widget/HyperProgressSeekBar;->onSizeChanged(IIII)V",
+      "contains": [
+        "mDeviceLevel:I"
+      ]
+    },
+    {
+      "locator": "dex_method:Lmiuix/miuixbasewidget/widget/HyperProgressSeekBar;->setProgressDrawable(Landroid/graphics/drawable/Drawable;)V",
+      "contains": [
+        "->setProgressDrawable"
+      ]
+    },
+    {
+      "locator": "dex_method:Lmiuix/miuixbasewidget/widget/HyperProgressSeekBar;->onTouchEvent(Landroid/view/MotionEvent;)Z",
+      "contains": [
+        "mProgressSeekBarMinHeight:I",
+        "mProgressSeekBarMaxHeight:I",
+        "mDeviceLevel:I",
+        "uTrackSize"
+      ]
+    },
+    {
+      "locator": "dex_method:Lmiuix/miuixbasewidget/widget/HyperProgressSeekBar;->drawHighEndMode(Landroid/graphics/Canvas;)V",
+      "contains": [
+        "mProgressHeight:I",
+        "uTrackSize"
+      ]
+    },
+    {
+      "locator": "dex_method:Lmiuix/miuixbasewidget/widget/HyperProgressSeekBar;->onLayout(ZIIII)V",
+      "contains": [
+        "mDeviceLevel:I",
+        "uTrackSize"
+      ]
+    }
+  ]
+}

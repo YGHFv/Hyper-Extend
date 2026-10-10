@@ -17,6 +17,7 @@ import java.lang.reflect.Method
 
 internal object NotificationHooks {
     fun install(loader: ClassLoader, settings: HookSettings): List<String> = buildList {
+        installSystemUiFeature(settings, NotificationImportanceHooks.FEATURE) { NotificationImportanceHooks.install(loader) }
         installSystemUiFeature(settings, "lockscreen_show_notifications") { constant(loader, SystemUiTargets.showOnKeyguard, true) }
         installSystemUiFeature(settings, "lockscreen_keep_notifications") { keepNotifications(loader) }
         val muteInteractive = settings.isOn("notification_mute_when_interactive")

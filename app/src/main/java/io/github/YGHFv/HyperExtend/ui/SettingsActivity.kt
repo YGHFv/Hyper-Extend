@@ -97,6 +97,7 @@ import top.yukonga.miuix.kmp.theme.LocalContentColor
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import top.yukonga.miuix.kmp.theme.darkColorScheme
 import top.yukonga.miuix.kmp.theme.lightColorScheme
+import top.yukonga.miuix.kmp.preference.ArrowPreference
 
 /**
  * 模块主界面。
@@ -197,7 +198,7 @@ class SettingsActivity : ComponentActivity() {
 /**
  * 底栏的三个页面。
  *
- * 「首页」放功能入口，「设置」放模块自身的外观与数据入口，「关于」放来源、日志与应急手段 ——
+ * 「首页」放功能入口，「设置」放外观、数据与故障排查入口，「关于」放模块状态与来源 ——
  * 三者的**访问频率**差一个量级，平铺在底栏上是为了让每天都用的那个（首页）永远只有一次点击。
  */
 private enum class MainTab(val title: String) {
@@ -274,6 +275,22 @@ private fun HyperApp(themeMode: Int, onThemeMode: (Int) -> Unit) {
         ui = next
         onThemeMode(next.themeMode)
     }
+    val resetSettings: () -> Boolean = {
+        NfcCardImage.clear(context)
+        val settingsReset = HyperSettings.resetToDefaults(context)
+        reloadSettings()
+        settingsReset
+    }
+
+    // Keep the incident host above every navigation branch, including detail pages.
+    SafeModeIncidentDialog(onOpenSafeMode = {
+        tabIndex = MainTab.SETTINGS.ordinal
+        openScopeId = ""
+        openGroupId = ""
+        openFeatureId = ""
+        searching = false
+        openAppPage = AppSettingsPage.SAFE_MODE.id
+    })
 
     // ---- 二三层：整页替换 ----
     // 顺序即层级：设置页的二级页面在最前（它没有更深的层），其次是功能详情、作用域页、搜索。
@@ -284,13 +301,7 @@ private fun HyperApp(themeMode: Int, onThemeMode: (Int) -> Unit) {
             ui = ui,
             onUi = applyUi,
             onReloadSettings = reloadSettings,
-            onReset = {
-                // 先清掉卡面副本再清设置：只清设置会留下一张谁都不再引用的图，
-                // 下次选图时它才被顺手删掉 —— 那等于把「已恢复默认」变成了一句不准确的话。
-                NfcCardImage.clear(context)
-                HyperSettings.resetToDefaults(context)
-                reloadSettings()
-            },
+            onReset = resetSettings,
             onBack = { openAppPage = "" },
         )
         return
@@ -370,6 +381,8 @@ private fun HyperApp(themeMode: Int, onThemeMode: (Int) -> Unit) {
             openScopeId = it.id
         },
         onOpenAppPage = { openAppPage = it.id },
+        onReloadSettings = reloadSettings,
+        onReset = resetSettings,
         onSearch = { searching = true },
     )
 }
@@ -400,6 +413,8 @@ private fun MainTabs(
     ui: UiPrefs.UiState,
     onOpenScope: (HyperScope) -> Unit,
     onOpenAppPage: (AppSettingsPage) -> Unit,
+    onReloadSettings: () -> Unit,
+    onReset: () -> Boolean,
     onSearch: () -> Unit,
 ) {
     val homeScroll = MiuixScrollBehavior()
@@ -538,7 +553,7 @@ private fun MainTabs(
                 .fillMaxSize()
                 .then(if (blurred || floating) Modifier.layerBackdrop(backdrop) else Modifier),
         ) {
-            MainTabsContent(tab, scrollBehavior, padding, switches, strings, onOpenScope, onOpenAppPage)
+            MainTabsContent(tab, scrollBehavior, padding, switches, strings, onOpenScope, onOpenAppPage, onReloadSettings, onReset)
         }
     }
 }
@@ -553,11 +568,13 @@ private fun MainTabsContent(
     strings: Map<String, String>,
     onOpenScope: (HyperScope) -> Unit,
     onOpenAppPage: (AppSettingsPage) -> Unit,
+    onReloadSettings: () -> Unit,
+    onReset: () -> Boolean,
 ) {
     when (tab) {
         MainTab.HOME -> HomeTab(scrollBehavior, padding, switches, strings, onOpenScope)
-        MainTab.SETTINGS -> SettingsTab(scrollBehavior, padding, onOpenAppPage)
-        MainTab.ABOUT -> AboutTab(scrollBehavior, padding) { onOpenAppPage(AppSettingsPage.LOGS) }
+        MainTab.SETTINGS -> SettingsTab(scrollBehavior, padding, onOpenAppPage, onReloadSettings, onReset)
+        MainTab.ABOUT -> AboutTab(scrollBehavior, padding)
     }
 }
 
@@ -607,17 +624,15 @@ private fun HomeTab(
 }
 
 /**
- * 设置页：**入口行**，没有开关。
- *
- * 与作用域页同一条规矩：列表页只负责「进入」，拨开关/做动作的事全部住进二级页面
- * （见 [AppSettingsPageHost]）。这样每一级只有一种交互，也更接近参考项目
- * （阅微补全计划）的设置页结构：界面 / 个性化 / 备份恢复各自一页。
+ * 设置页：外观入口、备份恢复整行操作、故障排查入口。
  */
 @Composable
 private fun SettingsTab(
     scrollBehavior: ScrollBehavior,
     padding: PaddingValues,
     onOpenAppPage: (AppSettingsPage) -> Unit,
+    onReloadSettings: () -> Unit,
+    onReset: () -> Boolean,
 ) {
     val scrollState = rememberScrollState()
 
@@ -645,13 +660,16 @@ private fun SettingsTab(
             )
         }
 
-        GroupTitle("数据")
+        BackupSettingsGroup(onReloadSettings, onReset)
+
+        GroupTitle("故障排查")
         SettingsCard {
-            FeatureRow(
-                title = "备份恢复",
-                summary = "导入、导出功能设置",
-                onClick = { onOpenAppPage(AppSettingsPage.BACKUP) },
+            ArrowPreference(
+                title = "安全模式",
+                summary = "按宿主停用模块功能",
+                onClick = { onOpenAppPage(AppSettingsPage.SAFE_MODE) },
             )
+            ArrowPreference(title = "查看日志", onClick = { onOpenAppPage(AppSettingsPage.LOGS) })
         }
         Spacer(Modifier.height(16.dp))
     }

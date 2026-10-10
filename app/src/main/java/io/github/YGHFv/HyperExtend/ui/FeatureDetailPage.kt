@@ -63,11 +63,16 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import io.github.YGHFv.HyperExtend.core.FeatureExtra
+import io.github.YGHFv.HyperExtend.core.featureDetailPanels
 import io.github.YGHFv.HyperExtend.core.HyperChoice
 import io.github.YGHFv.HyperExtend.core.HyperFeature
 import io.github.YGHFv.HyperExtend.core.HyperSlider
 import io.github.YGHFv.HyperExtend.core.HyperText
+import io.github.YGHFv.HyperExtend.core.HyperAppSelection
+import io.github.YGHFv.HyperExtend.core.HyperColor
 import io.github.YGHFv.HyperExtend.core.MobileSignalSettings
+import io.github.YGHFv.HyperExtend.core.DualRowSignalSettings
+import io.github.YGHFv.HyperExtend.core.MobileTypeTextSettings
 import io.github.YGHFv.HyperExtend.core.MONET_SCHEMES
 import io.github.YGHFv.HyperExtend.core.MONET_SCHEME_KEY
 import io.github.YGHFv.HyperExtend.core.NFC_IMAGE_KEY
@@ -143,6 +148,10 @@ internal fun FeatureDetailPage(
 ) {
     val scrollBehavior = MiuixScrollBehavior()
     val configKey = feature.configKey
+    val dualCompatible = feature.id != DualRowSignalSettings.FEATURE || DualRowSignalSettings.compatible(
+        switches["status_bar_mobile"] == true, strings[MobileSignalSettings.MODE],
+        switches[MobileSignalSettings.HIDE_SIM_1] == true, switches[MobileSignalSettings.HIDE_SIM_2] == true,
+    )
 
     // 系统返回键等同于顶栏的返回箭头。不挂的话返回键会直接退出 Activity，
     // 用户以为只是「上一步」，其实是把整个模块界面关了。
@@ -223,99 +232,94 @@ internal fun FeatureDetailPage(
                     SettingsCard {
                         SwitchPreference(
                             title = "启用此功能",
-                            summary = if (switches[feature.id] == true) {
+                            summary = if (!dualCompatible) {
+                                "请先将移动信号显示逻辑设为默认，并取消隐藏 SIM 卡"
+                            } else if (switches[feature.id] == true) {
                                 "已启用"
                             } else {
                                 "已关闭"
                             },
                             checked = switches[feature.id] == true,
+                            enabled = dualCompatible || switches[feature.id] == true,
                             onCheckedChange = { on -> onSwitch(feature.id, on) },
                         )
                     }
                 }
 
-                if (feature.options.isNotEmpty()) {
-                    // 按声明顺序分组：有 group 的另起一张卡片。参考项目本来就是分组的，
-                    // 十几行开关全塞进一张卡之后，用户分不清它们是同一件事的几个方面
-                    // 还是一堆不相干的开关。
-                    val defaultTitle = if (configKey == null) "子项" else "选项"
-                    feature.options
-                        .groupBy { it.group ?: defaultTitle }
-                        .forEach { (title, options) ->
-                            GroupTitle(title)
-                            SettingsCard {
-                                options.forEach { option ->
-                                    val available = !MobileSignalSettings.isHideCardOption(option.id) ||
-                                        MobileSignalSettings.allowsHiddenCards(
-                                            MobileSignalSettings.mode(strings[MobileSignalSettings.MODE]),
-                                        )
-                                    SwitchPreference(
-                                        title = option.title,
-                                        summary = if (available) option.summary else "当前显示逻辑下不生效",
-                                        enabled = available,
-                                        checked = available && switches[option.id] == true,
-                                        onCheckedChange = { on -> onSwitch(option.id, on) },
+                val detailPanels = remember(feature) { featureDetailPanels(feature) }
+                detailPanels.forEach { panel ->
+                    GroupTitle(panel.title)
+                    SettingsCard {
+                        panel.options.forEachIndexed { index, option ->
+                            if (index > 0) RowDivider()
+                            val available = !MobileSignalSettings.isHideCardOption(option.id) ||
+                                MobileSignalSettings.allowsHiddenCards(
+                                    MobileSignalSettings.mode(strings[MobileSignalSettings.MODE]),
+                                )
+                            SwitchPreference(
+                                title = option.title,
+                                summary = if (available) option.summary else "当前显示逻辑下不生效",
+                                enabled = available,
+                                checked = available && switches[option.id] == true,
+                                onCheckedChange = { on -> onSwitch(option.id, on) },
+                            )
+                        }
+                        panel.config.forEachIndexed { index, row ->
+                            if (index > 0 || panel.options.isNotEmpty()) RowDivider()
+                            when (row) {
+                                is HyperAppSelection -> AppSelectionRow(row, strings[row.key].orEmpty()) { onString(row.key, it) }
+                                is HyperColor -> ColorSelectionRow(row, strings[row.key].orEmpty()) { onString(row.key, it) }
+                                is HyperChoice -> {
+                                    val current = strings[row.key].orEmpty()
+                                        .ifBlank { row.default }
+                                    ChoiceRow(
+                                        title = row.title,
+                                        summary = row.summary,
+                                        currentLabel = row.labelOf(current),
+                                        options = row.entries.map { it.label },
+                                        selectedIndex = row.entries
+                                            .indexOfFirst { it.variant == current }
+                                            .coerceAtLeast(0),
+                                        onSelect = { picked ->
+                                            row.entries.getOrNull(picked)?.let {
+                                                onString(row.key, it.variant)
+                                            }
+                                        },
+                                    )
+                                }
+
+                                is HyperSlider -> {
+                                    val stored = strings[row.key].orEmpty()
+                                        .toIntOrNull() ?: row.default
+                                    NumberRow(
+                                        title = row.title,
+                                        summary = row.summary,
+                                        value = stored.toFloat(),
+                                        valueRange = row.min.toFloat()..row.max.toFloat(),
+                                        steps = ((row.max - row.min) / row.step - 1)
+                                            .coerceAtLeast(0),
+                                        format = { row.display(it.roundToInt()) },
+                                        onFinished = { onString(row.key, it.roundToInt().toString()) },
+                                    )
+                                }
+
+                                is HyperText -> {
+                                    TextInputRow(
+                                        title = row.title,
+                                        summary = row.summary,
+                                        value = strings[row.key].orEmpty(),
+                                        placeholder = row.placeholder,
+                                        onCommit = { onString(row.key, it) },
+                                        validate = { draft ->
+                                            if (row.key == MobileTypeTextSettings.TEXT && draft.isNotBlank() &&
+                                                MobileTypeTextSettings.text(draft) == null) "最多 8 个字符，不能包含换行或方向控制符"
+                                            else null
+                                        },
                                     )
                                 }
                             }
                         }
-                }
-
-                if (feature.config.isNotEmpty()) {
-                    feature.config
-                        .groupBy { it.group }
-                        .forEach { (title, rows) ->
-                            GroupTitle(title ?: "配置")
-                            SettingsCard {
-                                rows.forEach { row ->
-                                    when (row) {
-                                        is HyperChoice -> {
-                                            val current = strings[row.key].orEmpty()
-                                                .ifBlank { row.default }
-                                            ChoiceRow(
-                                                title = row.title,
-                                                summary = row.summary,
-                                                currentLabel = row.labelOf(current),
-                                                options = row.entries.map { it.label },
-                                                selectedIndex = row.entries
-                                                    .indexOfFirst { it.variant == current }
-                                                    .coerceAtLeast(0),
-                                                onSelect = { picked ->
-                                                    row.entries.getOrNull(picked)?.let {
-                                                        onString(row.key, it.variant)
-                                                    }
-                                                },
-                                            )
-                                        }
-
-                                        is HyperSlider -> {
-                                            val stored = strings[row.key].orEmpty()
-                                                .toIntOrNull() ?: row.default
-                                            NumberRow(
-                                                title = row.title,
-                                                summary = row.summary,
-                                                value = stored.toFloat(),
-                                                valueRange = row.min.toFloat()..row.max.toFloat(),
-                                                steps = ((row.max - row.min) / row.step - 1)
-                                                    .coerceAtLeast(0),
-                                                format = { row.display(it.roundToInt()) },
-                                                onFinished = { onString(row.key, it.roundToInt().toString()) },
-                                            )
-                                        }
-
-                                        is HyperText -> {
-                                            TextInputRow(
-                                                title = row.title,
-                                                summary = row.summary,
-                                                value = strings[row.key].orEmpty(),
-                                                placeholder = row.placeholder,
-                                                onCommit = { onString(row.key, it) },
-                                            )
-                                        }
-                                    }
-                                }
-                            }
-                        }
+                    }
                 }
 
                 if (configKey != null) {

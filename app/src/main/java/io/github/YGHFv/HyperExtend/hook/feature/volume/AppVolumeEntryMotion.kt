@@ -35,4 +35,19 @@ internal class AppVolumeEntryMotion {
 
     fun translationX(centerX: Float): Float = mappedX - layoutX + (scaleX - 1f) * (centerX - layoutX)
     fun translationY(centerY: Float): Float = mappedY - layoutY + (scaleY - 1f) * (centerY - layoutY)
+
+    data class Residual(val scaleX: Float, val scaleY: Float, val translationX: Float, val translationY: Float, val alpha: Float)
+
+    /** Remove transforms already inherited from the entry's actual parent (footer or dialog). */
+    fun relativeTo(parent: AppVolumeEntryMotion, localCenterX: Float, localCenterY: Float): Residual? {
+        if (parent.scaleX <= 0.0001f || parent.scaleY <= 0.0001f || parent.alpha <= 0.0001f) return null
+        val x = localCenterX + parent.layoutX
+        val y = localCenterY + parent.layoutY
+        val result = Residual(scaleX / parent.scaleX, scaleY / parent.scaleY,
+            (translationX(x) - parent.translationX(x)) / parent.scaleX,
+            (translationY(y) - parent.translationY(y)) / parent.scaleY,
+            (alpha / parent.alpha).coerceIn(0f, 1f))
+        return result.takeIf { it.scaleX.isFinite() && it.scaleY.isFinite() &&
+            it.translationX.isFinite() && it.translationY.isFinite() && it.alpha.isFinite() }
+    }
 }

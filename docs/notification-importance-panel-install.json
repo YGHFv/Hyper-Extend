@@ -1,0 +1,28 @@
+{
+  "started": "2026-10-10T19:09:24.961554+08:00",
+  "finished": "2026-10-10T19:09:26.263612+08:00",
+  "deviceSerial": "4e2d9aa2",
+  "packageName": "io.github.YGHFv.HyperExtend",
+  "result": "Performing Streamed Install\nSuccess",
+  "apkBytes": 2696133,
+  "sha256": "afd41c10cdcbe9ed7ecf68cdd6bd2463a52e8a6f5045b77aa4d2b742a84fb5e3",
+  "installedSha256": "afd41c10cdcbe9ed7ecf68cdd6bd2463a52e8a6f5045b77aa4d2b742a84fb5e3",
+  "versionName": "0.1.3",
+  "versionCode": 4,
+  "pidsBefore": {
+    "system_server": "3641",
+    "com.android.systemui": "26550",
+    "com.android.settings": "706",
+    "com.miui.misound": "905"
+  },
+  "pidsAfter": {
+    "system_server": "3641",
+    "com.android.systemui": "26550",
+    "com.android.settings": "706",
+    "com.miui.misound": "905"
+  },
+  "hostRestartRequested": false,
+  "hotReloadRequested": false,
+  "switchesOrScopesChanged": false,
+  "runtimeAcceptance": false
+}

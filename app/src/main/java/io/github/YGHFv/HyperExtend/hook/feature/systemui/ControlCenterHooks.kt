@@ -35,7 +35,10 @@ internal object ControlCenterHooks {
     fun install(loader: ClassLoader, settings: HookSettings): List<String> = buildList {
         installSystemUiFeature(settings, "control_center_auto_collapse") { autoCollapse(loader) }
         installSystemUiFeature(settings, "control_center_unlock_old") { unlockOld(loader) }
-        installSystemUiFeature(settings, "notification_channel_settings") { channelSettings(loader) }
+        // Both entries use one interceptor and preserve the host's menu dismissal/user ID.
+        val channelFeature = if (settings.isOn("notification_channel_settings")) "notification_channel_settings"
+            else NotificationImportanceHooks.FEATURE
+        installSystemUiFeature(settings, channelFeature) { channelSettings(loader) }
     }
 
     private fun autoCollapse(loader: ClassLoader): Int {

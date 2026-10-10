@@ -23,6 +23,7 @@ import io.github.YGHFv.HyperExtend.core.ModuleLog
 import io.github.YGHFv.HyperExtend.hook.HookRuntime
 import io.github.YGHFv.HyperExtend.hook.HookSettings
 import io.github.YGHFv.HyperExtend.hook.Reflect
+import io.github.YGHFv.HyperExtend.hook.SafeModeRuntime
 import android.view.ViewConfiguration
 import android.view.accessibility.AccessibilityManager
 import io.github.YGHFv.HyperExtend.hook.feature.systemui.DoubleTapTracker
@@ -64,7 +65,7 @@ internal object StatusBarGestures {
             override fun onViewDetachedFromWindow(view: View) { tracker.reset() }
         })
         view.setOnTouchListener { touched, event ->
-            if (accessibility?.isTouchExplorationEnabled == true || event.pointerCount != 1) {
+            if (SafeModeRuntime.blocked || accessibility?.isTouchExplorationEnabled == true || event.pointerCount != 1) {
                 tracker.reset()
             } else when (event.actionMasked) {
                 MotionEvent.ACTION_DOWN -> tracker.down(event.eventTime, event.x, event.y)

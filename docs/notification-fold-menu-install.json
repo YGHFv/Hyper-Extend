@@ -1,0 +1,36 @@
+{
+  "started": "2026-10-10T18:48:27.745987+08:00",
+  "finished": "2026-10-10T18:48:29.482578+08:00",
+  "deviceSerial": "4e2d9aa2",
+  "packageName": "io.github.YGHFv.HyperExtend",
+  "command": "adb -s 4e2d9aa2 install -r app/build/outputs/apk/release/app-release.apk",
+  "result": "Performing Streamed Install\nSuccess",
+  "apkBytes": 2696133,
+  "sha256": "ef684531b1126d8c178316645e15b6e9e6e4ad62bf6e5a060eacd59b3e815696",
+  "installedSha256": "ef684531b1126d8c178316645e15b6e9e6e4ad62bf6e5a060eacd59b3e815696",
+  "hashMatches": true,
+  "packageVersion": [
+    "versionCode=4 minSdk=26 targetSdk=35",
+    "versionName=0.1.3",
+    "lastUpdateTime=2026-10-10 18:48:26"
+  ],
+  "pidsBefore": {
+    "system_server": "3641",
+    "com.android.systemui": "16055",
+    "com.android.settings": "23704",
+    "com.miui.misound": "905",
+    "miui.systemui.plugin": ""
+  },
+  "pidsAfter": {
+    "system_server": "3641",
+    "com.android.systemui": "16055",
+    "com.android.settings": "23704",
+    "com.miui.misound": "905",
+    "miui.systemui.plugin": ""
+  },
+  "hostRestartRequested": false,
+  "hotReloadRequested": false,
+  "switchesOrScopesChanged": false,
+  "runtimeAcceptance": false,
+  "buildRecord": "docs/notification-fold-menu-build.json"
+}

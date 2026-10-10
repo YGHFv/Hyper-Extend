@@ -1,0 +1,305 @@
+{
+  "host": {
+    "packageName": "com.android.settings",
+    "versionCode": 37,
+    "versionName": "17",
+    "source": "/system_ext/priv-app/Settings/Settings.apk",
+    "sha256": "4774deb4c6fb1a9c00b25d7bf35087b3c7bb7c7860a790b72a8742dad5abd342",
+    "bytes": 130431043
+  },
+  "verification": "Read-only APK pulled from device 4e2d9aa2. DEX definition/access verification plus JADX body inspection, not MT or runtime acceptance.",
+  "members": [
+    {
+      "signature": "Lcom/android/settings/notification/ChannelNotificationSettings;->onResume()V",
+      "access": 1,
+      "dex": "classes3.dex"
+    },
+    {
+      "signature": "Lcom/android/settings/notification/ChannelNotificationSettings;->setupChannelDefaultPrefs()V",
+      "access": 2,
+      "dex": "classes3.dex"
+    },
+    {
+      "signature": "Lcom/android/settings/notification/ChannelNotificationSettings;->removeDefaultPrefs()V",
+      "access": 2,
+      "dex": "classes3.dex"
+    },
+    {
+      "signature": "Lcom/android/settings/notification/ChannelNotificationSettings;->updateDependents(Z)V",
+      "access": 4,
+      "dex": "classes3.dex"
+    },
+    {
+      "signature": "Lcom/android/settings/notification/BaseNotificationSettings;->onResume()V",
+      "access": 1,
+      "dex": "classes3.dex"
+    },
+    {
+      "signature": "Lcom/android/settings/notification/BaseNotificationSettings;->setPrefVisible(Landroidx/preference/Preference;Z)V",
+      "access": 4,
+      "dex": "classes3.dex"
+    },
+    {
+      "signature": "Lcom/android/settings/notification/BaseNotificationSettings;->isChannelConfigurable(Landroid/app/NotificationChannel;)Z",
+      "access": 4,
+      "dex": "classes3.dex"
+    },
+    {
+      "signature": "Lcom/android/settings/notification/BaseNotificationSettings;->isChannelBlockable(Landroid/app/NotificationChannel;)Z",
+      "access": 4,
+      "dex": "classes3.dex"
+    },
+    {
+      "signature": "Lcom/android/settings/notification/BaseNotificationSettings;->isIncludedInFilter(Ljava/lang/String;)Z",
+      "access": 4,
+      "dex": "classes3.dex"
+    },
+    {
+      "signature": "Lcom/android/settings/notification/BaseNotificationSettings;->mImportance:Lmiuix/preference/DropDownPreference;",
+      "access": 4,
+      "dex": "classes3.dex"
+    },
+    {
+      "signature": "Lcom/android/settings/notification/BaseNotificationSettings;->mChannel:Landroid/app/NotificationChannel;",
+      "access": 4,
+      "dex": "classes3.dex"
+    },
+    {
+      "signature": "Lcom/android/settings/notification/BaseNotificationSettings;->mBackupImportance:I",
+      "access": 4,
+      "dex": "classes3.dex"
+    },
+    {
+      "signature": "Lcom/android/settings/notification/BaseNotificationSettings;->mBackend:Lcom/android/settings/notification/MiuiNotificationBackend;",
+      "access": 4,
+      "dex": "classes3.dex"
+    },
+    {
+      "signature": "Lcom/android/settings/notification/BaseNotificationSettings;->mPkg:Ljava/lang/String;",
+      "access": 4,
+      "dex": "classes3.dex"
+    },
+    {
+      "signature": "Lcom/android/settings/notification/BaseNotificationSettings;->mUid:I",
+      "access": 4,
+      "dex": "classes3.dex"
+    },
+    {
+      "signature": "Lcom/android/settings/notification/BaseNotificationSettings;->mContext:Landroid/content/Context;",
+      "access": 4,
+      "dex": "classes3.dex"
+    },
+    {
+      "signature": "Lcom/android/settings/notification/BaseNotificationSettings;->mConversationId:Ljava/lang/String;",
+      "access": 2,
+      "dex": "classes3.dex"
+    },
+    {
+      "signature": "Lcom/android/settings/notification/BaseNotificationSettings;->mBlock:Lcom/android/settingslib/RestrictedSwitchPreference;",
+      "access": 4,
+      "dex": "classes3.dex"
+    },
+    {
+      "signature": "Lcom/android/settings/notification/MiuiNotificationBackend;->getChannel(Ljava/lang/String;ILjava/lang/String;Ljava/lang/String;)Landroid/app/NotificationChannel;",
+      "access": 1,
+      "dex": "classes3.dex"
+    },
+    {
+      "signature": "Lcom/android/settings/notification/MiuiNotificationBackend;->updateChannel(Ljava/lang/String;ILandroid/app/NotificationChannel;)V",
+      "access": 1,
+      "dex": "classes3.dex"
+    },
+    {
+      "signature": "Lcom/android/server/notification/NotificationManagerServiceCompat;->getNotificationChannelForPackage(Ljava/lang/String;ILjava/lang/String;Ljava/lang/String;Z)Landroid/app/NotificationChannel;",
+      "access": 9,
+      "dex": "classes2.dex"
+    },
+    {
+      "signature": "Lcom/android/server/notification/NotificationManagerServiceCompat;->updateNotificationChannelForPackage(Ljava/lang/String;ILandroid/app/NotificationChannel;)V",
+      "access": 9,
+      "dex": "classes2.dex"
+    },
+    {
+      "signature": "Lmiuix/preference/DropDownPreference;->findIndexOfValue(Ljava/lang/String;)I",
+      "access": 1,
+      "dex": "classes11.dex"
+    },
+    {
+      "signature": "Lmiuix/preference/DropDownPreference;->findSpinnerIndexOfValue(Ljava/lang/String;)I",
+      "access": 2,
+      "dex": "classes11.dex"
+    },
+    {
+      "signature": "Lmiuix/preference/DropDownPreference;->setValueIndex(I)V",
+      "access": 1,
+      "dex": "classes11.dex"
+    },
+    {
+      "signature": "Lmiuix/preference/DropDownPreference;->setValue(Ljava/lang/String;)V",
+      "access": 1,
+      "dex": "classes11.dex"
+    },
+    {
+      "signature": "Lmiuix/preference/DropDownPreference$1$1;->run()V",
+      "access": 1,
+      "dex": "classes11.dex"
+    },
+    {
+      "signature": "Landroidx/preference/Preference;->getKey()Ljava/lang/String;",
+      "access": 1,
+      "dex": "classes.dex"
+    },
+    {
+      "signature": "Landroidx/preference/Preference;->isEnabled()Z",
+      "access": 1,
+      "dex": "classes.dex"
+    },
+    {
+      "signature": "Landroidx/preference/Preference;->setPersistent(Z)V",
+      "access": 1,
+      "dex": "classes.dex"
+    },
+    {
+      "signature": "Landroidx/preference/Preference;->setOnPreferenceChangeListener(Landroidx/preference/Preference$OnPreferenceChangeListener;)V",
+      "access": 1,
+      "dex": "classes.dex"
+    },
+    {
+      "signature": "Landroidx/preference/Preference;->callChangeListener(Ljava/lang/Object;)Z",
+      "access": 1,
+      "dex": "classes.dex"
+    },
+    {
+      "signature": "Lcom/android/settingslib/RestrictedSwitchPreference;->isDisabledByAdmin()Z",
+      "access": 1,
+      "dex": "classes4.dex"
+    },
+    {
+      "signature": "Lcom/android/settingslib/RestrictedSwitchPreference;->isDisabledByEcm()Z",
+      "access": 1,
+      "dex": "classes4.dex"
+    },
+    {
+      "signature": "Landroidx/preference/PreferenceFragmentCompat;->findPreference(Ljava/lang/CharSequence;)Landroidx/preference/Preference;",
+      "access": 1,
+      "dex": "classes.dex"
+    },
+    {
+      "signature": "Landroidx/preference/Preference;->setEnabled(Z)V",
+      "access": 1,
+      "dex": "classes.dex"
+    },
+    {
+      "signature": "Lcom/android/settings/notification/app/ChannelNotificationSettings;->onResume()V",
+      "access": 1,
+      "dex": "classes3.dex"
+    },
+    {
+      "signature": "Lcom/android/settings/notification/app/ChannelNotificationSettings;->removeDefaultPrefs()V",
+      "access": 2,
+      "dex": "classes3.dex"
+    },
+    {
+      "signature": "Lcom/android/settings/notification/app/ChannelNotificationSettings;->updateDependents(Z)V",
+      "access": 4,
+      "dex": "classes3.dex"
+    },
+    {
+      "signature": "Lcom/android/settings/notification/app/ChannelNotificationSettings;->setupChannelDefaultPrefs()V",
+      "access": 2,
+      "dex": "classes3.dex"
+    },
+    {
+      "signature": "Lcom/android/settings/notification/app/ChannelPanelActivity;->launchFullSettings()V",
+      "access": 2,
+      "dex": "classes3.dex"
+    },
+    {
+      "signature": "Lcom/android/settings/notification/app/ChannelPanelActivity;->createOrUpdatePanel()V",
+      "access": 2,
+      "dex": "classes3.dex"
+    }
+  ],
+  "bodyEvidence": [
+    {
+      "path": ".workbuddy/tmp/importance-settings/ChannelNotificationSettings.java",
+      "sha256": "7d533d2554d5a262a834603037f067558b8f62fdb23baab4337997646f466277",
+      "contains": [
+        "setupChannelDefaultPrefs();",
+        "removeDefaultPrefs();",
+        "setPrefVisible(findPreference(\"importance\"), false);"
+      ]
+    },
+    {
+      "path": ".workbuddy/tmp/importance-settings/BaseNotificationSettings.java",
+      "sha256": "ec25dbf3be4e31e1540a3ef763fe181177af0efa54cdb25ae2f689ac6dfb67e8",
+      "contains": [
+        "this.mBackend.getChannel(this.mPkg, this.mUid, stringExtra, stringExtra2)",
+        "protected boolean isChannelConfigurable",
+        "protected void setPrefVisible"
+      ]
+    },
+    {
+      "path": ".workbuddy/tmp/importance-settings/DropDownPreference.java",
+      "sha256": "da2e3f27c5b96802df19ce18a60297ffe3649484a46222c5c449e4d11ea456e6",
+      "contains": [
+        "public int findIndexOfValue(String str)",
+        "private int findSpinnerIndexOfValue(String str)",
+        "callChangeListener(str)",
+        "setValue(str)"
+      ]
+    },
+    {
+      "path": ".workbuddy/tmp/importance-settings/MiuiNotificationBackend.java",
+      "sha256": "d55245d7a12e904c136cd7d1debc3a2f2ab1a2308d59537bbad258a11b43f878",
+      "contains": [
+        "public void updateChannel",
+        "NotificationManagerServiceCompat.updateNotificationChannelForPackage",
+        "catch (Exception e)",
+        "Error updateChannel"
+      ]
+    },
+    {
+      "path": ".workbuddy/tmp/importance-settings/NotificationManagerServiceCompat.java",
+      "sha256": "8665761618732df92948ed668b2a616fc2c9cda4955d4a5ed347ca2cd0f34177",
+      "contains": [
+        "sINM.updateNotificationChannelForPackage",
+        "sINM.getNotificationChannelForPackage"
+      ]
+    },
+    {
+      "path": ".workbuddy/tmp/importance-settings/AppChannelNotificationSettings.java",
+      "sha256": "a34e47891d45808219b27a95aa44331aa849c1a696c3154b0aae88996ede0aeb",
+      "contains": [
+        "extends BaseNotificationSettings",
+        "setupChannelDefaultPrefs();",
+        "setPrefVisible(findPreference(\"importance\"), false);"
+      ]
+    },
+    {
+      "path": ".workbuddy/tmp/importance-xml.txt",
+      "sha256": "4a3ce9060040426e4562ac3fd1fc3b1a091dffb6fe6c97f9e9e2437307db000d",
+      "contains": [
+        "key(0x010101e8)=\"importance\"",
+        "persistent(0x0101000d)=false"
+      ]
+    },
+    {
+      "path": ".workbuddy/tmp/importance-resources.txt",
+      "sha256": "c80f287249453066ac80dd44f4160656c6b1e2d9510737c114ba39ef9317cb6f",
+      "contains": [
+        "array/notifi_importance_values",
+        "[\"4\", \"3\", \"2\", \"1\"]"
+      ]
+    },
+    {
+      "path": ".workbuddy/tmp/importance-settings/ChannelPanelActivity.java",
+      "sha256": "f56fbb45ffdbf6206a61c04526b4b8a346e418f6e2014e4c4a4698b715663134",
+      "contains": [
+        "package com.android.settings.notification.app;",
+        "setDestination(ChannelNotificationSettings.class.getName())",
+        "new ChannelNotificationSettings()"
+      ]
+    }
+  ]
+}

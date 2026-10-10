@@ -1,0 +1,365 @@
+{
+  "host": {
+    "packageName": "com.android.systemui",
+    "versionName": "17.03.260226.r",
+    "versionCode": 202602260
+  },
+  "verification": "Partial artwork migration plus opt-in cover-only transition and lifecycle repairs; ordinary unlocked notification-center card only. No Monet foreground animation, full upstream parity, installation or device acceptance for this continuation.",
+  "evidence": [
+    {
+      "locator": "dex_class:Lcom/android/systemui/statusbar/notification/style/vieweffect/MediaViewNormalEffect;",
+      "contains": [
+        ".method public final apply(Ljava/lang/Object;Landroid/content/Context;)V",
+        ".method public final bridge synthetic clear(Ljava/lang/Object;)V"
+      ],
+      "sha256": "353066573f3fff4b866544b1e54b20631dd1e50d8ccd50c43a6ea5c69c469458"
+    },
+    {
+      "locator": "dex_class:Lcom/android/systemui/statusbar/notification/style/vieweffect/MediaViewBlurEffect;",
+      "contains": [
+        ".method public final bridge synthetic apply(Ljava/lang/Object;Landroid/content/Context;)V",
+        ".method public final clear(Ljava/lang/Object;)V"
+      ],
+      "sha256": "4f43f3d342531cc1c9bba11c4b953cbb51f6ba803173a1b2e7a1837243b9debc"
+    },
+    {
+      "locator": "dex_class:Lcom/android/systemui/statusbar/notification/style/vieweffect/MediaViewGlassEffect;",
+      "contains": [
+        ".method public final apply(Ljava/lang/Object;Landroid/content/Context;)V",
+        ".method public final clear(Ljava/lang/Object;)V"
+      ],
+      "sha256": "1388e732ff3f65e4f353450273bfdb3719f5d2d594efc692c1e0d193fa8caed1"
+    },
+    {
+      "locator": "dex_class:Lcom/android/systemui/statusbar/notification/style/vieweffect/MediaViewBlurOnKeyguardEffect;",
+      "contains": [
+        ".method public final apply(Ljava/lang/Object;Landroid/content/Context;)V",
+        ".method public final clear(Ljava/lang/Object;)V"
+      ],
+      "sha256": "8d388111d5f7b00057cb1e24e3785b2738c1782e9dcb9405166cfbb1b22304b1"
+    },
+    {
+      "locator": "dex_class:Lcom/android/systemui/statusbar/notification/style/vieweffect/MediaViewGlassOnKeyguardEffect;",
+      "contains": [
+        ".method public final apply(Ljava/lang/Object;Landroid/content/Context;)V",
+        ".method public final clear(Ljava/lang/Object;)V"
+      ],
+      "sha256": "51d3ad4542c48d544667c341ce60c815b0e41a335d155747ac86fc950cfb4465"
+    },
+    {
+      "locator": "dex_class:Lcom/android/systemui/statusbar/notification/style/vieweffect/MediaViewGlassOnKeyguardLightWallPaperEffect;",
+      "contains": [
+        ".method public final apply(Ljava/lang/Object;Landroid/content/Context;)V",
+        ".method public final clear(Ljava/lang/Object;)V"
+      ],
+      "sha256": "a185bdcd2fcfdd04ff669d7434a03d6dd3fa37855b7dc7ea4cf0fc829183069c"
+    },
+    {
+      "locator": "dex_class:Lcom/android/systemui/statusbar/notification/style/vieweffect/MediaViewGlassFullAodEffect;",
+      "contains": [
+        ".method public final apply(Ljava/lang/Object;Landroid/content/Context;)V",
+        ".method public final clear(Ljava/lang/Object;)V"
+      ],
+      "sha256": "9786fe57c26bd00f35fea542cdab7a06a557cc46fdbeaaf066712ffc49ff68ff"
+    },
+    {
+      "locator": "dex_class:Lcom/android/systemui/statusbar/notification/mediacontrol/MiuiMediaViewHolder;",
+      "contains": [
+        "->action4:Landroid/widget/ImageButton;"
+      ],
+      "sha256": "aadf6ea5097ec6bfb1cc657909e3f9c6570992bf843b40c9f9b0579c46465640"
+    },
+    {
+      "locator": "dex_class:Lcom/android/systemui/statusbar/notification/fullaod/NotifiFullAodController;",
+      "contains": [
+        ".field public mWillDoAodAnim:Z"
+      ],
+      "sha256": "665213015c838cb2e6ebbd4031433ca47348d630ddddbe4f5b23751be0c7ff46"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/notification/mediacontrol/MiuiMediaViewControllerImpl;->attach(Lcom/android/systemui/statusbar/notification/mediacontrol/MiuiMediaViewHolder;)V",
+      "contains": [
+        "->updateForegroundColors()V",
+        "->addCallback("
+      ],
+      "sha256": "7927ab2082eba1074448913ec611561757c745a8ef6f8dfaa65447e7aa60774c"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/notification/mediacontrol/MiuiMediaViewControllerImpl;->updateForegroundColors()V",
+      "contains": [
+        "->context:Landroid/content/Context;",
+        "->setForegroundPrimaryColor(I)V"
+      ],
+      "sha256": "74ad81ac000320c65b613fec18cd00f3178f598a96f3fa5b7b90b11a6fc73cad"
+    },
+    {
+      "locator": "dex_class:Lcom/android/systemui/statusbar/notification/mediacontrol/MiuiMediaViewControllerImpl$mediaFullAodListener$1;",
+      "contains": [
+        ".method public final onFullAodChange(ZZ)V",
+        "->updateForegroundColors()V"
+      ],
+      "sha256": "97d8b4006d9b284845dd24c6c696450c60f40e819fbdb7eeabb8133761dfd832"
+    },
+    {
+      "locator": "dex_class:Lcom/android/systemui/statusbar/notification/mediacontrol/MiuiMediaNotificationControllerImpl$configurationCallback$1;",
+      "contains": [
+        ".method public final onUiModeChanged()V",
+        "->updateForegroundColors()V"
+      ],
+      "sha256": "892f30947a1e8087cf8eb0bcc2c45583663a671f862d9a2ec2448511a58a9ce0"
+    },
+    {
+      "locator": "dex_class:Lcom/android/systemui/statusbar/notification/mediacontrol/MiuiMediaViewControllerImpl$1$1;",
+      "contains": [
+        ".method public final emit(Ljava/lang/Object;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;",
+        "->updateForegroundColors()V"
+      ],
+      "sha256": "de03824925fd8c21403116366fc47fc149029ec980040c8950b379e3fa9810b3"
+    },
+    {
+      "locator": "axml:res/drawable/notification_media_item_bg.xml",
+      "contains": [
+        "@7F060576"
+      ],
+      "sha256": "0149aabb2f771c509a00a5eb155a0cfaf2779acdab7bba68dcd43449b03a3852"
+    },
+    {
+      "locator": "dex_class:Lcom/android/systemui/statusbar/notification/style/view/MediaViewBinder$bind$1$1$invokeSuspend$$inlined$combine$1$3;",
+      "contains": [
+        "->mediaViewEffectsMap:Ljava/util/Map;",
+        "->mWillDoAodAnim:Z"
+      ],
+      "sha256": "7952acf2e2d117070fd03a2c2fb5f92ec0e0a183764da6491153e8ccfd663d90"
+    },
+    {
+      "locator": "dex_class:Lcom/android/systemui/statusbar/notification/mediacontrol/MiuiMediaHeaderView;",
+      "contains": [
+        "getMediaViewHolder()",
+        "->mediaViewHolder:"
+      ],
+      "sha256": "07b97dc0f111bb7bacf35fbd44b5fbf6543bf816f1ee1c26fa965ccba8bebffb"
+    },
+    {
+      "locator": "dex_class:Lcom/android/systemui/statusbar/notification/style/vieweffect/NotificationViewEffectHelper;",
+      "contains": [
+        "->mediaViewEffectsMap:Ljava/util/Map;"
+      ],
+      "sha256": "fa2107ebe508f293fb2c232f3cf8e75fbca098d996e7118b7d72ebeea11ebef8"
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/statusbar/notification/mediacontrol/MiuiMediaViewControllerImpl;->context:Landroid/content/Context;",
+      "contains": [
+        "context:Landroid/content/Context;"
+      ],
+      "sha256": "4179942b6f89c1ebb0cb427690bf316ec9394787214c39f2dfe1be45b8e4cda4"
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/statusbar/notification/mediacontrol/MiuiMediaViewControllerImpl;->holder:Lcom/android/systemui/statusbar/notification/mediacontrol/MiuiMediaViewHolder;",
+      "contains": [
+        "holder:Lcom/android/systemui/statusbar/notification/mediacontrol/MiuiMediaViewHolder;"
+      ],
+      "sha256": "3813a9c415cf8f0985c125996d390f3bf130755da7334f08826dd33205f65578"
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/statusbar/notification/mediacontrol/MiuiMediaViewControllerImpl;->fullAodController:Ldagger/Lazy;",
+      "contains": [
+        "fullAodController:Ldagger/Lazy;"
+      ],
+      "sha256": "5bc5b0d3628ac6487a0a7fd2a7835f58d5cce9053184789e0629f68cdd71048f"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/notification/mediacontrol/MiuiMediaViewControllerImpl;->bindMediaData(Lcom/android/systemui/media/controls/shared/model/MediaData;)V",
+      "contains": [
+        "->artWorkDrawable:",
+        "->loadDrawable(Landroid/content/Context;)",
+        "->mediaData:"
+      ],
+      "sha256": "f63e6055d03e4da436812546763f448aa23ca7fbeb572f4943a6db9ac323d6b5"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/notification/mediacontrol/MiuiMediaViewControllerImpl;->detach()V",
+      "contains": [
+        "->artWorkDrawable:",
+        "->holder:"
+      ],
+      "sha256": "980bfd3d1844daa5e0bd076447bb09487eb73f749d40ea64ad331c0e2edb775a"
+    },
+    {
+      "locator": "dex_class:Lcom/android/systemui/statusbar/notification/mediacontrol/MiuiMediaNotificationControllerImpl;",
+      "contains": [
+        "access$setTopMediaData",
+        "->bindMediaData(",
+        "->detach()V"
+      ],
+      "sha256": "7547d539ae98c1fde5ea4701a939e4d3d244d44eee9531465c7ed031c6ef3634"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/notification/stack/NotificationSectionsManager;->reinflateViews()V",
+      "contains": [
+        "->bindMediaData(",
+        "->detach()V",
+        "->setMediaViewHolder("
+      ],
+      "sha256": "560d59d066fa705e2914b63911f8050ade13eb333b9d3f65f2c24673def40b89"
+    },
+    {
+      "locator": "dex_class:Lcom/android/systemui/statusbar/notification/style/domain/NotificationMaterialStateInteractor;",
+      "contains": [
+        "->enterFullAod:",
+        ".field public final isOnKeyguard:",
+        ".field public final isShowingKeyguardNotification:"
+      ],
+      "sha256": "14eabac0d15bc8ae9ecc045ca3d08737de567ff6c1be0c6aff65669fd8160e3a"
+    },
+    {
+      "locator": "dex_method:Lcom/miui/systemui/util/MiGlassCompat;->setMiViewMaterialTypeCompat(ILandroid/view/View;)V",
+      "contains": [
+        "setMiViewMaterialTypeCompat(ILandroid/view/View;)V"
+      ],
+      "sha256": "b262065ce9f058cdd7c12194622f603a2be84a20d723aca2c7706bc6e15299f2"
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/media/controls/shared/model/MediaData;->artwork:Landroid/graphics/drawable/Icon;",
+      "contains": [
+        "artwork:Landroid/graphics/drawable/Icon;"
+      ],
+      "sha256": "c155aa9e9efdfc96c2cae10c8abac2520d955cb8dfd107658eda5f50edc99138"
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/statusbar/notification/mediacontrol/MiuiMediaViewControllerImpl;->mediaData:Lcom/android/systemui/media/controls/shared/model/MediaData;",
+      "contains": [
+        "mediaData:Lcom/android/systemui/media/controls/shared/model/MediaData;"
+      ],
+      "sha256": "d59a84ecba32f1cc80454b39873d0f9b5d7fb43cad07397d6463347fef076cd1"
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/statusbar/notification/mediacontrol/MiuiMediaViewControllerImpl;->artWorkDrawable:Landroid/graphics/drawable/Drawable;",
+      "contains": [
+        "artWorkDrawable:Landroid/graphics/drawable/Drawable;"
+      ],
+      "sha256": "fbc40b539a3978df49c76ea6b86980a1096372cff4b1f801ebf9edd15faa4b71"
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/statusbar/notification/mediacontrol/MiuiMediaViewControllerImpl;->isArtWorkUpdate:Z",
+      "contains": [
+        "isArtWorkUpdate:Z"
+      ],
+      "sha256": "6d66f11cb90311abd60e8751f1a209848903a117d70e03b0177f9f5b1cbe090a"
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/statusbar/notification/mediacontrol/MiuiMediaViewControllerImpl;->notificationMaterialStateInteractor:Lcom/android/systemui/statusbar/notification/style/domain/NotificationMaterialStateInteractor;",
+      "contains": [
+        "notificationMaterialStateInteractor:Lcom/android/systemui/statusbar/notification/style/domain/NotificationMaterialStateInteractor;"
+      ],
+      "sha256": "76b88d4e1934cefa4d52cc43684a2427b1f2bfbbae6039bf955c0146cf76b64e"
+    },
+    {
+      "locator": "dex_class:Lcom/android/systemui/statusbar/notification/mediacontrol/MiuiMediaViewHolder$Companion$create$1$1;",
+      "contains": [
+        "->mediaBg:"
+      ],
+      "sha256": "879d855bea795993e4e60f7a0aa8c8afec61e30d9f87fa738cd2754174772526"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/notification/mediacontrol/MiuiMediaHeaderView;->setMediaViewHolder(Lcom/android/systemui/statusbar/notification/mediacontrol/MiuiMediaViewHolder;)V",
+      "contains": [
+        ".method public final setMediaViewHolder(Lcom/android/systemui/statusbar/notification/mediacontrol/MiuiMediaViewHolder;)V",
+        "iput-object p1, p0,"
+      ],
+      "sha256": "61395cedefbd85673e777cd7d9619eff9068955beea0274b7dfcfd93fdc18100"
+    }
+  ],
+  "resourceNames": [
+    {
+      "type": "drawable",
+      "name": "notification_media_item_bg",
+      "locator": "resource:0x7f081851"
+    },
+    {
+      "type": "drawable",
+      "name": "notification_heads_up_transparent_bg",
+      "locator": "resource:0x7f08184c"
+    },
+    {
+      "type": "color",
+      "name": "media_primary_text",
+      "locator": "resource:0x7f06058d"
+    },
+    {
+      "type": "color",
+      "name": "media_secondary_text",
+      "locator": "resource:0x7f060590"
+    },
+    {
+      "type": "color",
+      "name": "notification_media_action_button_color",
+      "locator": "resource:0x7f060bdf"
+    },
+    {
+      "type": "color",
+      "name": "media_notification_bg_color",
+      "locator": "resource:0x7f060576"
+    },
+    {
+      "type": "dimen",
+      "name": "notification_item_bg_radius",
+      "locator": "resource:0x7f071522"
+    }
+  ],
+  "resourceFiles": [
+    {
+      "locator": "resource:0x7f081851",
+      "path": "res/drawable/notification_media_item_bg.xml"
+    }
+  ],
+  "resourceValues": [
+    {
+      "locator": "resource:0x7f06058d",
+      "variant": "default",
+      "valueKind": "color",
+      "value": "#e5000000"
+    },
+    {
+      "locator": "resource:0x7f06058d",
+      "variant": "-night",
+      "valueKind": "color",
+      "value": "#e5ffffff"
+    },
+    {
+      "locator": "resource:0x7f060590",
+      "variant": "default",
+      "valueKind": "color",
+      "value": "#80000000"
+    },
+    {
+      "locator": "resource:0x7f060590",
+      "variant": "-night",
+      "valueKind": "color",
+      "value": "#80ffffff"
+    },
+    {
+      "locator": "resource:0x7f060bdf",
+      "variant": "default",
+      "valueKind": "color",
+      "value": "#e6000000"
+    },
+    {
+      "locator": "resource:0x7f060bdf",
+      "variant": "-night",
+      "valueKind": "color",
+      "value": "#e6ffffff"
+    },
+    {
+      "locator": "resource:0x7f060576",
+      "variant": "default",
+      "valueKind": "color",
+      "value": "#ffffff"
+    },
+    {
+      "locator": "resource:0x7f060576",
+      "variant": "-night",
+      "valueKind": "color",
+      "value": "#1a1a1a"
+    }
+  ]
+}

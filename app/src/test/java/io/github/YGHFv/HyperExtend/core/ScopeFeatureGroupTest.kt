@@ -20,10 +20,12 @@ class ScopeFeatureGroupTest {
         )
     }
 
-    @Test fun systemUiMainPageKeepsOnlyUnrelatedFeatures() {
+    @Test fun systemUiMainPageContainsOnlySubmenusAndLegacyKeysStayInOther() {
+        assertTrue(featuresOfScopePage("systemui").isEmpty())
         assertEquals(
             setOf("gesture_line", "wallpaper_monet", "rotation_suggestion"),
-            featuresOfScopePage("systemui").map { it.id }.toSet(),
+            featuresOfScopePage("systemui", ScopeFeatureGroup.SYSTEM_UI_OTHER)
+                .filterNot { it in SYSTEM_UI_FEATURES }.map { it.id }.toSet(),
         )
     }
 
