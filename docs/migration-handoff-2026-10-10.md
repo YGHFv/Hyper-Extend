@@ -2,6 +2,19 @@
 
 ## 当前权威状态：19:29 低等级通知图标修复安装
 
+### 19:34 运行时与 Git 补录
+
+- 累计源码/测试/资源/文档已暂存、提交并正常推送：`77e779c`
+  `feat: migrate system UI features and repair notification controls`；共 326 个文件。
+  推送后 `origin/main` 与本地该提交一致。原始宿主 APK/日志/本机密钥/构建产物未提交。
+  本补录为随后独立文档提交，不 amend、不 force push；最终提交号用 `git log -2 --oneline` 查看。
+- 安装后观察到 SystemUI 自行进入 PID `30431`，19:29:58 日志已安装
+  `notification_importance/statusBarEffect`、`notification_importance/iconModel`，dispatch importance=3。
+- 19:30:01 日志确认 `low-ranking status-bar icon suppression reached`。
+  **新图标补丁已加载且实际命中**；此前“尚未确认加载”是安装即时状态，已由本条更新。
+- 没有发送重启/热重载命令；PID 变化原因未调查。实际图标消失/升回恢复、分组等视觉结果
+  仍无验收证据，不把 Hook 命中当全部验收通过。下一轮不必重复排查是否漏装图标 Hook。
+
 用户确认双页面修复后“可以调整”，但中文“低”仍显示状态栏图标，继续补修。
 **以本节为最新部署与进度，下面保留历史批次，勿误读为当前状态。**
 
