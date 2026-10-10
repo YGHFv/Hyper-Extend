@@ -1,0 +1,45 @@
+{
+  "started": "2026-10-10T23:18:36.850906+08:00",
+  "finished": "2026-10-10T23:18:48.997976+08:00",
+  "deviceSerial": "4e2d9aa2",
+  "deviceSdk": "37",
+  "packageName": "io.github.YGHFv.HyperExtend",
+  "result": "Performing Streamed Install\nSuccess",
+  "apkBytes": 2730066,
+  "sha256": "572b6b89e714ed694f91e2c8be6752ebe96708cc0b474408a70e21ac86d7cc11",
+  "installedSha256": "572b6b89e714ed694f91e2c8be6752ebe96708cc0b474408a70e21ac86d7cc11",
+  "hashesMatch": true,
+  "versionName": "0.1.3",
+  "versionCode": 4,
+  "pidsBefore": {
+    "system_server": "3641",
+    "com.android.systemui": "30431",
+    "com.android.settings": "25133",
+    "com.miui.misound": "905"
+  },
+  "pidsAfter": {
+    "system_server": "3641",
+    "com.android.systemui": "30431",
+    "com.android.settings": "25133",
+    "com.miui.misound": "905"
+  },
+  "pidsAfter10Seconds": {
+    "system_server": "3641",
+    "com.android.systemui": "30431",
+    "com.android.settings": "25133",
+    "com.miui.misound": "905"
+  },
+  "sampledHostPidsUnchanged": true,
+  "packageVersionAndInstallTimes": [
+    "versionCode=4 minSdk=26 targetSdk=35",
+    "versionName=0.1.3",
+    "lastUpdateTime=2026-10-10 23:18:35",
+    "firstInstallTime=2026-10-01 23:59:10"
+  ],
+  "previousApkBackup": "build\\pre-validation-2026-10-10.apk",
+  "previousApkSha256": "41001fbbc4db487523af392526446e73ceafc286494db923b483f2a21565ab63",
+  "hostRestartRequested": false,
+  "hotReloadRequested": false,
+  "switchesOrScopesChanged": false,
+  "runtimeAcceptance": false
+}

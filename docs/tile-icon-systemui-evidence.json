@@ -1,0 +1,58 @@
+{
+  "host": {
+    "packageName": "com.android.systemui",
+    "versionCode": 202602260
+  },
+  "verification": "Code logic review only; no compilation, tests, lint, packaging or device acceptance.",
+  "evidence": [
+    {
+      "locator": "dex_field:Lcom/android/systemui/plugins/qs/QSTile$State;->state:I",
+      "contains": [
+        ".field public state:I"
+      ],
+      "sha256": "a403a68ec91e5844e86c95929546ce6cb40dcc35deb98c72a59130f68e17a654",
+      "isStatic": false
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/plugins/qs/QSTile$State;->activeBgColor:I",
+      "contains": [
+        ".field public activeBgColor:I"
+      ],
+      "sha256": "a8d6a32ce7089983f5d33d2b5f7ed99317791866dda30e65834bbad63586eb01",
+      "isStatic": false
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/plugins/qs/QSTile$State;->disabledByPolicy:Z",
+      "contains": [
+        ".field public disabledByPolicy:Z"
+      ],
+      "sha256": "a8fd83577e185782121469ee51ca5eabda9b0169881e27c52a5a8c106b14db94",
+      "isStatic": false
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/plugins/qs/QSTile$State;->isTransient:Z",
+      "contains": [
+        ".field public isTransient:Z"
+      ],
+      "sha256": "9e0c5deea0d42a8a5ac4b54a4f6724c928bc15283f5dce62ab947f3679c71f0b",
+      "isStatic": false
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/plugins/qs/QSTile$State;-><init>()V",
+      "contains": [
+        ".method public constructor <init>()V",
+        "Lcom/android/systemui/plugins/qs/QSTile$State;->isTransient:Z"
+      ],
+      "sha256": "a9ba9e219bfb65d058d994a39447fb689af67071b6278115ef5d294df1e1dcf8",
+      "isStatic": false
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/plugins/qs/QSTile$State;->spec:Ljava/lang/String;",
+      "contains": [
+        ".field public spec:Ljava/lang/String;"
+      ],
+      "sha256": "3b5da3c4825782ed92a32983d12549fca9169d335252baace0fdfc1fb5488ce8",
+      "isStatic": false
+    }
+  ]
+}

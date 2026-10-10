@@ -9,6 +9,7 @@ import android.app.PendingIntent
 import android.app.NotificationManager
 import android.content.Context
 import android.os.PowerManager
+import android.os.Build
 import io.github.YGHFv.HyperExtend.core.ModuleLog
 import io.github.YGHFv.HyperExtend.hook.HookRuntime
 import io.github.YGHFv.HyperExtend.hook.HookSettings
@@ -81,7 +82,8 @@ internal object NotificationHooks {
         // Changing the field afterwards leaves a stale/invisible affordance.
         val query = HookRuntime.hook(canSlide, "notification_freeform/canNotificationSlide") { chain ->
             val pending = chain.args[1] as? PendingIntent
-            if (updating.get() == true && !(chain.args[0] as? String).isNullOrBlank() && pending?.isActivity == true) {
+            if (Build.VERSION.SDK_INT >= 31 && updating.get() == true &&
+                !(chain.args[0] as? String).isNullOrBlank() && pending?.isActivity == true) {
                 true
             } else chain.proceed()
         }

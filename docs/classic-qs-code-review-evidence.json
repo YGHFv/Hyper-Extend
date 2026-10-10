@@ -1,0 +1,170 @@
+{
+  "host": {
+    "packageName": "com.android.systemui",
+    "versionCode": 202602260
+  },
+  "verification": "Code logic review only, no build/test/lint/runtime acceptance. Row limit and collapsed prefix count only; expanded columns remain pending.",
+  "evidence": [
+    {
+      "locator": "dex_method:Lcom/android/systemui/qs/MiuiPagedTileLayout;->onMeasure(II)V",
+      "contains": [
+        "onMeasure(II)V"
+      ],
+      "sha256": "b5a847d4a93873f37cca839615ac7dbb2ee7feefcb7ac5158f4497fe60e53361"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/qs/MiuiPagedTileLayout;->updateResources()Z",
+      "contains": [
+        "updateResources()Z"
+      ],
+      "sha256": "79f612e4ddb15651086331f9811954cd9857bb9c4f5b963098ae8684062e4a86"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/qs/MiuiPagedTileLayout;->getNumPages()I",
+      "contains": [
+        "getNumPages()I"
+      ],
+      "sha256": "64a741cbdcf739e4f04ee50fe816ad2f4e59848dd9687264a011aaa6231b7e05"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/qs/MiuiPagedTileLayout;->createTilePage()Lcom/android/systemui/qs/TilePage;",
+      "contains": [
+        "createTilePage()Lcom/android/systemui/qs/TilePage;"
+      ],
+      "sha256": "595dd26d10689462d8c7e51ee5d94e27b103a9df2839e300fd835b03d9438a1e"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/qs/MiuiQuickQSPanel;->setMaxTiles(I)V",
+      "contains": [
+        "setMaxTiles(I)V"
+      ],
+      "sha256": "8741a95aa6dcccb7f7713a0dd0c722a51d38c09784c24b46b689159979085ba4"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/qs/MiuiQuickQSPanel;->updateResources$1()V",
+      "contains": [
+        "updateResources$1()V"
+      ],
+      "sha256": "289c1e3c58eb999396fcb41223ad4e61927c298d70a88e4c3288ece30ae33acf"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/qs/MiuiQuickQSPanel;->onAttachedToWindow()V",
+      "contains": [
+        "onAttachedToWindow()V"
+      ],
+      "sha256": "0a975cb43c75be7e20f4bebc5b399161c114c9c59a93e85c12fee966ed49f82f"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/qs/MiuiQuickQSPanel;->setTiles(Ljava/util/Collection;)V",
+      "contains": [
+        "setTiles(Ljava/util/Collection;)V"
+      ],
+      "sha256": "c998d3c0ba7772ea3599c8b94c0c6a3cde8708531efa266c0053aca85fb624ea"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/qs/MiuiQSPanel;-><init>(Landroid/content/Context;Landroid/util/AttributeSet;)V",
+      "contains": [
+        "<init>(Landroid/content/Context;Landroid/util/AttributeSet;)V"
+      ],
+      "sha256": "24140e2e29aaa8b1c34304b311d73e86d4ac549448829c4923d2ee0327717dc3"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/qs/MiuiQSPanel;->onConfigurationChanged(Landroid/content/res/Configuration;)V",
+      "contains": [
+        "onConfigurationChanged(Landroid/content/res/Configuration;)V"
+      ],
+      "sha256": "4261342006e3bf8642d0650a6e7d8725d1e8f0f6e9b969f8a41d7f18f4a94392"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/qs/MiuiTileLayout;->updateResources()Z",
+      "contains": [
+        "updateResources()Z"
+      ],
+      "sha256": "45ff6c5f63774e8baaee58d163aa5cca34da87ec2a9f5ef4650747f07cd2c084"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/qs/MiuiTileLayout;->updateColumns()Z",
+      "contains": [
+        "updateColumns()Z"
+      ],
+      "sha256": "a2c550659c5fd0ed9e37f8f2ddfaa182a59257a1742360bda156ddd4cfd8a381"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/qs/MiuiTileLayout;->onMeasure(II)V",
+      "contains": [
+        "onMeasure(II)V"
+      ],
+      "sha256": "d3b6141b381ca5f5c838ccc86d97541bb5749bb017a88d02122a66d9d030415a"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/qs/MiuiTileLayout;->layoutTileRecords(I)V",
+      "contains": [
+        "layoutTileRecords(I)V"
+      ],
+      "sha256": "21313572223cb23fa3895f30be022b5357f8e166666394a3edb132323819e874"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/qs/MiuiQuickQSPanel$HeaderTileLayout;->onMeasure(II)V",
+      "contains": [
+        "onMeasure(II)V"
+      ],
+      "sha256": "659ab0a4a8dd65b87f3b86e4e477c67255a9ee8a8f468996338e5352c8056385"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/qs/MiuiQuickQSPanel$HeaderTileLayout;->onLayout(ZIIII)V",
+      "contains": [
+        "onLayout(ZIIII)V"
+      ],
+      "sha256": "99e1d308093ec591081e697b78a8b90af09d97b93953b3cce4fbb91acc40d0bb"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/qs/MiuiQuickQSPanel$HeaderTileLayout;->updateResources()Z",
+      "contains": [
+        "updateResources()Z"
+      ],
+      "sha256": "0509ac061a80fa0cd89ee4199bea439a8a7904b276f7c6650db5088c7df1d099"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/qs/TilePage;-><init>(Landroid/content/Context;Landroid/util/AttributeSet;)V",
+      "contains": [
+        "<init>(Landroid/content/Context;Landroid/util/AttributeSet;)V"
+      ],
+      "sha256": "a067432e7e62b77a6b5eb0abcc2863fc37008e37339776ff833e80c0e01d3b9e"
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/qs/MiuiPagedTileLayout;->mPages:Ljava/util/ArrayList;",
+      "contains": [
+        "mPages:Ljava/util/ArrayList;"
+      ],
+      "sha256": "702690c70168c09a0845dfb916ed1d89fab9f77da7a8bdc14c930056ffde45be"
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/qs/MiuiPagedTileLayout;->mDistributeTiles:Z",
+      "contains": [
+        "mDistributeTiles:Z"
+      ],
+      "sha256": "c01c8dbe937f0f7efb40b8f7a0e4b4b4c3901176cba92ca7e537714c28d4a5bb"
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/qs/MiuiTileLayout;->mMaxAllowedRows:I",
+      "contains": [
+        "mMaxAllowedRows:I"
+      ],
+      "sha256": "b2bfaddef19ee2a128da95ad762e0d04b8f7c653e277d6cf2c38955fad4e3ad6"
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/qs/MiuiTileLayout;->mMinRows:I",
+      "contains": [
+        "mMinRows:I"
+      ],
+      "sha256": "82ca269b65466af3509630b2349d58475be0fd112aa86b4ecc659faed92c0cbf"
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/qs/MiuiQuickQSPanel;->mMaxTiles:I",
+      "contains": [
+        "mMaxTiles:I"
+      ],
+      "sha256": "73636ecbf6b51449b646e183d698bad2a511c50079500fcb455adbbb4ce631b0"
+    }
+  ]
+}

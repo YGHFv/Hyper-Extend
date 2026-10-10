@@ -4,6 +4,8 @@
  */
 package io.github.YGHFv.HyperExtend.hook.feature.volume
 
+import io.github.YGHFv.HyperExtend.core.compatibleVersionCode
+
 import android.app.Activity
 import android.app.Service
 import android.content.BroadcastReceiver
@@ -41,8 +43,8 @@ internal object MiSoundVolumeHooks {
         var lastQueryFailure: String? = null
 
         fun supported(context: Context): Boolean = audited ?: runCatching {
-            context.packageManager.getPackageInfo(AppVolumeSettings.PACKAGE, 0).longVersionCode == 260903L &&
-                context.packageManager.getPackageInfo("miui.systemui.plugin", 0).longVersionCode == 183022200L
+            context.packageManager.getPackageInfo(AppVolumeSettings.PACKAGE, 0).compatibleVersionCode == 260903L &&
+                context.packageManager.getPackageInfo("miui.systemui.plugin", 0).compatibleVersionCode == 183022200L
         }.getOrDefault(false).also { audited = it }
 
         fun register(host: Service) {

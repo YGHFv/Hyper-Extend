@@ -1,0 +1,11 @@
+instance Lcom/android/systemui/miui/volume/MiuiVolumeDialogView;->updateFooterVisibility(Z)V
+instance Lcom/android/systemui/miui/volume/MiuiVolumeDialogView;->onExpandStateUpdated(Z)V
+instance Lcom/android/systemui/miui/volume/widget/ExpandCollapseLinearLayout;->isExpanded()Z
+instance Lcom/android/systemui/miui/volume/VolumePanelViewController;->onStateChangedH(Lcom/android/systemui/plugins/VolumeDialogController$State;)V
+instance Lcom/android/systemui/miui/volume/VolumePanelViewController;->reInit()V
+instance Lcom/android/systemui/miui/volume/VolumePanelViewController;->updateExpandedH(ZZZ)V
+instance Lcom/android/systemui/miui/volume/MiuiVolumeDialogView;->showH(Ljava/lang/Runnable;)V
+instance Lcom/android/systemui/miui/volume/widget/ExpandCollapseStateHelper;->updateExpanded(ZZ)V
+instance Lcom/android/systemui/miui/volume/MiuiVolumeDialogView;->mRingerModeLayout:Lcom/android/systemui/miui/volume/MiuiRingerModeLayout;
+static Lcom/android/systemui/miui/volume/Util;->setVisOrGone(Landroid/view/View;Z)V
+instance Lcom/android/systemui/miui/volume/MiuiVolumeDialogView;->mNeedShowDialog:Z

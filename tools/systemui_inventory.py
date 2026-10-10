@@ -1,12 +1,20 @@
 #!/usr/bin/env python3
 """Snapshot upstream SystemUI preferences without assuming an old hook works on OS4."""
 import argparse
+import hashlib
 import json
 import subprocess
 import xml.etree.ElementTree as ET
 from pathlib import Path
 
 ANDROID = "{http://schemas.android.com/apk/res/android}"
+
+
+def source_digest(path):
+    data = path.read_bytes()
+    if path.suffix not in {".png", ".webp", ".jpg", ".jpeg", ".gif"}:
+        data = data.replace(b"\r\n", b"\n")
+    return hashlib.sha256(data).hexdigest()
 
 AUDIT_REPAIRS = {
     "prefs_key_system_ui_statusbar_network_speed_style": ("status_bar_network_speed.style", ["F01"]),
@@ -43,8 +51,27 @@ def main():
                     strings[entry.get("name")] = "".join(entry.itertext()).replace('\\"', '"')
 
     migrated = {
+        "prefs_key_system_control_center_old_enable": "classic_qs_layout",
+        "prefs_key_system_control_center_old_qs_rows": "classic_qs_layout.rows_portrait",
+        "prefs_key_system_control_center_old_qs_rows_horizontal": "classic_qs_layout.rows_landscape",
+        "prefs_key_system_control_center_old_qs_grid_columns": "classic_qs_layout.quick_portrait",
+        "prefs_key_system_control_center_old_qs_grid_columns_horizontal": "classic_qs_layout.quick_landscape",
+        "prefs_key_system_ui_control_center_qs_brightness_top_value_show": "control_center_brightness_value",
+        "prefs_key_system_ui_control_center_qs_volume_top_value_show": "control_center_volume_value",
+        "prefs_key_system_ui_volume_collpased_column_press": "volume_long_press_expand",
+        "prefs_key_security_center_reduce_bright_colors_tile": "control_center_dim_tile_icon",
+        "prefs_key_system_ui_control_center_fix_tiles_list": "control_center_fix_tiles_list",
         "prefs_key_system_settings_more_notification_settings": "notification_importance",
+        "prefs_key_system_ui_navigation_handle_custom": "navigation_handle_custom",
+        "prefs_key_system_ui_navigation_handle_custom_thickness": "navigation_handle_custom.radius",
+        "prefs_key_system_ui_navigation_handle_custom_color": "navigation_handle_custom.light_background",
+        "prefs_key_system_ui_navigation_handle_custom_color_dark": "navigation_handle_custom.dark_background",
         "prefs_key_system_ui_other_default_plugin_theme": "volume_default_theme",
+        "prefs_key_system_ui_control_center_rounded_rect": "control_center_tile_corners",
+        "prefs_key_system_ui_control_center_rounded_rect_radius": "control_center_tile_corners.radius",
+        "prefs_key_system_ui_control_center_qs_open_color": "control_center_tile_color",
+        "prefs_key_system_ui_control_center_qs_bg_color": "control_center_tile_color.background",
+        "prefs_key_system_ui_control_center_qs_color": "control_center_tile_color.icon",
         "prefs_key_system_ui_control_center_media_control_progress_on": "media_card_progress",
         "prefs_key_system_ui_control_center_media_control_progress_thickness": "media_card_progress.height",
         "prefs_key_system_ui_control_center_media_control_always_dark": "media_card_always_dark",
@@ -52,6 +79,9 @@ def main():
         "prefs_key_system_ui_control_center_media_control_panel_background_blur": "media_card_background.blur",
         "prefs_key_system_ui_control_center_media_control_control_color_anim": "media_card_background.transition",
         "prefs_key_system_ui_lock_screen_show_charging_cv": "lockscreen_charging_info",
+        "prefs_key_system_ui_lock_screen_linkage_anim": "lockscreen_wallpaper_transition",
+        "prefs_key_system_ui_lock_screen_linkage_anim_on": "lockscreen_wallpaper_transition.wake",
+        "prefs_key_system_ui_lock_screen_linkage_anim_off": "lockscreen_wallpaper_transition.sleep",
         "prefs_key_system_ui_show_charging_c_more": "lockscreen_charging_info.milliamps",
         "prefs_key_system_ui_show_battery_temperature": "lockscreen_charging_info.temperature",
         "prefs_key_system_ui_lock_screen_show_spacing_value": "lockscreen_charging_info.custom_interval",
@@ -157,6 +187,12 @@ def main():
             })
             if target and target.startswith("media_card_"):
                 items[-1]["boundary"] = "Notification-center normal layout only; flip tiny screen and dynamic island remain unchanged. Native drawable scaling covers common and semantic bindings; animated drawables and touch targets are retained. Background and progress styles are pending."
+            if target and target.startswith("navigation_handle_custom"):
+                items[-1].update(boundary="OS4 202602260 NavigationHandle only. Radius 0-5 dp in 0.05 steps, two optional ARGB endpoints using native ArgbEvaluator/dark intensity; blank colors retain native endpoints. Scoped onDraw and transition-info getters restore radius, geometry cache and paint in finally; native press/pulse animations, width, bottom, touch/layout, visibility and user gesture settings remain. Four-hook all-ready gate, caller deoptimization, main-thread/version gates and existing gesture-line draw-hiding priority. Zero skips drawing only and preserves native transition metadata. No runtime acceptance.",
+                    evidenceManifest="docs/navigation-handle-systemui-evidence.json",
+                    referenceNote="Upstream resource radius is half the rendered thickness (default 1.85 dp); local label states radius. Local colors default to follow-system, not forced upstream defaults. No dependency on hiding the navigation bar.")
+            if key in {"prefs_key_system_ui_navigation_handle_custom_height", "prefs_key_system_ui_navigation_handle_custom_width", "prefs_key_system_ui_navigation_handle_custom_width_land"}:
+                items[-1]["referenceNote"] = "Upstream XML explicitly disables this option; HandleLineCustom reads neither the key nor its resource. Kept pending, no empty local control. Current OS4 calculates width from screen width (portrait 0.32, landscape 0.21), not the old width resource."
             if target and target.startswith("status_bar_dual_row_signal"):
                 items[-1]["boundary"] = "OS4 202602260 only; two active ordinary cellular SIM icons, per-binding visibility facade, upstream four asset styles, signed offsets. Default-data SIM is upper/anchor; no stale-level reuse. Unknown/no-voice/satellite/airplane/single-SIM states retain native layout. No live dual-SIM acceptance."
                 items[-1]["evidenceManifest"] = "docs/dual-row-systemui-evidence.json"
@@ -199,6 +235,69 @@ def main():
             if target and target.startswith("lockscreen_charging_info"):
                 items[-1].update(boundary="OS4 202602260 native vertical indication area only. Separate detail row while the native battery indication is actually visible; keep its text/click/rotation and font. BatteryManager current plus battery broadcast voltage/temperature, battery-side estimated power, optional mA/temperature and 1-5s half-second interval (default 3s). Worker-only sampling, one in flight per binding, generation cancellation on hide/detach/rebind, bounded queue. AOD/tiny/reverse/protection/fault/wireless-reposition states keep native. Unsupported/stale readings omitted; no sysfs/root access or device acceptance.",
                     evidenceManifest="docs/lockscreen-charging-systemui-evidence.json")
+            if target and target.startswith("lockscreen_wallpaper_transition"):
+                items[-1].update(boundary="OS4 202602260 ordinary main-display keyguard wallpaper black/reveal animation only. Current owner is KeyguardPanelViewController, not old ClockBaseAnimation. Per-call identity-scoped outline factory replaces only the selected ease with a fresh 100-1600ms decelerate style. Native config/listeners/tracker/SurfaceControl/wake-lock release and cancellation remain; no shared ease mutation or new animation loop. Full-AOD/depth/video/secondary-display/third-party-theme/occluded/bouncer/unlock/power-save and native no-animation routes remain unchanged. All-ready and exact-version gates; no device acceptance.",
+                    evidenceManifest="docs/lockscreen-wallpaper-systemui-evidence.json",
+                    referenceNote="Display milliseconds, not upstream XML's misleading divided rate. Defaults follow XML: wake 300ms, sleep 200ms (upstream hook fallback says sleep 300). Wake uses upstream style 20 instead of the current host spring. This is bounded wallpaper dimming timing, not a replacement of full AOD, clock, depth, notification or unlock transitions.")
+            if target == "control_center_fix_tiles_list":
+                items[-1].update(boundary="SystemUI 202602260 and control-center plugin 183022200 only. Append six audited factory-backed specs to editor candidates, preserving the native list and order. Classic show uses one exact Context/string read; plugin addStockTiles scopes one getTilesStock read on its worker. Native isAvailable, exclusion lists, permissions, collection/destruction and explicit user save remain. No shared resource/Lazy/repository or restore-filter edits; no automatic tile creation/click/save by the module. Per-adapter all-ready and version gates; device acceptance pending.",
+                    evidenceManifest="docs/stock-tiles-systemui-evidence.json",
+                    pluginEvidenceManifest="docs/stock-tiles-plugin-evidence.json",
+                    referenceNote="Do not replace current phone/pad stock resources with upstream's old whole list, which omits current satellite/recorder/cast specs. Adds reduce_brightness,inversion,saver,dark,onehanded,color_correction only. user/dnd have no current native factory branch and are intentionally excluded. Closing the feature does not remove user-added tiles or rewrite layout; full upstream list parity is not claimed.")
+            if target == "control_center_dim_tile_icon":
+                items[-1].update(boundary="SystemUI 202602260 ReduceBrightColorsTile only. Native handleUpdateState runs first; replace icon alone with the attributed upstream 24dp vector wrapped in host DrawableIcon, with per-tile/configuration weak caching for stable identity. Native state/value/label/accessibility/tint/availability/click/long-click/upgrade-dialog remain. No resource-ID spoofing, brightness writes or tile-list edits. Disabled/safe mode restores on next native state refresh, not instantly. Device acceptance pending.",
+                    evidenceManifest="docs/dim-tile-icon-systemui-evidence.json",
+                    pluginEvidenceManifest="docs/dim-tile-icon-plugin-evidence.json",
+                    referenceNote="Current host uses DrawableIconWithRes via maybeLoadResourceIcon, not upstream ResourceIcon.get. Plain DrawableIcon deliberately avoids resource-ID-only equality hiding restoration; native consumers support both drawable and invisible drawable. Independent from stock-list completion; user must add an available tile.")
+            if target == "volume_long_press_expand":
+                items[-1].update(status="partially_implemented_static_verified",
+                    boundary="SystemUI 202602260/plugin 183022200 main-display ordinary collapsed volume panel only. Observe untransformed single-finger dispatch for a stationary 300ms hold. Slop/history/multi-touch, observed progress/geometry/configuration changes, lifecycle, stale or changed binding cancel. Preserve native drag until firing; send one native CANCEL then drain the remaining physical stream while hooks remain active and request the existing accessibility expand listener. Native screen-pinning/DND/animation policy retained. All-seven-hook readiness, shared loader discovery, weak view bindings and bounded main-thread callback. Global safe mode bypasses hooks; no seamless mid-stream recovery claim. No device acceptance.",
+                    evidenceManifest="docs/volume-long-press-plugin-evidence.json",
+                    systemUiEvidenceManifest="docs/volume-long-press-systemui-evidence.json",
+                    remaining="Upstream removal of expand button and custom whole-panel 0.92 scale animation intentionally not migrated; native button/accessibility and native press animation retained. Control-center-embedded volume, secondary displays, touch exploration, independent-app panel and expansion-button-origin touches remain native. Bounded partial migration, not full upstream parity.")
+            if target in {"control_center_brightness_value", "control_center_volume_value"}:
+                items[-1].update(status="code_reviewed_partial_unbuilt",
+                    boundary="Code-only partial migration by user request; no compilation, unit-test execution, lint or device acceptance. Exact SystemUI 202602260/plugin 183022200 main-display main-panel native top text only. Separate switches; brightness uses normalized slider range and volume uses native discrete levels. Existing native labels including super-volume take priority. Restore owned plain text/visibility before native updates; weak bindings and unbind/destroy/detach cleanup. No settings/audio writes, new overlays, layout/color/blur overrides or accessibility-label replacement. Queries resolve exactly; only concrete interception paths/callers are deoptimized.",
+                    evidenceManifest="docs/slider-value-plugin-evidence.json",
+                    systemUiEvidenceManifest="docs/code-only-plugin-discovery-evidence.json",
+                    remaining="Secondary/side volume and brightness panels, mirror, secondary display, disabled/edit/accessibility/rich-text cases and overlay/custom-material variants are not migrated. Restoration waits for native update/detach/rebuild; no immediate safe-mode or panel-transition cleanup guarantee.")
+            if target == "control_center_hide_edit":
+                items[-1].update(status="code_reviewed_repair_unbuilt",
+                    boundary="Source-only audit repair: resolve exact availability/context/distributor methods, require caller and shared discovery deoptimization, retain native availability first, then suppress only for enabled audited SystemUI/plugin versions. Dynamic setting reads; unavailable native entries never become available. No layout/list saves, capability bypass or forced redistribution. No build/test/lint/runtime validation in this batch; older successful builds do not include this repair.",
+                    evidenceManifest="docs/edit-button-code-review-evidence.json",
+                    systemUiEvidenceManifest="docs/code-only-plugin-discovery-evidence.json")
+            if target and (target == "control_center_tile_corners" or target.startswith("control_center_tile_corners.")):
+                items[-1].update(status="code_reviewed_partial_unbuilt",
+                    boundary="Source-only partial migration; no compilation, tests, lint or device acceptance. Exact SystemUI 202602260/plugin 183022200 main-display default-theme non-card/non-detail small tiles with ordinary backgrounds only. Clone and mutate rectangular GradientDrawable before setting its per-instance radius; preserve native state colors unless independent color feature is enabled. Shared eight-hook readiness with tile background/icon color, one loader adapter and exact callers deoptimized. Native outline reads drawable radius without replacing global radius getter. Restore independently owned radius/background color before native updates and on recycle; preserve newer native/transition shape writes. No resource/shared ConstantState mutations.",
+                    evidenceManifest="docs/tile-icon-plugin-evidence.json",
+                    stateEvidenceManifest="docs/tile-icon-systemui-evidence.json",
+                    systemUiEvidenceManifest="docs/code-only-plugin-discovery-evidence.json",
+                    remaining="Material/blend/glass, card and detail tile variants remain native; no forcing material off. Radius is upstream raw pixels 1..99/default 72 clamped to half tile size. Native transition setter may overwrite the custom radius until a new background is created. Detached views without display context may wait for native background creation. Disable recovery waits for native refresh; safe mode/old view cleanup may require restart. No full-upstream shape/transition parity claim.")
+            if target and (target == "control_center_tile_color" or target.startswith("control_center_tile_color.")):
+                items[-1].update(status="code_reviewed_partial_unbuilt",
+                    boundary="Source-only partial migration; no compilation/tests/lint/runtime acceptance. Exact SystemUI 202602260/plugin 183022200 main-display default-theme ordinary small tiles, state 2 and activeBgColor 0 only. Do not apply new custom colors to policy-disabled, transient, restricted or warning states. Clone active rectangular GradientDrawable before changing a non-stateful solid background color. For generic exact VectorDrawable/AnimatedVectorDrawable icons only, temporarily override per-view defaultIconColor around native drawableTint and restore it in finally without overwriting a newer native write. Native mutation/tint and animation identities/callbacks remain; no global resource or shared ConstantState writes. Background/icon inputs independently blank/invalid follow native; opaque RGB only. Shared eight-hook adapter with optional radius setting retains background ownership and native touch/accessibility.",
+                    evidenceManifest="docs/tile-icon-plugin-evidence.json",
+                    systemUiEvidenceManifest="docs/tile-icon-systemui-evidence.json",
+                    remaining="Card color and classic-QS color remain pending. Material/glass, detail/card tiles and stateful/filtered backgrounds remain native. Seven special icon specs, third-party custom tiles, bitmap and other drawable types are excluded. Contrast is user responsibility. Background enable waits for native creation and disable for refresh. Icon changes/disable wait for actual native drawableTint; same-state early returns can retain old tint. Safe-mode cleanup may require restart. No full upstream color parity or immediate recovery claim.")
+            if key == "prefs_key_system_ui_control_center_qs_color":
+                items[-1]["referenceNote"] = "Partial icon-color migration, not upstream global qs_icon_enabled_color replacement. Scoped per-view input only during native tint; preserve quietmode/papermode/mute/cell/autobrightness/flashlight/batterysaver special colors and custom/bitmap icons. No forced retint or vector replacement; same-state native caching can retain old color until a real tint call."
+            if target == "control_center_auto_collapse":
+                items[-1].update(status="code_reviewed_repair_unbuilt",
+                    boundary="Source-only audit repair; no compilation/tests/lint/runtime acceptance. Exact SystemUI 202602260, main-thread display-0 context, dynamic switch, known usable tile states 1/2, non-policy/non-transient, nonempty non-edit spec, no shown detail and status-bar state 0 before and after native click dispatch. Resolve eleven exact methods and nine fields; deoptimize concrete target/collapse/eight actual main-package callers, resolve abstract status query without deoptimization. One click hook with same-tile nested guard and host-identity recheck. Preserve native click/handler/authentication/rejection/exception paths, then request native panel collapse; dispatch is not operation success. No module asynchronous task or settings writes.",
+                    evidenceManifest="docs/auto-collapse-systemui-evidence.json",
+                    remaining="Main-package dispatch xref is complete; zero plugin dex references do not prove runtime absence, so current plugin coverage is unconfirmed. Missing display context fails native. Native collapse is a scheduled coroutine and cannot be cancelled by later disabling this switch. Tile execution can still reject or fail after dispatch; do not interpret panel collapse as success.")
+            if target == "volume_hide_collapsed_footer":
+                items[-1].update(status="code_reviewed_repair_unbuilt",
+                    boundary="Source-only audit repair; no compilation/tests/lint/runtime acceptance. Exact SystemUI 202602260/plugin 183022200 main-display ordinary volume dialog; preserve embedded and independent app-volume panels. Require both hooks and exact five caller paths plus shared discovery deoptimization. Restore only owned GONE visibility before native update/expand callbacks, then suppress only currently visible collapsed footer. Never synthesize visibility from a cached requested boolean. Leave expand button, native active-stream/tiny-screen restrictions, audio/DND state and native insets code intact. Weak View-to-Int ownership; closing switch waits for next native callback, safe-mode cleanup may require rebuild/restart.",
+                    evidenceManifest="docs/volume-footer-plugin-evidence.json",
+                    systemUiEvidenceManifest="docs/code-only-plugin-discovery-evidence.json")
+            if target and (target == "classic_qs_layout" or target.startswith("classic_qs_layout.")):
+                items[-1].update(status="code_reviewed_partial_unbuilt",
+                    boundary="Source-only partial migration on SystemUI 202602260 main display; no compilation/tests/lint/device acceptance. Expanded maximum rows and collapsed prefix count by orientation, not full rows/columns parity. Pager measure temporarily overrides first-page row cap, retains native minimum/available-height/tile-count constraints and marks redistribution only for changed effective cap; finally restores the cap. Collapsed setMaxTiles keeps native tile selection and animator refresh; native updateResources on attach handles display-less construction. No saved tile/order edits, display/hit-target resizing or automatic classic-style selection. All-three-hook readiness and exact caller resolution/deoptimization.",
+                    evidenceManifest="docs/classic-qs-code-review-evidence.json",
+                    remaining="Expanded columns remain pending: upstream writes mColumns after layout, inconsistent with current measure and page distribution. Collapsed count is an upper request; native width may show fewer tiles. Disabled row cap restores on next measure while hooks active, collapsed count on native resource refresh; safe mode may retain previously laid-out geometry until rebuild/restart.")
+            if key in {"prefs_key_system_control_center_old_qs_columns", "prefs_key_system_control_center_old_qs_columns_horizontal"}:
+                items[-1]["referenceNote"] = "Still pending. Current MiuiTileLayout measures cell width using columns and MiuiPagedTileLayout uses them for page capacity; do not copy QSGrid's post-layout column write. Row-cap/collapsed-count migration does not implement these options."
             if target == "lockscreen_charging_info.interval":
                 items[-1]["referenceNote"] = "Uses the XML preference and preserves half-second values. Upstream polling reads a mismatched statusbar-prefixed key and integer-divides before multiplication; those defects are not copied."
             if target == "media_card_always_dark":
@@ -213,7 +312,10 @@ def main():
             if key == "prefs_key_system_ui_control_center_media_control_background_mode":
                 items[-1]["referenceNote"] = "OS4 uses MediaViewBinder -> mediaViewEffectsMap -> seven native MediaView*Effect branches, not upstream updateMediaBackground. Current local rendering is deliberately partial with documented visual/palette and lockscreen boundaries. Do not promote this row or the whole media page to complete."
             if key == "prefs_key_system_ui_other_default_plugin_theme":
-                items[-1]["boundary"] = "Default theme only in three verified volume call sites; shared control-center ThemeUtils consumers remain unchanged. No device acceptance."
+                items[-1].update(status="code_reviewed_repair_unbuilt",
+                    boundary="Source-only audit repair, no compilation/tests/lint/runtime acceptance. Exact SystemUI 202602260/plugin 183022200 main-display contexts, all-four-hook and shared discovery readiness; deoptimize three immediate scopes and their three actual outer callers. Native ThemeUtils query runs first, dynamic settings and thread-local nested scope control only the three volume material branches. Keep low-end/blur/advanced-material gates and native resource selection. No shared theme field writes or global control-center theme override. Disable restores queries immediately while hooks active but displayed style waits for native refresh/rebuild; not a complete third-party skin replacement.",
+                    evidenceManifest="docs/volume-theme-code-review-evidence.json",
+                    systemUiEvidenceManifest="docs/code-only-plugin-discovery-evidence.json")
             if key == "prefs_key_system_ui_plugin_enable_volume_blur":
                 items[-1].update(status="already_supported_by_current_host",
                     boundary="MT plugin 183022200 Util.isSupportBlurS() returns constant true. No redundant switch/hook added; low-end/material gates retained.")
@@ -245,12 +347,46 @@ def main():
                 if target.startswith("status_bar_clock"):
                     items[-1]["evidenceManifest"] = "docs/clock-systemui-evidence.json"
                     items[-1]["boundary"] = "Existing key and encoding retained by the clock-role extension; exact OS4 clock/calendar evidence refreshed. Synchronous formatting restores shared calendar state. Host theme/density styling and native text restoration reviewed; unified device acceptance remains pending."
+    # The five source-only batches were subsequently built and tested together. Preserve
+    # their original review boundaries instead of treating installation as device acceptance.
+    validated_features = {
+        "classic_qs_layout", "control_center_tile_corners", "control_center_tile_color",
+        "control_center_brightness_value", "control_center_volume_value",
+        "control_center_hide_edit", "control_center_auto_collapse",
+        "volume_hide_collapsed_footer", "volume_default_theme",
+    }
+    validation = Path("docs/migration-validation-build-2026-10-10.json")
+    inputs = json.loads(validation.read_text(encoding="utf-8")).get("sourceInputsSha256", {}) if validation.is_file() else {}
+    validation_matches = bool(inputs) and all(
+        Path(name).is_file() and source_digest(Path(name)) == digest
+        for name, digest in inputs.items()
+    )
+    validation_matches = validation_matches and all(
+        path.as_posix() in inputs for path in Path("app/src").rglob("*") if path.is_file()
+    )
+    if validation_matches:
+        for item in items:
+            if (item.get("target") or "").split(".")[0] not in validated_features:
+                continue
+            previous = item["status"]
+            if previous not in {"code_reviewed_partial_unbuilt", "code_reviewed_repair_unbuilt"}:
+                continue
+            item["previousStatus"] = previous
+            item["status"] = ("partially_implemented_static_verified" if previous == "code_reviewed_partial_unbuilt"
+                              else "repaired_static_pending_device")
+            item["initialCodeReviewBoundary"] = item.pop("boundary")
+            item["boundary"] = "Subsequent cumulative validation: 598 local unit tests and R8 Release passed; full Debug/Release lint has zero errors. Original feature exclusions and restoration limits in initialCodeReviewBoundary still apply. Installed package hash verified; no host restart or unified device acceptance."
+            item["buildManifest"] = str(validation).replace("\\", "/")
+            item["installManifest"] = "docs/migration-validation-install-2026-10-10.json"
     revision = subprocess.check_output(["git", "-C", str(args.reference), "rev-parse", "HEAD"], text=True).strip()
     payload = {
         "reference": "https://github.com/ReChronoRain/HyperCeiler",
         "revision": revision,
         "scope": "All system_ui*.xml keys plus old-control-center and notification-importance hooks configured in system_settings.xml; includes navigation/dependency rows, not all are hooks. Settings importance adapter has static APK evidence, not device acceptance.",
-        "verification": "Static host-code checks and local tests only. No device acceptance yet.",
+        "verification": "Per-entry evidence only. A cumulative 598-test/R8/full-lint validation is recorded in migration-validation-build-2026-10-10.json; source-only statuses are promoted only while its source-input hashes match. Original code-review boundaries are retained as history. Installation is not unified device acceptance.",
+        "cumulativeValidationMatchesCurrentInputs": validation_matches,
+        "cumulativeBuildManifest": "docs/migration-validation-build-2026-10-10.json",
+        "cumulativeInstallManifest": "docs/migration-validation-install-2026-10-10.json",
         "completenessAudit": "docs/migration-completeness-audit.md",
         "continuationAudit": "docs/systemui-next-audit-2026-10-10.md",
         "mobileTypeDisplayAudit": "docs/mobile-type-display-2026-10-10.md",
@@ -264,7 +400,17 @@ def main():
         "notificationFoldMenuAudit": "docs/notification-fold-menu-2026-10-10.md",
         "notificationImportancePanelAudit": "docs/notification-importance-panel-2026-10-10.md",
         "notificationImportanceIconAudit": "docs/notification-importance-icon-2026-10-10.md",
-        "statusNote": "implemented_static_verified applies only to the named local scope, not full upstream parity. repaired_static_pending_device means the recorded defect has a source repair and regression coverage but no live acceptance; see repairedFindings and docs/migration-repair-0.1.3.md. Unreviewed rows remain needs_audit_existing_partial or pending.",
+        "navigationHandleAudit": "docs/navigation-handle-2026-10-10.md",
+        "lockscreenWallpaperAudit": "docs/lockscreen-wallpaper-2026-10-10.md",
+        "stockTilesAudit": "docs/stock-tiles-2026-10-10.md",
+        "dimTileIconAudit": "docs/dim-tile-icon-2026-10-10.md",
+        "volumeLongPressAudit": "docs/volume-long-press-2026-10-10.md",
+        "codeOnlyContinuationAudit": "docs/code-only-migration-2026-10-10.md",
+        "classicQsCodeOnlyAudit": "docs/classic-qs-code-only-2026-10-10.md",
+        "tileCornerVolumeThemeCodeOnlyAudit": "docs/tile-corner-volume-theme-code-only-2026-10-10.md",
+        "tileColorVolumeFooterCodeOnlyAudit": "docs/tile-color-volume-footer-code-only-2026-10-10.md",
+        "tileIconAutoCollapseCodeOnlyAudit": "docs/tile-icon-auto-collapse-code-only-2026-10-10.md",
+        "statusNote": "implemented_static_verified applies only to the named local scope, not full upstream parity. repaired_static_pending_device means the recorded defect has a source repair and regression coverage but no live acceptance; see repairedFindings and docs/migration-repair-0.1.3.md. code_reviewed_partial_unbuilt and code_reviewed_repair_unbuilt explicitly mean source-only review without compiling or running tests, not previous build coverage. Unreviewed rows remain needs_audit_existing_partial or pending.",
         "items": items,
     }
     args.output.parent.mkdir(parents=True, exist_ok=True)

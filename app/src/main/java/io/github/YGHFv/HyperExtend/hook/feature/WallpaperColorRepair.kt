@@ -22,6 +22,7 @@ package io.github.YGHFv.HyperExtend.hook.feature
 
 import android.app.WallpaperColors
 import android.app.WallpaperManager
+import androidx.annotation.RequiresApi
 import android.graphics.Color
 import android.os.Handler
 import android.os.Looper
@@ -68,6 +69,7 @@ import java.util.concurrent.atomic.AtomicBoolean
  * 上限（见 [MIN_FORCE_INTERVAL_MS]、[MAX_FORCE_ATTEMPTS] 与 [needsForcedReevaluate]）。
  * 这三道闸共同保证：同一份壁纸颜色的修复有明确预算，不会无限重建覆盖层。
  */
+@RequiresApi(27)
 internal class WallpaperColorRepair {
 
     private companion object {

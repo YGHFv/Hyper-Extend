@@ -1,0 +1,210 @@
+{
+  "host": {
+    "packageName": "com.android.systemui",
+    "versionName": "17.03.260226.r",
+    "versionCode": 202602260
+  },
+  "verification": "Read-only live MT method and field checks. Scoped native drawing and transition metadata only; no device runtime acceptance.",
+  "evidence": [
+    {
+      "locator": "dex_method:Lcom/android/systemui/navigationbar/gestural/NavigationHandle;-><init>(Landroid/content/Context;Landroid/util/AttributeSet;)V",
+      "contains": [
+        "->mRadius:F",
+        "->mLightColor:I",
+        "->mDarkColor:I",
+        "->mPressAnimator:"
+      ],
+      "sha256": "81eafcd96d5fc0079741d78b9ff1f476513f2084ac4b564da969987cf3062c29"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/navigationbar/gestural/NavigationHandle;->onDraw(Landroid/graphics/Canvas;)V",
+      "contains": [
+        "->computePillGeometry(Z)V",
+        "->drawRoundRect(FFFFFFLandroid/graphics/Paint;)V"
+      ],
+      "sha256": "72448b1342e0af765b9739f2433202b92493aa212c52021f2908d288e89df8c3"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/navigationbar/gestural/NavigationHandle;->computePillGeometry(Z)V",
+      "contains": [
+        "->mRadius:F",
+        "->mHeightScale:F",
+        "->mRadiusScale:F",
+        "->mPulseAnimationProgress:F",
+        "->mLastPillRect:",
+        "->mPillGeometryDirty:Z"
+      ],
+      "sha256": "d9c92fff10402c124c7e58a2ff3c706d5d513c0bff9f6ae6af2b862198c5b005"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/navigationbar/gestural/NavigationHandle;->getPillRect()Landroid/graphics/RectF;",
+      "contains": [
+        "->computePillGeometry(Z)V",
+        "Landroid/graphics/RectF;-><init>(Landroid/graphics/RectF;)V"
+      ],
+      "sha256": "2ed4ab0baf8ac364cc1927b071797f8da49ec3095920d746d58945f5257f3112"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/navigationbar/gestural/NavigationHandle;->getPillRadius()F",
+      "contains": [
+        "->computePillGeometry(Z)V",
+        "->mLastPillRadius:F"
+      ],
+      "sha256": "398baf17786f68c227c44d0b8afff4dbc1e93c1bd805e3c62fcc6e496959e761"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/navigationbar/gestural/NavigationHandle;->getHandleColor()I",
+      "contains": [
+        "->mPaint:Landroid/graphics/Paint;",
+        "->getColor()I"
+      ],
+      "sha256": "cae3d270f36760ef0359f8824426e69ae61b349ca5256d8d5883985cdbe5d9e6"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/navigationbar/gestural/NavigationHandle;->setDarkIntensity(F)V",
+      "contains": [
+        "->mDarkIntensity:F",
+        "->mLightColor:I",
+        "->mDarkColor:I",
+        "Landroid/animation/ArgbEvaluator;->evaluate",
+        "->setColor(I)V"
+      ],
+      "sha256": "5f951bed69c8b8ac86e461f63998c5ae9de819cc6e6c44d064e3ea54def463b1"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/navigationbar/gestural/NavigationHandle;->invalidate()V",
+      "contains": [
+        "->mPillGeometryDirty:Z",
+        "invoke-super"
+      ],
+      "sha256": "26f6900df31a13abc945dfd068d5f3df9703e4d15c233469717331e51ceaa168"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/navigationbar/gestural/NavigationHandle;->updateHandleWidth()Z",
+      "contains": [
+        "0.32f",
+        "0.21f",
+        "->orientation:I"
+      ],
+      "sha256": "8c5c1e209e35e3e081da52717b139d6619ea70365049d89124a5ffa105f460ab"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/navigationbar/gestural/NavigationHandle;->animateLongPress(ZZJ)V",
+      "contains": [
+        "->getVisibility()I",
+        "->ensureInitialized()V",
+        "\"radiusScale\"",
+        "->animateToNormal()V"
+      ],
+      "sha256": "0230803ce5ba68b24449b0986e9f98676cdff9dc8bbaaf13d55da5b8d64753c7"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/navigationbar/gestural/NavigationHandle;->onAttachedToWindow()V",
+      "contains": [
+        "->updateHandleWidth()Z",
+        "->isHidden:Z",
+        "->setAlpha(F)V"
+      ],
+      "sha256": "0ea1c4ae5561a06bbd255e4131f4a8d7b9db6220b5efe7ac8f8ff7e9568f38f1"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/navigationbar/gestural/NavigationHandle;->onConfigurationChanged(Landroid/content/res/Configuration;)V",
+      "contains": [
+        "->updateHandleWidth()Z",
+        "->invalidate()V"
+      ],
+      "sha256": "3853e417e0b0141c97977b1df10eb7f55223bb4737f59a044becc206223730e0"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/navigationbar/gestural/NavigationHandle;->onDetachedFromWindow()V",
+      "contains": [
+        "->resetScaleToNormal()V",
+        "->onDetachedFromWindow()V"
+      ],
+      "sha256": "c80c6ab8db31da3b1ef723d8d44e8e25203a5978e28fafc45b767c82278d2739"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/navigationbar/gestural/NavigationHandle;->setAlpha(F)V",
+      "contains": [
+        "->mRequiresInvalidate:Z",
+        "->invalidate()V"
+      ],
+      "sha256": "44f7c77a3077f8d3a135937934f0d0ce55a035a29086ef8120341758b7b52a46"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/navigationbar/gestural/NavigationHandle;->setVisibility(I)V",
+      "contains": [
+        "->mRequiresInvalidate:Z",
+        "invoke-super"
+      ],
+      "sha256": "a9a8d65bce1c2dd5861c99e086c90ac5969ab654646b9457dacffbbc25ecec17"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/navigationbar/HomeHandleVisibilityController;->getHomeHandleInfo()Lcom/android/systemui/navigationbar/HomeHandleInfo;",
+      "contains": [
+        "->getPillRect()",
+        "->getPillRadius()",
+        "->getHandleColor()",
+        "->getAlpha()F",
+        "->getNavBarBounds()"
+      ],
+      "sha256": "8e651367ca893e94a6164559464b8c352621c379febaf33126e5656bda1f4171"
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/navigationbar/gestural/NavigationHandle;->mRadius:F",
+      "contains": [
+        "mRadius:F"
+      ],
+      "sha256": "1e876e6d2c7f3a4a58617cf7c57422a3d3909b2834ae2875e08351eddecbc600"
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/navigationbar/gestural/NavigationHandle;->mLightColor:I",
+      "contains": [
+        "mLightColor:I"
+      ],
+      "sha256": "622f29528d9b5872dd50fe88238e22b5acec1df27f8d7eb05cbead8e4d95d558"
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/navigationbar/gestural/NavigationHandle;->mDarkColor:I",
+      "contains": [
+        "mDarkColor:I"
+      ],
+      "sha256": "4bc8b4a3a87974db3fdfb835995b4bbbd4f0863385ea16e6f6c4be84b27250dd"
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/navigationbar/gestural/NavigationHandle;->mDarkIntensity:F",
+      "contains": [
+        "mDarkIntensity:F"
+      ],
+      "sha256": "0f697134729a339fc18fa204c006adde51f6595d00e3403944b627a5c5bf485a"
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/navigationbar/gestural/NavigationHandle;->mPaint:Landroid/graphics/Paint;",
+      "contains": [
+        "mPaint:Landroid/graphics/Paint;"
+      ],
+      "sha256": "f2facb1a78c92827dcad9906acdd75d615fb5dcb131fe9738486805fc97f399b"
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/navigationbar/gestural/NavigationHandle;->mLastPillRect:Landroid/graphics/RectF;",
+      "contains": [
+        "mLastPillRect:Landroid/graphics/RectF;"
+      ],
+      "sha256": "d01407ceb56313f440e72336ee5b3e563789248bba2c9c011decae6ad59619e1"
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/navigationbar/gestural/NavigationHandle;->mLastPillRadius:F",
+      "contains": [
+        "mLastPillRadius:F"
+      ],
+      "sha256": "bc968d64b842d703f3948a6c341e8b4b6989eaba180a94cc1418ca14c415b736"
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/navigationbar/gestural/NavigationHandle;->mPillGeometryDirty:Z",
+      "contains": [
+        "mPillGeometryDirty:Z"
+      ],
+      "sha256": "1cd6b65a92a1dad1f4f23d17e4833a21127f3322e3ba8d41a0b197ecca6a8288"
+    }
+  ]
+}

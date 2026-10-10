@@ -1,0 +1,6 @@
+instance Lcom/android/systemui/plugins/qs/QSTile$State;->state:I
+instance Lcom/android/systemui/plugins/qs/QSTile$State;->activeBgColor:I
+instance Lcom/android/systemui/plugins/qs/QSTile$State;->disabledByPolicy:Z
+instance Lcom/android/systemui/plugins/qs/QSTile$State;->isTransient:Z
+instance Lcom/android/systemui/plugins/qs/QSTile$State;-><init>()V
+instance Lcom/android/systemui/plugins/qs/QSTile$State;->spec:Ljava/lang/String;

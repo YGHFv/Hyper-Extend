@@ -1,0 +1,123 @@
+{
+  "host": {
+    "packageName": "miui.systemui.plugin",
+    "versionCode": 183022200
+  },
+  "verification": "Source-only logic review; no compilation, unit-test execution, lint, build, installation or runtime acceptance.",
+  "evidence": [
+    {
+      "locator": "dex_method:Lmiui/systemui/util/ThemeUtils;->getDefaultPluginTheme()Z",
+      "contains": [
+        ".method public final getDefaultPluginTheme()Z",
+        "Lmiui/systemui/util/ThemeUtils;->defaultPluginTheme:Z"
+      ],
+      "sha256": "99432cf5c52c47f95ec5b2c21de8e8346dc1c78d8e2e88ade7e4469685a8815c",
+      "isStatic": false
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/miui/volume/MiuiRingerModeLayout$RingerButtonHelper;->isSuperBlurSupported()Z",
+      "contains": [
+        ".method private isSuperBlurSupported()Z",
+        "Lmiui/systemui/util/BlurUtils;->isLowEndDevice()Z",
+        "Lcom/android/systemui/miui/volume/Util;->isSupportBlurS()Z",
+        "Lmiui/systemui/util/ThemeUtils;->getDefaultPluginTheme()Z"
+      ],
+      "sha256": "f52bbf78edf8afa3a020f4b829c96a6a36100d97212d1aab2a7b116a8e88f08a",
+      "isStatic": false
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/miui/volume/VolumeColumnRes;->getSliderBackgroundResId(Landroid/view/View;ZZ)I",
+      "contains": [
+        ".method public static final getSliderBackgroundResId(Landroid/view/View;ZZ)I",
+        "Lmiui/systemui/util/BlurUtils;->isLowEndDevice()Z",
+        "Lcom/android/systemui/miui/volume/Util;->isSupportBlurS()Z",
+        "Lmiui/systemui/util/ThemeUtils;->getDefaultPluginTheme()Z"
+      ],
+      "sha256": "48a322b9f889a883ebc15821be3564ba2509f9d95904825f8e7c620149710982",
+      "isStatic": true
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/miui/volume/MiuiVolumeDialogMotion;->updateExpandBgState()V",
+      "contains": [
+        ".method private updateExpandBgState()V",
+        "Lcom/android/systemui/miui/volume/Util;->isAdvancedMaterialEffective(Landroid/content/Context;)Z",
+        "Lcom/android/systemui/miui/volume/Util;->setMiViewBackgroundStyle(Landroid/view/View;ILmiuix/theme/token/ColorBlendToken;Lmiui/systemui/util/BionicsToken;)V",
+        "Lcom/android/systemui/miui/volume/Util;->setMiBgBlur(Landroid/view/View;IZ)V",
+        "Lmiui/systemui/util/BlurUtils;->isLowEndDevice()Z",
+        "Lmiui/systemui/util/ThemeUtils;->getDefaultPluginTheme()Z"
+      ],
+      "sha256": "5dac0109c86fc1eb067c3e318d6b66aea702561fed1aed403ae32991d6137717",
+      "isStatic": false
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/miui/volume/MiuiRingerModeLayout$RingerButtonHelper;->updateStateWithDefaultMaterial()V",
+      "contains": [
+        ".method private updateStateWithDefaultMaterial()V",
+        "Lcom/android/systemui/miui/volume/MiuiRingerModeLayout$RingerButtonHelper;->isSuperBlurSupported()Z"
+      ],
+      "sha256": "f778857c731a65bffcf8b0a19cd0f05a620893d58a4ba2370518ff55535e1112",
+      "isStatic": false
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/miui/volume/VolumeColumn;->setSliderResource(Z)V",
+      "contains": [
+        ".method public final setSliderResource(Z)V",
+        "Lcom/android/systemui/miui/volume/Util;->isAdvancedMaterialEffective(Landroid/content/Context;)Z",
+        "Lcom/android/systemui/miui/volume/VolumeColumnRes;->getSliderBackgroundResId(Landroid/view/View;ZZ)I"
+      ],
+      "sha256": "d0385ca3cf3231c579da041b493cd28adad86e0092850c26d5e3afd783d2723a",
+      "isStatic": false
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/miui/volume/MiuiVolumeDialogMotion;->updateStateToExpand(Z)V",
+      "contains": [
+        ".method public updateStateToExpand(Z)V",
+        "Lcom/android/systemui/miui/volume/MiuiVolumeDialogMotion;->updateExpandBgState()V"
+      ],
+      "sha256": "8d447cfd8db6071f70ef29edcf7c788edcbb6b0d34cd5b663097d4fb8b9ac87a",
+      "isStatic": false
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/miui/volume/MiuiRingerModeLayout$RingerButtonHelper;->this$0:Lcom/android/systemui/miui/volume/MiuiRingerModeLayout;",
+      "contains": [
+        ".field final synthetic this$0:Lcom/android/systemui/miui/volume/MiuiRingerModeLayout;"
+      ],
+      "sha256": "2ee137fcffcc3aa28d1ba0751c0c2d519a8c98e854dd999aaeafa40f32938d9f",
+      "isStatic": false
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/miui/volume/MiuiVolumeDialogMotion;->mContext:Landroid/content/Context;",
+      "contains": [
+        ".field private mContext:Landroid/content/Context;"
+      ],
+      "sha256": "79e01043f3242cbdf14d495145dc6bd96ead63cecd4261c3a4b740a4c92b4a32",
+      "isStatic": false
+    }
+  ],
+  "callerReferences": [
+    {
+      "target": "dex_method:Lcom/android/systemui/miui/volume/VolumeColumnRes;->getSliderBackgroundResId(Landroid/view/View;ZZ)I",
+      "resolution": "dispatch",
+      "complete": true,
+      "sources": [
+        "dex_method:Lcom/android/systemui/miui/volume/VolumeColumn;->setSliderResource(Z)V"
+      ]
+    },
+    {
+      "target": "dex_method:Lcom/android/systemui/miui/volume/MiuiVolumeDialogMotion;->updateExpandBgState()V",
+      "resolution": "dispatch",
+      "complete": true,
+      "sources": [
+        "dex_method:Lcom/android/systemui/miui/volume/MiuiVolumeDialogMotion;->updateStateToExpand(Z)V"
+      ]
+    },
+    {
+      "target": "dex_method:Lcom/android/systemui/miui/volume/MiuiRingerModeLayout$RingerButtonHelper;->isSuperBlurSupported()Z",
+      "resolution": "dispatch",
+      "complete": true,
+      "sources": [
+        "dex_method:Lcom/android/systemui/miui/volume/MiuiRingerModeLayout$RingerButtonHelper;->updateStateWithDefaultMaterial()V"
+      ]
+    }
+  ]
+}

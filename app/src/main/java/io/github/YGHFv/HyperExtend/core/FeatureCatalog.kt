@@ -172,6 +172,7 @@ data class HyperSlider(
     val step: Int = 1,
     val divisor: Int = 1,
     val unit: String = "",
+    val decimalPlaces: Int = 1,
 ) : HyperConfigRow {
     /** 把存储值写成界面上显示的那串字（例如 `13.5 dp`）。 */
     fun display(stored: Int): String {
@@ -179,7 +180,7 @@ data class HyperSlider(
         val number = if (divisor == 1) {
             value.toInt().toString()
         } else {
-            String.format(java.util.Locale.US, "%.1f", value)
+            String.format(java.util.Locale.US, "%.${decimalPlaces.coerceIn(0, 3)}f", value)
         }
         return number + unit
     }
@@ -216,12 +217,13 @@ data class HyperAppSelection(
     override val group: String? = null,
 ) : HyperConfigRow
 
-/** An opaque RGB seed, stored as #RRGGBB; blank keeps the system color. */
+/** RGB by default, optionally ARGB; blank keeps the system color. */
 data class HyperColor(
     override val key: String,
     override val title: String,
     override val summary: String? = "选择预设颜色或拖动色彩滑块，不需要输入颜色值",
     override val group: String? = null,
+    val allowAlpha: Boolean = false,
 ) : HyperConfigRow
 
 /**

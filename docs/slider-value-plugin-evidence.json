@@ -1,0 +1,328 @@
+{
+  "host": {
+    "packageName": "miui.systemui.plugin",
+    "versionCode": 183022200
+  },
+  "verification": "Code-logic review only; exact host text read-only. No compilation, tests, lint or runtime acceptance in this batch.",
+  "evidence": [
+    {
+      "locator": "dex_field:Lmiui/systemui/controlcenter/panel/main/brightness/BrightnessSliderController;->isInEditMode:Z",
+      "contains": [
+        "isInEditMode:Z"
+      ],
+      "sha256": "f55792804b321dd7c23dbe142494715cb37787c85b3e1056505f54e336118c5e"
+    },
+    {
+      "locator": "dex_field:Lmiui/systemui/controlcenter/panel/main/brightness/BrightnessSliderController;->secondaryPanelRouter:LE0/a;",
+      "contains": [
+        "secondaryPanelRouter:LE0/a;"
+      ],
+      "sha256": "3413d9020d38431928af86d2363e9e2e1392c8dd96930a701520ceda3ed5bdac"
+    },
+    {
+      "locator": "dex_field:Lmiui/systemui/controlcenter/panel/main/volume/VolumeSliderController;->muted:Z",
+      "contains": [
+        "muted:Z"
+      ],
+      "sha256": "7e12cd5e6aa3ea707108807b113bb469f36b1c2d5fd3eb740e378193c9833a5f"
+    },
+    {
+      "locator": "dex_field:Lmiui/systemui/controlcenter/panel/main/volume/VolumeSliderController;->secondaryPanelRouter:LE0/a;",
+      "contains": [
+        "secondaryPanelRouter:LE0/a;"
+      ],
+      "sha256": "3413d9020d38431928af86d2363e9e2e1392c8dd96930a701520ceda3ed5bdac"
+    },
+    {
+      "locator": "dex_field:Lmiui/systemui/controlcenter/panel/main/volume/VolumeSliderController;->streamMaxVolume:I",
+      "contains": [
+        "streamMaxVolume:I"
+      ],
+      "sha256": "e401151659099ea1944d3bce0d08c74557dfad33ade4ce567e67d1c336744f36"
+    },
+    {
+      "locator": "dex_method:LE0/a;->get()Ljava/lang/Object;",
+      "contains": [
+        "get()Ljava/lang/Object;"
+      ],
+      "sha256": "afbc280673d163ce39658cd3c7156d88dd1311bd90be124e38354ac40fc4b793"
+    },
+    {
+      "locator": "dex_method:Lmiui/systemui/controlcenter/panel/SecondaryPanelRouter;->getInMainPanel()Z",
+      "contains": [
+        "getInMainPanel()Z"
+      ],
+      "sha256": "6df61f0530136034668af6e88e2aab67b30f10e7302060077ee83557f8c5a2a7"
+    },
+    {
+      "locator": "dex_method:Lmiui/systemui/controlcenter/panel/main/MainPanelContent;->onBindViewHolder(Lmiui/systemui/controlcenter/panel/main/recyclerview/MainPanelItemViewHolder;Lmiui/systemui/controlcenter/panel/main/recyclerview/MainPanelListItem;)V",
+      "contains": [
+        "onBindViewHolder(Lmiui/systemui/controlcenter/panel/main/recyclerview/MainPanelItemViewHolder;Lmiui/systemui/controlcenter/panel/main/recyclerview/MainPanelListItem;)V"
+      ],
+      "sha256": "0f28e5ce344e35a07cfedb13c1dc5554de2349034cee651315dfa871a992996c"
+    },
+    {
+      "locator": "dex_method:Lmiui/systemui/controlcenter/panel/main/MainPanelContent;->onUnbindViewHolder(Lmiui/systemui/controlcenter/panel/main/recyclerview/MainPanelItemViewHolder;Lmiui/systemui/controlcenter/panel/main/recyclerview/MainPanelListItem;)V",
+      "contains": [
+        "onUnbindViewHolder(Lmiui/systemui/controlcenter/panel/main/recyclerview/MainPanelItemViewHolder;Lmiui/systemui/controlcenter/panel/main/recyclerview/MainPanelListItem;)V"
+      ],
+      "sha256": "fb07bc774ba95c9a10a012f06d485a880ad260f8cce9d3cd8fcfdf61b758e47b"
+    },
+    {
+      "locator": "dex_method:Lmiui/systemui/controlcenter/panel/main/brightness/BrightnessSliderController$seekBarListener$1;->onProgressChanged(Landroid/widget/SeekBar;IZ)V",
+      "contains": [
+        "onProgressChanged(Landroid/widget/SeekBar;IZ)V"
+      ],
+      "sha256": "e7295ddbdd650c5d3c32fc10d218f7dcedd8e587929a64b758c95d23898b5af6"
+    },
+    {
+      "locator": "dex_method:Lmiui/systemui/controlcenter/panel/main/brightness/BrightnessSliderController;->getSliderHolder()Lmiui/systemui/controlcenter/panel/main/recyclerview/ToggleSliderViewHolder;",
+      "contains": [
+        "getSliderHolder()Lmiui/systemui/controlcenter/panel/main/recyclerview/ToggleSliderViewHolder;"
+      ],
+      "sha256": "57da0737027dbd5fe8cc980d4857aeb1114c1a5b094b66d36eb529841bb2967a"
+    },
+    {
+      "locator": "dex_method:Lmiui/systemui/controlcenter/panel/main/brightness/BrightnessSliderController;->onBindViewHolder()V",
+      "contains": [
+        "onBindViewHolder()V"
+      ],
+      "sha256": "2ec4cfeaae564bee96678a8e2c460e2722b73515d9402220f8cd70f05b7c8d4e"
+    },
+    {
+      "locator": "dex_method:Lmiui/systemui/controlcenter/panel/main/brightness/BrightnessSliderController;->onConfigurationChanged(I)V",
+      "contains": [
+        "onConfigurationChanged(I)V"
+      ],
+      "sha256": "1d9b2051d19c62e0def0dfd4e46f9d7bba16ab67c826649ad915a5ad1e35454b"
+    },
+    {
+      "locator": "dex_method:Lmiui/systemui/controlcenter/panel/main/brightness/BrightnessSliderController;->onDestroy()V",
+      "contains": [
+        "onDestroy()V"
+      ],
+      "sha256": "9dc5264865f731b5160a4175e7ca84bed29b3d03b73834e7128c1e1c45490cf7"
+    },
+    {
+      "locator": "dex_method:Lmiui/systemui/controlcenter/panel/main/brightness/BrightnessSliderController;->onMaterialModeChanged(Lmiui/systemui/util/MaterialMode;)V",
+      "contains": [
+        "onMaterialModeChanged(Lmiui/systemui/util/MaterialMode;)V"
+      ],
+      "sha256": "74f350dd9f743469f400d746dbd8796146302276b2918c51da91be38a91b48fe"
+    },
+    {
+      "locator": "dex_method:Lmiui/systemui/controlcenter/panel/main/brightness/BrightnessSliderController;->onUnbindViewHolder()V",
+      "contains": [
+        "onUnbindViewHolder()V"
+      ],
+      "sha256": "a0aa344075d3913d6f2d3c1c7725b4287e29f580b87db450a406b4824d642d59"
+    },
+    {
+      "locator": "dex_method:Lmiui/systemui/controlcenter/panel/main/brightness/BrightnessSliderController;->updateIcon()V",
+      "contains": [
+        "updateIcon()V"
+      ],
+      "sha256": "ec991d1dbccc80b8849519e1d53ed3e8846cac073e1a334cc8a789303cefb1a8"
+    },
+    {
+      "locator": "dex_method:Lmiui/systemui/controlcenter/panel/main/brightness/BrightnessSliderController;->updateIconProgress$default(Lmiui/systemui/controlcenter/panel/main/brightness/BrightnessSliderController;ZILjava/lang/Object;)V",
+      "contains": [
+        "updateIconProgress$default(Lmiui/systemui/controlcenter/panel/main/brightness/BrightnessSliderController;ZILjava/lang/Object;)V"
+      ],
+      "sha256": "fc97403fec395683651d9b6aa4e09820f3d51f2396e97def49da96318eee13a9",
+      "isStatic": true
+    },
+    {
+      "locator": "dex_method:Lmiui/systemui/controlcenter/panel/main/brightness/BrightnessSliderController;->updateIconProgress(Z)V",
+      "contains": [
+        "updateIconProgress(Z)V"
+      ],
+      "sha256": "4200f2a7fc28b9816579992b1fb20e774e0e3005d662c5ba43661bcf7f580792"
+    },
+    {
+      "locator": "dex_method:Lmiui/systemui/controlcenter/panel/main/recyclerview/ToggleSliderViewHolder;->getDisableState()Z",
+      "contains": [
+        "getDisableState()Z"
+      ],
+      "sha256": "4cd2a4ae0c944648a3e5e24befb925c38b840ef33efd88162183c5757e0b496f"
+    },
+    {
+      "locator": "dex_method:Lmiui/systemui/controlcenter/panel/main/recyclerview/ToggleSliderViewHolder;->getInMirror()Z",
+      "contains": [
+        "getInMirror()Z"
+      ],
+      "sha256": "795c8725831a496c8604ece914fd0a2982e8ed64688b86f9a9f2efe085395c77"
+    },
+    {
+      "locator": "dex_method:Lmiui/systemui/controlcenter/panel/main/recyclerview/ToggleSliderViewHolder;->getSlider()Lmiui/systemui/controlcenter/widget/VerticalSeekBar;",
+      "contains": [
+        "getSlider()Lmiui/systemui/controlcenter/widget/VerticalSeekBar;"
+      ],
+      "sha256": "d50f8d9efaedcbad767be221dff352e98dd0893808b6cd3b96fb5a3e186d6c0e"
+    },
+    {
+      "locator": "dex_method:Lmiui/systemui/controlcenter/panel/main/recyclerview/ToggleSliderViewHolder;->getTopText()Landroid/view/View;",
+      "contains": [
+        "getTopText()Landroid/view/View;"
+      ],
+      "sha256": "205edea8548b5b312e69cc3ac85611be47f8a5b30a22e06194353d22f62c0d81"
+    },
+    {
+      "locator": "dex_method:Lmiui/systemui/controlcenter/panel/main/recyclerview/ToggleSliderViewHolder;->setTopTextVisible(ZLjava/lang/String;)V",
+      "contains": [
+        "setTopTextVisible(ZLjava/lang/String;)V"
+      ],
+      "sha256": "0dad34337ffaae6f821d559168d2a586cd8c9c395f1605476bb8b4c607b52cee"
+    },
+    {
+      "locator": "dex_method:Lmiui/systemui/controlcenter/panel/main/volume/VolumeSliderController;->access$updateIconProgress(Lmiui/systemui/controlcenter/panel/main/volume/VolumeSliderController;ZZ)V",
+      "contains": [
+        "access$updateIconProgress(Lmiui/systemui/controlcenter/panel/main/volume/VolumeSliderController;ZZ)V"
+      ],
+      "sha256": "4356154e763b6d736ae200440b540a99ee91ffef1a75f816cf87795773dc5b8e",
+      "isStatic": true
+    },
+    {
+      "locator": "dex_method:Lmiui/systemui/controlcenter/panel/main/volume/VolumeSliderController;->getSliderHolder()Lmiui/systemui/controlcenter/panel/main/recyclerview/ToggleSliderViewHolder;",
+      "contains": [
+        "getSliderHolder()Lmiui/systemui/controlcenter/panel/main/recyclerview/ToggleSliderViewHolder;"
+      ],
+      "sha256": "be43d97f99d665f4d782f136a4d8ef1ce8f898cfdd5a04545e301703db1f9ddf"
+    },
+    {
+      "locator": "dex_method:Lmiui/systemui/controlcenter/panel/main/volume/VolumeSliderController;->getTargetValue()I",
+      "contains": [
+        "getTargetValue()I"
+      ],
+      "sha256": "2d0ce9680130ef5fbeb0cc67f628f31f1927b499b90ac44f42b70321598df3e1"
+    },
+    {
+      "locator": "dex_method:Lmiui/systemui/controlcenter/panel/main/volume/VolumeSliderController;->handleUpdateSlider(ZZ)V",
+      "contains": [
+        "handleUpdateSlider(ZZ)V"
+      ],
+      "sha256": "9878d9760b257ae729a8acd2191d4725b3ba42335a41bc793fc62c42f1668f4d"
+    },
+    {
+      "locator": "dex_method:Lmiui/systemui/controlcenter/panel/main/volume/VolumeSliderController;->onBindViewHolder()V",
+      "contains": [
+        "onBindViewHolder()V"
+      ],
+      "sha256": "c925594dd79843d56560c9a4fc5cd231428d1c44ee24d00d3b9fdcf6dc982638"
+    },
+    {
+      "locator": "dex_method:Lmiui/systemui/controlcenter/panel/main/volume/VolumeSliderController;->onConfigurationChanged(I)V",
+      "contains": [
+        "onConfigurationChanged(I)V"
+      ],
+      "sha256": "c8d88dc1b986e3e0a110bf4ff759e64240e05625b2f9d4683f67562cd595b552"
+    },
+    {
+      "locator": "dex_method:Lmiui/systemui/controlcenter/panel/main/volume/VolumeSliderController;->onDestroy()V",
+      "contains": [
+        "onDestroy()V"
+      ],
+      "sha256": "cc100acb9bd5ca6c06b6b2152b8dc627fe5d797fe05c5c13223fe6b3d701fd8a"
+    },
+    {
+      "locator": "dex_method:Lmiui/systemui/controlcenter/panel/main/volume/VolumeSliderController;->onMaterialModeChanged(Lmiui/systemui/util/MaterialMode;)V",
+      "contains": [
+        "onMaterialModeChanged(Lmiui/systemui/util/MaterialMode;)V"
+      ],
+      "sha256": "49fbce5d7117d3850b8132a9d8f574ff722bc834714b54ee9a8e7c3000ad45a8"
+    },
+    {
+      "locator": "dex_method:Lmiui/systemui/controlcenter/panel/main/volume/VolumeSliderController;->onUnbindViewHolder()V",
+      "contains": [
+        "onUnbindViewHolder()V"
+      ],
+      "sha256": "0819a9a1a3394af99163b29f5feee8827fa0063944beb5de4550fdb78346356e"
+    },
+    {
+      "locator": "dex_method:Lmiui/systemui/controlcenter/panel/main/volume/VolumeSliderController;->setShowSuperVolumeText(Z)V",
+      "contains": [
+        "setShowSuperVolumeText(Z)V"
+      ],
+      "sha256": "24cddd87134dee73cafd6a5406cd2e61fc68888e873ed061ae6116564806a8de"
+    },
+    {
+      "locator": "dex_method:Lmiui/systemui/controlcenter/panel/main/volume/VolumeSliderController;->setSuperVolumeText(Ljava/lang/String;)V",
+      "contains": [
+        "setSuperVolumeText(Ljava/lang/String;)V"
+      ],
+      "sha256": "1ec12460f8473afb447fd51fea7dd2ef4bfb2b9928e8beb9ec73fe69cdcf108d"
+    },
+    {
+      "locator": "dex_method:Lmiui/systemui/controlcenter/panel/main/volume/VolumeSliderController;->updateIcon(ZZZ)V",
+      "contains": [
+        "updateIcon(ZZZ)V"
+      ],
+      "sha256": "33a43e1bd7af5bb8294dcae062ff0a33d15d4e68e2822bd6772dfefae85bf356"
+    },
+    {
+      "locator": "dex_method:Lmiui/systemui/controlcenter/panel/main/volume/VolumeSliderController;->updateIconProgress$default(Lmiui/systemui/controlcenter/panel/main/volume/VolumeSliderController;ZZILjava/lang/Object;)V",
+      "contains": [
+        "updateIconProgress$default(Lmiui/systemui/controlcenter/panel/main/volume/VolumeSliderController;ZZILjava/lang/Object;)V"
+      ],
+      "sha256": "0eb75af525b0205d433d0464191a2dd4f82c8867d57658e1c038d2aae8133fe4",
+      "isStatic": true
+    },
+    {
+      "locator": "dex_method:Lmiui/systemui/controlcenter/panel/main/volume/VolumeSliderController;->updateIconProgress(ZZ)V",
+      "contains": [
+        "updateIconProgress(ZZ)V"
+      ],
+      "sha256": "e7ce321e8484372a14cba3f4c54a726d45f0576cc4a84c7fb906ecc533569616"
+    },
+    {
+      "locator": "dex_method:Lmiui/systemui/controlcenter/panel/main/volume/VolumeSliderController;->updateSuperVolume$default(Lmiui/systemui/controlcenter/panel/main/volume/VolumeSliderController;ZILjava/lang/Object;)V",
+      "contains": [
+        "updateSuperVolume$default(Lmiui/systemui/controlcenter/panel/main/volume/VolumeSliderController;ZILjava/lang/Object;)V"
+      ],
+      "sha256": "541e961ba9ef0069fcfd8bd4e74ca1de2e474a9edb11e9231870e54b43246c46",
+      "isStatic": true
+    },
+    {
+      "locator": "dex_method:Lmiui/systemui/controlcenter/panel/main/volume/VolumeSliderController;->updateSuperVolume(Z)V",
+      "contains": [
+        "updateSuperVolume(Z)V"
+      ],
+      "sha256": "22c96a7566a4ac2324ca507a0379f66069cfb50f04322826a1107cd6b984e7a7"
+    },
+    {
+      "locator": "dex_method:Lmiui/systemui/controlcenter/panel/main/volume/VolumeSliderController;->valueToVolume(I)I",
+      "contains": [
+        "valueToVolume(I)I"
+      ],
+      "sha256": "99b12acdbcd2360956d94aeef4070486ace3c86796c54c7cd3cee48b04133798"
+    },
+    {
+      "locator": "dex_method:Lmiui/systemui/controlcenter/widget/VerticalSeekBar;->getMax()I",
+      "contains": [
+        "getMax()I"
+      ],
+      "sha256": "35645da54ab8f34b8302ad0d9f2e0640fca22fc98fbce38ea4455d83669cbd93"
+    },
+    {
+      "locator": "dex_method:Lmiui/systemui/controlcenter/widget/VerticalSeekBar;->getMin()I",
+      "contains": [
+        "getMin()I"
+      ],
+      "sha256": "b5a35a50f362fbfce96e093dc358548ae93687e596432fc2475d67e3d3deac4f"
+    },
+    {
+      "locator": "dex_method:Lmiui/systemui/controlcenter/widget/VerticalSeekBar;->getValue()I",
+      "contains": [
+        "getValue()I"
+      ],
+      "sha256": "b6a503b2bd8204fc160fdda6bf74f608ce8120613d88b16e885a229fbdd0205b"
+    },
+    {
+      "locator": "dex_method:Lmiui/systemui/controlcenter/widget/VerticalSeekBar;->onInitializeAccessibilityNodeInfoInternal(Landroid/view/accessibility/AccessibilityNodeInfo;)V",
+      "contains": [
+        "onInitializeAccessibilityNodeInfoInternal(Landroid/view/accessibility/AccessibilityNodeInfo;)V"
+      ],
+      "sha256": "641f9c061375aed647428d887c8d300f20484aac69ce042c5fbf80c2a5130763"
+    }
+  ]
+}

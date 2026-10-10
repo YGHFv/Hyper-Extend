@@ -1,0 +1,230 @@
+{
+  "host": {
+    "packageName": "com.android.systemui",
+    "versionCode": 202602260
+  },
+  "verification": "Code logic review only; no compilation, tests, lint, packaging or device acceptance.",
+  "evidence": [
+    {
+      "locator": "dex_method:Lcom/android/systemui/qs/tileimpl/QSTileImpl;->click(Lcom/android/systemui/animation/Expandable;)V",
+      "contains": [
+        ".method public click(Lcom/android/systemui/animation/Expandable;)V",
+        "Lcom/android/systemui/plugins/statusbar/StatusBarStateController;->getState()I",
+        "Landroid/os/Message;->sendToTarget()V"
+      ],
+      "sha256": "e615913c470ee4135ffdb88ea02300c253ecb28001e208d5cc04126126e9258d",
+      "isStatic": false
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/qs/pipeline/domain/adapter/MiuiQSHostAdapter;->collapsePanels()V",
+      "contains": [
+        ".method public final collapsePanels()V",
+        "Lcom/android/systemui/shade/ShadeExpansionInteractor;->collapsePanels()V"
+      ],
+      "sha256": "f73c849a82560249b560df32cda22b4b9f7234bddf5d35a089b384e0b7cbbb78",
+      "isStatic": false
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/plugins/statusbar/StatusBarStateController;->getState()I",
+      "contains": [
+        ".method public abstract getState()I"
+      ],
+      "sha256": "c0a7345c01d72c811ef39b70df667f78cfee5cd67ba98300e194806aafb0de48",
+      "isStatic": false
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/plugins/qs/QSTile;->click()V",
+      "contains": [
+        ".method public click()V",
+        "Lcom/android/systemui/plugins/qs/QSTile;->click(Lcom/android/systemui/animation/Expandable;)V"
+      ],
+      "sha256": "8bcbd3b2faf503021e4fb3d955b2b7549c3aab92bf353e07e180b07f264e0ccd",
+      "isStatic": false
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/qs/MiuiQSFragment;->clickTile(Landroid/content/ComponentName;)V",
+      "contains": [
+        ".method public final clickTile(Landroid/content/ComponentName;)V",
+        "Lcom/android/systemui/plugins/qs/QSTile;->click(Lcom/android/systemui/animation/Expandable;)V"
+      ],
+      "sha256": "4fe427c3852f83f0a54c0b9a0549f931ce202c067de99668377fe2e3dd393bd4",
+      "isStatic": false
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/qs/panels/ui/compose/infinitegrid/TileKt$$ExternalSyntheticLambda8;->invoke()Ljava/lang/Object;",
+      "contains": [
+        ".method public final invoke()Ljava/lang/Object;",
+        "Lcom/android/systemui/plugins/qs/QSTile;->click(Lcom/android/systemui/animation/Expandable;)V"
+      ],
+      "sha256": "b800ae707afcf2df2227ca94d74c4d32dbda3e33b867a43d288f983f7ae892a6",
+      "isStatic": false
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/qs/panels/ui/compose/infinitegrid/TileKt$$ExternalSyntheticLambda9;->invoke()Ljava/lang/Object;",
+      "contains": [
+        ".method public final invoke()Ljava/lang/Object;",
+        "Lcom/android/systemui/plugins/qs/QSTile;->click(Lcom/android/systemui/animation/Expandable;)V"
+      ],
+      "sha256": "99c981a4a418898dc331f58a235fad0bb3d15524728412a153675d1545453080",
+      "isStatic": false
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/qs/pipeline/domain/adapter/MiuiQSHostAdapter;->clickTile(Landroid/content/ComponentName;)V",
+      "contains": [
+        ".method public final clickTile(Landroid/content/ComponentName;)V",
+        "Lcom/android/systemui/plugins/qs/QSTile;->click(Lcom/android/systemui/animation/Expandable;)V"
+      ],
+      "sha256": "995f0a1ece362700f78dcbf450de8f3002840a8821fdcc696c836b10e1071d1a",
+      "isStatic": false
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/qs/tileimpl/MiuiQSTileBaseView$$ExternalSyntheticLambda0;->onClick(Landroid/view/View;)V",
+      "contains": [
+        ".method public final onClick(Landroid/view/View;)V",
+        "Lcom/android/systemui/plugins/qs/QSTile;->click(Lcom/android/systemui/animation/Expandable;)V"
+      ],
+      "sha256": "2b57c299468fc11d425a7200fe9a26151afa7672298193c5c06bab5559ebf460",
+      "isStatic": false
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/qs/tiles/MiuiCellularTile;->$r8$lambda$6TkkrUugCzSHNexsoGhUWms89ro(Lcom/android/systemui/qs/tiles/MiuiCellularTile;)V",
+      "contains": [
+        ".method public static synthetic $r8$lambda$6TkkrUugCzSHNexsoGhUWms89ro(Lcom/android/systemui/qs/tiles/MiuiCellularTile;)V",
+        "Lcom/android/systemui/qs/tileimpl/QSTileImpl;->click(Lcom/android/systemui/animation/Expandable;)V"
+      ],
+      "sha256": "af84a29baebc1ad9ec7b2c861e340a98dd6d166bf65f3ed6e8288335750259d2",
+      "isStatic": true
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/qs/tiles/MiuiCellularTile;->click(Lcom/android/systemui/animation/Expandable;)V",
+      "contains": [
+        ".method public final click(Lcom/android/systemui/animation/Expandable;)V",
+        "Lcom/android/systemui/qs/pipeline/domain/adapter/MiuiQSHostAdapter;->collapsePanels()V",
+        "Lcom/android/systemui/qs/tileimpl/QSTileImpl;->click(Lcom/android/systemui/animation/Expandable;)V"
+      ],
+      "sha256": "4bb704a0f8574fce6c92e6de6ccd941013acd9d80f8f12126dabe44ae896b359",
+      "isStatic": false
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/qs/tileimpl/QSTileImpl;->mContext:Landroid/content/Context;",
+      "contains": [
+        ".field public final mContext:Landroid/content/Context;"
+      ],
+      "sha256": "3321f4cf884287c431cd5da51d4650e00e196c083f03e59999c51797fc47b74f",
+      "isStatic": false
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/qs/tileimpl/QSTileImpl;->mHost:Lcom/android/systemui/qs/QSHost;",
+      "contains": [
+        ".field public final mHost:Lcom/android/systemui/qs/QSHost;"
+      ],
+      "sha256": "3bacf725022e91b5b369a56971f9442d896ae7a1c8fca219818bc348875b3f4e",
+      "isStatic": false
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/qs/tileimpl/QSTileImpl;->mState:Lcom/android/systemui/plugins/qs/QSTile$State;",
+      "contains": [
+        ".field public mState:Lcom/android/systemui/plugins/qs/QSTile$State;"
+      ],
+      "sha256": "5a63d09dfff0f49e2df3795a26e163f55b6d980a6ce679d1eec3eaaa8233eec4",
+      "isStatic": false
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/qs/tileimpl/QSTileImpl;->mTileSpec:Ljava/lang/String;",
+      "contains": [
+        ".field public mTileSpec:Ljava/lang/String;"
+      ],
+      "sha256": "76d3ab1d6aea8cc82d8c169d18ab68bd3a0fe58e7461da752268a260bd919f9b",
+      "isStatic": false
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/qs/tileimpl/QSTileImpl;->mShowingDetail:Z",
+      "contains": [
+        ".field public mShowingDetail:Z"
+      ],
+      "sha256": "2864c363999009478270f13a9ef9471c2e5d0bc65f4da489a5e6d65f9916c054",
+      "isStatic": false
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/qs/tileimpl/QSTileImpl;->mStatusBarStateController:Lcom/android/systemui/plugins/statusbar/StatusBarStateController;",
+      "contains": [
+        ".field public final mStatusBarStateController:Lcom/android/systemui/plugins/statusbar/StatusBarStateController;"
+      ],
+      "sha256": "c2d9dab958ed515e5af74e75664dab3a71be298da4abb8b7cefa0471adab00e0",
+      "isStatic": false
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/plugins/qs/QSTile$State;->state:I",
+      "contains": [
+        ".field public state:I"
+      ],
+      "sha256": "a403a68ec91e5844e86c95929546ce6cb40dcc35deb98c72a59130f68e17a654",
+      "isStatic": false
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/plugins/qs/QSTile$State;->disabledByPolicy:Z",
+      "contains": [
+        ".field public disabledByPolicy:Z"
+      ],
+      "sha256": "a8fd83577e185782121469ee51ca5eabda9b0169881e27c52a5a8c106b14db94",
+      "isStatic": false
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/plugins/qs/QSTile$State;->isTransient:Z",
+      "contains": [
+        ".field public isTransient:Z"
+      ],
+      "sha256": "9e0c5deea0d42a8a5ac4b54a4f6724c928bc15283f5dce62ab947f3679c71f0b",
+      "isStatic": false
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/qs/tileimpl/QSTileImpl$H;->handleMessage(Landroid/os/Message;)V",
+      "contains": [
+        ".method public final handleMessage(Landroid/os/Message;)V",
+        "Lcom/android/systemui/plugins/qs/QSTile$State;->disabledByPolicy:Z",
+        "Lcom/android/systemui/plugins/ActivityStarter;->postStartActivityDismissingKeyguard(Landroid/content/Intent;I)V",
+        "Lcom/android/systemui/qs/tileimpl/QSTileImpl;->mShowingDetail:Z"
+      ],
+      "sha256": "bd4e4ca9ca105d8a4e3bf0b1ef03f93aef8601b87873444c49745b615286c101",
+      "isStatic": false
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/shade/ShadeExpansionInteractor;->collapsePanels()V",
+      "contains": [
+        ".method public final collapsePanels()V",
+        "Lcom/android/systemui/shade/ShadeExpansionInteractor$collapsePanels$1;-><init>(Lcom/android/systemui/shade/ShadeExpansionInteractor;Lkotlin/coroutines/Continuation;)V",
+        "Lkotlinx/coroutines/BuildersKt;->launch$default(Lkotlinx/coroutines/CoroutineScope;Lkotlin/coroutines/CoroutineContext;Lkotlinx/coroutines/CoroutineStart;Lkotlin/jvm/functions/Function2;I)Lkotlinx/coroutines/Job;"
+      ],
+      "sha256": "6e2be338538f259ca6cb70b9dad87e3ddc4d4169254be4affd212f06d8409bcc",
+      "isStatic": false
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/shade/ShadeExpansionInteractor$collapsePanels$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;",
+      "contains": [
+        ".method public final invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;",
+        "Lcom/android/systemui/shade/ShadeExpansionInteractor$collapsePanels$1;->label:I",
+        "Lcom/android/systemui/shade/ShadeExpansionInteractor$collapsePanels$1;->this$0:Lcom/android/systemui/shade/ShadeExpansionInteractor;"
+      ],
+      "sha256": "c574ca9713cf8ade92f8807df5edc1891e1e6362626b5a2ab80898e269a67d17",
+      "isStatic": false
+    }
+  ],
+  "callerReferences": [
+    {
+      "target": "dex_method:Lcom/android/systemui/qs/tileimpl/QSTileImpl;->click(Lcom/android/systemui/animation/Expandable;)V",
+      "resolution": "dispatch",
+      "complete": true,
+      "sources": [
+        "dex_method:Lcom/android/systemui/plugins/qs/QSTile;->click()V",
+        "dex_method:Lcom/android/systemui/qs/MiuiQSFragment;->clickTile(Landroid/content/ComponentName;)V",
+        "dex_method:Lcom/android/systemui/qs/panels/ui/compose/infinitegrid/TileKt$$ExternalSyntheticLambda8;->invoke()Ljava/lang/Object;",
+        "dex_method:Lcom/android/systemui/qs/panels/ui/compose/infinitegrid/TileKt$$ExternalSyntheticLambda9;->invoke()Ljava/lang/Object;",
+        "dex_method:Lcom/android/systemui/qs/pipeline/domain/adapter/MiuiQSHostAdapter;->clickTile(Landroid/content/ComponentName;)V",
+        "dex_method:Lcom/android/systemui/qs/tileimpl/MiuiQSTileBaseView$$ExternalSyntheticLambda0;->onClick(Landroid/view/View;)V",
+        "dex_method:Lcom/android/systemui/qs/tiles/MiuiCellularTile;->$r8$lambda$6TkkrUugCzSHNexsoGhUWms89ro(Lcom/android/systemui/qs/tiles/MiuiCellularTile;)V",
+        "dex_method:Lcom/android/systemui/qs/tiles/MiuiCellularTile;->click(Lcom/android/systemui/animation/Expandable;)V"
+      ]
+    }
+  ],
+  "pluginCoverageNote": "Plugin workspace had no references for base-class dispatch or exact QSTile interface click(Expandable); absence is not proof of runtime absence. Plugin coverage remains unconfirmed."
+}

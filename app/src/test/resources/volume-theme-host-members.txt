@@ -1,0 +1,9 @@
+instance Lmiui/systemui/util/ThemeUtils;->getDefaultPluginTheme()Z
+instance Lcom/android/systemui/miui/volume/MiuiRingerModeLayout$RingerButtonHelper;->isSuperBlurSupported()Z
+static Lcom/android/systemui/miui/volume/VolumeColumnRes;->getSliderBackgroundResId(Landroid/view/View;ZZ)I
+instance Lcom/android/systemui/miui/volume/MiuiVolumeDialogMotion;->updateExpandBgState()V
+instance Lcom/android/systemui/miui/volume/MiuiRingerModeLayout$RingerButtonHelper;->updateStateWithDefaultMaterial()V
+instance Lcom/android/systemui/miui/volume/VolumeColumn;->setSliderResource(Z)V
+instance Lcom/android/systemui/miui/volume/MiuiVolumeDialogMotion;->updateStateToExpand(Z)V
+instance Lcom/android/systemui/miui/volume/MiuiRingerModeLayout$RingerButtonHelper;->this$0:Lcom/android/systemui/miui/volume/MiuiRingerModeLayout;
+instance Lcom/android/systemui/miui/volume/MiuiVolumeDialogMotion;->mContext:Landroid/content/Context;

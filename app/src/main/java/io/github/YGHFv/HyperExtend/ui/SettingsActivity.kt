@@ -178,6 +178,7 @@ class SettingsActivity : ComponentActivity() {
     }
 
     override fun onUserLeaveHint() {
+        super.onUserLeaveHint()
         if (UiPrefs.hideRecentTask(this)) setTaskExcludedFromRecents(true)
     }
 
@@ -189,7 +190,12 @@ class SettingsActivity : ComponentActivity() {
     private fun setTaskExcludedFromRecents(excluded: Boolean) {
         runCatching {
             getSystemService(android.app.ActivityManager::class.java)?.appTasks
-                ?.firstOrNull { it.taskInfo?.taskId == taskId }
+                ?.firstOrNull {
+                    val info = it.taskInfo
+                    @Suppress("DEPRECATION")
+                    val id = if (Build.VERSION.SDK_INT >= 29) info?.taskId else info?.id
+                    id == taskId
+                }
                 ?.setExcludeFromRecents(excluded)
         }
     }

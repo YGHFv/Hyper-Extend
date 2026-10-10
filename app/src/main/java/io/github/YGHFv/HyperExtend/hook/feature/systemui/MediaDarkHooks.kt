@@ -5,6 +5,8 @@
  */
 package io.github.YGHFv.HyperExtend.hook.feature.systemui
 
+import io.github.YGHFv.HyperExtend.core.compatibleVersionCode
+
 import android.annotation.TargetApi
 import android.content.Context
 import android.content.res.Configuration
@@ -325,7 +327,7 @@ internal class MediaDarkHooks private constructor(loader: ClassLoader, settings:
 
     private fun supported(source: Context): Boolean {
         if (!ready || nested.get() == true || Looper.myLooper() != Looper.getMainLooper()) return false
-        val version = hostVersion ?: source.packageManager.getPackageInfo("com.android.systemui", 0).longVersionCode.also { hostVersion = it }
+        val version = hostVersion ?: source.packageManager.getPackageInfo("com.android.systemui", 0).compatibleVersionCode.also { hostVersion = it }
         return MediaDarkPolicy.enabled(version, true, false, SafeModeRuntime.blocked)
     }
 

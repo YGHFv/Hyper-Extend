@@ -8,6 +8,45 @@ import org.junit.Assert.*
 import org.junit.Test
 
 class SystemUiFeaturesTest {
+    @Test fun sliderValuesAreSeparateOptInCodeOnlyMigrations() {
+        for (id in listOf("control_center_brightness_value", "control_center_volume_value")) {
+            val feature = featureById(id)!!
+            assertFalse(feature.defaultEnabled)
+            assertEquals(FeaturePanel.NEW_CONTROL_CENTER, feature.panel)
+            assertTrue(feature.requirement!!.contains("待真机验收"))
+            assertTrue(feature.requirement.contains("部分迁移"))
+        }
+    }
+    @Test fun volumeHoldIsAnOptInPartialMigrationWithNativeAccessibility() {
+        val feature = featureById("volume_long_press_expand")!!
+        assertFalse(feature.defaultEnabled); assertFalse(feature.hasDetailPage)
+        assertEquals(FeaturePanel.VOLUME, feature.panel)
+        assertTrue(feature.requirement!!.contains("有界部分迁移"))
+        assertTrue(feature.requirement.contains("保留原生展开按钮"))
+        assertTrue(feature.requirement.contains("触摸探索"))
+    }
+
+    @Test fun dimTileIconDoesNotAddTilesOrChangeBrightness() {
+        val feature = featureById("control_center_dim_tile_icon")!!
+        assertFalse(feature.defaultEnabled)
+        assertFalse(feature.hasDetailPage)
+        assertEquals(FeaturePanel.TILES, feature.panel)
+        assertTrue(feature.requirement!!.contains("不主动添加磁贴或开启降低亮度"))
+        assertTrue(feature.requirement.contains("随原生状态刷新恢复"))
+        assertTrue(feature.requirement.contains("无障碍语义"))
+    }
+
+    @Test fun stockTilesAreOptInCandidatesNotAutomaticLayoutChanges() {
+        val feature = featureById("control_center_fix_tiles_list")!!
+        assertFalse(feature.defaultEnabled)
+        assertFalse(feature.hasDetailPage)
+        assertEquals(FeaturePanel.TILES, feature.panel)
+        assertEquals(ScopeFeatureGroup.CONTROL_CENTER, feature.group)
+        assertTrue(feature.requirement!!.contains("需手动添加"))
+        assertTrue(feature.requirement.contains("不修改已保存布局和备份恢复"))
+        assertTrue(feature.requirement.contains("关闭后不移除"))
+    }
+
     @Test fun autoFoldSwitchAlsoDocumentsMenuRemovalAndRecovery() {
         val feature = featureById("notification_disable_auto_fold")!!
         assertFalse(feature.defaultEnabled)
@@ -18,7 +57,7 @@ class SystemUiFeaturesTest {
     }
 
     @Test fun newFeaturesAreOptInAndRemainInSystemUi() {
-        assertEquals(38, SYSTEM_UI_FEATURES.size)
+        assertEquals(48, SYSTEM_UI_FEATURES.size)
         SYSTEM_UI_FEATURES.forEach { feature ->
             assertFalse(feature.defaultEnabled)
             assertEquals(if (feature.id in setOf("control_center_unlock_old", "notification_importance")) listOf("systemui", "settings")
@@ -55,7 +94,7 @@ class SystemUiFeaturesTest {
             setOf("lockscreen_show_notifications", "lockscreen_keep_notifications", "lockscreen_hide_status_bar",
                 "lockscreen_hide_ble_toast", "lockscreen_scramble_pin", "lockscreen_double_tap", "lockscreen_hide_zen",
                 "lockscreen_hide_hint", "lockscreen_third_party_biometrics", "lockscreen_charging_info",
-                "lockscreen_hide_left_shortcut", "lockscreen_hide_right_shortcut", "lockscreen_left_flashlight"),
+                "lockscreen_hide_left_shortcut", "lockscreen_hide_right_shortcut", "lockscreen_left_flashlight", "lockscreen_wallpaper_transition"),
             SYSTEM_UI_FEATURES.filter { it.group == ScopeFeatureGroup.LOCK_SCREEN }.map { it.id }.toSet(),
         )
     }

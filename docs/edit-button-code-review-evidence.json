@@ -1,0 +1,30 @@
+{
+  "host": {
+    "packageName": "miui.systemui.plugin",
+    "versionCode": 183022200
+  },
+  "verification": "Code-only repair review; no build/test execution or runtime acceptance.",
+  "evidence": [
+    {
+      "locator": "dex_method:Lmiui/systemui/controlcenter/panel/main/qs/EditButtonController;->available(Z)Z",
+      "contains": [
+        "available(Z)Z"
+      ],
+      "sha256": "21ed6c70d5f4e03514836fb44b4579494cb7c2ca4b3e1a2c13258c3e3e1c4ea8"
+    },
+    {
+      "locator": "dex_method:Lmiui/systemui/controlcenter/panel/main/MainPanelContentDistributor;->distributePanels(Z)V",
+      "contains": [
+        "distributePanels(Z)V"
+      ],
+      "sha256": "ee21be784ddf80c2a0cb275ecdaa162c1d5554f094ca2e23e499531e5e111307"
+    },
+    {
+      "locator": "dex_method:Lmiui/systemui/util/ViewController;->getContext()Landroid/content/Context;",
+      "contains": [
+        "getContext()Landroid/content/Context;"
+      ],
+      "sha256": "499e92dc5f60d8e386ed558a8015efe0723894355707e0fce9bf9289648acfa8"
+    }
+  ]
+}

@@ -1,0 +1,188 @@
+{
+  "host": {
+    "packageName": "com.android.systemui",
+    "versionName": "17.03.260226.r",
+    "versionCode": 202602260
+  },
+  "verification": "Read-only current host methods/fields. Icon-only migration; no deployment or runtime acceptance.",
+  "evidence": [
+    {
+      "locator": "dex_method:Lcom/android/systemui/qs/tiles/ReduceBrightColorsTile;->handleUpdateState(Lcom/android/systemui/plugins/qs/QSTile$State;Ljava/lang/Object;)V",
+      "contains": [
+        "\"reduce_bright_colors_activated\"",
+        "->value:Z",
+        "->contentDescription:",
+        "->maybeLoadResourceIcon(I)",
+        "->icon:"
+      ],
+      "sha256": "bee0d2fdd9dfd56b4c54e7eb86192eea96ca8cbb480a807bfdf261803c055e34"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/qs/tileimpl/QSTileImpl;->handleRefreshState(Ljava/lang/Object;)V",
+      "contains": [
+        "->handleUpdateState(",
+        "->copyTo(",
+        "->onStateChanged("
+      ],
+      "sha256": "732d3ae4777eb616f5e7c45ba329bb09181c2fae90d78c256297ea1f9674a002"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/qs/tileimpl/QSTileImpl;->handleUserSwitch(I)V",
+      "contains": [
+        "->handleRefreshState("
+      ],
+      "sha256": "e8b5d1585b13400eca83e9f017888db667b8f36aebfcd4bd861c0e12774eacd5"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/qs/tileimpl/QSTileImpl$H;->handleMessage(Landroid/os/Message;)V",
+      "contains": [
+        "->handleRefreshState("
+      ],
+      "sha256": "bd4e4ca9ca105d8a4e3bf0b1ef03f93aef8601b87873444c49745b615286c101"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/qs/tileimpl/QSTileImpl$DrawableIcon;-><init>(Landroid/graphics/drawable/Drawable;)V",
+      "contains": [
+        "->getConstantState()",
+        "->newDrawable()",
+        "->mInvisibleDrawable:"
+      ],
+      "sha256": "cef44b5ebd3f545d22281f67467ae69d27db37c8575f36d94bf1044eca446815"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/qs/tileimpl/QSTileImpl$DrawableIcon;->equals(Ljava/lang/Object;)Z",
+      "contains": [
+        "->mDrawable:",
+        "if-ne p1, p0"
+      ],
+      "sha256": "16f1ceb1f89f8fb6faf287b41053885f2bac5a848c2314acdd6f561e258fabbc"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/qs/tileimpl/QSTileImpl$DrawableIcon;->getDrawable(Landroid/content/Context;)Landroid/graphics/drawable/Drawable;",
+      "contains": [
+        "->mDrawable:"
+      ],
+      "sha256": "698a399937a31476c363d3ce124001e4504d82cda815f9491024a73925d254c1"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/qs/tileimpl/QSTileImpl$DrawableIcon;->getInvisibleDrawable(Landroid/content/Context;)Landroid/graphics/drawable/Drawable;",
+      "contains": [
+        "->mInvisibleDrawable:"
+      ],
+      "sha256": "935dc48c5aea794dea0a3b7e4cdbf9ef32d9e845826c0595165b98e61055c4e2"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/qs/tileimpl/QSTileImpl$DrawableIconWithRes;->equals(Ljava/lang/Object;)Z",
+      "contains": [
+        "instance-of",
+        "->mId:I"
+      ],
+      "sha256": "e610ea0fd029e722a077d916a570745bdb5ecb9db8666a900945a6e15e1b3bf3"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/plugins/qs/QSTile$State;->copyTo(Lcom/android/systemui/plugins/qs/QSTile$State;)Z",
+      "contains": [
+        "->icon:",
+        "Ljava/util/Objects;->equals(",
+        "->iconSupplier:"
+      ],
+      "sha256": "b5f6519fe77964d97bd2d84d233958967975f80a477fa96f83b2c7b7e7aaab7f"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/qs/tileimpl/QSTileImpl;->maybeLoadResourceIcon(I)Lcom/android/systemui/qs/tileimpl/QSTileImpl$DrawableIconWithRes;",
+      "contains": [
+        "->getQSIcons(",
+        "->getDrawable(I)",
+        "-><init>(ILandroid/graphics/drawable/Drawable;)V"
+      ],
+      "sha256": "127959d79f4476fcdcea006a36b1be86d802d8969679ce1f77daffff7af4cad9"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/qs/tiles/ReduceBrightColorsTile;->handleClick(Lcom/android/systemui/animation/Expandable;)V",
+      "contains": [
+        "->mInUpgradeMode:Z",
+        "->dismissKeyguardIfNeededAndShowDialog(",
+        "->setReduceBrightColorsActivated(Z)Z"
+      ],
+      "sha256": "49e72d581c39af466e9e2bf363e87569847b47530d3a543a8cadb696e0e92dfd"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/qs/tiles/ReduceBrightColorsTile;->handleLongClick(Lcom/android/systemui/animation/Expandable;)V",
+      "contains": [
+        "->mInUpgradeMode:Z",
+        "->dismissKeyguardIfNeededAndShowDialog(",
+        "invoke-super"
+      ],
+      "sha256": "4ffe2a3da207525bc4abec95e539cef9239fbca9875fdd8c1d8de5bc13d0e1d9"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/qs/tiles/ReduceBrightColorsTile;->isAvailable()Z",
+      "contains": [
+        "->mIsAvailable:Z"
+      ],
+      "sha256": "2e84e3a9eae223ee0b85697153b3b853a6dbcbed8fe8bf53641a513fb585289e"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/qs/tiles/ReduceBrightColorsTile;->getLongClickIntent()Landroid/content/Intent;",
+      "contains": [
+        "android.settings.DISPLAY_SETTINGS",
+        "android.settings.REDUCE_BRIGHT_COLORS_SETTINGS"
+      ],
+      "sha256": "83a605d17f6a5c4063a4697b1d726513049d3ba37246ada47d5208a6fb18e135"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/qs/tileimpl/MiuiQSIconViewImpl;->updateIcon(Landroid/widget/ImageView;Lcom/android/systemui/plugins/qs/QSTile$State;ZZ)V",
+      "contains": [
+        "->iconSupplier:",
+        "->getDrawable(Landroid/content/Context;)",
+        "->setTint(I)V",
+        "Ljava/util/Objects;->equals("
+      ],
+      "sha256": "0bc40c36d058c6334e2093e32e1c87f3e4df09a22358bb8f27bf63a68f1e48af"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/qs/panels/ui/viewmodel/TileUiStateKt;->toIconProvider(Lcom/android/systemui/plugins/qs/QSTile$State;)Lcom/android/systemui/qs/panels/ui/viewmodel/IconProvider;",
+      "contains": [
+        "DrawableIconWithRes;",
+        "->icon:",
+        "->newDrawable()"
+      ],
+      "sha256": "a10cb319dd240505686caa49766a279c41049b6229788bd4ec83401323594db8"
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/qs/tileimpl/QSTileImpl;->mContext:Landroid/content/Context;",
+      "contains": [
+        "mContext:Landroid/content/Context;"
+      ],
+      "sha256": "3321f4cf884287c431cd5da51d4650e00e196c083f03e59999c51797fc47b74f"
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/qs/tileimpl/QSTileImpl;->mTileSpec:Ljava/lang/String;",
+      "contains": [
+        "mTileSpec:Ljava/lang/String;"
+      ],
+      "sha256": "76d3ab1d6aea8cc82d8c169d18ab68bd3a0fe58e7461da752268a260bd919f9b"
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/plugins/qs/QSTile$State;->icon:Lcom/android/systemui/plugins/qs/QSTile$Icon;",
+      "contains": [
+        "icon:Lcom/android/systemui/plugins/qs/QSTile$Icon;"
+      ],
+      "sha256": "9bc92df09b7b09f671ec28e7a5fab685c5806d1d9ba8b2d7a647574e878fde75"
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/plugins/qs/QSTile$State;->iconSupplier:Ljava/util/function/Supplier;",
+      "contains": [
+        "iconSupplier:Ljava/util/function/Supplier;"
+      ],
+      "sha256": "6a09618a39b13bddf848667b81eabb86d77b5bebdfb0f6e2919fa7394a2d4e02"
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/plugins/qs/QSTile$State;->state:I",
+      "contains": [
+        "state:I"
+      ],
+      "sha256": "a403a68ec91e5844e86c95929546ce6cb40dcc35deb98c72a59130f68e17a654"
+    }
+  ]
+}

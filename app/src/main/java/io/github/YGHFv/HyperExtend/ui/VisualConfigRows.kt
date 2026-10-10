@@ -135,7 +135,7 @@ private fun AppSelectionDialog(value: String, onDismiss: () -> Unit, onCommit: (
 @Composable
 internal fun ColorSelectionRow(row: HyperColor, value: String, onCommit: (String) -> Unit) {
     var open by rememberSaveable { mutableStateOf(false) }
-    val color = SystemUiCustomSettings.color(value)
+    val color = SystemUiCustomSettings.color(value, row.allowAlpha)
     Row(verticalAlignment = Alignment.CenterVertically) {
         Box(Modifier.weight(1f)) { CardActionRow("${row.title} · ${if (color == null) "跟随系统" else "已自定义"}") { open = true } }
         if (color != null) Box(Modifier.padding(end = 20.dp).size(28.dp).clip(CircleShape).background(Color(color)))
@@ -146,16 +146,19 @@ internal fun ColorSelectionRow(row: HyperColor, value: String, onCommit: (String
     var hue by rememberSaveable(value) { mutableFloatStateOf(initial[0]) }
     var saturation by rememberSaveable(value) { mutableFloatStateOf(initial[1]) }
     var brightness by rememberSaveable(value) { mutableFloatStateOf(initial[2]) }
-    fun update() { draft = SystemUiCustomSettings.colorText(android.graphics.Color.HSVToColor(floatArrayOf(hue, saturation, brightness))) }
-    PickerDialog("选择主题色", { open = false }) {
+    var opacity by rememberSaveable(value) { mutableFloatStateOf(color?.let { android.graphics.Color.alpha(it) / 255f } ?: 1f) }
+    fun update() { draft = SystemUiCustomSettings.colorText(android.graphics.Color.HSVToColor(
+        if (row.allowAlpha) (opacity * 255f).toInt().coerceIn(0, 255) else 255,
+        floatArrayOf(hue, saturation, brightness)), row.allowAlpha) }
+    PickerDialog(if (row.allowAlpha) row.title else "选择主题色", { open = false }) {
         LazyColumn(Modifier.weight(1f).fillMaxWidth()) {
             item {
-                val preview = SystemUiCustomSettings.color(draft)
+                val preview = SystemUiCustomSettings.color(draft, row.allowAlpha)
                 Box(Modifier.padding(16.dp).fillMaxWidth().height(90.dp).clip(RoundedCornerShape(18.dp))
                     .background(preview?.let { Color(it) } ?: MiuixTheme.colorScheme.secondaryContainer), contentAlignment = Alignment.Center) {
                     val light = preview != null && (android.graphics.Color.red(preview) * 299 +
                         android.graphics.Color.green(preview) * 587 + android.graphics.Color.blue(preview) * 114) > 150000
-                    Text(if (preview == null) "跟随系统" else "主题种子色预览", color = if (preview == null) MiuixTheme.colorScheme.onSurface else if (light) Color.Black else Color.White)
+                    Text(if (preview == null) "跟随系统" else if (row.allowAlpha) "颜色预览" else "主题种子色预览", color = if (preview == null) MiuixTheme.colorScheme.onSurface else if (light) Color.Black else Color.White)
                 }
                 listOf("#4285F4", "#009688", "#43A047", "#F9AB00", "#F4511E", "#D81B60", "#795548", "#607D8B")
                     .chunked(4).forEach { colors ->
@@ -170,6 +173,7 @@ internal fun ColorSelectionRow(row: HyperColor, value: String, onCommit: (String
                                         val hsv = FloatArray(3)
                                         android.graphics.Color.colorToHSV(SystemUiCustomSettings.color(swatch)!!, hsv)
                                         hue = hsv[0]; saturation = hsv[1]; brightness = hsv[2]
+                                        if (row.allowAlpha) update()
                                     })
                             }
                         }
@@ -177,7 +181,9 @@ internal fun ColorSelectionRow(row: HyperColor, value: String, onCommit: (String
                 ColorSlider("色相", hue, 0f..360f) { hue = it; update() }
                 ColorSlider("饱和度", saturation, 0f..1f) { saturation = it; update() }
                 ColorSlider("明亮度", brightness, 0f..1f) { brightness = it; update() }
-                HintText("预览仅展示种子色，实际系统主题会按深浅模式生成。保存后重启系统界面生效。")
+                if (row.allowAlpha) ColorSlider("不透明度", opacity, 0f..1f) { opacity = it; update() }
+                HintText(if (row.allowAlpha) "实际颜色按系统背景判定混合；透明颜色可能不可见。保存后重启系统界面生效。"
+                    else "预览仅展示种子色，实际系统主题会按深浅模式生成。保存后重启系统界面生效。")
                 CardActionRow("恢复跟随系统") { draft = "" }
             }
         }

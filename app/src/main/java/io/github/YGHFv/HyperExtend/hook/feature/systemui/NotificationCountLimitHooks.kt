@@ -6,6 +6,8 @@
  */
 package io.github.YGHFv.HyperExtend.hook.feature.systemui
 
+import io.github.YGHFv.HyperExtend.core.compatibleVersionCode
+
 import android.content.Context
 import io.github.YGHFv.HyperExtend.core.ModuleLog
 import io.github.YGHFv.HyperExtend.hook.HookRuntime
@@ -29,7 +31,7 @@ internal object NotificationCountLimitHooks {
         return if (HookRuntime.hook(callback, "$FEATURE/onViewBound") { chain ->
                 val supported = verified ?: run {
                     val ctx = context.get(owner.get(chain.thisObject)) as? Context
-                    val version = ctx?.let { runCatching { it.packageManager.getPackageInfo("com.android.systemui", 0).longVersionCode }.getOrNull() }
+                    val version = ctx?.let { runCatching { it.packageManager.getPackageInfo("com.android.systemui", 0).compatibleVersionCode }.getOrNull() }
                     (version == 202602260L).also {
                         if (version != null) verified = it
                         if (!it) ModuleLog.warn("$FEATURE: unverified host; keeping count limit")

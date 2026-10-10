@@ -7,6 +7,8 @@
  */
 package io.github.YGHFv.HyperExtend.hook.feature.volume
 
+import io.github.YGHFv.HyperExtend.core.compatibleVersionCode
+
 import android.app.Activity
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -138,7 +140,7 @@ internal object AppVolumeEntryHooks {
     private fun entry(dialog: ViewGroup, panel: SystemUiAppVolumePanel, flip: Method, wideFold: Boolean,
         position: AppVolumeButtonPosition): Entry? {
         if (!panel.available()) return null
-        if (dialog.context.packageManager.getPackageInfo(PLUGIN, 0).longVersionCode != 183022200L) return null
+        if (dialog.context.packageManager.getPackageInfo(PLUGIN, 0).compatibleVersionCode != 183022200L) return null
         states[dialog]?.get()?.let { return it }
         if (dialog.findViewWithTag<View>(TAG) != null) return null
         if (conflicts.any { dialog.findViewWithTag<View>(it) != null }) return null
