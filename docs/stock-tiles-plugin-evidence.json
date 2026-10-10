@@ -1,0 +1,114 @@
+{
+  "host": {
+    "packageName": "miui.systemui.plugin",
+    "versionName": "18.3.2.22.0",
+    "versionCode": 183022200
+  },
+  "verification": "Live read-only exact signatures and caller bodies; editor-only additive candidates. No deployment or device acceptance.",
+  "evidence": [
+    {
+      "locator": "dex_method:Lmiui/systemui/controlcenter/qs/customize/TileQueryHelper;->getTilesStock()Ljava/lang/String;",
+      "contains": [
+        "->getStockTilesCompat(",
+        "->staticStockTiles:"
+      ],
+      "sha256": "fd039dd6ae5d0e651a4f96f6a7b5f2e2643767f5d4e9e8622505f8b133c756a4"
+    },
+    {
+      "locator": "dex_method:Lmiui/systemui/controlcenter/qs/customize/TileQueryHelper;->addStockTiles(Lcom/android/systemui/plugins/miui/qs/MiuiQSHost;)V",
+      "contains": [
+        "->getTilesStock()Ljava/lang/String;",
+        "->getQsListExcludeTileSpecs()",
+        "->isAvailable()Z",
+        "->destroy()V",
+        "->liveTiles:"
+      ],
+      "sha256": "ebffddeb2ff4582edcf83f0eab34b8c6dd3533601187014e612f84f5f76de9b5"
+    },
+    {
+      "locator": "dex_method:Lmiui/systemui/controlcenter/qs/customize/TileQueryHelper;->queryTiles$lambda$2(Lmiui/systemui/controlcenter/qs/customize/TileQueryHelper;Lcom/android/systemui/plugins/miui/qs/MiuiQSHost;)V",
+      "contains": [
+        "->addStockTiles(",
+        "->addPackageTiles(",
+        "->stopObserveStockTiles()",
+        "->startObserveStockTiles()"
+      ],
+      "sha256": "c53834efd745f511d1a589bc25ec6c24f887e6543d9600327ae04713e9aa5d46"
+    },
+    {
+      "locator": "dex_method:Lmiui/systemui/controlcenter/qs/customize/TileQueryHelper;->b(Lmiui/systemui/controlcenter/qs/customize/TileQueryHelper;Lcom/android/systemui/plugins/miui/qs/MiuiQSHost;)V",
+      "contains": [
+        "->queryTiles$lambda$2("
+      ],
+      "sha256": "3420ee9f71f042ab7124a67ab647d28734651c03bfc76eb0df2cccf3ada05b62"
+    },
+    {
+      "locator": "dex_method:Landroidx/constraintlayout/motion/widget/a;->run()V",
+      "contains": [
+        "TileQueryHelper;->b("
+      ],
+      "sha256": "02e2eeee317ad651f4ae259d394f9388cf80e2b5f0391a7a19a62281c8cbee23"
+    },
+    {
+      "locator": "dex_field:Lmiui/systemui/controlcenter/qs/customize/TileQueryHelper;->context:Landroid/content/Context;",
+      "contains": [
+        ".field private final context:"
+      ],
+      "sha256": "5f3f4dcf132a9960b2ab6bb1b73b49de5e2d0b4505ff7622ab85e12116bf42b7"
+    },
+    {
+      "locator": "dex_method:Lmiui/systemui/controlcenter/qs/customize/TileQueryHelper;->addPackageTiles(Lcom/android/systemui/plugins/miui/qs/MiuiQSHost;)V",
+      "contains": [
+        "->getTilesStock()",
+        "->isSystemTile(",
+        "->queryIntentServicesAsUser("
+      ],
+      "sha256": "5867f665da4c2e056c7e69aef41e37f1a6aa7c806e6b0495b7d52be598f67d0c"
+    },
+    {
+      "locator": "dex_method:Lmiui/systemui/controlcenter/qs/customize/TileQueryHelper;->getMiShareMigrated()Z",
+      "contains": [
+        "->getTilesStock()"
+      ],
+      "sha256": "a343b9c9b1ba807f990c2e629c915bd569fe8cb2f6e07a2c93f2750680730db6"
+    },
+    {
+      "locator": "dex_method:Lmiui/systemui/controlcenter/qs/customize/TileQueryHelper;->queryTiles(Lcom/android/systemui/plugins/miui/qs/MiuiQSHost;)V",
+      "contains": [
+        "->execute(Ljava/lang/Runnable;)V"
+      ],
+      "sha256": "74883214d5b63612917b957ced9758fbd814ea0ec81608b4a2d8cea1a953310d"
+    },
+    {
+      "locator": "dex_method:Lmiui/systemui/controlcenter/qs/customize/TileQueryHelper;->saveSpecs(Lcom/android/systemui/plugins/miui/qs/MiuiQSHost;Ljava/util/List;Ljava/util/List;)V",
+      "contains": [
+        "->changeTiles(Ljava/util/List;Ljava/util/List;)V"
+      ],
+      "sha256": "f8f756a98e125ac0846d0fafba0a951c8f19e5160684b61ec3d96438c2a82f96"
+    },
+    {
+      "locator": "dex_method:Lmiui/systemui/controlcenter/qs/customize/TileQueryHelper;->stopObserveStockTiles()V",
+      "contains": [
+        "->removeCallbacksByType(I)V",
+        "->destroy()V",
+        "->clear()V"
+      ],
+      "sha256": "38520fd15119bbe9c8022e933c63ae7c1e3db4f39ba6e13129db07a5dd08fc27"
+    },
+    {
+      "locator": "dex_method:Lmiui/systemui/controlcenter/utils/MiuiQSHostCompat;->getStockTilesCompat(Lcom/android/systemui/plugins/miui/qs/MiuiQSHost;)Ljava/lang/String;",
+      "contains": [
+        "->invoke(Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object;"
+      ],
+      "sha256": "6827483cbbf1a2029465fe8410eed5c1a82feb408d23d5ad900cbb0c9ca4b002"
+    },
+    {
+      "locator": "dex_method:Lmiui/systemui/controlcenter/utils/MiuiQSHostCompat$GET_STOCK_TILES$2;->invoke()Ljava/lang/reflect/Method;",
+      "contains": [
+        "\"getStockTiles\"",
+        "->getMethod("
+      ],
+      "sha256": "b227976de76aa269ef18325d7e69aea85c592d549ab57cae35e45c68fbf2b04b"
+    }
+  ]
+}

@@ -20,6 +20,8 @@ package io.github.YGHFv.HyperExtend.hook.feature
 
 import android.app.WallpaperColors
 import android.app.WallpaperManager
+import android.os.Build
+import androidx.annotation.RequiresApi
 import io.github.YGHFv.HyperExtend.core.MONET_SCHEME_KEY
 import io.github.YGHFv.HyperExtend.core.ModuleLog
 import io.github.YGHFv.HyperExtend.hook.DexScan
@@ -56,6 +58,8 @@ internal object WallpaperMonetFix {
         if (scheme.isNotEmpty()) {
             installed += installSchemeVariantHook(loader, scheme)
         }
+
+        if (Build.VERSION.SDK_INT < 27) return installed
 
         val controller = Reflect.loadClass(loader, CONTROLLER_CLASS)
         if (controller == null) {
@@ -144,6 +148,7 @@ internal object WallpaperMonetFix {
      * 注意这里是**替换参数**（`chain.proceed(newArgs)`）而不是改 `before` 里的 args —
      * libxposed 的 Chain 是不变接口，参数只能通过 proceed 的重载交回去。
      */
+    @RequiresApi(27)
     private fun installReevaluateHook(controller: Class<*>, repair: WallpaperColorRepair): Int {
         val method = Reflect.findMethods(controller, "reevaluateSystemTheme")
             .firstOrNull { it.parameterCount == 1 && it.parameterTypes[0] == java.lang.Boolean.TYPE }
@@ -162,6 +167,7 @@ internal object WallpaperMonetFix {
     }
 
     /** 壁纸颜色监听器的 `onColorsChanged(WallpaperColors, int, int)`。 */
+    @RequiresApi(27)
     private fun installColorsChangedHook(
         loader: ClassLoader,
         controller: Class<*>,
@@ -204,6 +210,7 @@ internal object WallpaperMonetFix {
      *
      * 四条同时满足才能中选。这样即使编号变了、甚至被 R8 内联改名，也照样找得到。
      */
+    @RequiresApi(27)
     private fun findColorListenerClass(loader: ClassLoader, controller: Class<*>): Class<*>? {
         val candidates = DexScan.namesWithSimpleNamePrefix(
             HookRuntime.codePaths,

@@ -1,0 +1,38 @@
+{
+  "time": "2026-10-10T20:47:26.537413+08:00",
+  "tests": {
+    "tests": 523,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "release": "R8 build successful",
+  "apk": {
+    "path": "app/build/outputs/apk/release/app-release.apk",
+    "bytes": 2697298,
+    "sha256": "d14b168619fd2731089fdff22f5c6b99b57af170cf61faaf0c05d4b767c1cc30",
+    "versionName": "0.1.3",
+    "versionCode": 4
+  },
+  "log": "build/dim-tile-icon-build.log",
+  "liveSystemUiTargets": 22,
+  "livePluginConsumerTargets": 2,
+  "packagedVector": {
+    "resourceName": "drawable/ic_qs_extra_dim_hyperceiler",
+    "resourceId": "0x7f0800e6",
+    "file": "res/k81.xml",
+    "paths": 9
+  },
+  "inventory": {
+    "pending": 78,
+    "implemented_static_verified": 98,
+    "repaired_static_pending_device": 19,
+    "partially_implemented_static_verified": 8,
+    "covered_by_existing_feature_per_user": 1,
+    "already_supported_by_current_host": 1,
+    "needs_audit_existing_partial": 132
+  },
+  "installed": false,
+  "runtimeAcceptance": false,
+  "lint": "Release lintVital passed; full lint not rerun, previous 22 full-lint errors remain unresolved."
+}

@@ -1,0 +1,34 @@
+{
+  "time": "2026-10-10T21:13:16.971346+08:00",
+  "tests": {
+    "tests": 545,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "release": "R8 build successful",
+  "apk": {
+    "path": "app/build/outputs/apk/release/app-release.apk",
+    "bytes": 2713682,
+    "sha256": "fa5fbc4e22be8df9251d26372bdad3703904b3a56d2442bdaf23f8059b6572fd",
+    "versionName": "0.1.3",
+    "versionCode": 4
+  },
+  "log": "build/volume-long-press-build.log",
+  "liveSystemUiTargets": 3,
+  "livePluginTargets": 43,
+  "fixtureAndLiveHashesMatch": true,
+  "inventory": {
+    "pending": 77,
+    "implemented_static_verified": 98,
+    "repaired_static_pending_device": 19,
+    "partially_implemented_static_verified": 9,
+    "covered_by_existing_feature_per_user": 1,
+    "already_supported_by_current_host": 1,
+    "needs_audit_existing_partial": 132
+  },
+  "migrationStatus": "partially_implemented_static_verified",
+  "installed": false,
+  "runtimeAcceptance": false,
+  "lint": "Release lintVital passed; full lint not rerun, previous 22 full-lint errors remain unresolved."
+}

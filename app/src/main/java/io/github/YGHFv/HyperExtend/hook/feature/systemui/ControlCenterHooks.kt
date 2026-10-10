@@ -14,6 +14,7 @@ import android.service.notification.StatusBarNotification
 import io.github.YGHFv.HyperExtend.hook.HookRuntime
 import io.github.YGHFv.HyperExtend.hook.HookSettings
 import io.github.YGHFv.HyperExtend.hook.Reflect
+import io.github.YGHFv.HyperExtend.core.ClassicQsSettings
 
 internal object ControlCenterHooks {
     private val menuNotification = ThreadLocal<StatusBarNotification?>()
@@ -33,31 +34,15 @@ internal object ControlCenterHooks {
         }
     }
     fun install(loader: ClassLoader, settings: HookSettings): List<String> = buildList {
-        installSystemUiFeature(settings, "control_center_auto_collapse") { autoCollapse(loader) }
+        installSystemUiFeature(settings, ClassicQsSettings.FEATURE) { ClassicQsHooks.install(loader, settings) }
+        installSystemUiFeature(settings, DimTileIconPolicy.FEATURE) { DimTileIconHooks.install(loader, settings) }
+        installSystemUiFeature(settings, StockTilesPolicy.FEATURE) { StockTilesHooks.installClassic(loader, settings) }
+        installSystemUiFeature(settings, AutoCollapseHooks.FEATURE) { AutoCollapseHooks.install(loader, settings) }
         installSystemUiFeature(settings, "control_center_unlock_old") { unlockOld(loader) }
         // Both entries use one interceptor and preserve the host's menu dismissal/user ID.
         val channelFeature = if (settings.isOn("notification_channel_settings")) "notification_channel_settings"
             else NotificationImportanceHooks.FEATURE
         installSystemUiFeature(settings, channelFeature) { channelSettings(loader) }
-    }
-
-    private fun autoCollapse(loader: ClassLoader): Int {
-        val click = NotificationHooks.resolve(loader, SystemUiTargets.tileClick) ?: return 0
-        val collapse = NotificationHooks.resolve(loader, SystemUiTargets.collapsePanels) ?: return 0
-        val hostField = Reflect.findField(click.declaringClass, "mHost") ?: return 0
-        val stateField = Reflect.findField(click.declaringClass, "mState") ?: return 0
-        val tileSpec = Reflect.findField(click.declaringClass, "mTileSpec") ?: return 0
-        val stateValue = Reflect.findField(stateField.type, "state") ?: return 0
-        val restricted = Reflect.findField(stateField.type, "disabledByPolicy") ?: return 0
-        return if (HookRuntime.hookAfter(click, "control_center_auto_collapse/click") { chain, original ->
-                val state = stateField.get(chain.thisObject)
-                val host = hostField.get(chain.thisObject)
-                if (state != null && stateValue.getInt(state) != 0 && !restricted.getBoolean(state) &&
-                    tileSpec.get(chain.thisObject) != "edit" && collapse.declaringClass.isInstance(host)) {
-                    collapse.invoke(host)
-                }
-                original
-            }) 1 else 0
     }
 
     private fun unlockOld(loader: ClassLoader): Int {

@@ -1,0 +1,293 @@
+{
+  "host": {
+    "packageName": "com.android.systemui",
+    "versionName": "17.03.260226.r",
+    "versionCode": 202602260
+  },
+  "verification": "Live read-only MT exact methods and fields. No device runtime acceptance. Ordinary keyguard wallpaper timing only; excluded modes remain native.",
+  "evidence": [
+    {
+      "locator": "dex_method:Lcom/android/keyguard/panel/KeyguardPanelViewController;->doWallpaperBlackAnim(ZFIZLcom/android/keyguard/clock/animation/AnimationTracker;)V",
+      "contains": [
+        "->localAodShowEaseStyle:",
+        "->localAodHideEaseStyle:",
+        "->fullAodEnable()Z",
+        "->getDepthEffectEnable()Z",
+        "->acquire(Ljava/lang/String;)V",
+        "->release(Ljava/lang/String;)V",
+        "->newTransitionListener",
+        "->to([Ljava/lang/Object;)"
+      ],
+      "sha256": "64c3518582cd90334f34803a38f6f8849be896e3faba8f2c1690eac37b32a0f7"
+    },
+    {
+      "locator": "dex_method:Lcom/android/keyguard/panel/KeyguardPanelViewController;->linkageViewAnim$default(Lcom/android/keyguard/panel/KeyguardPanelViewController;ZLjava/lang/String;I)V",
+      "contains": [
+        "->doWallpaperBlackAnim(",
+        "->doAnimationToAod(",
+        "->fullAodEnable()Z"
+      ],
+      "sha256": "22686408e3477ddeafe0a4ffda9a98751a83122ef7e4dac64ef66159e39bc45d"
+    },
+    {
+      "locator": "dex_method:Lcom/miui/keyguard/KeyguardCommonSettingObserver;->getDepthEffectEnable()Z",
+      "contains": [
+        "->depthEffectEnable:",
+        "->booleanValue()Z"
+      ],
+      "sha256": "463650e656bd91df2912debcb6a2b486b388bf3663e1a488b76eaf16502258b3"
+    },
+    {
+      "locator": "dex_method:Lcom/android/keyguard/wallpaper/MiuiKeyguardWallPaperManager;->isVideoWallPaper()Z",
+      "contains": [
+        "\"video\"",
+        "->mKeyguardWallpaperType:"
+      ],
+      "sha256": "30cf47c3979ac3a83a384330f16d22e655eb0999e52d39c1c7b610a94ab27f8b"
+    },
+    {
+      "locator": "dex_method:Lcom/android/keyguard/wallpaper/MiuiKeyguardWallPaperManager;->isDepthVideoEnable()Z",
+      "contains": [
+        "->mDepthVideoReady:Z",
+        "->getMiuiWallpaperMagicType()I"
+      ],
+      "sha256": "49120eae480485bc379122ac4e54c05049a7ced8eedf3c5c943b03cd2f2d0713"
+    },
+    {
+      "locator": "dex_method:Lmiuix/animation/base/AnimConfig;->setEase(Lmiuix/animation/utils/EaseManager$EaseStyle;)Lmiuix/animation/base/AnimConfig;",
+      "contains": [
+        "iput-object p1, p0",
+        "->ease:Lmiuix/animation/utils/EaseManager$EaseStyle;"
+      ],
+      "sha256": "15924c5cef34d3fda4e802dbdbed293732e7da8da5defd23e8f48d6191967165"
+    },
+    {
+      "locator": "dex_method:Lmiuix/animation/internal/FolmeCore;->updateInterpolatorAnim(Lmiuix/animation/internal/AnimData;ZJ)V",
+      "contains": [
+        "->duration:J",
+        "->getInterpolation(F)F",
+        "->setOp(B)V"
+      ],
+      "sha256": "ab801d9976d51b8396c1f7921df7bf71006506f7d118116e50da07be6c78b9b6"
+    },
+    {
+      "locator": "dex_method:Lmiuix/animation/utils/EaseManager;->createTimeInterpolator(I[D)Landroid/animation/TimeInterpolator;",
+      "contains": [
+        ":pswitch_29  #0x14",
+        "Landroid/view/animation/DecelerateInterpolator;"
+      ],
+      "sha256": "6d3049cec34f519735163a9d963ac81e186ccf0f1e6f43e238df81c0a3aca4bf"
+    },
+    {
+      "locator": "dex_method:Lcom/android/keyguard/panel/KeyguardPanelViewController;->resolveAodLinkageTransitionStates(Z)Lkotlin/Pair;",
+      "contains": [
+        "->sleepFromGone:Z",
+        "->keyguardOccluded:Z",
+        "->PRIMARY_BOUNCER:",
+        "->LOCKSCREEN:"
+      ],
+      "sha256": "eb471cf91fa780f66d3dbc1234a9a72a31f5733b448ed4150a4475086afe0b39"
+    },
+    {
+      "locator": "dex_method:Lcom/android/keyguard/clock/animation/ClockBaseAnimation;->doAnimationToAod(ZZZZLcom/android/keyguard/clock/animation/AnimationTracker;)V",
+      "contains": [
+        "->mAnimationTracker:",
+        "->doAnimationToFullScreenAod(ZZ)V"
+      ],
+      "sha256": "ab135d691cdb3f2273d12fb0ee2aaccfb9ca7194176c0ccbb9f33aac51e0c08b"
+    },
+    {
+      "locator": "dex_method:Lcom/android/keyguard/clock/KeyguardClockContainer$$ExternalSyntheticOutline0;->m(Lmiuix/animation/utils/EaseManager$EaseStyle;)Lmiuix/animation/base/AnimConfig;",
+      "contains": [
+        "-><init>()V",
+        "->setEase(Lmiuix/animation/utils/EaseManager$EaseStyle;)"
+      ],
+      "sha256": "525fe6e68c3ea313776ab4f907cc5f91f2a52b4e837abd048635e70d1ce197b6"
+    },
+    {
+      "locator": "dex_method:Lcom/miui/interfaces/keyguard/IMiuiFullAodManager;->fullAodEnable()Z",
+      "contains": [
+        ".method public fullAodEnable()Z",
+        "return p0"
+      ],
+      "sha256": "5500b98212d490c0fce8ab9e042451e0f78e73502fd91d0e08a98329d9676106"
+    },
+    {
+      "locator": "dex_method:Lcom/android/keyguard/fullaod/MiuiFullAodManager;->fullAodEnable()Z",
+      "contains": [
+        "fullAodEnable()Z"
+      ],
+      "sha256": "aeed3d2af0bcab94e39b9baf15295adb442388fff5b362f81a964afde847de8a"
+    },
+    {
+      "locator": "dex_method:Lmiuix/animation/utils/EaseManager$InterpolateEaseStyle;->setDuration(J)Lmiuix/animation/utils/EaseManager$InterpolateEaseStyle;",
+      "contains": [
+        "->duration:J",
+        "return-object p0"
+      ],
+      "sha256": "9065ece18b1248d1f6be4815403ec7b3310c9d0127789197c1b69ebd3e22ea72"
+    },
+    {
+      "locator": "dex_method:Lmiuix/animation/utils/EaseManager$InterpolateEaseStyle;-><init>(I[F)V",
+      "contains": [
+        "Lmiuix/animation/utils/EaseManager$EaseStyle;-><init>(I[F)V",
+        "->duration:J"
+      ],
+      "sha256": "f735d4e19f63fafeae35f189c474158b6d608ba1dc6f15bf451ad82980c84623"
+    },
+    {
+      "locator": "dex_method:Lcom/android/keyguard/panel/KeyguardPanelViewController$doWallpaperBlackAnim$1;->onBegin(Ljava/lang/Object;)V",
+      "contains": [
+        "->beginTrace$1()V",
+        "->start$default("
+      ],
+      "sha256": "51e596c75b53a1f32fe7db37b591aedafcb50cb846506bc5c7b18c99d4ea5ad9"
+    },
+    {
+      "locator": "dex_method:Lcom/android/keyguard/panel/KeyguardPanelViewController$doWallpaperBlackAnim$1;->onCancel(Ljava/lang/Object;)V",
+      "contains": [
+        "->onCancel(Ljava/lang/Object;)V",
+        "->release(Ljava/lang/String;)V",
+        "->endTrace()V"
+      ],
+      "sha256": "a2558f394cccfab8c5e9a4dd03ae4b4bc1f470ce56582d4265d983ff255d9cd5"
+    },
+    {
+      "locator": "dex_method:Lcom/android/keyguard/panel/KeyguardPanelViewController$doWallpaperBlackAnim$1;->onComplete(Ljava/lang/Object;)V",
+      "contains": [
+        "->onComplete(Ljava/lang/Object;)V",
+        "->release(Ljava/lang/String;)V",
+        "->endTrace()V"
+      ],
+      "sha256": "c81cfd1d11435c531e54dad45697239d600379e7e4304e551a29f619e5bbac4e"
+    },
+    {
+      "locator": "dex_method:Lcom/android/keyguard/panel/KeyguardPanelViewController$doWallpaperBlackAnim$1;->onUpdate(Ljava/lang/Object;Ljava/util/Collection;)V",
+      "contains": [
+        "\"wallpaperBlack\"",
+        "->apply()V"
+      ],
+      "sha256": "81ce508c4ef15ccb47389e0f7fe706115f9d2381d661dd7e68eb0ae5dfbf74e8"
+    },
+    {
+      "locator": "dex_method:Lcom/android/keyguard/panel/KeyguardPanelViewController$fullAodBrightnessListener$1;->onBrightnessChanged(F)V",
+      "contains": [
+        "->doWallpaperBlackAnim(",
+        "const/4 v7, 0x0"
+      ],
+      "sha256": "4a2bff034beb4b3e4286a3add680ae3c1037b39d38ca46aa9a22525106367d65"
+    },
+    {
+      "locator": "dex_field:Lcom/android/keyguard/panel/KeyguardPanelViewController;->context:Landroid/content/Context;",
+      "contains": [
+        "context:Landroid/content/Context;"
+      ],
+      "sha256": "4179942b6f89c1ebb0cb427690bf316ec9394787214c39f2dfe1be45b8e4cda4"
+    },
+    {
+      "locator": "dex_field:Lcom/android/keyguard/panel/KeyguardPanelViewController;->keyguardRootView:Landroid/view/ViewGroup;",
+      "contains": [
+        "keyguardRootView:Landroid/view/ViewGroup;"
+      ],
+      "sha256": "2080e3ecabd4c4e164185fc608db0e0bd1991a4c07872a43a9960daeabed3833"
+    },
+    {
+      "locator": "dex_field:Lcom/android/keyguard/panel/KeyguardPanelViewController;->miuiFullAodManager:Lcom/miui/interfaces/keyguard/IMiuiFullAodManager;",
+      "contains": [
+        "miuiFullAodManager:Lcom/miui/interfaces/keyguard/IMiuiFullAodManager;"
+      ],
+      "sha256": "75d00ab565a09d0bcb76faf276696bfbb2b8d6e9c64d988ac0791ea770e5489d"
+    },
+    {
+      "locator": "dex_field:Lcom/android/keyguard/panel/KeyguardPanelViewController;->keyguardCommonSettingObserver:Lcom/miui/keyguard/KeyguardCommonSettingObserver;",
+      "contains": [
+        "keyguardCommonSettingObserver:Lcom/miui/keyguard/KeyguardCommonSettingObserver;"
+      ],
+      "sha256": "f1866900627258a90bb4cdb24242b6ecb6f916d0640b45327c37a7a6a688f01f"
+    },
+    {
+      "locator": "dex_field:Lcom/android/keyguard/panel/KeyguardPanelViewController;->miuiKeyguardWallPaperManager:Lcom/android/keyguard/wallpaper/MiuiKeyguardWallPaperManager;",
+      "contains": [
+        "miuiKeyguardWallPaperManager:Lcom/android/keyguard/wallpaper/MiuiKeyguardWallPaperManager;"
+      ],
+      "sha256": "d7cc733240e5e91963e54907d5c1ed7061c92099add9b23b7014b783d6ceef7b"
+    },
+    {
+      "locator": "dex_field:Lcom/android/keyguard/panel/KeyguardPanelViewController;->localAodShowEaseStyle:Lmiuix/animation/utils/EaseManager$EaseStyle;",
+      "contains": [
+        "localAodShowEaseStyle:Lmiuix/animation/utils/EaseManager$EaseStyle;"
+      ],
+      "sha256": "f134417b41951429ba49469ee1d625f28fc07c16cc0ad63300b4089c8019a5d7"
+    },
+    {
+      "locator": "dex_field:Lcom/android/keyguard/panel/KeyguardPanelViewController;->localAodHideEaseStyle:Lmiuix/animation/utils/EaseManager$InterpolateEaseStyle;",
+      "contains": [
+        "localAodHideEaseStyle:Lmiuix/animation/utils/EaseManager$InterpolateEaseStyle;"
+      ],
+      "sha256": "ab01a6d5509dd7496f28ec0de08485271e3ef2919910ea586436890b675cf176"
+    },
+    {
+      "locator": "dex_field:Lcom/android/keyguard/panel/KeyguardPanelViewController;->isDefaultTheme:Z",
+      "contains": [
+        "isDefaultTheme:Z"
+      ],
+      "sha256": "a6744acb2581e1562046c0f37698e8911c1eb6724f6bd1b7330485600d0416e3"
+    },
+    {
+      "locator": "dex_field:Lcom/android/keyguard/panel/KeyguardPanelViewController;->keyguardShowing:Z",
+      "contains": [
+        "keyguardShowing:Z"
+      ],
+      "sha256": "3d243cbed06a63ecaa8e0ec2931af869e74d82456c71c446c2fe7e5edf89a90f"
+    },
+    {
+      "locator": "dex_field:Lcom/android/keyguard/panel/KeyguardPanelViewController;->isFlipFold:Z",
+      "contains": [
+        "isFlipFold:Z"
+      ],
+      "sha256": "809fc4e066373ef9eb421e37179e746ffb8de6324537e30f9feecd7bafb85705"
+    },
+    {
+      "locator": "dex_field:Lcom/android/keyguard/panel/KeyguardPanelViewController;->keyguardOccluded:Z",
+      "contains": [
+        "keyguardOccluded:Z"
+      ],
+      "sha256": "7d9c77aa19bee0695f2230aeabe6d968490cd6e2605205a478f1699c7afd4433"
+    },
+    {
+      "locator": "dex_field:Lcom/android/keyguard/panel/KeyguardPanelViewController;->sleepFromGone:Z",
+      "contains": [
+        "sleepFromGone:Z"
+      ],
+      "sha256": "0f76c1f6e98f5237a7aefca0e0b9615258684f4435be759f57f619f39d139450"
+    },
+    {
+      "locator": "dex_field:Lcom/android/keyguard/panel/KeyguardPanelViewController;->keyguardBouncerShowing:Z",
+      "contains": [
+        "keyguardBouncerShowing:Z"
+      ],
+      "sha256": "4c4186ce53b6f9cb6a8e3606f017ba1c3d0828463259f40f068329cee2e4b827"
+    },
+    {
+      "locator": "dex_field:Lcom/android/keyguard/panel/KeyguardPanelViewController;->isBouncerShowingWhenStartedGoingToSleep:Z",
+      "contains": [
+        "isBouncerShowingWhenStartedGoingToSleep:Z"
+      ],
+      "sha256": "ed7145582a6953ad850ee50973a4b26cad4614f0e2e2186d520f61c23754a4df"
+    },
+    {
+      "locator": "dex_field:Lcom/android/keyguard/panel/KeyguardPanelViewController;->isGoingToDismissKeyguard:Z",
+      "contains": [
+        "isGoingToDismissKeyguard:Z"
+      ],
+      "sha256": "35aa5870a10f098803f1f65ddad3ab91f281cc50ea5f8ee71e0f8f682e4682f3"
+    },
+    {
+      "locator": "dex_field:Lcom/android/keyguard/panel/KeyguardPanelViewController;->isSuperSavePowerMode:Z",
+      "contains": [
+        "isSuperSavePowerMode:Z"
+      ],
+      "sha256": "828f7b2e764532eac7b9be4093c594243b6800cb6d304a1c38db66863adf3aec"
+    }
+  ]
+}

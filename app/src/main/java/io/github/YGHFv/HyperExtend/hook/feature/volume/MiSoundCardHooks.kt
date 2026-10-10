@@ -7,6 +7,8 @@
  */
 package io.github.YGHFv.HyperExtend.hook.feature.volume
 
+import io.github.YGHFv.HyperExtend.core.compatibleVersionCode
+
 import android.content.Context
 import android.content.res.Configuration
 import android.graphics.Color
@@ -68,7 +70,7 @@ internal object MiSoundCardHooks {
         fun supported(host: Any): Boolean {
             if (!enabled) return false
             return audited ?: ((context.get(host) as Context).packageManager
-                .getPackageInfo(AppVolumeSettings.PACKAGE, 0).longVersionCode == 260903L).also {
+                .getPackageInfo(AppVolumeSettings.PACKAGE, 0).compatibleVersionCode == 260903L).also {
                 audited = it
                 if (!it) ModuleLog.warn("app_volume card: unaudited MiSound; native UI retained")
             }

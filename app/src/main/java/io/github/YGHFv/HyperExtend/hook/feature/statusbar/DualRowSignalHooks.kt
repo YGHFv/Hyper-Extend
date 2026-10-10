@@ -6,7 +6,13 @@
  */
 package io.github.YGHFv.HyperExtend.hook.feature.statusbar
 
+import io.github.YGHFv.HyperExtend.core.compatibleVersionCode
+
 import android.content.BroadcastReceiver
+import android.Manifest
+import android.annotation.SuppressLint
+import android.content.pm.PackageManager
+import android.os.Build
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
@@ -298,11 +304,18 @@ internal class DualRowSignalHooks private constructor(
         override fun onSubscriptionsChanged() = requestState()
     }
 
+    // The module does not request telephony access; SystemUI's grant is checked before use.
+    @SuppressLint("MissingPermission")
     private fun readState() {
         val ctx = context ?: return
         // Permission/service failures are compatibility fallbacks, not protected-hook failures.
-        sims = runCatching { ctx.getSystemService(SubscriptionManager::class.java)?.activeSubscriptionInfoList
-            ?.map { DualRowSignalPolicy.Sim(it.subscriptionId, it.simSlotIndex) }.orEmpty() }.getOrDefault(emptyList())
+        sims = if (ctx.checkSelfPermission(Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
+            try {
+                ctx.getSystemService(SubscriptionManager::class.java)?.activeSubscriptionInfoList
+                    ?.map { DualRowSignalPolicy.Sim(it.subscriptionId, it.simSlotIndex) }.orEmpty()
+            } catch (_: SecurityException) { emptyList() }
+            catch (_: Exception) { emptyList() }
+        } else emptyList()
         defaultData = runCatching { SubscriptionManager.getDefaultDataSubscriptionId() }.getOrDefault(-1)
         airplane = runCatching { Settings.Global.getInt(ctx.contentResolver, Settings.Global.AIRPLANE_MODE_ON) != 0 }.getOrNull()
         if (!receiverRegistered || !subscriptionsRegistered) sims = emptyList()
@@ -322,7 +335,11 @@ internal class DualRowSignalHooks private constructor(
         }.getOrDefault(false)
         subscriptionsRegistered = runCatching {
             val manager = ctx.getSystemService(SubscriptionManager::class.java) ?: error("no subscription service")
-            manager.addOnSubscriptionsChangedListener(ctx.mainExecutor, subscriptions)
+            if (Build.VERSION.SDK_INT >= 30) manager.addOnSubscriptionsChangedListener(ctx.mainExecutor, subscriptions)
+            else {
+                @Suppress("DEPRECATION")
+                manager.addOnSubscriptionsChangedListener(subscriptions)
+            }
             true
         }.getOrDefault(false)
         readState()
@@ -392,7 +409,7 @@ internal class DualRowSignalHooks private constructor(
             return if (HookRuntime.hook(bind, "$FEATURE/MiuiMobileIconBinder#bind") { chain ->
                 val root = chain.args[0] as? ViewGroup
                 val vm = chain.args[2]
-                if (root != null && root.context.packageManager.getPackageInfo("com.android.systemui", 0).longVersionCode != 202602260L) {
+                if (root != null && root.context.packageManager.getPackageInfo("com.android.systemui", 0).compatibleVersionCode != 202602260L) {
                     return@hook chain.proceed()
                 }
                 val binding = if (root == null || vm == null) null else controller.prepare(root, vm)

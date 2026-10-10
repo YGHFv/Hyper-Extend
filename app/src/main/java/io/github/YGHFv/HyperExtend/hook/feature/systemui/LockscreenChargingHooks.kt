@@ -5,6 +5,8 @@
  */
 package io.github.YGHFv.HyperExtend.hook.feature.systemui
 
+import io.github.YGHFv.HyperExtend.core.compatibleVersionCode
+
 import android.app.KeyguardManager
 import android.annotation.TargetApi
 import android.content.Context
@@ -214,7 +216,7 @@ internal class LockscreenChargingHooks private constructor(loader: ClassLoader, 
             val result = chain.proceed()
             val anchor = text.get(owner) as? TextView ?: return@hook result
             val container = area.get(owner) as? LinearLayout ?: return@hook result
-            val version = hostVersion ?: anchor.context.packageManager.getPackageInfo("com.android.systemui", 0).longVersionCode.also { hostVersion = it }
+            val version = hostVersion ?: anchor.context.packageManager.getPackageInfo("com.android.systemui", 0).compatibleVersionCode.also { hostVersion = it }
             if (version == 202602260L && anchor.parent === container && container.orientation == LinearLayout.VERTICAL) {
                 val binding = Binding(owner, anchor, container)
                 bindings[owner] = WeakReference(binding)

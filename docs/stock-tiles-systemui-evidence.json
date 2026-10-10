@@ -1,0 +1,193 @@
+{
+  "host": {
+    "packageName": "com.android.systemui",
+    "versionName": "17.03.260226.r",
+    "versionCode": 202602260
+  },
+  "verification": "Live read-only exact signatures and caller bodies; editor-only additive candidates. No deployment or device acceptance.",
+  "evidence": [
+    {
+      "locator": "dex_method:Lcom/android/systemui/qs/customize/MiuiQSCustomizerController;->show(II)V",
+      "contains": [
+        "->getString(I)Ljava/lang/String;",
+        "0x7f140a06",
+        "->createTile(Ljava/lang/String;)",
+        "->isAvailable()Z",
+        "->destroy()V",
+        "MiuiTileQueryHelper$TileCollector;"
+      ],
+      "sha256": "beee7af6c46d39652a4548d1ad91811ab07b3f9d21cfed2643d42dd895a46a3c"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/qs/MiuiQSPanel$H;->handleMessage(Landroid/os/Message;)V",
+      "contains": [
+        "->show(II)V"
+      ],
+      "sha256": "541f1cd176b6bb81f508d7bf0361ef46aa87d194a342e134656d8d1dcacccd77"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/qs/customize/MiuiQSCustomizerController$restoreInstanceState$1;->onLayoutChange(Landroid/view/View;IIIIIIII)V",
+      "contains": [
+        "->show(II)V"
+      ],
+      "sha256": "b303f551e58124c66a0ddee5a40bc8429bbbb4cc450df97a579705d9ee0e6c45"
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/qs/customize/MiuiQSCustomizerController;->tileQueryHelper:Lcom/android/systemui/qs/customize/MiuiTileQueryHelper;",
+      "contains": [
+        ".field public tileQueryHelper:Lcom/android/systemui/qs/customize/MiuiTileQueryHelper;"
+      ],
+      "sha256": "bae9cfc9d633b82c246b7c06da51792314a5ce7ce579b4837ca4af1e4cfd46b8"
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/qs/customize/MiuiTileQueryHelper;->mContext:Landroid/content/Context;",
+      "contains": [
+        ".field public mContext:Landroid/content/Context;"
+      ],
+      "sha256": "1f5dfc29baa6749f286af300e4eff4df842adf85d8dd002adb4918febdcd22af"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/qs/tileimpl/MiuiQSFactory;->createTile(Ljava/lang/String;)Lcom/android/systemui/plugins/qs/QSTile;",
+      "contains": [
+        "\"reduce_brightness\"",
+        "\"inversion\"",
+        "\"saver\"",
+        "\"dark\"",
+        "\"onehanded\"",
+        "\"color_correction\"",
+        "->reduceBrightColorsTileProvider:",
+        "->colorInversionTileProvider:",
+        "->dataSaverTileProvider:",
+        "->uiModeNightTileProvider:",
+        "->oneHandedModeTileProvider:",
+        "->colorCorrectionTileProvider:"
+      ],
+      "sha256": "0bdd4b1d1ff9948e315b903bda17b34f011011d860b11c5e5f7db6e9ae9a39bd"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/qs/pipeline/domain/adapter/MiuiQSHostAdapter;->getStockTiles()Ljava/lang/String;",
+      "contains": [
+        "->stockTiles$delegate:Lkotlin/Lazy;",
+        "->getValue()Ljava/lang/Object;"
+      ],
+      "sha256": "8f0984b400b04863365bf64afacf23c5c9410795d36a247eed63ec02ced4fe51"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/qs/pipeline/domain/adapter/MiuiQSHostAdapter;->createTile(Ljava/lang/String;)Lcom/android/systemui/plugins/qs/QSTile;",
+      "contains": [
+        "->createTileSync("
+      ],
+      "sha256": "b96a5145124a85a504a9899a4a85b5ece9dd379d5024b6f035399f2140a84966"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/qs/pipeline/data/repository/QSSettingsRestoredRepositoryExt;->changeToRestoreValue(Ljava/lang/String;)Ljava/lang/String;",
+      "contains": [
+        "->stockTiles$delegate:Lkotlin/Lazy;",
+        "Filtered non-stock specs from restore:"
+      ],
+      "sha256": "a23f05331c817b0d90582c7066b17e05b1612ed94c8345892d525ded927daabb"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/qs/pipeline/data/repository/MiuiStockTilesRepository$$ExternalSyntheticLambda0;->invoke()Ljava/lang/Object;",
+      "contains": [
+        "0x7f140a06",
+        "0x7f140a07",
+        "->getString(I)Ljava/lang/String;"
+      ],
+      "sha256": "feb6af3bd67bf50079175ee8705f48810e10acf3aa24e3f4635b5bdc720ae541"
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/qs/tileimpl/MiuiQSFactory;->reduceBrightColorsTileProvider:Ljavax/inject/Provider;",
+      "contains": [
+        ".field public final reduceBrightColorsTileProvider:Ljavax/inject/Provider;"
+      ],
+      "sha256": "cd5705c7729de3e836ce73329df4b37b791d810df1917a102c1a79e515b50bdd"
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/qs/tileimpl/MiuiQSFactory;->colorInversionTileProvider:Ljavax/inject/Provider;",
+      "contains": [
+        ".field public final colorInversionTileProvider:Ljavax/inject/Provider;"
+      ],
+      "sha256": "7c5e7d27b0c50e0ad2ff12caf4a2186420ba4907aaabdff5c62747849b685cea"
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/qs/tileimpl/MiuiQSFactory;->dataSaverTileProvider:Ljavax/inject/Provider;",
+      "contains": [
+        ".field public final dataSaverTileProvider:Ljavax/inject/Provider;"
+      ],
+      "sha256": "3d7ddb44ba792a162cd204e9a6420242c618c6c405991ad2bfb74ed4dbd01633"
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/qs/tileimpl/MiuiQSFactory;->uiModeNightTileProvider:Ljavax/inject/Provider;",
+      "contains": [
+        ".field public final uiModeNightTileProvider:Ljavax/inject/Provider;"
+      ],
+      "sha256": "07a3180a74062585ee0f8786eb6bfff69b8e0f73f71b7b8ac46c8ef20bbd596f"
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/qs/tileimpl/MiuiQSFactory;->oneHandedModeTileProvider:Ljavax/inject/Provider;",
+      "contains": [
+        ".field public final oneHandedModeTileProvider:Ljavax/inject/Provider;"
+      ],
+      "sha256": "05c015482963529c1de02ecd9c2167fc2534696821aa295541c15fd59f82f50b"
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/qs/tileimpl/MiuiQSFactory;->colorCorrectionTileProvider:Ljavax/inject/Provider;",
+      "contains": [
+        ".field public final colorCorrectionTileProvider:Ljavax/inject/Provider;"
+      ],
+      "sha256": "adf029866199544eb126d333c5c5f79e0bfc90935673cba8e4dc108d140e67b3"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/shared/plugins/PluginInstance$PluginFactory;->createClassLoader()Ljava/lang/ClassLoader;",
+      "contains": [
+        ".method public final createClassLoader()Ljava/lang/ClassLoader;",
+        "->pluginAppInfo:",
+        "->sClassLoaders:"
+      ],
+      "sha256": "7dec6c9ee4daa94799e0f9cc732fea5fb408cb940812a4cd460dd3ff75b1ec9a"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/shared/plugins/PluginInstance$PluginFactory;->createPlugin(Lcom/android/systemui/shared/plugins/PluginInstance;)Lcom/android/systemui/plugins/Plugin;",
+      "contains": [
+        ".method public final createPlugin(Lcom/android/systemui/shared/plugins/PluginInstance;)Lcom/android/systemui/plugins/Plugin;",
+        "->createClassLoader()Ljava/lang/ClassLoader;"
+      ],
+      "sha256": "683291d120ca17241ddf3b637af4df19989d285c65dd94d73af031d73f4af535"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/shared/plugins/PluginInstance$PluginFactory;->createPluginContext()Lcom/android/systemui/shared/plugins/PluginInstance$PluginContextWrapper;",
+      "contains": [
+        ".method public final createPluginContext()Lcom/android/systemui/shared/plugins/PluginInstance$PluginContextWrapper;",
+        "->createClassLoader()Ljava/lang/ClassLoader;"
+      ],
+      "sha256": "e710a6dcc2917ff0cd3d5df0be792b34c2e3473f7d4096f44add9d3e2edec8a2"
+    }
+  ],
+  "resourceNames": [
+    {
+      "name": "miui_quick_settings_tiles_stock",
+      "type": "string",
+      "locator": "resource:0x7f140a06"
+    },
+    {
+      "name": "miui_quick_settings_tiles_stock_pad",
+      "type": "string",
+      "locator": "resource:0x7f140a07"
+    }
+  ],
+  "resourceValues": [
+    {
+      "locator": "resource:0x7f140a06",
+      "variant": "default",
+      "valueKind": "text",
+      "value": "vowifi1,vowifi2,googlehome,googlepay,cell,wifi,bt,airplane,autobrightness,mute,screenshot,flashlight,rotation,screenlock,dtmdtm,scanner,papermode,night,quietmode,batterysaver,uwb_shp,aitranslate,aisubtitles,voicetrans,freeformhang,vibrate,hotspot,sync,wirelesspower,nfc,dolbyatomssound,gps,work,edit,hearingassisttile,controls,wallet,satellite,coolingfan,aspectratioswitch,taskmanager,settings,camerahandle,carsickness,screenrecordertile,milinkcast,misharetile"
+    },
+    {
+      "locator": "resource:0x7f140a07",
+      "variant": "default",
+      "valueKind": "text",
+      "value": "vowifi1,vowifi2,googlehome,googlepay,cell,wifi,rotation,airplane,mute,screenshot,bt,autobrightness,screenlock,dtmdtm,night,papermode,quietmode,batterysaver,gps,flashlight,scanner,aitranslate,aisubtitles,voicetrans,freeformhang,vibrate,hotspot,sync,wirelesspower,nfc,dolbyatomssound,work,edit,controls,workmode,wallet,taskmanager,settings,carsickness,screenrecordertile,milinkcast,misharetile"
+    }
+  ]
+}

@@ -5,6 +5,8 @@
  */
 package io.github.YGHFv.HyperExtend.hook.feature.statusbar
 
+import io.github.YGHFv.HyperExtend.core.compatibleVersionCode
+
 import android.annotation.TargetApi
 import android.content.Context
 import android.graphics.Typeface
@@ -217,7 +219,7 @@ internal class StatusBarClock private constructor(settings: HookSettings) {
         bindings[view]?.get()?.let { return it }
         val name = runCatching { view.resources.getResourceEntryName(view.id) }.getOrNull() ?: return null
         val role = Config.role(name) ?: return null
-        if (view.context.packageManager.getPackageInfo("com.android.systemui", 0).longVersionCode != 202602260L) return null
+        if (view.context.packageManager.getPackageInfo("com.android.systemui", 0).compatibleVersionCode != 202602260L) return null
         return Binding(view, name, role).also {
             bindings[view] = WeakReference(it)
             view.addOnAttachStateChangeListener(it)

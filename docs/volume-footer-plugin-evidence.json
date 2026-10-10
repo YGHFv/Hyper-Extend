@@ -1,0 +1,132 @@
+{
+  "host": {
+    "packageName": "miui.systemui.plugin",
+    "versionCode": 183022200
+  },
+  "verification": "Source-only review; no compilation, tests, lint, packaging, installation or runtime acceptance.",
+  "evidence": [
+    {
+      "locator": "dex_method:Lcom/android/systemui/miui/volume/MiuiVolumeDialogView;->updateFooterVisibility(Z)V",
+      "contains": [
+        ".method public updateFooterVisibility(Z)V",
+        "Lcom/android/systemui/miui/volume/MiuiVolumeDialogView;->mRingerModeLayout:Lcom/android/systemui/miui/volume/MiuiRingerModeLayout;",
+        "Lcom/android/systemui/miui/volume/Util;->setVisOrGone(Landroid/view/View;Z)V",
+        "Lcom/android/systemui/miui/volume/widget/ExpandCollapseLinearLayout;->isExpanded()Z"
+      ],
+      "sha256": "06ea55e5cb8419ab87131507b3d7ccfd35330dde1c0e7f933be736957a93d175",
+      "isStatic": false
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/miui/volume/MiuiVolumeDialogView;->onExpandStateUpdated(Z)V",
+      "contains": [
+        ".method public onExpandStateUpdated(Z)V",
+        "Lcom/android/systemui/miui/volume/widget/ExpandCollapseLinearLayout;->onExpandStateUpdated(Z)V",
+        "Lcom/android/systemui/miui/volume/MiuiVolumeDialogView;->mRingerModeLayout:Lcom/android/systemui/miui/volume/MiuiRingerModeLayout;",
+        "Lcom/android/systemui/miui/volume/MiuiRingerModeLayout;->updateExpandedH(ZZ)V"
+      ],
+      "sha256": "5c87fd2b3c257366e45501fc4aac3430b43d72fdf20186e1fb1421e4abd4e4df",
+      "isStatic": false
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/miui/volume/widget/ExpandCollapseLinearLayout;->isExpanded()Z",
+      "contains": [
+        ".method public isExpanded()Z",
+        "Lcom/android/systemui/miui/volume/widget/ExpandCollapseStateHelper;->isExpanded()Z"
+      ],
+      "sha256": "d5fdab32aeceaf1a89e8b7280a81aadf744b9d763d92814685161745e3a5bde3",
+      "isStatic": false
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/miui/volume/VolumePanelViewController;->onStateChangedH(Lcom/android/systemui/plugins/VolumeDialogController$State;)V",
+      "contains": [
+        ".method private onStateChangedH(Lcom/android/systemui/plugins/VolumeDialogController$State;)V",
+        "Lcom/android/systemui/miui/volume/MiuiVolumeDialogView;->updateFooterVisibility(Z)V"
+      ],
+      "sha256": "5aa6314d670a7056cf8b92d0f62b5e63abde589f8ed3815d8c3bbb093f940d60",
+      "isStatic": false
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/miui/volume/VolumePanelViewController;->reInit()V",
+      "contains": [
+        ".method public reInit()V",
+        "Lcom/android/systemui/miui/volume/MiuiVolumeDialogView;->updateFooterVisibility(Z)V"
+      ],
+      "sha256": "a5da65edda90564ac2ee6e7d4dc3f0fb5397dbf54aacc23b4298edcbda944d2c",
+      "isStatic": false
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/miui/volume/VolumePanelViewController;->updateExpandedH(ZZZ)V",
+      "contains": [
+        ".method public updateExpandedH(ZZZ)V",
+        "Lcom/android/systemui/miui/volume/MiuiVolumeDialogView;->updateFooterVisibility(Z)V",
+        "Lcom/android/systemui/miui/volume/VolumePanelViewController$VolumeColumns;->updateExpandedH(Z)V"
+      ],
+      "sha256": "d483c945a567488df11c7425d9c729e4bd4aac840b3603b40a35927a3c2a702a",
+      "isStatic": false
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/miui/volume/MiuiVolumeDialogView;->showH(Ljava/lang/Runnable;)V",
+      "contains": [
+        ".method public showH(Ljava/lang/Runnable;)V",
+        "Lcom/android/systemui/miui/volume/MiuiVolumeDialogView;->mRingerModeLayout:Lcom/android/systemui/miui/volume/MiuiRingerModeLayout;",
+        "Lcom/android/systemui/miui/volume/MiuiVolumeDialogView;->onExpandStateUpdated(Z)V"
+      ],
+      "sha256": "3341900ac4a5c8e3f4ff6d3e1e91466291f476390c03ee71a752413d76571d5c",
+      "isStatic": false
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/miui/volume/widget/ExpandCollapseStateHelper;->updateExpanded(ZZ)V",
+      "contains": [
+        ".method public final updateExpanded(ZZ)V",
+        "Lcom/android/systemui/miui/volume/widget/ExpandCollapseStateHelper$OnExpandStateUpdatedListener;->onExpandStateUpdated(Z)V"
+      ],
+      "sha256": "34866a303830b4a12283ae4ba7f4dd006adcdfe1714162e6fbc824e9f8674e9d",
+      "isStatic": false
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/miui/volume/MiuiVolumeDialogView;->mRingerModeLayout:Lcom/android/systemui/miui/volume/MiuiRingerModeLayout;",
+      "contains": [
+        ".field private mRingerModeLayout:Lcom/android/systemui/miui/volume/MiuiRingerModeLayout;"
+      ],
+      "sha256": "6b1bb38412dd733490a7e5680653515f499a194ae189559db3f8bd52aac20c1c",
+      "isStatic": false
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/miui/volume/Util;->setVisOrGone(Landroid/view/View;Z)V",
+      "contains": [
+        ".method public static final setVisOrGone(Landroid/view/View;Z)V"
+      ],
+      "sha256": "0a82ff44d57f2b696e6adfef1cc1005ed3b023146b04ff6a39f4081130f7b22f",
+      "isStatic": true
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/miui/volume/MiuiVolumeDialogView;->mNeedShowDialog:Z",
+      "contains": [
+        ".field private mNeedShowDialog:Z"
+      ],
+      "isStatic": false,
+      "sha256": "5c7083a8ec77271086f55da30342e350177d5e5d787735c727bbfa4a2b24427d"
+    }
+  ],
+  "callerReferences": [
+    {
+      "target": "dex_method:Lcom/android/systemui/miui/volume/MiuiVolumeDialogView;->updateFooterVisibility(Z)V",
+      "resolution": "dispatch",
+      "complete": true,
+      "sources": [
+        "dex_method:Lcom/android/systemui/miui/volume/VolumePanelViewController;->onStateChangedH(Lcom/android/systemui/plugins/VolumeDialogController$State;)V",
+        "dex_method:Lcom/android/systemui/miui/volume/VolumePanelViewController;->reInit()V",
+        "dex_method:Lcom/android/systemui/miui/volume/VolumePanelViewController;->updateExpandedH(ZZZ)V"
+      ]
+    },
+    {
+      "target": "dex_method:Lcom/android/systemui/miui/volume/MiuiVolumeDialogView;->onExpandStateUpdated(Z)V",
+      "resolution": "dispatch",
+      "complete": true,
+      "sources": [
+        "dex_method:Lcom/android/systemui/miui/volume/MiuiVolumeDialogView;->showH(Ljava/lang/Runnable;)V",
+        "dex_method:Lcom/android/systemui/miui/volume/widget/ExpandCollapseStateHelper;->updateExpanded(ZZ)V"
+      ]
+    }
+  ]
+}

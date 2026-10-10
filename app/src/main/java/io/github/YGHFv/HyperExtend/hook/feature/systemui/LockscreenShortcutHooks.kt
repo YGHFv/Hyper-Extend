@@ -5,6 +5,8 @@
  */
 package io.github.YGHFv.HyperExtend.hook.feature.systemui
 
+import io.github.YGHFv.HyperExtend.core.compatibleVersionCode
+
 import android.annotation.TargetApi
 import android.content.Context
 import android.os.Looper
@@ -46,8 +48,8 @@ internal class LockscreenShortcutHooks private constructor(loader: ClassLoader, 
 
     private fun supported(context: Context): Boolean = supported ?: runCatching {
         val pm = context.packageManager
-        LockscreenShortcutPolicy.supported(pm.getPackageInfo("com.android.systemui", 0).longVersionCode,
-            pm.getPackageInfo(LockscreenShortcutPolicy.PACKAGE, 0).longVersionCode)
+        LockscreenShortcutPolicy.supported(pm.getPackageInfo("com.android.systemui", 0).compatibleVersionCode,
+            pm.getPackageInfo(LockscreenShortcutPolicy.PACKAGE, 0).compatibleVersionCode)
     }.getOrDefault(false).also { supported = it }
 
     private inner class Binding(owner: Any, val image: ImageView, val layout: View, val isLeft: Boolean) :

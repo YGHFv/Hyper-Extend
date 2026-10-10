@@ -17,6 +17,7 @@ import java.util.WeakHashMap
 
 internal object LockScreenHooks {
     fun install(loader: ClassLoader, settings: HookSettings): List<String> = buildList {
+        installSystemUiFeature(settings, "lockscreen_wallpaper_transition") { LockscreenWallpaperHooks.install(loader, settings) }
         installSystemUiFeature(settings, "lockscreen_charging_info") { LockscreenChargingHooks.install(loader, settings) }
         installSystemUiFeature(settings, "lockscreen_hide_status_bar") { hideStatusBar(loader) }
         installSystemUiFeature(settings, "lockscreen_hide_ble_toast") { hideBleToast() }

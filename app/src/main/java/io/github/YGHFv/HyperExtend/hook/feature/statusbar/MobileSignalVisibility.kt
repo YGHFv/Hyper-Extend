@@ -6,6 +6,10 @@
 package io.github.YGHFv.HyperExtend.hook.feature.statusbar
 
 import android.content.BroadcastReceiver
+import android.Manifest
+import android.annotation.SuppressLint
+import android.content.pm.PackageManager
+import android.os.Build
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
@@ -147,17 +151,21 @@ internal class MobileSignalVisibility private constructor(
         }
     }
 
+    // Runs as SystemUI, not the module APK; check the host grant and retain failure fallback.
+    @SuppressLint("MissingPermission")
     private fun apply(record: Record, ctx: Context) {
         if (SafeModeRuntime.blocked) {
             record.relay.set(record.value)
             return
         }
-        val slot = readState { SubscriptionManager.getSlotIndex(record.subId) }
+        val slot = if (Build.VERSION.SDK_INT >= 29) readState { SubscriptionManager.getSlotIndex(record.subId) } else null
         val airplane = if (policy.mode != 0) readState {
             Settings.Global.getInt(ctx.contentResolver, Settings.Global.AIRPLANE_MODE_ON) != 0
         } else null
         val defaultData = if (policy.mode >= 2) readState { SubscriptionManager.getDefaultDataSubscriptionId() } else null
         val transports = if (policy.mode in 1..2) readState {
+            if (ctx.checkSelfPermission(Manifest.permission.ACCESS_NETWORK_STATE) != PackageManager.PERMISSION_GRANTED)
+                return@readState null
             val cm = ctx.getSystemService(ConnectivityManager::class.java) ?: error("ConnectivityManager missing")
             val network = cm.activeNetwork
             if (network == null) false to false else {
@@ -177,6 +185,8 @@ internal class MobileSignalVisibility private constructor(
         null
     }
 
+    // Lint sees the module manifest, but the checked permission belongs to the injected host.
+    @SuppressLint("MissingPermission")
     private fun startWatching(ctx: Context) {
         context = ctx
         if (!receiverRegistered) receiverRegistered = watch {
@@ -190,7 +200,11 @@ internal class MobileSignalVisibility private constructor(
         }
         if (!subscriptionsRegistered) subscriptionsRegistered = watch {
             val sm = ctx.getSystemService(SubscriptionManager::class.java) ?: error("SubscriptionManager missing")
-            sm.addOnSubscriptionsChangedListener(ctx.mainExecutor, subscriptions)
+            if (Build.VERSION.SDK_INT >= 30) sm.addOnSubscriptionsChangedListener(ctx.mainExecutor, subscriptions)
+            else {
+                @Suppress("DEPRECATION")
+                sm.addOnSubscriptionsChangedListener(subscriptions)
+            }
         }
         if (policy.mode != 0 && !observerRegistered) observerRegistered = watch {
             ctx.contentResolver.registerContentObserver(
@@ -198,6 +212,9 @@ internal class MobileSignalVisibility private constructor(
             )
         }
         if (policy.mode in 1..2 && !networkRegistered) networkRegistered = watch {
+            check(ctx.checkSelfPermission(Manifest.permission.ACCESS_NETWORK_STATE) == PackageManager.PERMISSION_GRANTED) {
+                "Host network-state permission unavailable"
+            }
             val cm = ctx.getSystemService(ConnectivityManager::class.java) ?: error("ConnectivityManager missing")
             cm.registerDefaultNetworkCallback(network, main)
         }

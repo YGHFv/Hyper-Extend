@@ -1,0 +1,26 @@
+{
+  "host": {
+    "packageName": "miui.systemui.plugin",
+    "versionName": "18.3.2.22.0",
+    "versionCode": 183022200
+  },
+  "verification": "Read-only current host methods/fields. Icon-only migration; no deployment or runtime acceptance.",
+  "evidence": [
+    {
+      "locator": "dex_method:Lmiui/systemui/controlcenter/qs/tileview/QSTileItemIconView;->updateIconInternal(Lcom/android/systemui/plugins/qs/QSTile$State;ZZZZ)V",
+      "contains": [
+        "->getDrawable(Landroid/content/Context;)",
+        "->getInvisibleDrawableCompat("
+      ],
+      "sha256": "8267109edc0653f933fcd8d93a926882caf80e95ae2436b694378440c1c3ce8a"
+    },
+    {
+      "locator": "dex_method:Lmiui/systemui/controlcenter/qs/tileview/QSItemView$Companion;->getInvisibleDrawableCompat(Lcom/android/systemui/plugins/qs/QSTile$Icon;Landroid/content/Context;)Landroid/graphics/drawable/Drawable;",
+      "contains": [
+        "->getInvisibleDrawable(Landroid/content/Context;)",
+        "->getDrawable(Landroid/content/Context;)"
+      ],
+      "sha256": "2630c7e17045555f57803812058c50b66844b7d1432eb5e6e1b171719d634914"
+    }
+  ]
+}

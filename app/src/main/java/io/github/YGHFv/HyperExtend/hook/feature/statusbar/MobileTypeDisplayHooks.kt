@@ -5,6 +5,8 @@
  */
 package io.github.YGHFv.HyperExtend.hook.feature.statusbar
 
+import io.github.YGHFv.HyperExtend.core.compatibleVersionCode
+
 import android.graphics.Typeface
 import android.os.Looper
 import android.telephony.ServiceState
@@ -241,7 +243,7 @@ internal class MobileTypeDisplayHooks private constructor(
                 val root = chain.args[0] as? ViewGroup
                 val delegate = chain.args[2]
                 if (root == null || delegate == null || root.context.packageManager
-                        .getPackageInfo("com.android.systemui", 0).longVersionCode != 202602260L) return@hook chain.proceed()
+                        .getPackageInfo("com.android.systemui", 0).compatibleVersionCode != 202602260L) return@hook chain.proceed()
                 val binding = controller.prepare(root, delegate) ?: return@hook chain.proceed()
                 val result = chain.proceed(chain.args.toMutableList().apply { set(2, binding.facade) }.toTypedArray())
                 controller.bindings[root] = WeakReference(binding)

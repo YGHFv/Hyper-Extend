@@ -1,0 +1,4 @@
+Lmiui/systemui/controlcenter/panel/main/brightness/BrightnessSliderController;->updateIconProgress$default(Lmiui/systemui/controlcenter/panel/main/brightness/BrightnessSliderController;ZILjava/lang/Object;)V
+Lmiui/systemui/controlcenter/panel/main/volume/VolumeSliderController;->access$updateIconProgress(Lmiui/systemui/controlcenter/panel/main/volume/VolumeSliderController;ZZ)V
+Lmiui/systemui/controlcenter/panel/main/volume/VolumeSliderController;->updateIconProgress$default(Lmiui/systemui/controlcenter/panel/main/volume/VolumeSliderController;ZZILjava/lang/Object;)V
+Lmiui/systemui/controlcenter/panel/main/volume/VolumeSliderController;->updateSuperVolume$default(Lmiui/systemui/controlcenter/panel/main/volume/VolumeSliderController;ZILjava/lang/Object;)V

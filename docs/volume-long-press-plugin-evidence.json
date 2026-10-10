@@ -1,0 +1,335 @@
+{
+  "host": {
+    "packageName": "miui.systemui.plugin",
+    "versionName": "18.3.2.22.0",
+    "versionCode": 183022200
+  },
+  "verification": "Read-only exact host signatures and native touch/expand policy. Bounded partial migration; no runtime acceptance.",
+  "evidence": [
+    {
+      "locator": "dex_method:Lcom/android/systemui/miui/volume/MiuiVolumeSeekBar;->dispatchTouchEvent(Landroid/view/MotionEvent;)Z",
+      "contains": [
+        "->performDragAnimation(",
+        "->performScaleAnimation(",
+        "Landroid/view/View;->dispatchTouchEvent("
+      ],
+      "sha256": "22240f480a2c544c4807c8fdb3fc9c24b46add4ca4ccc2b4d671436d0e9ff991"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/miui/volume/MiuiVolumeDialogView;->dispatchTouchEvent(Landroid/view/MotionEvent;)Z",
+      "contains": [
+        "Landroid/view/ViewGroup;->dispatchTouchEvent("
+      ],
+      "sha256": "e29d91f1e024d0a28d3395d8b3bbf3d5d1b5a62b512e04b09839b64d85b82c5e"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/miui/volume/MiuiVolumeDialogView;->dismissH(ZLjava/lang/Runnable;)V",
+      "contains": [
+        "dismissH(ZLjava/lang/Runnable;)V"
+      ],
+      "sha256": "ec95f8f552c23eb23cc66282a3569398c4555ac666833021f9c28c8ed1ee4928"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/miui/volume/MiuiVolumeDialogView;->destroy()V",
+      "contains": [
+        "destroy()V"
+      ],
+      "sha256": "7f56903306580eb2d3b100592f7483217bfb890cfffeb32b3f6b586948b903b6"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/miui/volume/MiuiVolumeDialogView;->showH(Ljava/lang/Runnable;)V",
+      "contains": [
+        "showH(Ljava/lang/Runnable;)V"
+      ],
+      "sha256": "3341900ac4a5c8e3f4ff6d3e1e91466291f476390c03ee71a752413d76571d5c"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/miui/volume/MiuiVolumeDialogView;->onConfigurationChanged(Landroid/content/res/Configuration;)V",
+      "contains": [
+        "onConfigurationChanged(Landroid/content/res/Configuration;)V"
+      ],
+      "sha256": "1efa3681294b08fb99f28df6a963f74169b01952e7c2aed406d15580c0ed8798"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/miui/volume/MiuiVolumeDialogView;->onExpandStateUpdated(Z)V",
+      "contains": [
+        "onExpandStateUpdated(Z)V"
+      ],
+      "sha256": "5c87fd2b3c257366e45501fc4aac3430b43d72fdf20186e1fb1421e4abd4e4df"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/miui/volume/MiuiVolumeDialogView;->isAnimating()Z",
+      "contains": [
+        "isAnimating()Z"
+      ],
+      "sha256": "c5705c2413b0ab692fbe05a035c9fa889b803fcdbf045faa81e525e38f8eedef"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/miui/volume/MiuiVolumeDialogView;->isShowAnimating()Z",
+      "contains": [
+        "isShowAnimating()Z"
+      ],
+      "sha256": "46a2fde125adcd29cb78b662a9b09a051395221c3aa0221a235b6d21d92d8f9e"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/miui/volume/widget/ExpandCollapseLinearLayout;->isExpanded()Z",
+      "contains": [
+        "isExpanded()Z"
+      ],
+      "sha256": "d5fdab32aeceaf1a89e8b7280a81aadf744b9d763d92814685161745e3a5bde3"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/miui/volume/VolumeColumn$onTouchListener$2$1;->onTouch(Landroid/view/View;Landroid/view/MotionEvent;)Z",
+      "contains": [
+        "->offsetLocation(FF)V",
+        "->dispatchTouchEvent("
+      ],
+      "sha256": "52e6a00c0603a922ad2e36042d877527f0674930de3dd5f0978b299f9b383b94"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/miui/volume/VolumePanelViewController;->dismissVolumePanel(I)V",
+      "contains": [
+        "->dismissH("
+      ],
+      "sha256": "1d10c7a61ec12f1d827d063c00ed3f679f863e22b9aecfc07bd2f713d610da9e"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/miui/volume/VolumePanelViewController;->showVolumePanelH(I)V",
+      "contains": [
+        "->showH("
+      ],
+      "sha256": "4606cfe71fe1951988dd83bb8d6dfc7fefc93c206f172759f1b30c14f6c264bc"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/miui/volume/VolumePanelViewController;->destroy()V",
+      "contains": [
+        "MiuiVolumeDialogView;->destroy()V"
+      ],
+      "sha256": "8344a3a995dae12ddbfb7f35444b1fccce7d74395fb5a7cff84b3e548148a62b"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/miui/volume/widget/ExpandCollapseStateHelper;->updateExpanded(ZZ)V",
+      "contains": [
+        "->onExpandStateUpdated(Z)V"
+      ],
+      "sha256": "34866a303830b4a12283ae4ba7f4dd006adcdfe1714162e6fbc824e9f8674e9d"
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/miui/volume/MiuiVolumeSeekBar;->mSeekBarOnclickListener:Lcom/android/systemui/miui/volume/MiuiVolumeSeekBar$SeekBarOnclickListener;",
+      "contains": [
+        "mSeekBarOnclickListener:Lcom/android/systemui/miui/volume/MiuiVolumeSeekBar$SeekBarOnclickListener;"
+      ],
+      "sha256": "ffad975a63e5794d0dfcd7ab3a64455311a64a71f8ae10e9c6253310119d8751"
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/miui/volume/h;->a:Ljava/lang/Object;",
+      "contains": [
+        "a:Ljava/lang/Object;"
+      ],
+      "sha256": "7d2b9402b8937e35f85f540cae0450ec77f94a7a5909997aa7c7a7c77f2589d0"
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/miui/volume/MiuiVolumeDialogMotion;->mVolumeSeekBar:Lcom/android/systemui/miui/volume/MiuiVolumeSeekBar;",
+      "contains": [
+        "mVolumeSeekBar:Lcom/android/systemui/miui/volume/MiuiVolumeSeekBar;"
+      ],
+      "sha256": "218bea3bf085c6a75e1d4753c624d175750baf9e263408a54e690cbd73e66a03"
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/miui/volume/MiuiVolumeDialogMotion;->mVolumeView:Landroid/view/View;",
+      "contains": [
+        "mVolumeView:Landroid/view/View;"
+      ],
+      "sha256": "da1de6909480c17e9a0c0361b756a78e1efa980f33e25aec54b556e2827ac3d5"
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/miui/volume/MiuiVolumeDialogMotion;->mExpanded:Z",
+      "contains": [
+        "mExpanded:Z"
+      ],
+      "sha256": "c92472bb5f44452bbb50716237a160b620cad36cb46ec5eb06d129c85ea7b824"
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/miui/volume/MiuiVolumeDialogMotion;->mIsExpandButton:Z",
+      "contains": [
+        "mIsExpandButton:Z"
+      ],
+      "sha256": "c39fe4276c3ef05add779ca56768876deb7f5dc3bd399a78a91ba87079601dc6"
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/miui/volume/MiuiVolumeDialogView;->mMotion:Lcom/android/systemui/miui/volume/MiuiVolumeDialogMotion;",
+      "contains": [
+        "mMotion:Lcom/android/systemui/miui/volume/MiuiVolumeDialogMotion;"
+      ],
+      "sha256": "e7c1c7c2a9647a63c585cf10b4c5e9ec9fcf654075b499ec6fbd185e8eaca0b7"
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/miui/volume/MiuiVolumeDialogView;->mNeedShowDialog:Z",
+      "contains": [
+        "mNeedShowDialog:Z"
+      ],
+      "sha256": "5c7083a8ec77271086f55da30342e350177d5e5d787735c727bbfa4a2b24427d"
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/miui/volume/MiuiVolumeDialogView;->isControlCenterPanel:Z",
+      "contains": [
+        "isControlCenterPanel:Z"
+      ],
+      "sha256": "d612ac480e417859cd7f5b060f9914ae40d3236186c4a8c8be210b1259dcda6d"
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/miui/volume/MiuiVolumeDialogView;->expandListener:Landroid/view/View$OnClickListener;",
+      "contains": [
+        "expandListener:Landroid/view/View$OnClickListener;"
+      ],
+      "sha256": "1a6ac375ecbb97acfcf69dbe4d4f25a584ad4b3886ddc3e4eb60bfea2bb48698"
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/miui/volume/MiuiVolumeDialogView;->mExpandButton:Landroid/view/View;",
+      "contains": [
+        "mExpandButton:Landroid/view/View;"
+      ],
+      "sha256": "9f175a8bfa94a75887453b363efa4884101d163646e64a8fa60812a0d63ac409"
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/miui/volume/MiuiVolumeDialogView;->mCallback:Lcom/android/systemui/miui/volume/MiuiVolumeDialogMotion$Callback;",
+      "contains": [
+        "mCallback:Lcom/android/systemui/miui/volume/MiuiVolumeDialogMotion$Callback;"
+      ],
+      "sha256": "7f2aca03b36e611269ca2ba801ab5a6845383c73ce5ed0934ded32143ce9d2be"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/miui/volume/MiuiVolumeSeekBar;->onTouchEvent(Landroid/view/MotionEvent;)Z",
+      "contains": [
+        "->transformTouchEvent(",
+        "->doClick(Landroid/view/MotionEvent;)Z",
+        "VerticalSeekBar;->onTouchEvent("
+      ],
+      "sha256": "a4719be6dedef8f4e59f896fddcdbb7eb5018d91ea8377720a3b181154dcb642"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/miui/volume/MiuiVolumeSeekBar;->doClick(Landroid/view/MotionEvent;)Z",
+      "contains": [
+        "->mMoveTime:J",
+        "->isNeedDoClick:Z",
+        "->onClick()V",
+        "->setAction(I)V"
+      ],
+      "sha256": "bd2bb1b9398425907f45e1fc7440cf7c109f703a3dfe375d5f6a54cab9f48fbc"
+    },
+    {
+      "locator": "dex_method:Lmiui/systemui/widget/RelativeSeekBarInjector;->transformTouchEvent(Landroid/view/MotionEvent;)V",
+      "contains": [
+        "->computeTouchOffset(",
+        "->offsetLocation(FF)V"
+      ],
+      "sha256": "079802c8c005e62b33e9fd89ded751058ad93792150cbce001feb8d252d0e69b"
+    },
+    {
+      "locator": "dex_method:Lmiui/systemui/widget/VerticalSeekBar;->onTouchEvent(Landroid/view/MotionEvent;)Z",
+      "contains": [
+        "->setLocation(FF)V",
+        "AbsSeekBar;->onTouchEvent("
+      ],
+      "sha256": "3a9e42eb8d671fb0882cb7066be9e63bb7bcfef94cb4a01e89ddb9fff40b2471"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/miui/volume/MiuiVolumeSeekBar;->performDragAnimation(Landroid/view/MotionEvent;)V",
+      "contains": [
+        "->animDragUp()V",
+        "->animDragMove("
+      ],
+      "sha256": "0a72d89b7373ca1afea389d4f1f6951a1f109181ea968e760db0fc8fe3e3cda3"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/miui/volume/MiuiVolumeSeekBar;->performScaleAnimation(Landroid/view/MotionEvent;)V",
+      "contains": [
+        "->animPressUpTo()V",
+        "->animPressDownTo(F)V"
+      ],
+      "sha256": "4ec7d9ff4a6b151cdfd69ef13a6cdad8e44aaded0494d4bf711f7758a8ebd44e"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/miui/volume/MiuiVolumeSeekBar;->onDetachedFromWindow()V",
+      "contains": [
+        "->clean()V",
+        "->onDestory()V"
+      ],
+      "sha256": "8b6fa5626f18c7de3ae052ae5313b254c8decb84d6d4fb7af5dbbcf4eb57a391"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/miui/volume/MiuiVolumeDialogMotion;->processExpandTouch()V",
+      "contains": [
+        "->mVolumeSeekBar:",
+        "->setSeekBarOnclickListener("
+      ],
+      "sha256": "9ccf1284b0a16c71a6db07f897645e844848c92c8ba4d7d15bf11c05beddd5a4"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/miui/volume/MiuiVolumeDialogMotion;->lambda$processExpandTouch$2()V",
+      "contains": [
+        "->mIsExpandButton:Z",
+        "->calculateFromViewValues(Z)V",
+        "->onExpandClicked()V"
+      ],
+      "sha256": "abccc51cd8d0d90c23c072d1b3be8fd60cdc923c8688d5a7f3195a3fb930cb6d"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/miui/volume/h;->onClick()V",
+      "contains": [
+        "MiuiVolumeDialogMotion;->d("
+      ],
+      "sha256": "e8d8a26d959020b79f90e6d8ebe4fdc18c3adb051bb6aae490d3abf2c2b58565"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/miui/volume/MiuiVolumeDialogView$1;->onClick(Landroid/view/View;)V",
+      "contains": [
+        "->onExpandClicked()V"
+      ],
+      "sha256": "48028e1a735e1b453aeedd7735e7df1e1a7086979c1daf240788dd3f1b657f5a"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/miui/volume/VolumePanelDialogController$1;->onExpandClicked()V",
+      "contains": [
+        "->expandClicked()V"
+      ],
+      "sha256": "1c721a2e5c960ec0f30beb24bbddc195fa1bd49700a1a3b45981815646dc6311"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/miui/volume/VolumePanelViewController;->onExpandClicked()V",
+      "contains": [
+        "->mLockTaskModeState:I",
+        "->showPinningEscapeToast()V",
+        "->isDndPopupShowing()Z",
+        "->isAnimating()Z",
+        "->resetView()V",
+        "->updateExpandedAnim("
+      ],
+      "sha256": "d6db755a63e0c169364b6055caea88e13238f1350faa94b8fc3b41318716098f"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/miui/volume/MiuiVolumeDialogView;->notifyAccessibilityChanged(Z)V",
+      "contains": [
+        "->setOnClickListener(",
+        "->setClickable(Z)V"
+      ],
+      "sha256": "2e14c1da06ffb2f44a6e976bf0dd4a0af3a9e050f726ec8eea96ac22d4872212"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/miui/volume/MiuiVolumeDialogView;->setNeedShowDialog(Z)V",
+      "contains": [
+        "->mNeedShowDialog:Z"
+      ],
+      "sha256": "82f850cfdd65071544db8e81eb3fbbe8fdebb44d2b82a3647f016472351bfc64"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/miui/volume/MiuiVolumeDialogMotion;->isAnimating()Z",
+      "contains": [
+        "->mShowHideAnimator:",
+        "->mVolumeExpandCollapsedAnimator:",
+        "->isRunning()Z"
+      ],
+      "sha256": "b184ee4c90ebca25a15bd4375a7fa012627084b31598a25b5c57c7e3ed9a8f2a"
+    }
+  ]
+}

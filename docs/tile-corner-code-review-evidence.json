@@ -1,0 +1,510 @@
+{
+  "host": {
+    "packageName": "miui.systemui.plugin",
+    "versionCode": 183022200
+  },
+  "verification": "Source-only logic review; no compilation, unit-test execution, lint, build, installation or runtime acceptance.",
+  "evidence": [
+    {
+      "locator": "dex_method:Lmiui/systemui/controlcenter/qs/tileview/QSTileItemIconView;->setEnabledBg(Landroid/graphics/drawable/Drawable;)V",
+      "contains": [
+        ".method private final setEnabledBg(Landroid/graphics/drawable/Drawable;)V",
+        "Lmiui/systemui/controlcenter/qs/tileview/QSTileItemIconView;->enabledBg:Landroid/graphics/drawable/Drawable;"
+      ],
+      "sha256": "12130c81c66ab99a3ad48afc7833f7f21ca52ece4d1e11de004d4961449c2e86",
+      "isStatic": false
+    },
+    {
+      "locator": "dex_method:Lmiui/systemui/controlcenter/qs/tileview/QSTileItemIconView;->setDisabledBg(Landroid/graphics/drawable/Drawable;)V",
+      "contains": [
+        ".method private final setDisabledBg(Landroid/graphics/drawable/Drawable;)V",
+        "Lmiui/systemui/controlcenter/qs/tileview/QSTileItemIconView;->disabledBg:Landroid/graphics/drawable/Drawable;"
+      ],
+      "sha256": "33ecaef03746a66e02456ff2fe1e8abb492a741d90ca0384de0f494165e75ad3",
+      "isStatic": false
+    },
+    {
+      "locator": "dex_method:Lmiui/systemui/controlcenter/qs/tileview/QSTileItemIconView;->updateIconInternal(Lcom/android/systemui/plugins/qs/QSTile$State;ZZZZ)V",
+      "contains": [
+        ".method private final updateIconInternal(Lcom/android/systemui/plugins/qs/QSTile$State;ZZZZ)V",
+        "Lmiui/systemui/controlcenter/qs/tileview/QSTileItemIconView;->state:Lcom/android/systemui/plugins/qs/QSTile$State;",
+        "Lcom/android/systemui/plugins/qs/QSTile$State;->state:I",
+        "Lmiui/systemui/controlcenter/utils/ControlCenterUtils;->getBackgroundMaterialOpenedWithoutSuperPower(Landroid/content/Context;)Z",
+        "Lmiui/systemui/controlcenter/qs/tileview/QSTileItemIconView;->disabledBg:Landroid/graphics/drawable/Drawable;",
+        "Lmiui/systemui/controlcenter/qs/tileview/QSTileItemIconView;->enabledBg:Landroid/graphics/drawable/Drawable;"
+      ],
+      "sha256": "8267109edc0653f933fcd8d93a926882caf80e95ae2436b694378440c1c3ce8a",
+      "isStatic": false
+    },
+    {
+      "locator": "dex_method:Lmiui/systemui/controlcenter/qs/tileview/QSTileItemIconView;->updateResources()V",
+      "contains": [
+        ".method public final updateResources()V",
+        "Lmiui/systemui/controlcenter/qs/tileview/QSTileItemIconView;->updateCornerRadius()V",
+        "Lmiui/systemui/controlcenter/qs/tileview/QSTileItemIconView;->updateSize()V",
+        "Lmiui/systemui/controlcenter/qs/tileview/QSTileItemIconView;->tileSize:F",
+        "Lmiui/systemui/controlcenter/qs/tileview/QSTileItemIconView;->state:Lcom/android/systemui/plugins/qs/QSTile$State;",
+        "Lmiui/systemui/controlcenter/utils/ControlCenterUtils;->getBackgroundMaterialOpenedWithoutSuperPower(Landroid/content/Context;)Z"
+      ],
+      "sha256": "d39cbbc97276e66b2b0d5a59c47c2cf7cd3144814cca212567024456360837f2",
+      "isStatic": false
+    },
+    {
+      "locator": "dex_method:Lmiui/systemui/controlcenter/qs/tileview/QSTileItemIconView;->setCornerRadius(F)V",
+      "contains": [
+        ".method public setCornerRadius(F)V",
+        "Lmiui/systemui/controlcenter/qs/tileview/QSTileItemIconView;->enabledBg:Landroid/graphics/drawable/Drawable;",
+        "Landroid/graphics/drawable/GradientDrawable;->setCornerRadius(F)V",
+        "Lmiui/systemui/controlcenter/qs/tileview/QSTileItemIconView;->disabledBg:Landroid/graphics/drawable/Drawable;"
+      ],
+      "sha256": "0b975bd359f92ecec8fa9b4269645ab2e2382583839df3649d9b626175ced6b9",
+      "isStatic": false
+    },
+    {
+      "locator": "dex_method:Lmiui/systemui/controlcenter/qs/tileview/QSTileItemIconView;->onMaterialModeChanged(Lmiui/systemui/util/MaterialMode;)V",
+      "contains": [
+        ".method public onMaterialModeChanged(Lmiui/systemui/util/MaterialMode;)V"
+      ],
+      "sha256": "113429692a52645d2e274a78acc9000863a64fec9b450ff295da9161c00e2afc",
+      "isStatic": false
+    },
+    {
+      "locator": "dex_method:Lmiui/systemui/controlcenter/qs/tileview/QSTileItemIconView;->recycle()V",
+      "contains": [
+        ".method public final recycle()V"
+      ],
+      "sha256": "221c1ca9bd9c123a5e661d1e6bf580158e5e770630363e6c624d39cf551db159",
+      "isStatic": false
+    },
+    {
+      "locator": "dex_method:Lmiui/systemui/controlcenter/qs/tileview/QSTileItemIconView;->liteIconUpdate(Lcom/android/systemui/plugins/qs/QSTile$State;Landroid/graphics/drawable/Drawable;)V",
+      "contains": [
+        ".method private final liteIconUpdate(Lcom/android/systemui/plugins/qs/QSTile$State;Landroid/graphics/drawable/Drawable;)V",
+        "Lmiui/systemui/controlcenter/qs/tileview/QSTileItemIconView;->enabledBg:Landroid/graphics/drawable/Drawable;"
+      ],
+      "sha256": "9097b16da608988c945e69bc022b137471c909e1281b44f84d3748e52a8554ca",
+      "isStatic": false
+    },
+    {
+      "locator": "dex_method:Lmiui/systemui/controlcenter/qs/tileview/QSTileItemIconView;->updateSize()V",
+      "contains": [
+        ".method private final updateSize()V",
+        "Lmiui/systemui/controlcenter/qs/tileview/QSTileItemIconView;->card:Z",
+        "Lmiui/systemui/controlcenter/qs/tileview/QSTileItemIconView;->tileSize:F",
+        "Lmiui/systemui/controlcenter/qs/tileview/QSTileItemIconView;->getCornerRadius()F",
+        "Lmiui/systemui/controlcenter/qs/tileview/QSTileItemIconView;->setCornerRadius(F)V"
+      ],
+      "sha256": "83d78224e7b9daaa142d91d377f8aad7c9345a5ecceead612d529962267963b4",
+      "isStatic": false
+    },
+    {
+      "locator": "dex_method:Lmiui/systemui/controlcenter/qs/tileview/QSTileItemIconView;->updateIcon(Lcom/android/systemui/plugins/qs/QSTile$State;ZZZZ)V",
+      "contains": [
+        ".method public final updateIcon(Lcom/android/systemui/plugins/qs/QSTile$State;ZZZZ)V",
+        "Lmiui/systemui/controlcenter/qs/tileview/QSTileItemIconView;->state:Lcom/android/systemui/plugins/qs/QSTile$State;",
+        "Lmiui/systemui/controlcenter/qs/tileview/QSTileItemIconView;->updateIconInternal(Lcom/android/systemui/plugins/qs/QSTile$State;ZZZZ)V"
+      ],
+      "sha256": "ca76df91a883288528cdc5215e2e28b14e167dfb13bd0114cbea92300cc0d209",
+      "isStatic": false
+    },
+    {
+      "locator": "dex_method:Lmiui/systemui/controlcenter/qs/tileview/QSTileItemIconView;->updateIcon$lambda$3(Lmiui/systemui/controlcenter/qs/tileview/QSTileItemIconView;ZZZ)V",
+      "contains": [
+        ".method private static final updateIcon$lambda$3(Lmiui/systemui/controlcenter/qs/tileview/QSTileItemIconView;ZZZ)V",
+        "Lmiui/systemui/controlcenter/qs/tileview/QSTileItemIconView;->state:Lcom/android/systemui/plugins/qs/QSTile$State;",
+        "Lmiui/systemui/controlcenter/qs/tileview/QSTileItemIconView;->updateIconInternal(Lcom/android/systemui/plugins/qs/QSTile$State;ZZZZ)V"
+      ],
+      "sha256": "9e007b12ad8bdf796c68ae9f5a1340295e21b65e2d7af2039821f8285ff99e40",
+      "isStatic": true
+    },
+    {
+      "locator": "dex_method:Lmiui/systemui/controlcenter/qs/tileview/QSTileItemIconView;->updateIconInternal$default(Lmiui/systemui/controlcenter/qs/tileview/QSTileItemIconView;Lcom/android/systemui/plugins/qs/QSTile$State;ZZZZILjava/lang/Object;)V",
+      "contains": [
+        ".method public static synthetic updateIconInternal$default(Lmiui/systemui/controlcenter/qs/tileview/QSTileItemIconView;Lcom/android/systemui/plugins/qs/QSTile$State;ZZZZILjava/lang/Object;)V",
+        "Lmiui/systemui/controlcenter/qs/tileview/QSTileItemIconView;->state:Lcom/android/systemui/plugins/qs/QSTile$State;",
+        "Lmiui/systemui/controlcenter/qs/tileview/QSTileItemIconView;->updateIconInternal(Lcom/android/systemui/plugins/qs/QSTile$State;ZZZZ)V"
+      ],
+      "sha256": "262b4761281a577b441c42fde0b88197ab5c07f135147045aad46e6b536f5afb",
+      "isStatic": true
+    },
+    {
+      "locator": "dex_method:Lmiui/systemui/controlcenter/qs/tileview/QSTileItemIconView;-><init>(Landroid/content/Context;Landroid/content/Context;ZZ)V",
+      "contains": [
+        ".method public constructor <init>(Landroid/content/Context;Landroid/content/Context;ZZ)V",
+        "Lmiui/systemui/controlcenter/qs/tileview/QSTileItemIconView;->card:Z",
+        "Lmiui/systemui/controlcenter/qs/tileview/QSTileItemIconView;->isDetailTile:Z",
+        "Lcom/android/systemui/plugins/qs/QSTile$State;->state:I",
+        "Lmiui/systemui/controlcenter/qs/tileview/QSTileItemIconView;->state:Lcom/android/systemui/plugins/qs/QSTile$State;"
+      ],
+      "sha256": "e01f65e5925a174a2daeabba1ef1de79493d275da8b9155617384ff77414f4f6",
+      "isStatic": false
+    },
+    {
+      "locator": "dex_method:Lmiui/systemui/controlcenter/qs/tileview/QSTileItemIconView;->getCornerRadius()F",
+      "contains": [
+        ".method public getCornerRadius()F",
+        "Lmiui/systemui/controlcenter/qs/tileview/QSTileItemIconView;->card:Z",
+        "Lmiui/systemui/controlcenter/qs/tileview/QSTileItemIconView;->tileSize:F"
+      ],
+      "sha256": "5ba62216710971e9a8a6b11cb21814025d63c686ee2e2b47193682fd79167d02",
+      "isStatic": false
+    },
+    {
+      "locator": "dex_method:Lmiui/systemui/controlcenter/qs/tileview/QSTileItemIconView;->getActiveBackgroundDrawable(Lcom/android/systemui/plugins/qs/QSTile$State;)Landroid/graphics/drawable/Drawable;",
+      "contains": [
+        ".method private final getActiveBackgroundDrawable(Lcom/android/systemui/plugins/qs/QSTile$State;)Landroid/graphics/drawable/Drawable;",
+        "Lmiui/systemui/controlcenter/qs/tileview/QSTileItemIconView;->card:Z",
+        "Lmiui/systemui/controlcenter/qs/tileview/QSTileItemIconView;->isDetailTile:Z"
+      ],
+      "sha256": "1b560b7340a85cc1d33dea56b7f54e672627b30b11a00585e017410d9adce3db",
+      "isStatic": false
+    },
+    {
+      "locator": "dex_method:Lmiui/systemui/controlcenter/qs/tileview/QSTileItemIconView;->getDisabledBackgroundDrawable(Lcom/android/systemui/plugins/qs/QSTile$State;)Landroid/graphics/drawable/Drawable;",
+      "contains": [
+        ".method private final getDisabledBackgroundDrawable(Lcom/android/systemui/plugins/qs/QSTile$State;)Landroid/graphics/drawable/Drawable;",
+        "Lmiui/systemui/controlcenter/qs/tileview/QSTileItemIconView;->card:Z",
+        "Lmiui/systemui/controlcenter/qs/tileview/QSTileItemIconView;->isDetailTile:Z"
+      ],
+      "sha256": "22b8e07f54d8df37447c584cef556a81eb158cd9b135cfb0f3e67412798a0ec2",
+      "isStatic": false
+    },
+    {
+      "locator": "dex_method:Lmiui/systemui/controlcenter/qs/tileview/QSTileItemIconView;->getBackgroundDrawable(Lcom/android/systemui/plugins/qs/QSTile$State;)Landroid/graphics/drawable/Drawable;",
+      "contains": [
+        ".method private final getBackgroundDrawable(Lcom/android/systemui/plugins/qs/QSTile$State;)Landroid/graphics/drawable/Drawable;",
+        "Lcom/android/systemui/plugins/qs/QSTile$State;->state:I",
+        "Lmiui/systemui/controlcenter/qs/tileview/QSTileItemIconView;->card:Z",
+        "Lmiui/systemui/controlcenter/qs/tileview/QSTileItemIconView;->isDetailTile:Z"
+      ],
+      "sha256": "70daa110530afd8b6c4fa465bfa0eef22435f1905c4dea37f574a1b83875c507",
+      "isStatic": false
+    },
+    {
+      "locator": "dex_method:Lmiui/systemui/controlcenter/qs/tileview/QSTileItemView;->onConfigurationChanged(I)V",
+      "contains": [
+        ".method public onConfigurationChanged(I)V",
+        "Lmiui/systemui/controlcenter/qs/tileview/QSTileItemView;->updateSize()V"
+      ],
+      "sha256": "2a65b31f5d2b57f4cd37195ebc9ff16de4d598ef64f39a041810f06bc6db6c0d",
+      "isStatic": false
+    },
+    {
+      "locator": "dex_method:Lmiui/systemui/controlcenter/qs/tileview/QSTileItemView;->onMaterialModeChanged(Lmiui/systemui/util/MaterialMode;)V",
+      "contains": [
+        ".method public onMaterialModeChanged(Lmiui/systemui/util/MaterialMode;)V",
+        "Lmiui/systemui/controlcenter/utils/ControlCenterUtils;->getBackgroundMaterialOpenedWithoutSuperPower(Landroid/content/Context;)Z",
+        "Lmiui/systemui/controlcenter/qs/tileview/QSTileItemView;->state:Lcom/android/systemui/plugins/qs/QSTile$State;",
+        "Lmiui/systemui/controlcenter/qs/tileview/QSTileItemIconView;->onMaterialModeChanged(Lmiui/systemui/util/MaterialMode;)V"
+      ],
+      "sha256": "7c5899b09ab480c96d232c68ea5e007dd56728bd7e8b959b25675c11c405146a",
+      "isStatic": false
+    },
+    {
+      "locator": "dex_method:Lmiui/systemui/controlcenter/qs/tileview/QSTileItemView;->recycle()V",
+      "contains": [
+        ".method public recycle()V"
+      ],
+      "sha256": "d340462e62c4155c8d2932427fc7183b13fad40752074007f0805ae4178130b2",
+      "isStatic": false
+    },
+    {
+      "locator": "dex_method:Lmiui/systemui/controlcenter/panel/secondary/brightness/BrightnessPanelTilesDelegate;->updateSize(I)V",
+      "contains": [
+        ".method private final updateSize(I)V",
+        "Lmiui/systemui/controlcenter/qs/tileview/QSTileItemView;->updateSize()V"
+      ],
+      "sha256": "22234e4d2cb20551d02a50360f3ba1f9724b383343f6da33391638be1c0674b8",
+      "isStatic": false
+    },
+    {
+      "locator": "dex_method:Lmiui/systemui/controlcenter/panel/secondary/detail/DetailPanelTilesDelegate;->onConfigurationChanged(I)V",
+      "contains": [
+        ".method public onConfigurationChanged(I)V",
+        "Lmiui/systemui/controlcenter/qs/tileview/QSCardItemView;->updateSize()V"
+      ],
+      "sha256": "dd20575ff5ce2706f55eaaa45f4c8aba6e3796385748ada52497a1b556764ac8",
+      "isStatic": false
+    },
+    {
+      "locator": "dex_method:Lmiui/systemui/controlcenter/panel/main/qs/QSItemViewHolder;->setCornerRadius(F)V",
+      "contains": [
+        ".method public setCornerRadius(F)V",
+        "Lmiui/systemui/controlcenter/qs/tileview/QSTileItemIconView;->setCornerRadius(F)V"
+      ],
+      "sha256": "781cb6cb565dd6e581fe64e74d4885a05bbcaba53cfd124780937ff21c74501e",
+      "isStatic": false
+    },
+    {
+      "locator": "dex_method:Lmiui/systemui/controlcenter/panel/secondary/detail/DetailPanelAnimator;->frameCallback()V",
+      "contains": [
+        ".method public frameCallback()V",
+        "Lmiui/systemui/controlcenter/panel/secondary/SecondaryPanelAnimatorBase;->isLowEndDevice()Z",
+        "Lmiui/systemui/controlcenter/qs/tileview/QSTileItemIconView;->setCornerRadius(F)V",
+        "Lmiui/systemui/controlcenter/qs/tileview/QSCardItemView;->setCornerRadius(F)V"
+      ],
+      "sha256": "fb29e7130764a1d8df66c26c2270feeb0af90d7f8882cbe47b8cd54664eddd63",
+      "isStatic": false
+    },
+    {
+      "locator": "dex_method:Lmiui/systemui/controlcenter/qs/tileview/QSTileItemIconView$icon$1$1;->getOutline(Landroid/view/View;Landroid/graphics/Outline;)V",
+      "contains": [
+        ".method public getOutline(Landroid/view/View;Landroid/graphics/Outline;)V",
+        "Landroid/graphics/drawable/GradientDrawable;->getCornerRadius()F",
+        "Lmiui/systemui/util/ThemeUtils;->getDefaultPluginTheme()Z",
+        "Lmiui/systemui/controlcenter/qs/tileview/QSTileItemIconView;->getCornerRadius()F"
+      ],
+      "sha256": "8ebf8e538e2cd35e37f00e4babc70e78cd094dcddc462a69be7f5028b442211b",
+      "isStatic": false
+    },
+    {
+      "locator": "dex_method:Lmiui/systemui/util/ThemeUtils;->getDefaultPluginTheme()Z",
+      "contains": [
+        ".method public final getDefaultPluginTheme()Z",
+        "Lmiui/systemui/util/ThemeUtils;->defaultPluginTheme:Z"
+      ],
+      "sha256": "99432cf5c52c47f95ec5b2c21de8e8346dc1c78d8e2e88ade7e4469685a8815c",
+      "isStatic": false
+    },
+    {
+      "locator": "dex_method:Lmiui/systemui/controlcenter/utils/ControlCenterUtils;->getBackgroundMaterialOpenedWithoutSuperPower(Landroid/content/Context;)Z",
+      "contains": [
+        ".method public static final getBackgroundMaterialOpenedWithoutSuperPower(Landroid/content/Context;)Z",
+        "Lmiui/systemui/util/MiBlurCompat;->getBackgroundMaterialOpenedInDefaultTheme(Landroid/content/Context;)Z"
+      ],
+      "sha256": "d4a9e9f2a82deb37fa9587f5012d5c629e681bbb3d3f7962f07399b45f35da0a",
+      "isStatic": true
+    },
+    {
+      "locator": "dex_field:Lmiui/systemui/controlcenter/qs/tileview/QSTileItemIconView;->card:Z",
+      "contains": [
+        ".field private final card:Z"
+      ],
+      "sha256": "7d0374c84815c9ad7776d3d2e888dc014ba0cc746b664d45251e9952b6b1902e",
+      "isStatic": false
+    },
+    {
+      "locator": "dex_field:Lmiui/systemui/controlcenter/qs/tileview/QSTileItemIconView;->isDetailTile:Z",
+      "contains": [
+        ".field private final isDetailTile:Z"
+      ],
+      "sha256": "1043380124e19390d68ac091810d65f23c60ab238f7ab3806c657e7e3a5c24be",
+      "isStatic": false
+    },
+    {
+      "locator": "dex_field:Lmiui/systemui/controlcenter/qs/tileview/QSTileItemIconView;->tileSize:F",
+      "contains": [
+        ".field private tileSize:F"
+      ],
+      "sha256": "164ccdaa08d21fe64e8bd1758555b85ddca5ec9cb766437d9d21cc5b3fa771c6",
+      "isStatic": false
+    },
+    {
+      "locator": "dex_field:Lmiui/systemui/controlcenter/qs/tileview/QSTileItemIconView;->enabledBg:Landroid/graphics/drawable/Drawable;",
+      "contains": [
+        ".field private enabledBg:Landroid/graphics/drawable/Drawable;"
+      ],
+      "sha256": "7d0a082ec124b567d3ee3186bbc49acd94139a186e9d93e2ab6bb216aae4c4b3",
+      "isStatic": false
+    },
+    {
+      "locator": "dex_field:Lmiui/systemui/controlcenter/qs/tileview/QSTileItemIconView;->disabledBg:Landroid/graphics/drawable/Drawable;",
+      "contains": [
+        ".field private disabledBg:Landroid/graphics/drawable/Drawable;"
+      ],
+      "sha256": "420a6703ef0d34d977247dc53d1e3309c3ebd999c4d96705f27c4c7076b048c9",
+      "isStatic": false
+    },
+    {
+      "locator": "dex_field:Lmiui/systemui/controlcenter/qs/tileview/QSTileItemIconView;->icon:Lmiui/systemui/widget/ImageView;",
+      "contains": [
+        ".field private final icon:Lmiui/systemui/widget/ImageView;"
+      ],
+      "sha256": "9a381e1ecae9a4896616618aecae9f8e7fac59b9444fe02e039f1f086068dda6",
+      "isStatic": false
+    },
+    {
+      "locator": "dex_field:Lmiui/systemui/util/ThemeUtils;->INSTANCE:Lmiui/systemui/util/ThemeUtils;",
+      "contains": [
+        ".field public static final INSTANCE:Lmiui/systemui/util/ThemeUtils;"
+      ],
+      "sha256": "d07948dde9ccb2d4198005f3ed0515f6fb2d33e5dbf2d821a9a2f7394b33539d",
+      "isStatic": true
+    },
+    {
+      "locator": "axml:res/VNf.xml",
+      "contains": [
+        "<?xml version=\"1.0\" encoding=\"utf-8\"?>",
+        "<shape",
+        "<solid",
+        "<corners"
+      ],
+      "sha256": "97b5ebc1904970ed68f70a6546719aceaaf3f3268153021420377ee2d1630bcb"
+    },
+    {
+      "locator": "axml:res/3zO.xml",
+      "contains": [
+        "<?xml version=\"1.0\" encoding=\"utf-8\"?>",
+        "<shape",
+        "<solid",
+        "<corners"
+      ],
+      "sha256": "bd01924d503e30ed155e315fd55e5d575d270cdc659c35915318fcca847df3db"
+    },
+    {
+      "locator": "axml:res/WrS.xml",
+      "contains": [
+        "<?xml version=\"1.0\" encoding=\"utf-8\"?>",
+        "<shape",
+        "<solid",
+        "<corners"
+      ],
+      "sha256": "3d3334ae9be108bec2bee89fac603ba697b08f0e78fabca36b234a1e1464f73b"
+    },
+    {
+      "locator": "axml:res/_BL.xml",
+      "contains": [
+        "<?xml version=\"1.0\" encoding=\"utf-8\"?>",
+        "<shape",
+        "<solid",
+        "<corners"
+      ],
+      "sha256": "4ef4ee71c5c90824aab51f07ab71de80bcb11658b08eef05e003c462d1b54693"
+    },
+    {
+      "locator": "axml:res/Pu9.xml",
+      "contains": [
+        "<?xml version=\"1.0\" encoding=\"utf-8\"?>",
+        "<shape",
+        "<solid",
+        "<corners"
+      ],
+      "sha256": "6c4ea5b947f364dbb566f06ee2278928d26426a8c39e6200fa0a7b8cfe941f3e"
+    },
+    {
+      "locator": "dex_method:Lmiui/systemui/controlcenter/panel/secondary/brightness/BrightnessPanelTilesDelegate;->getQSTileItemView(Ljava/lang/String;)Lmiui/systemui/controlcenter/qs/tileview/QSTileItemView;",
+      "contains": [
+        ".method private final getQSTileItemView(Ljava/lang/String;)Lmiui/systemui/controlcenter/qs/tileview/QSTileItemView;",
+        "const/4 v8, 0x1",
+        "-><init>(Landroid/content/Context;Landroid/content/Context;ZZILkotlin/jvm/internal/DefaultConstructorMarker;)V"
+      ],
+      "sha256": "a592c09369c232065e8777c6b4badab28de699221d6489ac2f2f1300f94b7b2a",
+      "isStatic": false
+    }
+  ],
+  "resourceFiles": [
+    {
+      "locator": "resource:0x7f080987",
+      "path": "res/VNf.xml"
+    },
+    {
+      "locator": "resource:0x7f080988",
+      "path": "res/3zO.xml"
+    },
+    {
+      "locator": "resource:0x7f080989",
+      "path": "res/WrS.xml"
+    },
+    {
+      "locator": "resource:0x7f08098a",
+      "path": "res/_BL.xml"
+    },
+    {
+      "locator": "resource:0x7f08098b",
+      "path": "res/Pu9.xml"
+    }
+  ],
+  "resourceNames": [
+    {
+      "locator": "resource:0x7f080987",
+      "name": "qs_background_disabled",
+      "type": "drawable"
+    },
+    {
+      "locator": "resource:0x7f080988",
+      "name": "qs_background_enabled",
+      "type": "drawable"
+    },
+    {
+      "locator": "resource:0x7f080989",
+      "name": "qs_background_restricted",
+      "type": "drawable"
+    },
+    {
+      "locator": "resource:0x7f08098a",
+      "name": "qs_background_unavailable",
+      "type": "drawable"
+    },
+    {
+      "locator": "resource:0x7f08098b",
+      "name": "qs_background_warning",
+      "type": "drawable"
+    }
+  ],
+  "callerReferences": [
+    {
+      "target": "dex_method:Lmiui/systemui/controlcenter/qs/tileview/QSTileItemIconView;->onMaterialModeChanged(Lmiui/systemui/util/MaterialMode;)V",
+      "resolution": "dispatch",
+      "complete": true,
+      "sources": [
+        "dex_method:Lmiui/systemui/controlcenter/qs/tileview/QSTileItemView;->onMaterialModeChanged(Lmiui/systemui/util/MaterialMode;)V"
+      ]
+    },
+    {
+      "target": "dex_method:Lmiui/systemui/controlcenter/qs/tileview/QSTileItemIconView;->recycle()V",
+      "resolution": "dispatch",
+      "complete": true,
+      "sources": [
+        "dex_method:Lmiui/systemui/controlcenter/qs/tileview/QSTileItemView;->recycle()V"
+      ]
+    },
+    {
+      "target": "dex_method:Lmiui/systemui/controlcenter/qs/tileview/QSTileItemIconView;->setCornerRadius(F)V",
+      "resolution": "dispatch",
+      "complete": true,
+      "sources": [
+        "dex_method:Lmiui/systemui/controlcenter/panel/main/qs/QSItemViewHolder;->setCornerRadius(F)V",
+        "dex_method:Lmiui/systemui/controlcenter/panel/secondary/detail/DetailPanelAnimator;->frameCallback()V",
+        "dex_method:Lmiui/systemui/controlcenter/qs/tileview/QSTileItemIconView;->updateSize()V"
+      ]
+    },
+    {
+      "target": "dex_method:Lmiui/systemui/controlcenter/qs/tileview/QSTileItemIconView;->setDisabledBg(Landroid/graphics/drawable/Drawable;)V",
+      "resolution": "dispatch",
+      "complete": true,
+      "sources": [
+        "dex_method:Lmiui/systemui/controlcenter/qs/tileview/QSTileItemIconView;->updateIconInternal(Lcom/android/systemui/plugins/qs/QSTile$State;ZZZZ)V"
+      ]
+    },
+    {
+      "target": "dex_method:Lmiui/systemui/controlcenter/qs/tileview/QSTileItemIconView;->setEnabledBg(Landroid/graphics/drawable/Drawable;)V",
+      "resolution": "dispatch",
+      "complete": true,
+      "sources": [
+        "dex_method:Lmiui/systemui/controlcenter/qs/tileview/QSTileItemIconView;->liteIconUpdate(Lcom/android/systemui/plugins/qs/QSTile$State;Landroid/graphics/drawable/Drawable;)V",
+        "dex_method:Lmiui/systemui/controlcenter/qs/tileview/QSTileItemIconView;->updateIconInternal(Lcom/android/systemui/plugins/qs/QSTile$State;ZZZZ)V"
+      ]
+    },
+    {
+      "target": "dex_method:Lmiui/systemui/controlcenter/qs/tileview/QSTileItemIconView;->updateIconInternal(Lcom/android/systemui/plugins/qs/QSTile$State;ZZZZ)V",
+      "resolution": "dispatch",
+      "complete": true,
+      "sources": [
+        "dex_method:Lmiui/systemui/controlcenter/qs/tileview/QSTileItemIconView;->updateIcon$lambda$3(Lmiui/systemui/controlcenter/qs/tileview/QSTileItemIconView;ZZZ)V",
+        "dex_method:Lmiui/systemui/controlcenter/qs/tileview/QSTileItemIconView;->updateIcon(Lcom/android/systemui/plugins/qs/QSTile$State;ZZZZ)V",
+        "dex_method:Lmiui/systemui/controlcenter/qs/tileview/QSTileItemIconView;->updateIconInternal$default(Lmiui/systemui/controlcenter/qs/tileview/QSTileItemIconView;Lcom/android/systemui/plugins/qs/QSTile$State;ZZZZILjava/lang/Object;)V"
+      ]
+    },
+    {
+      "target": "dex_method:Lmiui/systemui/controlcenter/qs/tileview/QSTileItemIconView;->updateResources()V",
+      "resolution": "dispatch",
+      "complete": true,
+      "sources": [
+        "dex_method:Lmiui/systemui/controlcenter/panel/secondary/brightness/BrightnessPanelTilesDelegate;->updateSize(I)V",
+        "dex_method:Lmiui/systemui/controlcenter/panel/secondary/detail/DetailPanelTilesDelegate;->onConfigurationChanged(I)V",
+        "dex_method:Lmiui/systemui/controlcenter/qs/tileview/QSTileItemIconView;-><init>(Landroid/content/Context;Landroid/content/Context;ZZ)V",
+        "dex_method:Lmiui/systemui/controlcenter/qs/tileview/QSTileItemView;->onConfigurationChanged(I)V"
+      ]
+    }
+  ]
+}
