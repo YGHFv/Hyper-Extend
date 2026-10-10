@@ -33,6 +33,14 @@ import io.github.YGHFv.HyperExtend.core.featureById
  * 一批用户根本没开过的功能在后台被装上了 hook。
  */
 class HookSettings internal constructor(private val prefs: SharedPreferences?) {
+    internal fun safeModeDisabled(scope: String): Boolean = runCatching {
+        prefs?.getBoolean(io.github.YGHFv.HyperExtend.core.SafeModeKeys.disabled(scope), false) ?: true
+    }.getOrDefault(true)
+
+    internal fun safeModeReset(scope: String): Long = maxOf(
+        long(io.github.YGHFv.HyperExtend.core.SafeModeKeys.reset(scope), 0),
+        long(io.github.YGHFv.HyperExtend.core.FRAMEWORK_FUSE_RESET_KEY, 0),
+    )
 
     /** 这份设置是否真的读到了。界面侧用来在「关于」页提示「设置未同步」。 */
     val isAvailable: Boolean get() = prefs != null

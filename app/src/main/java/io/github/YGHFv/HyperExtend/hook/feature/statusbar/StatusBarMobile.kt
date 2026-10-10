@@ -85,7 +85,7 @@ internal object StatusBarMobile {
 
         val ok = HookRuntime.hook(bind, "$FEATURE/MiuiMobileIconBinder#bind") { chain ->
             // 第三个参数就是这一条 SIM 的视图模型（见 MiuiMobileIconBinder#bind 的签名）。
-            val viewModel = chain.args.getOrNull(2)
+            val viewModel = chain.args.getOrNull(2)?.let(DualRowSignalHooks::originalViewModel)
             if (viewModel != null) {
                 if (hideIndicator) replaceOnce(viewModel, "inOutVisible", hidden)
                 if (hideRoaming) {

@@ -10,9 +10,9 @@
  * 适用性的默示担保。详见 GNU Affero 通用公共许可证。
  *
  * ---------------------------------------------------------------------------
- * 设置页的三个二级页面：界面 / 个性化 / 备份恢复。
+ * 设置页的二级页面，以及设置首页共用的备份恢复入口。
  *
- * 设置页本身只有入口行（与作用域页同构），开关与动作全部住在这里。
+ * 备份动作在设置首页直接展示，外观开关与按宿主安全模式保留独立页面。
  * 「界面」一页的条目文案直接沿用参考项目（阅微补全计划）的定案：
  * 主题 / 模糊 / 澎湃水底栏 / 液态玻璃，含义与实现一一对应，不另造词。
  */
@@ -73,6 +73,7 @@ import top.yukonga.miuix.kmp.basic.TopAppBar
 import top.yukonga.miuix.kmp.icon.MiuixIcons
 import top.yukonga.miuix.kmp.icon.extended.Back
 import top.yukonga.miuix.kmp.preference.SwitchPreference
+import top.yukonga.miuix.kmp.preference.ArrowPreference
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 /** 设置页的二级页面清单。id 是 rememberSaveable 的存档键，定了就不要改。 */
@@ -80,6 +81,7 @@ enum class AppSettingsPage(val id: String, val title: String) {
     INTERFACE("interface", "界面"),
     PERSONALIZATION("personalization", "个性化"),
     BACKUP("backup", "备份恢复"),
+    SAFE_MODE("safe_mode", "安全模式"),
     LOGS("logs", "日志"),
     ;
 
@@ -100,7 +102,7 @@ internal fun AppSettingsPageHost(
     ui: UiPrefs.UiState,
     onUi: (UiPrefs.UiState) -> Unit,
     onReloadSettings: () -> Unit,
-    onReset: () -> Unit,
+    onReset: () -> Boolean,
     onBack: () -> Unit,
 ) {
     if (page == AppSettingsPage.LOGS) {
@@ -137,7 +139,8 @@ internal fun AppSettingsPageHost(
             when (page) {
                 AppSettingsPage.INTERFACE -> InterfacePage(ui, onUi)
                 AppSettingsPage.PERSONALIZATION -> PersonalizationPage(ui, onUi)
-                AppSettingsPage.BACKUP -> BackupPage(onReloadSettings, onReset)
+                AppSettingsPage.BACKUP -> BackupSettingsGroup(onReloadSettings, onReset)
+                AppSettingsPage.SAFE_MODE -> SafeModePage()
                 AppSettingsPage.LOGS -> Unit
             }
             Spacer(Modifier.height(16.dp))
@@ -354,13 +357,12 @@ private fun IconStylePreview(
 // ------------------------------------------------------------------ 备份恢复
 
 /**
- * 「备份恢复」页。从设置页原样搬过来的三个动作 —— 逻辑没有任何变化，
- * 只是入口从「和外观开关挤在一页」变成了独立页面。
+ * 设置首页的整行入口；旧版保存的 backup 页面位置仍可使用同一组动作。
  */
 @Composable
-private fun BackupPage(
+internal fun BackupSettingsGroup(
     onReloadSettings: () -> Unit,
-    onReset: () -> Unit,
+    onReset: () -> Boolean,
 ) {
     var confirmReset by remember { mutableStateOf(false) }
     val context = LocalContext.current
@@ -406,28 +408,26 @@ private fun BackupPage(
         }
     }
 
-    GroupTitle("功能设置")
+    GroupTitle("备份与恢复")
     SettingsCard {
-        CardActionRow(
-            label = "备份到文件",
+        ArrowPreference(
+            title = "备份模块配置",
             onClick = { exportLauncher.launch("hyperextend-settings-${BuildConfig.VERSION_NAME}.json") },
         )
-        RowDivider()
-        CardActionRow(
-            label = "从文件恢复",
+        ArrowPreference(
+            title = "恢复模块配置",
             onClick = { importLauncher.launch(arrayOf("application/json", "text/plain", "*/*")) },
         )
-        CardDivider()
-        CardActionRow(label = "恢复默认设置", danger = true, onClick = { confirmReset = true })
+        ArrowPreference(title = "重置模块配置", onClick = { confirmReset = true })
     }
-    HintText(
-        message ?: "备份功能设置，不包含图片文件和界面外观。",
-        color = if (message != null) MiuixTheme.colorScheme.primary else null,
-    )
-    top.yukonga.miuix.kmp.overlay.OverlayDialog(show = confirmReset, title = "恢复默认设置？",
-        summary = "功能设置与自定义卡面图片将被清除，此操作不可撤销。",
+    message?.let { HintText(it, color = MiuixTheme.colorScheme.primary) }
+    top.yukonga.miuix.kmp.overlay.OverlayDialog(show = confirmReset, title = "重置模块配置？",
+        summary = "功能设置与自定义卡面图片将被清除，此操作不可撤销。安全模式和界面外观保持不变。备份仅包含功能配置，不包含图片文件。",
         onDismissRequest = { confirmReset = false }) {
-        CardActionRow("确认恢复", danger = true) { confirmReset = false; onReset() }
+        CardActionRow("确认重置", danger = true) {
+            confirmReset = false
+            message = if (onReset()) "已重置模块配置，安全模式保持不变。" else "重置未完成，请查看日志后重试。"
+        }
         CardActionRow("取消") { confirmReset = false }
     }
 }

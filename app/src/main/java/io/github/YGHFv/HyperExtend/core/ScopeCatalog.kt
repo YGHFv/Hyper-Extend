@@ -164,7 +164,7 @@ enum class ScopeFeatureGroup(val scopeId: String, val title: String, val summary
     STATUS_BAR("systemui", "状态栏", "图标、电池、网速、时钟与手势"),
     LOCK_SCREEN("systemui", "锁屏", "锁屏通知、状态栏与解锁提示"),
     CONTROL_CENTER("systemui", "通知与控制中心", "通知提醒、背景与显示设置"),
-    SYSTEM_UI_OTHER("systemui", "其他", "通知小窗及其他系统界面设置"),
+    SYSTEM_UI_OTHER("systemui", "其他", "手势横条、旋转建议、主题取色与剪贴板"),
 }
 
 val HyperFeature.entryGroup: ScopeFeatureGroup?

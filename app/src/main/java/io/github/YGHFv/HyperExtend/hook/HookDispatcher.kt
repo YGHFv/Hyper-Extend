@@ -33,9 +33,14 @@ import io.github.YGHFv.HyperExtend.hook.feature.statusbar.StatusBarClock
 import io.github.YGHFv.HyperExtend.hook.feature.statusbar.StatusBarGestures
 import io.github.YGHFv.HyperExtend.hook.feature.statusbar.StatusBarIcons
 import io.github.YGHFv.HyperExtend.hook.feature.statusbar.StatusBarMobile
+import io.github.YGHFv.HyperExtend.hook.feature.statusbar.DualRowSignalHooks
+import io.github.YGHFv.HyperExtend.hook.feature.statusbar.MobileTypeTextHooks
+import io.github.YGHFv.HyperExtend.hook.feature.statusbar.MobileTypeDisplayHooks
+import io.github.YGHFv.HyperExtend.hook.feature.systemui.NotificationCountLimitHooks
 import io.github.YGHFv.HyperExtend.hook.feature.statusbar.StatusBarNetworkSpeed
 import io.github.YGHFv.HyperExtend.hook.feature.systemui.LockScreenHooks
 import io.github.YGHFv.HyperExtend.hook.feature.systemui.NotificationHooks
+import io.github.YGHFv.HyperExtend.hook.feature.systemui.NotificationImportanceHooks
 import io.github.YGHFv.HyperExtend.hook.feature.systemui.NotificationExpansionHooks
 import io.github.YGHFv.HyperExtend.hook.feature.systemui.ClipboardOverlayHooks
 import io.github.YGHFv.HyperExtend.hook.feature.systemui.ControlCenterHooks
@@ -112,6 +117,7 @@ internal object HookDispatcher {
         HostPlatform.TSM_CLIENT -> { loader, settings -> installNfcCardFace(loader, settings) }
         HostPlatform.SETTINGS -> { loader, settings ->
             (ControlCenterHooks.installSettings(loader, settings) +
+                NotificationImportanceHooks.installSettings(loader, settings) +
                 PasskeyFix.installPackage(packageName, loader, settings)).joinToString()
         }
         HostPlatform.SECURITY_CENTER,
@@ -160,6 +166,7 @@ internal object HookDispatcher {
         }
 
 
+        if (SafeModeRuntime.begin(packageName, applicationInfo?.dataDir, settings)) return
         if (packageName == HostPlatform.SYSTEMUI && BootLoopGuard.shouldSkipSystemUiHooks(settings, applicationInfo?.dataDir)) {
             ModuleLog.warn("SystemUI hooks skipped (framework hook fuse engaged)")
             return
@@ -220,42 +227,26 @@ internal object HookDispatcher {
 
         parts += LockScreenHooks.install(loader, settings)
         parts += NotificationHooks.install(loader, settings)
+        parts.installSystemUiFeature(settings, NotificationCountLimitHooks.FEATURE) { NotificationCountLimitHooks.install(loader) }
         parts += NotificationExpansionHooks.install(loader, settings)
         parts += ControlCenterHooks.install(loader, settings)
         parts += SystemUiCustomHooks.install(loader, settings)
         parts += MediaCardHooks.install(loader, settings)
         parts += SystemUiPluginHooks.install(loader, settings)
         parts.installSystemUiFeature(settings, "clipboard_native_overlay") { ClipboardOverlayHooks.install(loader) }
-        if (settings.isOn("gesture_line")) {
-            parts += "gesture_line=${GestureLineHider.install(loader, settings)}"
-        }
-        if (settings.isOn("wallpaper_monet")) {
-            parts += "wallpaper_monet=${WallpaperMonetFix.install(loader, settings)}"
-        }
-        if (settings.isOn("native_notify_icon")) {
-            parts += "native_notify_icon=${NativeNotifyIcon.install(loader, settings)}"
-        }
-        if (settings.isOn("rotation_suggestion")) {
-            parts += "rotation_suggestion=${RotationSuggestionHider.install(loader)}"
-        }
-        if (settings.isOn("status_bar_icons")) {
-            parts += "status_bar_icons=${StatusBarIcons.install(loader, settings)}"
-        }
-        if (settings.isOn("status_bar_battery_style")) {
-            parts += "status_bar_battery_style=${StatusBarBatteryStyle.install(loader, settings)}"
-        }
-        if (settings.isOn("status_bar_mobile")) {
-            parts += "status_bar_mobile=${StatusBarMobile.install(loader, settings)}"
-        }
-        if (settings.isOn("status_bar_network_speed")) {
-            parts += "status_bar_network_speed=${StatusBarNetworkSpeed.install(loader, settings)}"
-        }
-        if (settings.isOn("status_bar_clock")) {
-            parts += "status_bar_clock=${StatusBarClock.install(loader, settings)}"
-        }
-        if (settings.isOn("status_bar_double_tap")) {
-            parts += "status_bar_double_tap=${StatusBarGestures.install(loader, settings)}"
-        }
+        parts.installSystemUiFeature(settings, "gesture_line") { GestureLineHider.install(loader, settings) }
+        parts.installSystemUiFeature(settings, "wallpaper_monet") { WallpaperMonetFix.install(loader, settings) }
+        parts.installSystemUiFeature(settings, "native_notify_icon") { NativeNotifyIcon.install(loader, settings) }
+        parts.installSystemUiFeature(settings, "rotation_suggestion") { RotationSuggestionHider.install(loader) }
+        parts.installSystemUiFeature(settings, "status_bar_icons") { StatusBarIcons.install(loader, settings) }
+        parts.installSystemUiFeature(settings, "status_bar_battery_style") { StatusBarBatteryStyle.install(loader, settings) }
+        parts.installSystemUiFeature(settings, "status_bar_mobile") { StatusBarMobile.install(loader, settings) }
+        parts.installSystemUiFeature(settings, "status_bar_dual_row_signal") { DualRowSignalHooks.install(loader, settings) }
+        parts.installSystemUiFeature(settings, "status_bar_mobile_type_text") { MobileTypeTextHooks.install(loader, settings) }
+        parts.installSystemUiFeature(settings, "status_bar_mobile_type_display") { MobileTypeDisplayHooks.install(loader, settings) }
+        parts.installSystemUiFeature(settings, "status_bar_network_speed") { StatusBarNetworkSpeed.install(loader, settings) }
+        parts.installSystemUiFeature(settings, "status_bar_clock") { StatusBarClock.install(loader, settings) }
+        parts.installSystemUiFeature(settings, "status_bar_double_tap") { StatusBarGestures.install(loader, settings) }
         return if (parts.isEmpty()) "no feature enabled" else parts.joinToString(",")
     }
 

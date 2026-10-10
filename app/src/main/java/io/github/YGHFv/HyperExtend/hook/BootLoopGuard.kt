@@ -12,7 +12,6 @@
 
 package io.github.YGHFv.HyperExtend.hook
 
-import io.github.YGHFv.HyperExtend.core.FRAMEWORK_FUSE_RESET_KEY
 import io.github.YGHFv.HyperExtend.core.ModuleLog
 import java.io.File
 
@@ -26,10 +25,11 @@ internal object BootLoopGuard {
     @Synchronized
     fun shouldSkipSystemServerHooks(settings: HookSettings, countRestart: Boolean): Boolean {
         val previous = serverStore.read()
-        val next = BootFusePolicy.next(previous, System.currentTimeMillis(), settings.long(FRAMEWORK_FUSE_RESET_KEY), countRestart)
+        val next = BootFusePolicy.next(previous, System.currentTimeMillis(), settings.safeModeReset("system_server"), countRestart)
         if (next == null) {
             ModuleLog.error("framework hook fuse: unreadable state or unsafe clock; hooks skipped")
             engageProperty()
+            SafeModeRuntime.trip("系统框架启动保护：安全记录无法读取或系统时间异常。请查看日志后恢复")
             return true
         }
         val reset = previous != null && next.lastResetToken > previous.lastResetToken
@@ -38,12 +38,14 @@ internal object BootLoopGuard {
             if (!serverStore.write(next)) {
                 engageProperty()
                 ModuleLog.error("framework hook fuse: manual reset failed; hooks skipped")
+                SafeModeRuntime.trip("系统框架启动保护：无法保存恢复状态，仍保持安全模式")
                 return true
             }
             if (!setProperty("0")) {
                 engageProperty()
-                if (previous != null) serverStore.write(previous)
+                serverStore.write(previous)
                 ModuleLog.error("framework hook fuse: cannot clear property; hooks skipped")
+                SafeModeRuntime.trip("系统框架启动保护：无法清除保护属性，仍保持安全模式")
                 return true
             }
             ModuleLog.info("framework hook fuse reset; automatic protection remains enabled")
@@ -53,11 +55,14 @@ internal object BootLoopGuard {
             engageProperty()
             if (next.disabled) serverStore.write(next)
             ModuleLog.warn("framework hook fuse engaged; system_server hooks skipped")
+            SafeModeRuntime.trip(if (next.disabled) "系统框架在五分钟内连续重启三次，已触发启动保护"
+                else "系统框架保护属性已开启或无法读取，已暂停模块功能")
             return true
         }
         if (countRestart && !serverStore.write(next)) {
             engageProperty()
             ModuleLog.error("framework hook fuse: cannot persist start; hooks skipped")
+            SafeModeRuntime.trip("系统框架启动保护：无法保存启动记录，已暂停模块功能")
             return true
         }
         return false
@@ -74,21 +79,25 @@ internal object BootLoopGuard {
     private fun checkSystemUi(settings: HookSettings, dataDir: String?): Boolean {
         if (readDisabledProperty() != false) {
             ModuleLog.warn("framework hook fuse engaged; SystemUI hooks skipped")
+            SafeModeRuntime.trip("系统框架启动保护已触发，系统界面同时暂停。请先恢复系统框架并重启设备，再恢复系统界面")
             return true
         }
         if (dataDir.isNullOrBlank()) {
             ModuleLog.error("SystemUI fuse: no private data directory; hooks skipped")
+            SafeModeRuntime.trip("系统界面启动保护：无法读取私有目录，已暂停模块功能")
             return true
         }
         val store = BootFuseStore(File(dataDir, "files/hyperextend_systemui_bootguard"))
         val previous = store.read()
-        val next = BootFusePolicy.next(previous, System.currentTimeMillis(), settings.long(FRAMEWORK_FUSE_RESET_KEY), true)
+        val next = BootFusePolicy.next(previous, System.currentTimeMillis(), settings.safeModeReset("systemui"), true)
         if (next == null || !store.write(next)) {
             ModuleLog.error("SystemUI fuse: unsafe clock or state IO failed; hooks skipped")
+            SafeModeRuntime.trip("系统界面启动保护：系统时间或安全记录读写异常，已暂停模块功能")
             return true
         }
         if (next.disabled) {
             ModuleLog.error("SYSTEMUI HOOK FUSE ENGAGED: three restarts in five minutes; hooks skipped until manual reset")
+            SafeModeRuntime.trip("系统界面在五分钟内连续重启三次，已触发启动保护")
             return true
         }
         ModuleLog.info("SystemUI fuse ready: rapidRestarts=${next.rapidRestarts}; automatic protection enabled")

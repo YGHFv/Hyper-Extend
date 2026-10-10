@@ -208,6 +208,22 @@ data class HyperText(
     val placeholder: String = "",
 ) : HyperConfigRow
 
+/** Pick installed apps without changing the existing serialized package-list setting. */
+data class HyperAppSelection(
+    override val key: String,
+    override val title: String = "选择应用",
+    override val summary: String? = "按应用名称搜索并多选；未选择应用时不生效",
+    override val group: String? = null,
+) : HyperConfigRow
+
+/** An opaque RGB seed, stored as #RRGGBB; blank keeps the system color. */
+data class HyperColor(
+    override val key: String,
+    override val title: String,
+    override val summary: String? = "选择预设颜色或拖动色彩滑块，不需要输入颜色值",
+    override val group: String? = null,
+) : HyperConfigRow
+
 /**
  * 功能详情页在「子项」之下追加的一个附加控件。
  *
@@ -361,6 +377,7 @@ val FEATURES: List<HyperFeature> = listOf(
     ),
     HyperFeature(
         id = "gesture_line",
+        group = ScopeFeatureGroup.SYSTEM_UI_OTHER,
         title = "隐藏手势横条",
         summary = "隐藏底部横条，保留手势操作",
         scopes = listOf("systemui"),
@@ -382,6 +399,7 @@ val FEATURES: List<HyperFeature> = listOf(
     ),
     HyperFeature(
         id = "wallpaper_monet",
+        group = ScopeFeatureGroup.SYSTEM_UI_OTHER,
         title = "壁纸取色修复",
         summary = "让动态主题色跟随壁纸更新",
         scopes = listOf("systemui"),
@@ -452,6 +470,7 @@ val FEATURES: List<HyperFeature> = listOf(
     ),
     HyperFeature(
         id = "rotation_suggestion",
+        group = ScopeFeatureGroup.SYSTEM_UI_OTHER,
         title = "\u5173\u95ed\u65cb\u8f6c\u5efa\u8bae",
         summary = "隐藏导航栏附近的旋转建议按钮",
         scopes = listOf("systemui"),
@@ -602,6 +621,7 @@ private fun HyperFeature.matches(q: String): Boolean =
         summary.contains(q, true) ||
         origin.contains(q, true) ||
         entryGroup?.title?.contains(q, true) == true ||
+        panel.title.contains(q, true) ||
         scopesOfFeature(this).any { it.title.contains(q, true) || it.process.contains(q, true) }
 
 private fun HyperOption.matches(q: String): Boolean =

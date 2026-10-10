@@ -40,7 +40,7 @@ import io.github.YGHFv.HyperExtend.core.RestartResult
 import io.github.YGHFv.HyperExtend.core.ScopeFeatureGroup
 import io.github.YGHFv.HyperExtend.core.featureGroupsOfScope
 import io.github.YGHFv.HyperExtend.core.featuresOfScopePage
-import io.github.YGHFv.HyperExtend.core.hasDetailPage
+import io.github.YGHFv.HyperExtend.core.featurePanels
 import io.github.YGHFv.HyperExtend.core.isFeatureActive
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -112,9 +112,7 @@ internal fun ScopeDetailPage(
     val groups = remember(scope.id, group) {
         if (group == null) featureGroupsOfScope(scope.id) else emptyList()
     }
-    val (detailFeatures, switchFeatures) = remember(features) { features.partition { it.hasDetailPage } }
-    val hasEntries = groups.isNotEmpty() || detailFeatures.isNotEmpty()
-    val mixed = hasEntries && switchFeatures.isNotEmpty()
+    val panels = remember(features) { featurePanels(features) }
     // 走共用助手而不是在这里直接查 PackageManager：它是跨进程调用，不该发生在组合阶段
     // （理由见 HyperUiKit.rememberInstalledScopes）。只有一个宿主也照样用它 ——
     // 两套写法并存的结果是「哪天有人给这一页加了第二个宿主」时又得改一次结构。
@@ -201,8 +199,8 @@ internal fun ScopeDetailPage(
                 onCancel = { restart = RestartUi.Idle },
             )
 
-            if (hasEntries) {
-                GroupTitle(if (mixed) "功能设置" else "功能")
+            if (groups.isNotEmpty()) {
+                GroupTitle("功能分类")
                 SettingsCard {
                     groups.forEachIndexed { index, item ->
                         if (index > 0) RowDivider()
@@ -215,22 +213,12 @@ internal fun ScopeDetailPage(
                             onClick = { onOpenGroup(item) },
                         )
                     }
-                    detailFeatures.forEachIndexed { index, item ->
-                        if (index > 0 || groups.isNotEmpty()) RowDivider()
-                        FeaturePreference(
-                            feature = item,
-                            switches = switches,
-                            strings = strings,
-                            onSwitch = onSwitch,
-                            onOpenFeature = onOpenFeature,
-                        )
-                    }
                 }
             }
-            if (switchFeatures.isNotEmpty()) {
-                GroupTitle(if (mixed) "快捷开关" else "功能")
+            panels.forEach { (key, panelFeatures) ->
+                GroupTitle(key.panel.title)
                 SettingsCard {
-                    switchFeatures.forEachIndexed { index, item ->
+                    panelFeatures.forEachIndexed { index, item ->
                         if (index > 0) RowDivider()
                         FeaturePreference(
                             feature = item,

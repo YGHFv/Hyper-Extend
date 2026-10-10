@@ -4,6 +4,7 @@ package io.github.YGHFv.HyperExtend.hook
 /** Never replay a host call after a failing postprocessor, including void/null results. */
 internal class HookInvocation {
     private var outcome: Result<Any?>? = null
+    fun isOriginalFailure(failure: Throwable): Boolean = outcome?.exceptionOrNull() === failure
 
     fun proceed(call: () -> Any?): Any? {
         val result = outcome ?: runCatching(call).also { outcome = it }

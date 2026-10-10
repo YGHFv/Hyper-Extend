@@ -23,6 +23,9 @@
       这是普通的安装期权限，不会在运行时弹窗，也不涉及任何用户数据。
     -->
     <uses-permission android:name="android.permission.INTERNET" />
+    <!-- App selection includes notification-only and system apps without launcher activities.
+         The installed-app list is read locally on demand and is never uploaded. -->
+    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" tools:ignore="QueryAllPackagesPermission" />
 
     <!--
       包可见性声明。Android 11 起，不声明就查不到别的应用 —— 而「默认通行密钥应用」
@@ -48,6 +51,12 @@
         android:label="@string/module_name"
         android:supportsRtl="true"
         android:theme="@style/ModuleTheme">
+
+        <provider
+            android:name=".core.SafeModeProvider"
+            android:authorities="io.github.YGHFv.HyperExtend.safety"
+            android:exported="true"
+            android:grantUriPermissions="false" />
 
         <!--
           LSPosed Manager 的模块识别靠这四个 meta-data。API 102 实际生效的模块元数据在

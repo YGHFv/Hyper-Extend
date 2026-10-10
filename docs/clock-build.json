@@ -1,0 +1,39 @@
+{
+  "recordedAt": "2026-10-10T06:41:01.668896+00:00",
+  "verification": "Local tests/build and exact read-only MT contracts only; device acceptance deferred until migration completion.",
+  "build": "successful",
+  "command": ".\\gradlew.bat :app:testDebugUnitTest :app:assembleRelease --console=plain",
+  "log": "build/clock-next-build.log",
+  "tests": {
+    "tests": 319,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "newTests": 17,
+  "apk": {
+    "path": "app/build/outputs/apk/release/app-release.apk",
+    "versionName": "0.1.3",
+    "versionCode": 4,
+    "bytes": 2663365,
+    "sha256": "25c251159874b49f28ed0425e98e84746fd498dad66618fe0561c85ef90c234f",
+    "r8": true
+  },
+  "evidence": {
+    "codeLayoutTargets": 9,
+    "resourceNameMappings": 5,
+    "recordedHashesMatchRefresh": true
+  },
+  "mediaBackgroundInvestigation": {
+    "candidateTargets": 8,
+    "recordedHashesMatchRefresh": true,
+    "implemented": false
+  },
+  "inventoryReproducible": true,
+  "gitDiffCheck": "passed",
+  "untrackedTextWhitespaceCheck": "Trailing whitespace passed. Pre-existing imported dual-row XML assets may lack EOF newline; left unchanged.",
+  "fullLint": "Not rerun; prior full lint reported 22 known errors; Release vital lint is not full lint.",
+  "installed": false,
+  "restartedOrReloadedHost": false,
+  "changedNetworkSimOrFeatureState": false
+}

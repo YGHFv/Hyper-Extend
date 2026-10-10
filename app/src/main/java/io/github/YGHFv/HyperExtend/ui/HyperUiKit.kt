@@ -200,22 +200,7 @@ internal fun FeaturePreference(
     }
 }
 
-/**
- * 一行「从若干选项里选一个」。
- *
- * ## 为什么不用 miuix 的 `OverlayDropdownPreference`
- *
- * 那个组件是给「一整块设置项 + 浮层下拉」用的，它自己的浮层动画和定位逻辑对本模块
- * 「卡片里塞一行」的排版来说太重，而且换 miuix 版本时它的参数名最容易变。
- * 这里用「点一下就把候选就地展开成一列」的方式，只用最基本的 `Column` + `Text`，
- * 既不用新组件、也不引入浮层 —— 候选最多十条（莫奈风格），就地展开完全放得下。
- *
- * ## 为什么当前值用主色、选项里再加一个勾
- *
- * 只用颜色区分选中项在浅色主题下太弱（主色和正文色对比不够），所以选中的那一项
- * 前缀一个勾号字符。这里刻意不用图标：候选行是动态长度的，图标要为每一行算一次
- * 矢量绘制，而一个字符就够了。
- */
+/** Miuix 原生浮层选择菜单：背景遮罩、圆角菜单、当前项主色和勾选标记。 */
 @Composable
 internal fun ChoiceRow(
     title: String,
@@ -256,7 +241,7 @@ internal fun NumberRow(
     format: (Float) -> String,
     onFinished: (Float) -> Unit,
 ) {
-    var draft by remember(value) { mutableStateOf(value) }
+    var draft by remember(value, valueRange) { mutableStateOf(value.coerceIn(valueRange)) }
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -308,12 +293,14 @@ internal fun TextInputRow(
     value: String,
     placeholder: String,
     onCommit: (String) -> Unit,
+    validate: (String) -> String? = { null },
 ) {
     var draft by remember(value) { mutableStateOf(value) }
     var committed by remember(value) { mutableStateOf(value) }
     val dirty = draft != committed
+    val error = validate(draft)
     val commit = {
-        if (dirty) {
+        if (dirty && error == null) {
             committed = draft
             onCommit(draft)
         }
@@ -339,7 +326,7 @@ internal fun TextInputRow(
                     color = MiuixTheme.colorScheme.primary,
                     modifier = Modifier
                         .clip(RoundedCornerShape(8.dp))
-                        .clickable(onClick = commit)
+                        .clickable(enabled = error == null, onClick = commit)
                         .padding(horizontal = 8.dp, vertical = 4.dp),
                 )
             }
@@ -368,6 +355,10 @@ internal fun TextInputRow(
                 }
             },
         )
+        if (error != null) {
+            Spacer(Modifier.height(4.dp))
+            SecondaryText(error)
+        }
     }
 }
 @Composable

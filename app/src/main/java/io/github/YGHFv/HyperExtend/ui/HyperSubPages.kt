@@ -47,7 +47,8 @@ import io.github.YGHFv.HyperExtend.core.SCOPES
 import io.github.YGHFv.HyperExtend.core.entryScope
 import io.github.YGHFv.HyperExtend.core.entryGroup
 import io.github.YGHFv.HyperExtend.core.isFeatureActive
-import io.github.YGHFv.HyperExtend.core.hasDetailPage
+import io.github.YGHFv.HyperExtend.core.groupFeaturePanels
+import io.github.YGHFv.HyperExtend.core.scopeById
 import io.github.YGHFv.HyperExtend.core.searchFeatures
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.basic.IconButton
@@ -118,8 +119,7 @@ internal fun SearchPage(
     var query by rememberSaveable { mutableStateOf("") }
     val hits = remember(query) { searchFeatures(query) }
     val hitSections = remember(hits) {
-        val (details, switches) = hits.partition { it.feature.hasDetailPage }
-        listOf("功能设置" to details, "快捷开关" to switches).filter { it.second.isNotEmpty() }
+        groupFeaturePanels(hits) { it.feature }
     }
 
     val scrollBehavior = MiuixScrollBehavior()
@@ -174,8 +174,8 @@ internal fun SearchPage(
                 }
 
                 else -> {
-                    hitSections.forEach { (title, sectionHits) ->
-                        GroupTitle(if (hitSections.size > 1) title else "命中 ${hits.size} 项")
+                    hitSections.forEach { (key, sectionHits) ->
+                        GroupTitle(listOfNotNull(key.scopeId?.let { scopeById(it)?.title }, key.group?.title, key.panel.title).joinToString(" · "))
                         SettingsCard {
                             sectionHits.forEachIndexed { index, hit ->
                                 if (index > 0) RowDivider()
@@ -219,12 +219,7 @@ internal fun SearchPage(
 /**
  * 关于页（底栏第三个 tab）。
  *
- * **诊断信息与日志都放在这里**，因为模块常年无界面：一旦用户打开它，
- * 多半就是「某个开关按了没反应」，此时这一页是他唯一能自查的地方。
- *
- * 日志只覆盖**模块 App 进程**：被注入进程（SystemUI、system_server）各有各的缓冲，
- * 跨进程搬运的代价远大于价值。要查注入侧的问题得看 logcat（tag `HyperExtend`）——
- * 这一句必须写在界面上，否则用户会以为「日志是空的 = 什么都没发生」。
+ * 仅展示模块状态与开源致谢；日志和安全模式统一由设置页进入。
  *
  * 作为 tab 而不是子页面：它不接收返回键，也不需要返回按钮 —— 底栏就是退出方式，
  * 多一个「返回」会和底栏的语义打架（返回到哪？）。
@@ -233,13 +228,10 @@ internal fun SearchPage(
 internal fun AboutTab(
     scrollBehavior: ScrollBehavior,
     padding: PaddingValues,
-    onOpenLogs: () -> Unit,
 ) {
     val context = LocalContext.current
     val uriHandler = LocalUriHandler.current
     val scrollState = rememberScrollState()
-    var showRecovery by rememberSaveable { mutableStateOf(false) }
-    var fuseResetMessage by remember { mutableStateOf<String?>(null) }
 
     Column(
         modifier = Modifier
@@ -283,46 +275,6 @@ internal fun AboutTab(
             }
         }
 
-        GroupTitle("诊断")
-        SettingsCard {
-            ArrowPreference(title = "日志", summary = "${ModuleLog.errorCount} 条异常", onClick = onOpenLogs)
-        }
-
-        // 这一节刻意写得像操作手册而不是功能介绍：它是「系统已经不正常了」时才用到的，
-        // 那种情况下用户没有耐心读解释，需要的是能照着敲的命令。
-        GroupTitle("紧急停用")
-        SettingsCard {
-            CardActionRow(
-                label = if (showRecovery) "收起恢复说明" else "停用与恢复说明",
-                onClick = { showRecovery = !showRecovery },
-            )
-            if (showRecovery) {
-                HintText("开机异常时，可通过以下任一方式停用所有 Hook。")
-                HintText("方式一（需 root）：adb shell su -c 'setprop persist.sys.hyperextend.disabled 1'")
-                HintText("方式二：adb shell touch /data/local/tmp/hyperextend.disabled")
-                HintText("系统框架、系统界面分别记录启动；五分钟内三次重启触发持久熔断。系统界面独立熔断只停用其自身 Hook。")
-                HintText(
-                    "恢复：属性设回 0，删除停用标记 /data/local/tmp/hyperextend.disabled" +
-                        "（或 /sdcard/HyperExtend/disable）；解除自动熔断后重启设备。",
-                )
-                HintText(
-                    "无法进入模块时：将 persist.sys.hyperextend.framework_disabled 设为 0，" +
-                        "删除 /data/system/hyperextend_bootguard 和系统界面私有 files/hyperextend_systemui_bootguard 后重启。先关闭可疑功能再解除熔断。",
-                )
-            }
-            CardDivider()
-            CardActionRow(
-                label = "解除自动熔断",
-                onClick = {
-                    if (!HyperSettings.requestFrameworkFuseReset(context)) {
-                        fuseResetMessage = "解除请求写入失败，请查看模块日志。"
-                        return@CardActionRow
-                    }
-                    fuseResetMessage = "已保存，请手动重启设备；自动防砖仍开启。"
-                },
-            )
-            fuseResetMessage?.let { HintText(it) }
-        }
         Spacer(Modifier.height(16.dp))
     }
 }

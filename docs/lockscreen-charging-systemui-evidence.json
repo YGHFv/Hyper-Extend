@@ -1,0 +1,170 @@
+{
+  "host": {
+    "packageName": "com.android.systemui",
+    "versionName": "17.03.260226.r",
+    "versionCode": 202602260
+  },
+  "verification": "OS4 normal visible charging-indication detail row; static evidence only, not runtime acceptance.",
+  "evidence": [
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/KeyguardIndicationController;->setIndicationArea(Landroid/view/ViewGroup;)V",
+      "contains": [
+        ".method public final setIndicationArea(Landroid/view/ViewGroup;)V",
+        "->mLockScreenIndicationView:",
+        "->mRotateTextViewController:"
+      ],
+      "sha256": "ec9200ea02db832f0bdba1167eb3e293f6fec07fdc3eca70fd7a2ac449a2b3a9"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/keyguard/KeyguardViewConfigurator;->start()V",
+      "contains": [
+        "->setIndicationArea(Landroid/view/ViewGroup;)V"
+      ],
+      "sha256": "4e543edb69f5678307c33572c0b07f7fb1179f2464869038085a62ba996989a8"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/keyguard/ui/binder/KeyguardIndicationAreaBinder;->bind(Landroid/view/ViewGroup;Lcom/android/systemui/keyguard/ui/viewmodel/KeyguardIndicationAreaViewModel;Lcom/android/systemui/statusbar/KeyguardIndicationController;)Lcom/android/systemui/util/kotlin/DisposableHandles;",
+      "contains": [
+        ".method public static final bind(",
+        "->setIndicationArea(Landroid/view/ViewGroup;)V"
+      ],
+      "sha256": "c06c67870df46f241cf6e94606f39c160cfa85e979f763d9d8f0f8bc582bdde7"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/keyguard/ui/binder/KeyguardIndicationAreaBinder$bind$1;->dispose()V",
+      "contains": [
+        "->setIndicationArea(Landroid/view/ViewGroup;)V"
+      ],
+      "sha256": "09de343e4b22ae3b544843abcc36fdab82a79e6bf1f932693d15300984f38002"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/keyguard/KeyguardIndicationRotateTextViewController;->showIndication(I)V",
+      "contains": [
+        "->mCurrIndicationType:I",
+        "->mCurrMessage:Ljava/lang/CharSequence;",
+        "->setOnClickListener(",
+        "->setText(Ljava/lang/CharSequence;)V"
+      ],
+      "sha256": "78ec97c0a781714dd11e620bc5c6a32185c8a2c1d9e8217957f71ea3ee796d61"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/KeyguardIndicationController;->updateDeviceEntryIndication(Z)V",
+      "contains": [
+        "const/4 v7, 0x3",
+        "->mReverseChargingState:I",
+        "->mBatteryDefender:Z",
+        "->sNeedRepositionDevice:Z",
+        "->mBatteryIndicationClickListener:"
+      ],
+      "sha256": "1c296f7f20e4bb1a69e6fa5b078b074461fd9083c625fab82fff70083d933d0a"
+    },
+    {
+      "locator": "axml:res/layout/keyguard_bottom_area.xml",
+      "contains": [
+        "android:orientation=\"vertical\"",
+        "@7F0B05F7",
+        "android:singleLine=\"true\""
+      ],
+      "sha256": "75f0e709cf9b232a8ce84f0cbb7a81a4dad67c68321318a872f09a34c884da4d"
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/statusbar/KeyguardIndicationController;->mIndicationArea:Landroid/view/ViewGroup;",
+      "contains": [
+        "mIndicationArea:Landroid/view/ViewGroup;"
+      ],
+      "sha256": "f9d543d637f8254589d7775e1c340321206c439acc48729a490cd870dba6720f"
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/statusbar/KeyguardIndicationController;->mLockScreenIndicationView:Lcom/android/systemui/statusbar/phone/KeyguardIndicationTextView;",
+      "contains": [
+        "mLockScreenIndicationView:Lcom/android/systemui/statusbar/phone/KeyguardIndicationTextView;"
+      ],
+      "sha256": "5828f42cb1280ce554219c330f47fabd24cb42014ad1887b66b29b854ccad958"
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/statusbar/KeyguardIndicationController;->mRotateTextViewController:Lcom/android/systemui/keyguard/KeyguardIndicationRotateTextViewController;",
+      "contains": [
+        "mRotateTextViewController:Lcom/android/systemui/keyguard/KeyguardIndicationRotateTextViewController;"
+      ],
+      "sha256": "67c9d355b24dc0cd0f930a1aaa636b7044576a9e2c58b0e49e8d133e7e0bc1e7"
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/statusbar/KeyguardIndicationController;->mVisible:Z",
+      "contains": [
+        "mVisible:Z"
+      ],
+      "sha256": "bedaf7d3df14f1c2e651986a840dbaacd03582f6bd63fee246f4f218a975b27f"
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/statusbar/KeyguardIndicationController;->mDozing:Z",
+      "contains": [
+        "mDozing:Z"
+      ],
+      "sha256": "fd257eccdc3cba45dffc657dca766d56ada8623ae8ade30595a0aacd0bb763a3"
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/statusbar/KeyguardIndicationController;->mPowerPluggedIn:Z",
+      "contains": [
+        "mPowerPluggedIn:Z"
+      ],
+      "sha256": "6ecef3801fb5918c9685d275d4c18fa2635a78f3925c6f7a505868a42746f636"
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/statusbar/KeyguardIndicationController;->mBatteryDefender:Z",
+      "contains": [
+        "mBatteryDefender:Z"
+      ],
+      "sha256": "f6f0357bd88bd11073e8d893b54c26034703a29ae9a25f207a1568676276c634"
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/statusbar/KeyguardIndicationController;->mKeyguardIndicationInjectorLazy:Ldagger/Lazy;",
+      "contains": [
+        "mKeyguardIndicationInjectorLazy:Ldagger/Lazy;"
+      ],
+      "sha256": "58fe425deba1baa85a368161b2899474c5e1561f48699156a03ca14188891819"
+    },
+    {
+      "locator": "dex_field:Lcom/android/keyguard/injector/KeyguardIndicationInjector;->mReverseChargingState:I",
+      "contains": [
+        "mReverseChargingState:I"
+      ],
+      "sha256": "f40be80bc067ccdfeaf8aa848264cdddd84a866aab82cb0f665ca4949deafa78"
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/keyguard/KeyguardIndicationRotateTextViewController;->mCurrIndicationType:I",
+      "contains": [
+        "mCurrIndicationType:I"
+      ],
+      "sha256": "e65ad63eab0fa25bdc68499db7c2fcce4dd455be7537d1ddc0033b3f2c2dd843"
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/keyguard/KeyguardIndicationRotateTextViewController;->mCurrMessage:Ljava/lang/CharSequence;",
+      "contains": [
+        "mCurrMessage:Ljava/lang/CharSequence;"
+      ],
+      "sha256": "f4502aff9152f1e18526d95f9879b9a1f87698e503a78ced57e2072e20a77539"
+    },
+    {
+      "locator": "dex_field:Lcom/miui/charge/ChargeUtils;->sNeedRepositionDevice:Z",
+      "contains": [
+        "sNeedRepositionDevice:Z"
+      ],
+      "sha256": "267cd017dd6a9c38f279be370b2087bf74b909cb12e521cc8471778a4dc44d01"
+    },
+    {
+      "locator": "dex_method:Lcom/miui/utils/configs/MiuiConfigs;->isFlipTinyScreen(Landroid/content/Context;)Z",
+      "contains": [
+        ".method public static isFlipTinyScreen(Landroid/content/Context;)Z"
+      ],
+      "sha256": "75ccdb3d988bcd64d9d429a51ef554c83771a8f5a652baa7db31afddcbadbd5a"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/keyguard/KeyguardIndicationRotateTextViewController;->indicationTypeToString(I)Ljava/lang/String;",
+      "contains": [
+        ".method public static indicationTypeToString(I)Ljava/lang/String;",
+        "\"battery\""
+      ],
+      "sha256": "925a5e85e8ca8a1b89039ece5a9404fe5dce65a459c42c85072a129d371fcbe0"
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "time": "2026-10-10T19:09:24.658176+08:00",
+  "tests": {
+    "tests": 449,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "release": "R8 build successful",
+  "apk": {
+    "path": "app/build/outputs/apk/release/app-release.apk",
+    "bytes": 2696133,
+    "sha256": "afd41c10cdcbe9ed7ecf68cdd6bd2463a52e8a6f5045b77aa4d2b742a84fb5e3",
+    "versionName": "0.1.3",
+    "versionCode": 4
+  },
+  "log": "build/importance-panel-build.log",
+  "staticSettingsMembers": 42,
+  "runtimeAcceptance": false
+}

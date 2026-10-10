@@ -15,6 +15,7 @@ import io.github.YGHFv.HyperExtend.core.SystemUiCustomSettings
 import io.github.YGHFv.HyperExtend.hook.HookRuntime
 import io.github.YGHFv.HyperExtend.hook.HookSettings
 import io.github.YGHFv.HyperExtend.hook.Reflect
+import io.github.YGHFv.HyperExtend.hook.SafeModeRuntime
 import java.lang.ref.WeakReference
 import java.util.WeakHashMap
 
@@ -38,7 +39,7 @@ internal object NotificationExpansionHooks {
     }
 
     private fun unlocked(row: View): Boolean = Reflect.attempt {
-        row.context.getSystemService(KeyguardManager::class.java)?.isKeyguardLocked == false &&
+        !SafeModeRuntime.blocked && row.context.getSystemService(KeyguardManager::class.java)?.isKeyguardLocked == false &&
             Reflect.readField(row, "mOnKeyguard") == false && Reflect.callWith(row, "shouldShowPublic") == false
     } == true
 

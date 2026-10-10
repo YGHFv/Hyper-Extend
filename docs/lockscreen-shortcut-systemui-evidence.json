@@ -1,0 +1,51 @@
+{
+  "host": {
+    "packageName": "com.android.systemui",
+    "versionName": "17.03.260226.r",
+    "versionCode": 202602260
+  },
+  "verification": "Read-only exact current-host shortcut hide adapter evidence; not runtime acceptance.",
+  "evidence": [
+    {
+      "locator": "dex_method:Lcom/android/systemui/shared/plugins/PluginInstance$PluginFactory;->createClassLoader()Ljava/lang/ClassLoader;",
+      "contains": [
+        ".method public final createClassLoader()Ljava/lang/ClassLoader;",
+        "->pluginAppInfo:",
+        "->sClassLoaders:"
+      ],
+      "sha256": "7dec6c9ee4daa94799e0f9cc732fea5fb408cb940812a4cd460dd3ff75b1ec9a"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/shared/plugins/PluginInstance$PluginFactory;->createPlugin(Lcom/android/systemui/shared/plugins/PluginInstance;)Lcom/android/systemui/plugins/Plugin;",
+      "contains": [
+        ".method public final createPlugin(Lcom/android/systemui/shared/plugins/PluginInstance;)Lcom/android/systemui/plugins/Plugin;",
+        "->createClassLoader()Ljava/lang/ClassLoader;"
+      ],
+      "sha256": "683291d120ca17241ddf3b637af4df19989d285c65dd94d73af031d73f4af535"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/shared/plugins/PluginInstance$PluginFactory;->createPluginContext()Lcom/android/systemui/shared/plugins/PluginInstance$PluginContextWrapper;",
+      "contains": [
+        ".method public final createPluginContext()Lcom/android/systemui/shared/plugins/PluginInstance$PluginContextWrapper;",
+        "->createClassLoader()Ljava/lang/ClassLoader;"
+      ],
+      "sha256": "e710a6dcc2917ff0cd3d5df0be792b34c2e3473f7d4096f44add9d3e2edec8a2"
+    },
+    {
+      "locator": "dex_method:Lcom/android/keyguard/shortcut/MiuiShortcutController;->onPluginLoaded(Lcom/android/systemui/plugins/Plugin;Landroid/content/Context;Lcom/android/systemui/plugins/PluginLifecycleManager;)V",
+      "contains": [
+        ".method public final onPluginLoaded(Lcom/android/systemui/plugins/Plugin;Landroid/content/Context;Lcom/android/systemui/plugins/PluginLifecycleManager;)V",
+        "->setMiuiShortcutPlugin("
+      ],
+      "sha256": "35095a55ac9eacf31d9a1f1035398ff82c395c91a9999a43759e73a25f05f45f"
+    },
+    {
+      "locator": "dex_method:Lcom/android/keyguard/shortcut/MiuiShortcutController;->addShortcutViews(Landroid/widget/FrameLayout;)V",
+      "contains": [
+        ".method public final addShortcutViews(Landroid/widget/FrameLayout;)V",
+        "->getShortcutContentView()Landroid/view/View;"
+      ],
+      "sha256": "52704e69188c384dbde31ddcde228a2bedd41a099dedec35fd926968c2ab415a"
+    }
+  ]
+}

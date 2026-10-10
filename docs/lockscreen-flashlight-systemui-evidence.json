@@ -1,0 +1,158 @@
+{
+  "host": {
+    "packageName": "com.android.systemui",
+    "versionName": "17.03.260226.r",
+    "versionCode": 202602260
+  },
+  "verification": "Read-only exact host evidence for hide plus bounded flashlight replacement. No runtime acceptance.",
+  "evidence": [
+    {
+      "locator": "dex_method:Lcom/android/systemui/shared/plugins/PluginInstance$PluginFactory;->createClassLoader()Ljava/lang/ClassLoader;",
+      "contains": [
+        ".method public final createClassLoader()Ljava/lang/ClassLoader;",
+        "->pluginAppInfo:",
+        "->sClassLoaders:"
+      ],
+      "sha256": "7dec6c9ee4daa94799e0f9cc732fea5fb408cb940812a4cd460dd3ff75b1ec9a"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/shared/plugins/PluginInstance$PluginFactory;->createPlugin(Lcom/android/systemui/shared/plugins/PluginInstance;)Lcom/android/systemui/plugins/Plugin;",
+      "contains": [
+        ".method public final createPlugin(Lcom/android/systemui/shared/plugins/PluginInstance;)Lcom/android/systemui/plugins/Plugin;",
+        "->createClassLoader()Ljava/lang/ClassLoader;"
+      ],
+      "sha256": "683291d120ca17241ddf3b637af4df19989d285c65dd94d73af031d73f4af535"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/shared/plugins/PluginInstance$PluginFactory;->createPluginContext()Lcom/android/systemui/shared/plugins/PluginInstance$PluginContextWrapper;",
+      "contains": [
+        ".method public final createPluginContext()Lcom/android/systemui/shared/plugins/PluginInstance$PluginContextWrapper;",
+        "->createClassLoader()Ljava/lang/ClassLoader;"
+      ],
+      "sha256": "e710a6dcc2917ff0cd3d5df0be792b34c2e3473f7d4096f44add9d3e2edec8a2"
+    },
+    {
+      "locator": "dex_method:Lcom/android/keyguard/shortcut/MiuiShortcutController;->onPluginLoaded(Lcom/android/systemui/plugins/Plugin;Landroid/content/Context;Lcom/android/systemui/plugins/PluginLifecycleManager;)V",
+      "contains": [
+        ".method public final onPluginLoaded(Lcom/android/systemui/plugins/Plugin;Landroid/content/Context;Lcom/android/systemui/plugins/PluginLifecycleManager;)V",
+        "->setMiuiShortcutPlugin("
+      ],
+      "sha256": "35095a55ac9eacf31d9a1f1035398ff82c395c91a9999a43759e73a25f05f45f"
+    },
+    {
+      "locator": "dex_method:Lcom/android/keyguard/shortcut/MiuiShortcutController;->addShortcutViews(Landroid/widget/FrameLayout;)V",
+      "contains": [
+        ".method public final addShortcutViews(Landroid/widget/FrameLayout;)V",
+        "->getShortcutContentView()Landroid/view/View;"
+      ],
+      "sha256": "52704e69188c384dbde31ddcde228a2bedd41a099dedec35fd926968c2ab415a"
+    },
+    {
+      "locator": "dex_class:Lmiui/stub/MiuiStub;",
+      "contains": [
+        ".field public static final INSTANCE:Lmiui/stub/MiuiStub;",
+        ".field public mSysUIProvider:Lmiui/stub/MiuiStub$SysUIProvider;"
+      ],
+      "sha256": "5011bcf049a49ad1b60e37133f61be02c40850d8a71f7b1a3fe948adce1833af"
+    },
+    {
+      "locator": "dex_class:Lmiui/stub/MiuiStub$SysUIProvider;",
+      "contains": [
+        ".field public mFlashlightController:Ldagger/Lazy;"
+      ],
+      "sha256": "36bb212a0ddfeb7601c11e74e6c91633cbe82498c9360a5afc97f5b7ca99bc36"
+    },
+    {
+      "locator": "dex_class:Lcom/android/systemui/statusbar/policy/FlashlightController$FlashlightListener;",
+      "contains": [
+        ".method public abstract onFlashlightChanged(Z)V",
+        ".method public abstract onFlashlightAvailabilityChanged(Z)V",
+        ".method public abstract onFlashlightError()V"
+      ],
+      "sha256": "8b7c5e25bc002cf60cfb5593da0bcc6434eba4ba36749f87a7385342f1c595de"
+    },
+    {
+      "locator": "dex_class:Ldagger/Lazy;",
+      "contains": [
+        ".method public abstract get()Ljava/lang/Object;"
+      ],
+      "sha256": "37ddd892a13a9bae0f0f89c99c4bcbe4562b1782be28ea60b030ba30ff578772"
+    },
+    {
+      "locator": "dex_method:Lcom/android/keyguard/injector/KeyguardPanelViewInjector;->onTouchEvent(Landroid/view/MotionEvent;IFFZZZ)Z",
+      "contains": [
+        "->mIsShortcutMoving:Z",
+        "->mIsTouchShortcutIcon:Z",
+        "->onTouchEvent(Landroid/view/MotionEvent;)Z",
+        "->finishAction(FFZ)V"
+      ],
+      "sha256": "bbeb724525e6a06c376cacd03fa761e0ac2b01b3e76910be6ff4bfb02478d486"
+    },
+    {
+      "locator": "dex_method:Lcom/android/keyguard/panel/KeyguardMoveHelper;->finishAction(FFZ)V",
+      "contains": [
+        "->mIsShortcutMoving:Z",
+        "->mMotionCancelled:Z",
+        "->endMotion(FZ)V"
+      ],
+      "sha256": "b906590389bc5365c032dbb28fa3b25cd0d6e58385a0d6f80cc413df69c72b34"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/controlcenter/policy/MiuiFlashlightControllerImpl;->isEnabled()Z",
+      "contains": [
+        "isEnabled()Z",
+        "->mFlashlightEnabled:Z"
+      ],
+      "sha256": "29f6b24ad2d9c28d40da0d2f6752a7497d0694e86734ff2b515fd7d3b434ee03"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/controlcenter/policy/MiuiFlashlightControllerImpl;->isAvailable()Z",
+      "contains": [
+        "isAvailable()Z",
+        "->mBatteryOff:Z"
+      ],
+      "sha256": "9bf7d4d561955d632f955f4963ea91d1b4871f7ba6e05d5c1650fd108d399e84"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/controlcenter/policy/MiuiFlashlightControllerImpl;->setFlashlight(Z)V",
+      "contains": [
+        "setFlashlight(Z)V",
+        "->mForceOff:Z"
+      ],
+      "sha256": "a90feb4b2f862fd9de3764def6a4a651a3298ebcf6d43a3f1c5768b238b18759"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/controlcenter/policy/MiuiFlashlightControllerImpl;->addCallback(Ljava/lang/Object;)V",
+      "contains": [
+        "addCallback(Ljava/lang/Object;)V",
+        "->onFlashlightAvailabilityChanged(Z)V"
+      ],
+      "sha256": "bce126f161db29c3d61acdefce03c9e1c3e9aaaa90f0a1c78987f75e3b0f6420"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/controlcenter/policy/MiuiFlashlightControllerImpl;->removeCallback(Ljava/lang/Object;)V",
+      "contains": [
+        "removeCallback(Ljava/lang/Object;)V",
+        "->cleanUpListenersLocked("
+      ],
+      "sha256": "25254db6bf6c2e372df78b636f7c83d27fb658f1f0642ab363e658165c968bbb"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/controlcenter/policy/MiuiFlashlightControllerImpl;->setFlashlightInternal(Z)V",
+      "contains": [
+        "setFlashlightInternal(Z)V",
+        "->execute(Ljava/lang/Runnable;)V"
+      ],
+      "sha256": "e2e3760a3a03cf86dfb92ca8e08e3f466d9a15112d3e586753e6ffd7facdecf0"
+    },
+    {
+      "locator": "dex_method:Lcom/android/keyguard/panel/KeyguardMoveHelper;->endMotion(FZ)V",
+      "contains": [
+        "->mSwipingInProgress:Z",
+        "->mTranslation:F",
+        "->recycle()V"
+      ],
+      "sha256": "8998e975207232d07d5fb8c27d8aa72100e381e05a2e04ba47fb77669b3bc759"
+    }
+  ]
+}

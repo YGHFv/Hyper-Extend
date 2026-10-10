@@ -1,0 +1,111 @@
+{
+  "host": {
+    "packageName": "com.android.systemui",
+    "versionName": "17.03.260226.r",
+    "versionCode": 202602260
+  },
+  "reference": {
+    "url": "https://github.com/ReChronoRain/HyperCeiler",
+    "revision": "5e4686069dd7ab1f3697e256d5fc7d68fb73e317"
+  },
+  "verification": "Read-only MT MCP current host evidence. Not device runtime acceptance.",
+  "evidence": [
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/notification/utils/NotificationUtil;->canCustomFold(Lcom/android/systemui/statusbar/notification/collection/NotificationEntry;)Z",
+      "contains": [
+        ".method public static canCustomFold"
+      ],
+      "sha256": "8c764274cdc7fbc884615e059c24667a67fdb4916f588478416a3bdcb5d29f54"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/notification/utils/NotificationUtil;->shouldIgnoreEntry(Lcom/android/systemui/statusbar/notification/collection/NotificationEntry;)Z",
+      "contains": [
+        ".method public static shouldIgnoreEntry"
+      ],
+      "sha256": "e1431d1e6ea8bc3937603e5de0cdfa9033d2e1bf19606af3140f9218fb4cf65f"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/notification/row/MiuiNotificationMenuRow;->createMenuViews(Z)V",
+      "contains": [
+        "->canCustomFold(",
+        "->mIsFold:Z",
+        "->clear()V",
+        "->removeAllViews()V",
+        "->size()I"
+      ],
+      "sha256": "64d7970f06e144a5560970a475eea8548c75cd50068464c48f37db7c3d57da7b"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/notification/row/MiuiNotificationMenuRow;->createMenu(Landroid/view/ViewGroup;)V",
+      "contains": [
+        "->createMenuViews(Z)V"
+      ],
+      "sha256": "7235fa3a721cb62b8f2d13ef67385ef0c588815e928df221f50b20e3c007c811"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/notification/row/MiuiNotificationMenuRow;->onNotificationUpdated()V",
+      "contains": [
+        "->createMenuViews(Z)V"
+      ],
+      "sha256": "7af6e5734255f0a811b6cda63c1b94aa04a214c28ba285b933d31207167df0eb"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/notification/collection/coordinator/FoldCoordinator$collectionListener$1;->onEntryAdded(Lcom/android/systemui/statusbar/notification/collection/NotificationEntry;)V",
+      "contains": [
+        "->shouldIgnoreEntry(Lcom/android/systemui/statusbar/notification/collection/NotificationEntry;)Z"
+      ],
+      "sha256": "1abbdedfb6ff279304130618310ce6162b37d1aa74e2c7142fb87e8e2429dbfd"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/notification/collection/coordinator/FoldCoordinator$collectionListener$1;->onEntryUpdated(Lcom/android/systemui/statusbar/notification/collection/NotificationEntry;)V",
+      "contains": [
+        "->shouldIgnoreEntry(Lcom/android/systemui/statusbar/notification/collection/NotificationEntry;)Z"
+      ],
+      "sha256": "be4a83234644514e8b3101855b1861bbc0d68d6e585eb3b8fa6c50b12563fc22"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/notification/collection/coordinator/FoldCoordinator$shadeExpansionListener$1;->onPanelExpansionChanged$1(Lcom/android/systemui/shade/ShadeExpansionChangeEvent;)V",
+      "contains": [
+        "->shouldIgnoreEntry(Lcom/android/systemui/statusbar/notification/collection/NotificationEntry;)Z"
+      ],
+      "sha256": "88db85b941a702638c30dfa94cd9ca735e135714b1e20d8a62b51a102c46caeb"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/notification/collection/coordinator/FoldCoordinator$alarmScheduler$2$1$onReceive$1;->run()V",
+      "contains": [
+        "->shouldIgnoreEntry(Lcom/android/systemui/statusbar/notification/collection/NotificationEntry;)Z"
+      ],
+      "sha256": "51e9341aa365b0b3407d8c2f593dad942d47ae238f84acaf34b51309e7e80e62"
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/statusbar/notification/row/MiuiNotificationMenuRow;->mSbn:Lcom/android/systemui/statusbar/notification/ExpandedNotification;",
+      "contains": [
+        "mSbn:Lcom/android/systemui/statusbar/notification/ExpandedNotification;"
+      ]
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/statusbar/notification/collection/NotificationEntry;->mSbn:Lcom/android/systemui/statusbar/notification/ExpandedNotification;",
+      "contains": [
+        "mSbn:Lcom/android/systemui/statusbar/notification/ExpandedNotification;"
+      ]
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/statusbar/notification/ExpandedNotification;->mIsFold:Z",
+      "contains": [
+        "mIsFold:Z"
+      ]
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/statusbar/notification/collection/coordinator/FoldCoordinator$shadeExpansionListener$1;->this$0:Lcom/android/systemui/statusbar/notification/collection/coordinator/FoldCoordinator;",
+      "contains": [
+        "this$0:Lcom/android/systemui/statusbar/notification/collection/coordinator/FoldCoordinator;"
+      ]
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/statusbar/notification/collection/coordinator/FoldCoordinator;->mPendingNotifications:Ljava/util/List;",
+      "contains": [
+        "mPendingNotifications:Ljava/util/List;"
+      ]
+    }
+  ]
+}

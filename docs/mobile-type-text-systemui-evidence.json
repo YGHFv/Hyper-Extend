@@ -1,0 +1,61 @@
+{
+  "host": {
+    "packageName": "com.android.systemui",
+    "versionName": "17.03.260226.r",
+    "versionCode": 202602260
+  },
+  "verification": "Read-only name lookup, deoptimization caller and native rendering contracts. Not device runtime acceptance.",
+  "evidence": [
+    {
+      "locator": "dex_class:Lcom/android/systemui/statusbar/pipeline/mobile/domain/interactor/MiuiMobileIconInteractorImpl;",
+      "contains": [
+        ".method public final getMobileTypeName(I)Ljava/lang/String;",
+        "->mobileTypeName:Ljava/util/List;",
+        "const-string p0, \"\""
+      ],
+      "sha256": "03755bbae1f2a67da04298247177b10d4737fe802c765e78cf32e66140a0d315"
+    },
+    {
+      "locator": "dex_class:Lcom/android/systemui/statusbar/pipeline/mobile/domain/interactor/MiuiMobileIconInteractorImpl$special$$inlined$combine$1$3;",
+      "contains": [
+        ".method public final invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;",
+        "->isInService(Landroid/telephony/ServiceState;)Z",
+        "->getMobileTypeName(I)Ljava/lang/String;"
+      ],
+      "sha256": "5ca3c922ecb042d595be7274402edf08f9f6ef76a04fb4a7dd4fdf50b101eefe"
+    },
+    {
+      "locator": "dex_class:Lcom/android/systemui/statusbar/pipeline/mobile/ui/viewmodel/MiuiMobileIconVMImpl;",
+      "contains": [
+        ".method public final getShowName()Lkotlinx/coroutines/flow/StateFlow;"
+      ],
+      "sha256": "0d8449eeeea5ba40ab015c8dcd477b29d7ea177f32f12cc694ac9e3ed3ecebfd"
+    },
+    {
+      "locator": "dex_class:Lcom/android/systemui/statusbar/pipeline/mobile/ui/binder/MiuiMobileIconBinder$bind$1$1$22;",
+      "contains": [
+        "->getShowName()Lkotlinx/coroutines/flow/StateFlow;",
+        "->collectLatest("
+      ],
+      "sha256": "5eb42434dd10fc8edaa8cc2558fd656fac975c9fa9dd2d4d5ccfd70daee4a5d3"
+    },
+    {
+      "locator": "dex_class:Lcom/android/systemui/statusbar/pipeline/mobile/ui/binder/MiuiMobileIconBinder$bind$1$1$22$1;",
+      "contains": [
+        "->setText(Ljava/lang/CharSequence;)V",
+        "->measure()V",
+        "->updateMobileTypeLayoutParams("
+      ],
+      "sha256": "84d07c60313b0a60a91def8d29f4cf17eaadcc754d6848b615cdc4a089d4ea9a"
+    },
+    {
+      "locator": "dex_class:Lcom/miui/systemui/statusbar/views/MobileTypeDrawable;",
+      "contains": [
+        ".method public final measure()V",
+        "->measureText(Ljava/lang/String;)F",
+        "->invalidateSelf()V"
+      ],
+      "sha256": "537e80de8e57c94882951b2371b96b17c3ba34086de7d4b215de1ba9b85e8731"
+    }
+  ]
+}

@@ -1,0 +1,89 @@
+{
+  "host": {
+    "packageName": "miui.systemui.plugin",
+    "versionName": "18.3.2.22.0",
+    "versionCode": 183022200
+  },
+  "verification": "Read-only MT code and layout verification; not runtime acceptance.",
+  "evidence": [
+    {
+      "locator": "dex_method:Lcom/android/systemui/miui/volume/MiuiRingerModeLayout;->initialize()V",
+      "contains": [
+        "->ringer_layout:I",
+        "->dnd_layout:I",
+        "->mRingerHelper:",
+        "->mDndHelper:"
+      ],
+      "sha256": "991941a9f6550a10e96f268fc1b52a8cdc8f0ea9a0314a2d1fdd8b0538171479"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/miui/volume/MiuiRingerModeLayout;->updateExpandedH(ZZ)V",
+      "contains": [
+        "->onExpanded(ZZ)V",
+        "->updateExpandedStateH()V"
+      ],
+      "sha256": "3ec7f2ecb6752c65827fbb895882f62f87ce859997c460d2061114d181942d03"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/miui/volume/MiuiVolumeDialogMotion;->getCollapsedStates()Lcom/android/systemui/miui/ViewStateGroup;",
+      "contains": [
+        "->miui_ringer_btn_layout:I",
+        "->miui_volume_ringer_divider:I",
+        "->miui_volume_ringer_layout_orientation:I"
+      ],
+      "sha256": "2d33ca5c9ef528da65538f02976fe85f6b306fa9649a957a8b1a7bd5bca7af58"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/miui/volume/MiuiVolumeDialogView;->onComputeInternalInsets(Landroid/view/ViewTreeObserver$InternalInsetsInfo;)V",
+      "contains": [
+        "->getHeight()I",
+        "->touchableRegion:Landroid/graphics/Region;"
+      ],
+      "sha256": "0250637af0a877a5ee90c21cb67bd41be2dc73fec337090c7639dc22a2c58d83"
+    },
+    {
+      "locator": "axml:res/gt3.xml",
+      "contains": [
+        "android:id=\"@7F0A045C\"",
+        "android:id=\"@7F0A0188\"",
+        "android:id=\"@7F0A0329\""
+      ],
+      "sha256": "c47e6357df46a2da55f83938c39b56ac75622be796be417c388f63e2bd67e81c"
+    },
+    {
+      "locator": "dex_class:Lcom/android/systemui/miui/volume/VolumePanelViewController$3;",
+      "contains": [
+        ".method public setScale(FF)V",
+        ".method public setRingerY(FF)V",
+        ".method public setDndY(FF)V",
+        ".method public setVolY(FF)V",
+        "->setScaleY(F)V",
+        "->setTranslationY(F)V"
+      ],
+      "sha256": "1c099b0a0553dcd264242cf2237fa9dca435cdac13b44d4b4a0fd81eddffd7ff"
+    }
+  ],
+  "resourceNames": [
+    {
+      "name": "ringer_layout",
+      "type": "id",
+      "locator": "resource:0x7f0a045c"
+    },
+    {
+      "name": "dnd_layout",
+      "type": "id",
+      "locator": "resource:0x7f0a0188"
+    },
+    {
+      "name": "miui_ringer_btn_layout",
+      "type": "id",
+      "locator": "resource:0x7f0a0329"
+    }
+  ],
+  "resourceFiles": [
+    {
+      "locator": "resource:0x7f0d0129",
+      "path": "res/gt3.xml"
+    }
+  ]
+}

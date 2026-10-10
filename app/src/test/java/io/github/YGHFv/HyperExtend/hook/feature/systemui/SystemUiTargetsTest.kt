@@ -49,4 +49,24 @@ class SystemUiTargetsTest {
         assertTrue(SystemUiTargets.ignoreFold.isStatic)
         assertEquals("run", SystemUiTargets.mediaActionRun.name)
     }
+
+    @Test fun foldQueriesAndMenuCreationCallersMatchLiveHost() {
+        val signatures = javaClass.getResourceAsStream("/notification-fold-host-methods.txt")!!
+            .bufferedReader().use { it.readLines().toSet() }
+        fun descriptor(name: String): String = when (name) {
+            "void" -> "V"
+            "boolean" -> "Z"
+            else -> "L${name.replace('.', '/')};"
+        }
+        val targets = SystemUiTargets.foldCallers + SystemUiTargets.foldMenuCallers +
+            listOf(SystemUiTargets.ignoreFold, SystemUiTargets.customFold, SystemUiTargets.foldMenuViews)
+        assertEquals(9, targets.size)
+        for (spec in targets) {
+            val signature = descriptor(spec.owner) + "->" + spec.name + "(" +
+                spec.parameters.joinToString("") { descriptor(it) } + ")" + descriptor(spec.returns)
+            assertTrue(signature, signature in signatures)
+            assertEquals(spec in listOf(SystemUiTargets.ignoreFold, SystemUiTargets.customFold), spec.isStatic)
+        }
+        assertEquals(setOf("createMenu", "onNotificationUpdated"), SystemUiTargets.foldMenuCallers.map { it.name }.toSet())
+    }
 }

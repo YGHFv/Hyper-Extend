@@ -10,6 +10,7 @@ import android.util.TypedValue
 import android.view.View
 import android.widget.TextView
 import io.github.YGHFv.HyperExtend.core.MediaCardSettings as Settings
+import io.github.YGHFv.HyperExtend.core.MediaBackgroundSettings
 import io.github.YGHFv.HyperExtend.hook.HookRuntime
 import io.github.YGHFv.HyperExtend.hook.HookSettings
 import io.github.YGHFv.HyperExtend.hook.Reflect
@@ -21,10 +22,49 @@ internal object MediaCardHooks {
     fun install(loader: ClassLoader, settings: HookSettings): List<String> = buildList {
         installSystemUiFeature(settings, Settings.LAYOUT) { layout(loader, settings) }
         installSystemUiFeature(settings, Settings.TEXT_SIZE) { textSize(loader, settings) }
+        installSystemUiFeature(settings, "media_card_progress") { progressHeight(loader, settings) }
+        val artwork = settings.isOn(MediaBackgroundSettings.FEATURE) && MediaBackgroundSettings.mode(settings.string(MediaBackgroundSettings.MODE)) != 0
+        val appearanceFeature = if (artwork) MediaBackgroundSettings.FEATURE else MediaDarkHooks.FEATURE
+        installSystemUiFeature(settings, appearanceFeature) { MediaDarkHooks.install(loader, settings) }
         if (isNotEmpty()) {
             // R8 inlines holder construction; keep the verified creation/refresh callers observable.
             listOf(SystemUiTargets.mediaReinflate, SystemUiTargets.mediaBoundsChanged).forEach { spec ->
                 NotificationHooks.resolve(loader, spec)?.let { HookRuntime.deoptimize(it, "media_card/${spec.name}") }
+            }
+        }
+    }
+
+    private fun progressHeight(loader: ClassLoader, settings: HookSettings): Int {
+        val views = HolderAccess(loader)
+        val type = requireNotNull(Reflect.loadClass(loader, "miuix.miuixbasewidget.widget.HyperProgressSeekBar"))
+        val seek = field(views.holderType, "seekBar", type)
+        val min = field(type, "mProgressSeekBarMinHeight", Int::class.javaPrimitiveType!!)
+        val max = field(type, "mProgressSeekBarMaxHeight", Int::class.javaPrimitiveType!!)
+        val current = field(type, "mProgressHeight", Int::class.javaPrimitiveType!!)
+        val device = field(type, "mDeviceLevel", Int::class.javaPrimitiveType!!)
+        val originals = WeakHashMap<View, Int>()
+        val height = settings.number("media_card_progress.height", 80, 10, 160)
+        return listOf(SystemUiTargets.mediaAttach, SystemUiTargets.mediaUpdateLayout).count { spec ->
+            HookRuntime.hookAfter(resolve(loader, spec), "media_card_progress/${spec.name}") { chain, result ->
+                val owner = chain.thisObject ?: return@hookAfter result
+                val bar = views.holder(owner)?.let { seek.get(it) as? View } ?: return@hookAfter result
+                // The current host uses shader tracks on device levels 1/2. Primary-device
+                // drawable bounds use a different path; retain that path until verified.
+                if (device.getInt(bar) !in 1..2) return@hookAfter result
+                if (views.isTiny(owner)) {
+                    originals.remove(bar)?.let { min.setInt(bar, it); current.setInt(bar, it); bar.invalidate() }
+                } else {
+                    val px = MediaProgressPolicy.height(height, bar.resources.displayMetrics.density, max.getInt(bar))
+                        ?: return@hookAfter result
+                    originals.getOrPut(bar) { min.getInt(bar) }
+                    min.setInt(bar, px)
+                    // Layout can refresh while a user holds the seekbar. Do not collapse its
+                    // pressed track to the idle minimum in the middle of a drag.
+                    current.setInt(bar, MediaProgressPolicy.currentHeight(px, max.getInt(bar), bar.isPressed))
+                    // Keep the original pressed maximum, view size and seek listener.
+                    bar.invalidate()
+                }
+                result
             }
         }
     }

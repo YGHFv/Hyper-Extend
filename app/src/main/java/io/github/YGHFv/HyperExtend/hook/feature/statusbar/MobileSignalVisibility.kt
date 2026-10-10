@@ -24,6 +24,7 @@ import io.github.YGHFv.HyperExtend.core.ModuleLog
 import io.github.YGHFv.HyperExtend.hook.HookRuntime
 import io.github.YGHFv.HyperExtend.hook.HookSettings
 import io.github.YGHFv.HyperExtend.hook.Reflect
+import io.github.YGHFv.HyperExtend.hook.SafeModeRuntime
 import java.lang.ref.WeakReference
 import java.lang.reflect.Constructor
 import java.lang.reflect.Method
@@ -147,6 +148,10 @@ internal class MobileSignalVisibility private constructor(
     }
 
     private fun apply(record: Record, ctx: Context) {
+        if (SafeModeRuntime.blocked) {
+            record.relay.set(record.value)
+            return
+        }
         val slot = readState { SubscriptionManager.getSlotIndex(record.subId) }
         val airplane = if (policy.mode != 0) readState {
             Settings.Global.getInt(ctx.contentResolver, Settings.Global.AIRPLANE_MODE_ON) != 0
@@ -265,7 +270,7 @@ internal class MobileSignalVisibility private constructor(
                 val controller = MobileSignalVisibility(policy, factory, pair, collect)
                 val installed = HookRuntime.hook(bind, "$FEATURE/MiuiMobileIconBinder#bind") { chain ->
                     val view = chain.args[0] as? View
-                    val model = chain.args[2]
+                    val model = chain.args[2]?.let(MobileViewModelFacade::original)
                     if (view != null && vm.isInstance(model)) {
                         runCatching { controller.bind(view, model!!) }
                             .onFailure { controller.warnOnce("bind skipped: ${it.javaClass.simpleName}") }

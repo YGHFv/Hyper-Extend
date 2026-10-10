@@ -185,6 +185,7 @@ internal object HookRuntime {
      * @return 是否装上
      */
     fun hook(target: Executable?, label: String, block: (XposedInterface.Chain) -> Any?): Boolean {
+        if (SafeModeRuntime.blocked) return false
         if (target == null) {
             ModuleLog.warn("hook target missing: $label")
             return false
@@ -210,6 +211,7 @@ internal object HookRuntime {
                 // We contain module failures ourselves. Host exceptions must not trigger framework replay.
                 .setExceptionMode(XposedInterface.ExceptionMode.PASSTHROUGH)
                 .intercept { chain ->
+                    if (SafeModeRuntime.blocked) return@intercept chain.proceed()
                     val invocation = HookInvocation()
                     val guarded = object : XposedInterface.Chain by chain {
                         override fun proceed(): Any? = invocation.proceed { chain.proceed() }
@@ -219,6 +221,7 @@ internal object HookRuntime {
                             invocation.proceed { chain.proceedWith(receiver, args) }
                     }
                     invocation.protect({ block(guarded) }, { chain.proceed() }) {
+                        if (!invocation.isOriginalFailure(it)) SafeModeRuntime.trip("Hook 执行异常：$label (${it.javaClass.simpleName})")
                         ModuleLog.error("interceptor failed; preserving single host invocation: $label", it)
                     }
                 }
@@ -238,9 +241,11 @@ internal object HookRuntime {
         block: (XposedInterface.Chain, Any?) -> Any?,
     ): Boolean = hook(target, label) { chain ->
         val original = chain.proceed()
+        if (SafeModeRuntime.blocked) return@hook original
         try {
             block(chain, original)
         } catch (failure: Throwable) {
+            SafeModeRuntime.trip("Hook 后处理异常：$label (${failure.javaClass.simpleName})")
             ModuleLog.error("postprocessor threw, keeping original result: $label", failure)
             original
         }

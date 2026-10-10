@@ -1,0 +1,88 @@
+{
+  "host": {
+    "packageName": "com.android.systemui",
+    "versionName": "17.03.260226.r",
+    "versionCode": 202602260
+  },
+  "verification": "Live read-only MT code evidence; not runtime acceptance.",
+  "evidence": [
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/notification/domain/interactor/ActiveNotificationsStoreBuilder;->toModel(Lcom/android/systemui/statusbar/notification/collection/NotificationEntry;)Lcom/android/systemui/statusbar/notification/shared/ActiveNotificationModel;",
+      "contains": [
+        "const/16 v10, 0x20",
+        "->shouldSuppressVisualEffect(I)Z",
+        "->isSuppressedFromStatusBar:Z"
+      ],
+      "sha256": "bc5b91ffccfabba7db2c0ab8fa4b2225e97d2206c617fe8dc7cc0e0616103d95"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/notification/collection/NotificationEntry;->shouldSuppressVisualEffect(I)Z",
+      "contains": [
+        "->getSuppressedVisualEffects()I"
+      ],
+      "sha256": "711c509b183025885734130c6e2ef5c833d106fd55106ab440559978641ae3eb"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/notification/domain/interactor/ActiveNotificationsStoreBuilder;->toModel(Lcom/android/systemui/statusbar/notification/collection/GroupEntry;)Lcom/android/systemui/statusbar/notification/shared/ActiveNotificationGroupModel;",
+      "contains": [
+        "->toModel(Lcom/android/systemui/statusbar/notification/collection/NotificationEntry;)"
+      ],
+      "sha256": "3134480499124eaac85120ba6678d12316a17e24af6193438c645ffe9e0cf416"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/notification/domain/interactor/RenderNotificationListInteractor$$ExternalSyntheticLambda0;->invoke(Ljava/lang/Object;)Ljava/lang/Object;",
+      "contains": [
+        "->toModel(Lcom/android/systemui/statusbar/notification/collection/NotificationEntry;)"
+      ],
+      "sha256": "194c7a19de0d59dcb0e9b696716f387021b97cf6395671d43a68601749af4112"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/notification/collection/coordinator/StackCoordinator$attach$1;->onAfterRenderList(Ljava/util/List;)V",
+      "contains": [
+        "->calculateNotifStats(",
+        "->setRenderedList("
+      ],
+      "sha256": "e4bf95aaffbdd16c826719bdcd298ab3b23371a3d7ae6746ca64105687c76ab8"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/notification/domain/interactor/RenderNotificationListInteractor;->setRenderedList(Ljava/util/List;)V",
+      "contains": [
+        "->activeNotifications:",
+        "->access$buildActiveNotificationsStore("
+      ],
+      "sha256": "e127b0ff67449e8a8eef26a70090212563086eaec569e11c9a0417eb8852cea3"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/notification/icon/domain/interactor/NotificationIconsInteractor$filteredNotifSet$1$$ExternalSyntheticLambda1;->invoke(Ljava/lang/Object;)Ljava/lang/Object;",
+      "contains": [
+        "->isSuppressedFromStatusBar:Z",
+        "->isAmbient:Z"
+      ],
+      "sha256": "a417fb09afd357561ff757bbb490099a23b0ea4acdd3bfdff4417f9cc72f5e7c"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/notification/icon/domain/interactor/NotificationIconsInteractor;->areAllChildrenSuppressed(Ljava/util/List;)Z",
+      "contains": [
+        "->isSuppressedFromStatusBar:Z",
+        "->areAllChildrenSuppressed("
+      ],
+      "sha256": "4e9de00ed78d2ed51e54c1e58696c8953ea127f3b89caee95417d72033df5f92"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/notification/icon/domain/interactor/StatusBarNotificationIconsInteractor$special$$inlined$flatMapLatest$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;",
+      "contains": [
+        "const/16 v6, 0x30",
+        "->filteredNotifSet$default("
+      ],
+      "sha256": "322ae0b4d80e368ad4922ebf0705488989526000ef71780a3e0e1f4056639826"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/notification/icon/domain/interactor/NotificationIconsInteractor;->filteredNotifSet$default(Lcom/android/systemui/statusbar/notification/icon/domain/interactor/NotificationIconsInteractor;ZZI)Lkotlinx/coroutines/flow/FlowKt__ZipKt$combine$$inlined$combineUnsafe$FlowKt__ZipKt$1;",
+      "contains": [
+        "and-int/lit8 v0, p3, 0x1",
+        "-><init>("
+      ],
+      "sha256": "758abc713c3dfdd07381c23ca7facc8fb10edb41d442918afd5b1fd8f05c22fc"
+    }
+  ]
+}

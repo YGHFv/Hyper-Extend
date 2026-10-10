@@ -42,4 +42,26 @@ class HookInvocationTest {
     @Test fun reportingFailureCannotPreventFallback() {
         assertEquals(5, HookInvocation().protect({ error("module") }, { 5 }, { error("log") }))
     }
+
+    @Test fun hostExceptionIsNotReportedAsModuleFault() {
+        val invocation = HookInvocation()
+        val hostFailure = IllegalArgumentException("host")
+        var moduleFaults = 0
+        runCatching {
+            invocation.protect({ invocation.proceed { throw hostFailure } }, { fail("replayed") }) {
+                if (!invocation.isOriginalFailure(it)) moduleFaults++
+            }
+        }
+        assertEquals(0, moduleFaults)
+    }
+
+    @Test fun modulePostprocessorFailureIsReportedOnce() {
+        val invocation = HookInvocation()
+        var moduleFaults = 0
+        val result = invocation.protect({ invocation.proceed { 42 }; error("module") }, { fail("replayed") }) {
+            if (!invocation.isOriginalFailure(it)) moduleFaults++
+        }
+        assertEquals(42, result)
+        assertEquals(1, moduleFaults)
+    }
 }

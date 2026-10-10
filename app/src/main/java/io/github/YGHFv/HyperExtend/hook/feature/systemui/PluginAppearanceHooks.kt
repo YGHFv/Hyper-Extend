@@ -16,6 +16,7 @@ internal object PluginAppearanceHooks {
 
     fun install(loader: ClassLoader, id: String): Int {
         val suffix = Integer.toHexString(System.identityHashCode(loader))
+        if (id == "volume_default_theme") return defaultVolumeTheme(loader, suffix)
         if (id == "control_center_hide_edit") {
             val prefix = "miui.systemui.controlcenter.panel.main."
             val edit = Class.forName(prefix + "qs.EditButtonController", false, loader)
@@ -60,6 +61,34 @@ internal object PluginAppearanceHooks {
                 original
             }) count++
         return count
+    }
+
+    private fun defaultVolumeTheme(loader: ClassLoader, suffix: String): Int {
+        val theme = Class.forName("miui.systemui.util.ThemeUtils", false, loader)
+            .getDeclaredMethod("getDefaultPluginTheme")
+        require(theme.returnType == Boolean::class.javaPrimitiveType)
+        val callers = listOf(
+            Class.forName("com.android.systemui.miui.volume.MiuiRingerModeLayout\$RingerButtonHelper", false, loader)
+                .getDeclaredMethod("isSuperBlurSupported"),
+            Class.forName("com.android.systemui.miui.volume.VolumeColumnRes", false, loader)
+                .getDeclaredMethod("getSliderBackgroundResId", View::class.java, Boolean::class.javaPrimitiveType, Boolean::class.javaPrimitiveType),
+            Class.forName("com.android.systemui.miui.volume.MiuiVolumeDialogMotion", false, loader)
+                .getDeclaredMethod("updateExpandBgState"),
+        )
+        val inVolume = ThreadLocal<Boolean>()
+        // ThemeUtils is shared by QS cards and device controls. Never force it globally.
+        if (!HookRuntime.hook(theme, "volume_default_theme/query/$suffix") { chain ->
+                if (inVolume.get() == true) true else chain.proceed()
+            }) return 0
+        return 1 + callers.count { method ->
+            HookRuntime.deoptimize(method, "volume_default_theme/caller")
+            HookRuntime.hook(method, "volume_default_theme/${method.name}/$suffix") { chain ->
+                val previous = inVolume.get()
+                inVolume.set(true)
+                try { chain.proceed() }
+                finally { if (previous == null) inVolume.remove() else inVolume.set(previous) }
+            }
+        }
     }
 }
 
