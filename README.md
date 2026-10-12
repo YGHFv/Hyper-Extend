@@ -399,14 +399,6 @@ app/src/main/
 作用域反查它有哪些功能）是刻意的：界面两个方向都要用，而两份都是纯数据、无副作用。
 加功能时只改 `FeatureCatalog.kt`，加宿主时只改 `ScopeCatalog.kt`。
 
-### 两条必须遵守的纪律
-
-1. **设置键就是功能 id**。`HyperFeature.id` / `HyperOption.id` 直接当 SharedPreferences 的键用。
-   界面不写死任何一个 id —— 加功能只需要在 `FeatureCatalog.kt` 里加一条，界面、设置存取、搜索三处自动跟上。
-2. **注入侧不许抛异常**。宿主的 SystemUI 崩了是状态栏反复重启，system_server 崩了是开机循环。
-   所以 `HookRuntime.hook` 吞掉一切 throwable，每个 feature 的安装过程也各自 `runCatching`，
-   「目标找不到」一律走「记日志并跳过」而不是报错。
-
 ## 开源致谢
 
 本模块的大量功能是参考、移植与重实现上游项目的成果。**各功能的具体来源与许可逐条保留在
@@ -430,18 +422,9 @@ app/src/main/
 | AndroidX | 应用侧依赖 | <https://github.com/androidx/androidx> |
 | Android Open Source Project | 系统行为与 API 依据 | <https://source.android.com> |
 
-对上游的处理分两类，按「上游是否声明了开源协议」划分：
-
-- **声明了开源协议**（Apache-2.0 / AGPL-3.0 / GPL-3.0）：直接参考其实现。
-- **未声明协议**：不复制代码，按反编译得到的**行为**重新实现（挂在哪个类、哪个方法、返回什么）。
-  这是实现思路，不是代码。
-
 ## 许可
 
-本模块整体采用 **AGPL-3.0**（见 `LICENSE`）。选它的理由是上游构成：
-原生通知图标与 HyperCeiler 为 AGPL-3.0，通行密钥与 NFC 卡面为 GPL-3.0，
-壁纸取色与分应用音量为 Apache-2.0 —— AGPL-3.0 是唯一能同时吸收这几者的许可
-（AGPL-3.0 §13 明确允许与 GPL-3.0 组合）。
+本模块整体采用 **AGPL-3.0**（见 `LICENSE`）。
 
 ## 排查
 
@@ -454,12 +437,3 @@ app/src/main/
   在 root 管理器（Magisk / KernelSU / APatch）里给「澎湃补全计划」授权后重试。
 - **注入侧的日志**：模块界面只能看到模块自身进程的日志。SystemUI / system_server 的日志在 logcat 里，
   按标签过滤：`adb logcat -s HyperExtend`。
-
-## 开发记录
-
-迁移范围、逐项取证、宿主成员清单与未完成边界维护在 `docs/` 下，按日期命名。
-当前进度与遗留项见 `docs/migration-continuous-progress-2026-10-11.md` 与
-`docs/systemui-remaining-row-audit-2026-10-12.md`。
-
-**本地验证不等于真机验收。** 单测、R8、lint 全绿只说明源码在本地自洽；
-功能是否在设备上按预期生效，仍以真机表现与宿主日志为准。
