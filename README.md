@@ -13,6 +13,7 @@
 | 作用域 | 10 个宿主进程（见 `META-INF/xposed/scope.list`） |
 | 功能条目 | 95 条，全部默认关闭 |
 | 许可 | AGPL-3.0 |
+| 下载 | [Releases](https://github.com/YGHFv/Hyper-Extend/releases)（由 CI 自动发版） |
 
 ## 为什么要有这个模块
 
@@ -347,6 +348,13 @@ adb shell mkdir -p /sdcard/HyperExtend && adb shell touch /sdcard/HyperExtend/di
 再恢复被连带保护的系统界面。
 
 实现见 `hook/BootLoopGuard.kt` 与 `hook/KillSwitch.kt`。
+
+## 下载
+
+不必自己编译：每次推送 `main` 后 CI 都会跑单测并打包 release APK（见 Actions 工件），
+当 `app/build.gradle.kts` 里的 `versionName` 变化时，CI 自动建 `v<版本号>` 标签并
+发到 [Releases](https://github.com/YGHFv/Hyper-Extend/releases)。直接装那里的
+`app-release.apk` 即可，与本地 `:app:assembleRelease` 的产物同源同签名，可直接覆盖安装。
 
 ## 构建
 

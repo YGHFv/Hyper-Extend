@@ -20,6 +20,8 @@ jobs:
     name: 组装 Release APK
     runs-on: ubuntu-latest
     timeout-minutes: 40
+    outputs:
+      version: ${{ steps.version.outputs.version }}
     steps:
       - name: 检出源码
         uses: actions/checkout@v4
@@ -78,6 +80,18 @@ jobs:
               -dname "CN=Android Debug,O=Android,C=US"
           fi
 
+      # 版本号的唯一来源是 app/build.gradle.kts，发版任务据此决定要不要建标签。
+      - name: 读取版本号
+        id: version
+        run: |
+          set -euo pipefail
+          VERSION="$(sed -n 's/^ *versionName *= *"\([^"]*\)".*/\1/p' app/build.gradle.kts | head -n1)"
+          CODE="$(sed -n 's/^ *versionCode *= *\([0-9]*\).*/\1/p' app/build.gradle.kts | head -n1)"
+          test -n "$VERSION"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "versionCode=$CODE" >> "$GITHUB_OUTPUT"
+          echo "本次构建：versionName=$VERSION versionCode=$CODE"
+
       - name: 测试并组装 Release
         run: ./gradlew :app:testDebugUnitTest :app:assembleRelease --no-daemon --stacktrace
 
@@ -89,8 +103,47 @@ jobs:
           if-no-files-found: error
           retention-days: 30
 
+  # 推送 main：只有 app/build.gradle.kts 里的 versionName 变了（对应标签还不存在）才发版，
+  # 版本号没动时只留构建工件，不会重复建 Release。
+  auto-release:
+    name: 自动打标签发版
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: 检出源码
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: 下载构建产物
+        uses: actions/download-artifact@v4
+        with:
+          name: HyperExtend-release-apk
+          path: dist
+
+      - name: 建标签并发版
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ needs.build.outputs.version }}
+        run: |
+          set -euo pipefail
+          TAG="v$VERSION"
+          if gh release view "$TAG" > /dev/null 2>&1; then
+            echo "Release $TAG 已存在，跳过发版。"
+            exit 0
+          fi
+          if git rev-parse -q --verify "refs/tags/$TAG" > /dev/null; then
+            gh release create "$TAG" dist/*.apk --title "$TAG" --generate-notes
+          else
+            gh release create "$TAG" dist/*.apk --target "$GITHUB_SHA" --title "$TAG" --generate-notes
+          fi
+
+  # 手动推版本标签时也发版，两条路都走同一份构建产物。
   release:
-    name: 发布到 GitHub Release
+    name: 发布标签对应的 Release
     if: startsWith(github.ref, 'refs/tags/v')
     needs: build
     runs-on: ubuntu-latest
@@ -106,4 +159,11 @@ jobs:
       - name: 创建 Release
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh release create "$GITHUB_REF_NAME" dist/*.apk --title "$GITHUB_REF_NAME" --generate-notes
+        run: |
+          set -euo pipefail
+          if gh release view "$GITHUB_REF_NAME" > /dev/null 2>&1; then
+            echo "Release $GITHUB_REF_NAME 已存在，改为覆盖上传产物。"
+            gh release upload "$GITHUB_REF_NAME" dist/*.apk --clobber
+          else
+            gh release create "$GITHUB_REF_NAME" dist/*.apk --title "$GITHUB_REF_NAME" --generate-notes
+          fi
