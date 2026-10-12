@@ -17,7 +17,7 @@ class AppVolumePlacementPolicyTest {
         assertEquals("volume_app_entry", APP_VOLUME_FEATURE.id)
         val row = APP_VOLUME_FEATURE.config.single() as HyperChoice
         assertEquals("多应用音量调节按钮位置", row.title)
-        assertEquals(listOf("新增·音量条上方", "新增·静音按钮上方", "新增·勿扰按钮上方",
+        assertEquals(listOf("新增·音量条上方", "新增·音量条下方", "新增·勿扰按钮上方",
             "新增·勿扰按钮下方", "替换·静音按钮", "替换·勿扰按钮"), row.entries.map { it.label })
         assertEquals(6, row.entries.map { it.variant }.toSet().size)
         assertEquals(AppVolumeSettings.POSITION, row.key)
@@ -32,11 +32,48 @@ class AppVolumePlacementPolicyTest {
     }
 
     @Test fun nativeSpacerAndButtonOrderingArePreserved() {
-        val expected = mapOf(ABOVE_VOLUME to 0, ABOVE_SILENT to 0, ABOVE_DND to 2,
+        val expected = mapOf(ABOVE_VOLUME to 0, ABOVE_SILENT to 1, ABOVE_DND to 2,
             BELOW_DND to 3, REPLACE_SILENT to 0, REPLACE_DND to 2)
-        expected.forEach { (position, index) -> assertEquals(index, AppVolumePlacementPolicy.insertionIndex(position, 0, 2)) }
+        expected.forEach { (position, index) -> assertEquals(index, AppVolumePlacementPolicy.insertionIndex(position, 0, 2, 1)) }
         assertEquals(-1, AppVolumePlacementPolicy.insertionIndex(BELOW_DND, 0, -1))
         assertEquals(-1, AppVolumePlacementPolicy.insertionIndex(REPLACE_SILENT, -1, 2))
+    }
+
+    @Test fun belowVolumePreservesOldPreferenceButDoesNotBelongToHiddenFooter() {
+        assertEquals(ABOVE_SILENT, AppVolumeButtonPosition.fromVariant("above_silent"))
+        assertEquals("新增·音量条下方", ABOVE_SILENT.label)
+        assertTrue(ABOVE_SILENT.belowVolume)
+        assertFalse(ABOVE_SILENT.inFooter)
+        assertFalse(ABOVE_SILENT.replacesNative)
+        assertFalse(ABOVE_SILENT.targetsSilent)
+        assertFalse(ABOVE_VOLUME.inFooter)
+        listOf(ABOVE_DND, BELOW_DND, REPLACE_SILENT, REPLACE_DND).forEach { assertTrue(it.inFooter) }
+    }
+
+    @Test fun belowVolumeRequiresFooterSiblingButNotNativeButtonAnchors() {
+        assertEquals(1, AppVolumePlacementPolicy.insertionIndex(ABOVE_SILENT, -1, -1, 1))
+        assertEquals(-1, AppVolumePlacementPolicy.insertionIndex(ABOVE_SILENT, 0, 2, -1))
+    }
+
+    @Test fun independentRowKeepsOldButtonAndSilentCoordinates() {
+        val sliderBottom = 400
+        val button = 60
+        val gap = 10
+        val top = AppVolumePlacementPolicy.rowTopMargin(ABOVE_SILENT, gap)
+        val row = AppVolumePlacementPolicy.rowHeight(ABOVE_SILENT, button, gap)
+        assertEquals(sliderBottom + gap, sliderBottom + top)
+        assertEquals(sliderBottom + gap + button + gap, sliderBottom + top + row + gap)
+        assertEquals(button + gap, row + top)
+        assertEquals(button + gap, AppVolumePlacementPolicy.rowHeight(ABOVE_VOLUME, button, gap))
+        assertEquals(0, AppVolumePlacementPolicy.rowTopMargin(ABOVE_VOLUME, gap))
+        assertEquals(button, AppVolumePlacementPolicy.rowHeight(REPLACE_DND, button, gap))
+    }
+
+    @Test fun belowVolumeKeepsBottomSpaceGateWhenNativeFooterIsGone() {
+        assertTrue(AppVolumePlacementPolicy.footerFits(100, 400, 70, 570, false))
+        assertFalse(AppVolumePlacementPolicy.footerFits(100, 400, 70, 569, false))
+        assertTrue(AppVolumePlacementPolicy.footerFits(100, 550, 70, 720, false))
+        assertFalse(AppVolumePlacementPolicy.footerFits(100, 550, 70, 719, false))
     }
 
     @Test fun everyPositionUsesTheSamePlaybackAndLockGate() {

@@ -4,12 +4,19 @@ package io.github.YGHFv.HyperExtend.hook.feature.volume
 import io.github.YGHFv.HyperExtend.core.AppVolumeButtonPosition
 
 internal object AppVolumePlacementPolicy {
-    fun insertionIndex(position: AppVolumeButtonPosition, silentIndex: Int, dndIndex: Int): Int = when (position) {
+    fun insertionIndex(position: AppVolumeButtonPosition, silentIndex: Int, dndIndex: Int,
+        footerIndex: Int = -1): Int = when (position) {
         AppVolumeButtonPosition.ABOVE_VOLUME -> 0
-        AppVolumeButtonPosition.ABOVE_SILENT, AppVolumeButtonPosition.REPLACE_SILENT -> silentIndex
+        AppVolumeButtonPosition.ABOVE_SILENT -> footerIndex
+        AppVolumeButtonPosition.REPLACE_SILENT -> silentIndex
         AppVolumeButtonPosition.ABOVE_DND, AppVolumeButtonPosition.REPLACE_DND -> dndIndex
         AppVolumeButtonPosition.BELOW_DND -> if (dndIndex < 0) -1 else dndIndex + 1
     }
+
+    fun rowHeight(position: AppVolumeButtonPosition, buttonHeight: Int, gap: Int): Int =
+        buttonHeight + if (position.belowVolume || position.replacesNative) 0 else gap
+
+    fun rowTopMargin(position: AppVolumeButtonPosition, gap: Int): Int = if (position.belowVolume) gap else 0
 
     /** Footer additions keep the media slider anchored; landscape centers the complete stack. */
     fun footerFits(baseTop: Int, nativeHeight: Int, addedHeight: Int, bottom: Int, centered: Boolean): Boolean {
