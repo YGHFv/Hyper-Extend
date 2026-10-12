@@ -14,6 +14,9 @@ local.properties
 mcp/
 build.log
 
+# 迁移记录与真机取证材料：只在本机留档，不进公开仓库
+docs/
+
 # IDE
 .idea/
 *.iml
