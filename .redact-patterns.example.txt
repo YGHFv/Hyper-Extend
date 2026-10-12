@@ -1,0 +1,10 @@
+# 个人信息脱敏模式表（示例）
+#
+# 把本文件复制为 .redact-patterns.txt，按同样格式填入要清理的值。
+# .redact-patterns.txt 已在 .gitignore 中，不会被提交。
+#
+# 格式：每行「原始值 <制表符> 占位符」，以 # 开头的行为注释。
+# 占位符请用尖括号形式，既醒目又不会破坏 Markdown / JSON 结构。
+example-device-serial	<serial>
+example-device-model	<model>
+10.0.0.1	<mcp-host>

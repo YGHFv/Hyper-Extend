@@ -26,3 +26,6 @@ captures/
 # Python inspection tool caches
 __pycache__/
 *.py[cod]
+
+# 本机个人信息脱敏模式表（含真实设备/网络信息，禁止入库）
+.redact-patterns.txt
