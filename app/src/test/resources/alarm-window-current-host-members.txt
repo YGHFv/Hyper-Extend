@@ -1,0 +1,16 @@
+Lcom/android/systemui/statusbar/StatusBarIconView;->isIconVisible()Z
+Lcom/android/systemui/statusbar/policy/MiuiNextAlarmControllerImpl;->updateAlarmExistInBg()V
+Lcom/android/systemui/statusbar/policy/MiuiNextAlarmControllerImpl$$ExternalSyntheticLambda0;->run()V
+Lcom/android/systemui/statusbar/policy/MiuiNextAlarmControllerImpl$1;->onPackageAdded(Ljava/lang/String;I)V
+Lcom/android/systemui/statusbar/policy/MiuiNextAlarmControllerImpl$1;->onPackageRemoved(Ljava/lang/String;I)V
+Lcom/android/systemui/statusbar/phone/StatusIconContainer;->onLayout(ZIIII)V
+Lcom/android/systemui/statusbar/phone/StatusIconContainer;->onMeasure(II)V
+Lcom/android/systemui/statusbar/views/MiuiStatusIconContainer;->onLayout(ZIIII)V
+Lcom/android/systemui/statusbar/views/MiuiStatusIconContainer;->onMeasure(II)V
+Lcom/android/systemui/settings/UserTrackerImpl;->getUserId()I
+Lcom/android/systemui/settings/UserTrackerImpl;->createCurrentUserContext(Landroid/content/Context;)Landroid/content/Context;
+Lcom/android/systemui/statusbar/StatusBarIconView;->mSlot:Ljava/lang/String;
+Lcom/android/systemui/statusbar/policy/MiuiNextAlarmControllerImpl;->mUTracker:Lcom/android/systemui/settings/UserTracker;
+Lcom/android/systemui/statusbar/policy/MiuiNextAlarmControllerImpl$MiuiKeyguardAlarmController$1;->onChange(Z)V
+Lcom/android/systemui/statusbar/phone/PhoneStatusBarPolicy$4;->onAlarmChanged(Z)V
+Lcom/android/systemui/statusbar/policy/MiuiNextAlarmControllerImpl$MiuiStatusBarAlarmController;->updateAlarmIcon()V

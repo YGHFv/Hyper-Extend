@@ -2,16 +2,33 @@
 package io.github.YGHFv.HyperExtend.hook.feature.systemui
 
 import io.github.YGHFv.HyperExtend.core.featureById
+import io.github.YGHFv.HyperExtend.core.LockscreenShortcutSettings
+import io.github.YGHFv.HyperExtend.core.hasDetailPage
 import org.junit.Assert.*
 import org.junit.Test
 
 class LockscreenFlashlightPolicyTest {
     private fun press() = FlashlightPress().apply { down(100, 10f, 20f, 7) }
-    @Test fun nativeAndHideSettingsRemainIndependent() {
-        assertFalse(LockscreenShortcutPolicy.replaceLeft(false, false))
-        assertFalse(LockscreenShortcutPolicy.replaceLeft(false, true))
-        assertFalse(LockscreenShortcutPolicy.replaceLeft(true, true))
-        assertTrue(LockscreenShortcutPolicy.replaceLeft(true, false))
+    @Test fun leftButtonIsNowOneThreeWayChoiceInsteadOfTwoCompetingCards() {
+        // 合并前「隐藏」与「手电筒」是两张可以同时打开的卡片，靠隐藏优先收场；
+        // 合并后是同一个选择项的取值，互斥由数据保证。
+        assertEquals(LockscreenShortcutSettings.MODE_DEFAULT, LockscreenShortcutSettings.modeOf(""))
+        assertEquals(LockscreenShortcutSettings.MODE_DEFAULT, LockscreenShortcutSettings.modeOf("bad"))
+        assertEquals(LockscreenShortcutSettings.MODE_HIDE, LockscreenShortcutSettings.modeOf("1"))
+        assertEquals(LockscreenShortcutSettings.MODE_FLASHLIGHT, LockscreenShortcutSettings.modeOf("2"))
+        assertTrue(LockscreenShortcutSettings.hidesLeft("1"))
+        assertFalse(LockscreenShortcutSettings.hidesLeft("2"))
+        assertTrue(LockscreenShortcutSettings.replacesLeft("2"))
+        assertFalse(LockscreenShortcutSettings.replacesLeft("1"))
+        // 「保持原生」档既不算隐藏也不算替换。
+        for (raw in listOf("", "0", "bad")) {
+            assertFalse(raw, LockscreenShortcutSettings.hidesLeft(raw))
+            assertFalse(raw, LockscreenShortcutSettings.replacesLeft(raw))
+        }
+        // 三选一的两档不可能同时成立。
+        for (raw in listOf("0", "1", "2", "")) {
+            assertFalse(raw, LockscreenShortcutSettings.hidesLeft(raw) && LockscreenShortcutSettings.replacesLeft(raw))
+        }
     }
     @Test fun shortTapNeverToggles() { assertFalse(press().up(499)) }
     @Test fun thresholdIsInclusive() { assertTrue(press().up(500)) }
@@ -69,9 +86,14 @@ class LockscreenFlashlightPolicyTest {
         val nativeTint = Any(); s.apply(nativeTint, null); s.apply(null, null); assertSame(nativeTint, s.restore(null))
     }
     @Test fun uiDescribesBoundariesAndNeverEnablesByDefault() {
-        val f = featureById(LockscreenShortcutPolicy.FLASHLIGHT)!!
-        assertFalse(f.defaultEnabled); assertTrue(f.requirement!!.contains("优先隐藏"))
-        assertTrue(f.requirement.contains("不含上游缩放动画")); assertTrue(f.summary.contains("0.4"))
+        val f = featureById(LockscreenShortcutSettings.FEATURE)!!
+        assertFalse(f.defaultEnabled)
+        // 合并后不再有「优先隐藏」这条隐藏规则：处理方式是互斥的三选一。
+        assertTrue(f.requirement!!.contains("按住至少 0.4 秒"))
+        assertTrue(f.requirement.contains("不含上游缩放动画"))
+        assertTrue(f.summary.contains("手电筒"))
+        assertTrue(f.hasDetailPage)
+        assertEquals(listOf(LockscreenShortcutSettings.MODE), f.config.map { it.key })
     }
     @Test fun allNewTargetsAreBackedByHostSignatures() {
         fun descriptor(name: String): String = when (name) {

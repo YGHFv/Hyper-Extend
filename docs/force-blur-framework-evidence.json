@@ -1,0 +1,34 @@
+{
+  "artifact": ".workbuddy/tmp/host/framework.jar",
+  "sha256": "f8af87fa975ca7e529aeeeb193a4e77bea650b0e9b611259e600c248ac3b4bc4",
+  "verification": "Complete cached DEX declarations, not newly captured device/framework provenance.",
+  "members": [
+    {
+      "owner": "android.app.ActivityThread",
+      "declaration": "currentApplication():android.app.Application",
+      "dex": "classes.dex"
+    },
+    {
+      "owner": "android.os.SystemProperties",
+      "declaration": "getBoolean(java.lang.String,Z):Z",
+      "dex": "classes3.dex"
+    },
+    {
+      "owner": "android.view.CrossWindowBlurListeners",
+      "declaration": "isCrossWindowBlurEnabled():Z",
+      "dex": "classes4.dex"
+    },
+    {
+      "owner": "android.view.CrossWindowBlurListeners",
+      "field": "CROSS_WINDOW_BLUR_SUPPORTED",
+      "type": "Z",
+      "access": 25,
+      "dex": "classes4.dex"
+    },
+    {
+      "owner": "android.view.ViewRootImpl",
+      "declaration": "getView():android.view.View",
+      "dex": "classes4.dex"
+    }
+  ]
+}

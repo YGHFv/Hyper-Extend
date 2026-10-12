@@ -1,0 +1,272 @@
+{
+  "host": {
+    "packageName": "com.android.systemui",
+    "versionCode": 202602260,
+    "workspaceId": "wot5ikcq"
+  },
+  "boundary": "Source-only independent island Binder/Holder layout and text/icon styling; no build or runtime acceptance. Background/progress/AOD remain native.",
+  "evidence": [
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/notification/mediaisland/MiuiIslandMediaViewBinderImpl;->attach(Lcom/android/systemui/statusbar/notification/mediaisland/MiuiIslandMediaViewHolder;Lcom/android/systemui/statusbar/notification/mediaisland/MiuiIslandMediaViewHolder;)V",
+      "sha256": "2b7184f5a30e5ec153926b8d13a9e5483954c7c593ab86331082549788873a7b",
+      "raw": ".workbuddy/tmp/mt-systemui/island-media-current-member-0.json",
+      "pages": 1
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/notification/mediaisland/MiuiIslandMediaViewBinderImpl;->detach()V",
+      "sha256": "71a4b04dcb9c3ab18d8e4e2a2b38a4293854106b41e77520654a4e00f40d07f2",
+      "raw": ".workbuddy/tmp/mt-systemui/island-media-current-member-1.json",
+      "pages": 1
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/notification/mediaisland/MiuiIslandMediaViewBinderImpl;->setInfoText(Lcom/android/systemui/statusbar/notification/mediaisland/MiuiIslandMediaViewHolder;)V",
+      "sha256": "be7a5ae3be3b50c1a34a29809be588f0498ebae0b041add6547ffac6e9742b8a",
+      "raw": ".workbuddy/tmp/mt-systemui/island-media-current-member-2.json",
+      "pages": 1
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/notification/mediaisland/MiuiIslandMediaViewBinderImpl;->setSeamless(Lcom/android/systemui/media/controls/shared/model/MediaData;Lcom/android/systemui/statusbar/notification/mediaisland/MiuiIslandMediaViewHolder;)V",
+      "sha256": "051af0c0c4a074daa3ed2425b2ceb48c004ec3d872bf2cb533ac744c0ff737ea",
+      "raw": ".workbuddy/tmp/mt-systemui/island-media-current-member-3.json",
+      "pages": 1
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/notification/mediaisland/MiuiIslandMediaViewBinderImpl;->setActionButtons(Lcom/android/systemui/media/controls/shared/model/MediaData;Lcom/android/systemui/statusbar/notification/mediaisland/MiuiIslandMediaViewHolder;Z)V",
+      "sha256": "749031c5f7b38287367eca6178128cf05d6944e3c8418725ce87018164fa52b3",
+      "raw": ".workbuddy/tmp/mt-systemui/island-media-current-member-4.json",
+      "pages": 1
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/notification/mediaisland/MiuiIslandMediaControllerImpl;->resetPlayerHolder()V",
+      "sha256": "59dc567c35d53d44789314863d9e7539154bca227599d8f1eaedae42e42278c8",
+      "raw": ".workbuddy/tmp/mt-systemui/island-media-current-member-5.json",
+      "pages": 1
+    },
+    {
+      "locator": "dex_method:Landroidx/constraintlayout/widget/ConstraintSet;->load(Landroid/content/Context;I)V",
+      "sha256": "dffb4ca5c3bd3726c7683d3faa69571114e35ef2fd62ab98666bad26a45e7415",
+      "raw": ".workbuddy/tmp/mt-systemui/island-media-current-member-6.json",
+      "pages": 1
+    },
+    {
+      "locator": "dex_method:Landroidx/constraintlayout/widget/ConstraintSet;->clone(Landroidx/constraintlayout/widget/ConstraintSet;)V",
+      "sha256": "f80990ca71eb31e37cc90fe8c0d25e34dd1252179cec5ebd2606a928b6366665",
+      "raw": ".workbuddy/tmp/mt-systemui/island-media-current-member-7.json",
+      "pages": 1
+    },
+    {
+      "locator": "dex_method:Landroidx/constraintlayout/widget/ConstraintSet;-><init>()V",
+      "sha256": "7389e3927808dc2532eb795515180e7c8a40a269f9ab5b9437a3088187342f31",
+      "raw": ".workbuddy/tmp/mt-systemui/island-media-current-member-8.json",
+      "pages": 1
+    },
+    {
+      "locator": "dex_method:Landroidx/constraintlayout/widget/ConstraintSet;->connect(IIII)V",
+      "sha256": "b61a6646cdea39f4868ade376972d0e7cf926fb1c614d01dab1a5794b09b07a6",
+      "raw": ".workbuddy/tmp/mt-systemui/island-media-current-member-9.json",
+      "pages": 1
+    },
+    {
+      "locator": "dex_method:Landroidx/constraintlayout/widget/ConstraintSet;->clear(II)V",
+      "sha256": "b7dfe1a4f103f5dd2d42772625808e248e60b4e784cf9b2d5169762bc43a2d64",
+      "raw": ".workbuddy/tmp/mt-systemui/island-media-current-member-10.json",
+      "pages": 1
+    },
+    {
+      "locator": "dex_method:Landroidx/constraintlayout/widget/ConstraintSet;->setMargin(III)V",
+      "sha256": "abd912078a0ad0001eea61155a23a5d4feb2262c2242ad674a3abf60b95cdfc5",
+      "raw": ".workbuddy/tmp/mt-systemui/island-media-current-member-11.json",
+      "pages": 1
+    },
+    {
+      "locator": "dex_method:Landroidx/constraintlayout/widget/ConstraintSet;->setGoneMargin(III)V",
+      "sha256": "547fc63f75e66f3ae95de4777f226b01c244741796d27cf9539f0848a3ef3597",
+      "raw": ".workbuddy/tmp/mt-systemui/island-media-current-member-12.json",
+      "pages": 1
+    },
+    {
+      "locator": "dex_method:Landroidx/constraintlayout/widget/ConstraintSet;->setVisibility(II)V",
+      "sha256": "6b5b4697f8cd7dbfdb8815327160892da39a9c5b11d57d467e56f2485aee576b",
+      "raw": ".workbuddy/tmp/mt-systemui/island-media-current-member-13.json",
+      "pages": 1
+    },
+    {
+      "locator": "dex_method:Landroidx/constraintlayout/widget/ConstraintSet;->setHorizontalChainStyle(II)V",
+      "sha256": "945246a643af7cb716f103733cf4d19cd6d0a7db0ca64c9a638fdd1b7575924e",
+      "raw": ".workbuddy/tmp/mt-systemui/island-media-current-member-14.json",
+      "pages": 1
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/notification/mediaisland/MiuiIslandMediaControllerImpl$mediaDataChangeListener$1$$ExternalSyntheticLambda0;->invoke()Ljava/lang/Object;",
+      "sha256": "96a9760593e7b2f0b88f25680e397c6afaa02a5460e31826d9b6a7a61d0d0afd",
+      "raw": ".workbuddy/tmp/mt-systemui/island-media-current-member-15.json",
+      "pages": 1
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/notification/mediaisland/MiuiIslandMediaControllerImpl;->reInflateView$2()V",
+      "sha256": "2537a93e3bf4bea48850b15a00eff86bc70df14bfc88b7389ece716be6966e17",
+      "raw": ".workbuddy/tmp/mt-systemui/island-media-current-member-16.json",
+      "pages": 1
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/notification/mediaisland/MiuiIslandMediaViewBinderImpl$callback$1;->onMetadataChanged(Landroid/media/MediaMetadata;)V",
+      "sha256": "c3f7de64a1720743a2cf6a142bbb37304366efbd7f64549c7aff25dc406a4355",
+      "raw": ".workbuddy/tmp/mt-systemui/island-media-current-member-17.json",
+      "pages": 1
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/notification/mediaisland/MiuiIslandMediaViewBinderImpl;->bindMediaData(Lcom/android/systemui/media/controls/shared/model/MediaData;)V",
+      "sha256": "0d207d0f7ce04eb05864f6b6e3f3ac1c1a16dbb8ae3e57079e486813728184b0",
+      "raw": ".workbuddy/tmp/mt-systemui/island-media-current-member-18.json",
+      "pages": 1
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/notification/mediaisland/MiuiIslandMediaViewBinderImpl;->onMediaDataChanged(Ljava/util/Map;)V",
+      "sha256": "313853db585e97778d0541362967dc43f1bb945249c8c815059edfa6069a3594",
+      "raw": ".workbuddy/tmp/mt-systemui/island-media-current-member-19.json",
+      "pages": 1
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/statusbar/notification/mediaisland/MiuiIslandMediaViewBinderImpl;->holder:Lcom/android/systemui/statusbar/notification/mediaisland/MiuiIslandMediaViewHolder;",
+      "sha256": "5e90484c9a4de176f60c0e05e36d4dab8f654ab202a2ab25a267c7e8ca25b8e2",
+      "raw": ".workbuddy/tmp/mt-systemui/island-media-current-member-20.json",
+      "pages": 1
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/statusbar/notification/mediaisland/MiuiIslandMediaViewBinderImpl;->dummyHolder:Lcom/android/systemui/statusbar/notification/mediaisland/MiuiIslandMediaViewHolder;",
+      "sha256": "09dd4fd15c293590e9ca24bc5c6c1ac10bc7c6c7a308f9981b2832f62749bc74",
+      "raw": ".workbuddy/tmp/mt-systemui/island-media-current-member-21.json",
+      "pages": 1
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/statusbar/notification/mediaisland/MiuiIslandMediaViewBinderImpl;->mediaData:Lcom/android/systemui/media/controls/shared/model/MediaData;",
+      "sha256": "989068b7dcf5ebbfecebd647bff75f54ef23d453b341441d10bf79e9001309d6",
+      "raw": ".workbuddy/tmp/mt-systemui/island-media-current-member-22.json",
+      "pages": 1
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/media/controls/shared/model/MediaData;->semanticActions:Lcom/android/systemui/media/controls/shared/model/MediaButton;",
+      "sha256": "3c66074267418f640b97a7de029e190d7722e174e41ad75a6695dbc1470a9e64",
+      "raw": ".workbuddy/tmp/mt-systemui/island-media-current-member-23.json",
+      "pages": 1
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/statusbar/notification/mediaisland/MiuiIslandMediaControllerImpl;->context:Landroid/content/Context;",
+      "sha256": "6eb825e2d93db2b9624088b9b2dd102c55d787087cf4fbd74844f2de66bdb59f",
+      "raw": ".workbuddy/tmp/mt-systemui/island-media-current-member-24.json",
+      "pages": 1
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/statusbar/notification/mediaisland/MiuiIslandMediaControllerImpl;->normalLayoutIsland:Landroidx/constraintlayout/widget/ConstraintSet;",
+      "sha256": "9b1528a8ad8ee8bf7bc4c130667076c71f6e74a5d83aa67cc0bd353ed59eb54c",
+      "raw": ".workbuddy/tmp/mt-systemui/island-media-current-member-25.json",
+      "pages": 1
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/statusbar/notification/mediaisland/MiuiIslandMediaControllerImpl;->miuiPlayerHolder:Lcom/android/systemui/statusbar/notification/mediaisland/MiuiIslandMediaViewHolder;",
+      "sha256": "7acaab7d598008f13f421f87cf8cdd9814a609b86492b0d8496d790f25f95225",
+      "raw": ".workbuddy/tmp/mt-systemui/island-media-current-member-26.json",
+      "pages": 1
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/statusbar/notification/mediaisland/MiuiIslandMediaControllerImpl;->miuiDummyPlayerHolder:Lcom/android/systemui/statusbar/notification/mediaisland/MiuiIslandMediaViewHolder;",
+      "sha256": "1eac81e9053b9af291556d9aa66250cd2e57154147de9dc20377f9fd1eefe380",
+      "raw": ".workbuddy/tmp/mt-systemui/island-media-current-member-27.json",
+      "pages": 1
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/statusbar/notification/mediaisland/MiuiIslandMediaViewHolder;->player:Landroid/view/View;",
+      "sha256": "e07267a9bef3dc74f9a99ca27d4ca84ef8bd8aad8e7eaf1f6fd700fda230ddc0",
+      "raw": ".workbuddy/tmp/mt-systemui/island-media-current-member-28.json",
+      "pages": 1
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/statusbar/notification/mediaisland/MiuiIslandMediaViewHolder;->seamless:Landroid/view/ViewGroup;",
+      "sha256": "3a1e1dd8728fee61c78c27f6bb834088f61d408293db641decbeb33394c33ecc",
+      "raw": ".workbuddy/tmp/mt-systemui/island-media-current-member-29.json",
+      "pages": 1
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/statusbar/notification/mediaisland/MiuiIslandMediaViewHolder;->appIcon:Landroid/widget/ImageView;",
+      "sha256": "00aba381346c6ebd81429a769aacd57b63b033d1447ffed0de35cbe3709b4c51",
+      "raw": ".workbuddy/tmp/mt-systemui/island-media-current-member-30.json",
+      "pages": 1
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/statusbar/notification/mediaisland/MiuiIslandMediaViewHolder;->albumView:Landroid/view/View;",
+      "sha256": "8ba6ce2e264e4cee0d4827cf307738b6eae3145c2c985a9cf3c5c28336e1e415",
+      "raw": ".workbuddy/tmp/mt-systemui/island-media-current-member-31.json",
+      "pages": 1
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/statusbar/notification/mediaisland/MiuiIslandMediaViewHolder;->titleText:Landroid/widget/TextView;",
+      "sha256": "67833f729581e24c6161777a4e5d2234b91722a66546f80b148bd2c7ab95a2de",
+      "raw": ".workbuddy/tmp/mt-systemui/island-media-current-member-32.json",
+      "pages": 1
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/statusbar/notification/mediaisland/MiuiIslandMediaViewHolder;->artistText:Landroid/widget/TextView;",
+      "sha256": "58e1b4cc86caa1f8b636115bcfc73f0f881d613aa16a6386441004e971e8cc2f",
+      "raw": ".workbuddy/tmp/mt-systemui/island-media-current-member-33.json",
+      "pages": 1
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/statusbar/notification/mediaisland/MiuiIslandMediaViewHolder;->elapsedTimeView:Landroid/widget/TextView;",
+      "sha256": "d1f4072187dcd099356c407d91e01fc740701d006c0fa411e2e1769dcc7165f8",
+      "raw": ".workbuddy/tmp/mt-systemui/island-media-current-member-34.json",
+      "pages": 1
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/statusbar/notification/mediaisland/MiuiIslandMediaViewHolder;->totalTimeView:Landroid/widget/TextView;",
+      "sha256": "1fb416a7733b7df516b3db84439d357b0578fdc41acb58dd9dba297d90748b8c",
+      "raw": ".workbuddy/tmp/mt-systemui/island-media-current-member-35.json",
+      "pages": 1
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/statusbar/notification/mediaisland/MiuiIslandMediaViewHolder;->action0:Landroid/widget/ImageButton;",
+      "sha256": "0cb3d3455ad3756c47101fe759275fd845ca33c899763320fb9c38db3506883f",
+      "raw": ".workbuddy/tmp/mt-systemui/island-media-current-member-36.json",
+      "pages": 1
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/statusbar/notification/mediaisland/MiuiIslandMediaViewHolder;->action1:Landroid/widget/ImageButton;",
+      "sha256": "a7c45c6429f33c826ed1b9f5aecbf2ce06eb8dad4c8996b37d4d56e96960cd06",
+      "raw": ".workbuddy/tmp/mt-systemui/island-media-current-member-37.json",
+      "pages": 1
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/statusbar/notification/mediaisland/MiuiIslandMediaViewHolder;->action2:Landroid/widget/ImageButton;",
+      "sha256": "4029eb8e2b1f83fcec0b4858f45043584ca1c3db6abaa9b57f03925e37134c21",
+      "raw": ".workbuddy/tmp/mt-systemui/island-media-current-member-38.json",
+      "pages": 1
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/statusbar/notification/mediaisland/MiuiIslandMediaViewHolder;->action3:Landroid/widget/ImageButton;",
+      "sha256": "c57aa3df97e4284eb7fa1f627e53facab7a83238530df16339ed6b1e4c5a8a22",
+      "raw": ".workbuddy/tmp/mt-systemui/island-media-current-member-39.json",
+      "pages": 1
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/statusbar/notification/mediaisland/MiuiIslandMediaViewHolder;->action4:Landroid/widget/ImageButton;",
+      "sha256": "fb8fd473a90d84dfe94a0ca8cbcebe66d5d9d804b4c71eeab8625c4a56a93c8b",
+      "raw": ".workbuddy/tmp/mt-systemui/island-media-current-member-40.json",
+      "pages": 1
+    }
+  ],
+  "resources": [
+    "island-layout-resources.json",
+    "island-constraint-resource.json",
+    "island-constraints.json",
+    "miui_media_session_island.json",
+    "miui_media_session_island_dummy.json"
+  ],
+  "xrefs": [
+    "island-style-xref-0.json",
+    "island-style-xref-1.json",
+    "island-style-xref-2.json",
+    "island-style-xref-3.json",
+    "island-style-xref-4.json",
+    "island-style-xref-5.json",
+    "island-layout-field-xref.json"
+  ]
+}

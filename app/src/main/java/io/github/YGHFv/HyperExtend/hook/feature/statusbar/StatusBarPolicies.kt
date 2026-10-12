@@ -3,8 +3,12 @@
 package io.github.YGHFv.HyperExtend.hook.feature.statusbar
 
 internal object ScreenshotLayerPolicy {
+    fun eligible(version: Long, display: Int, enabled: Boolean, original: List<String>): Boolean =
+        enabled && version == 10603038L && display == 0 && "RearScreenshotWindow" !in original
+
     fun exclusions(original: Array<String>?, rearDisplay: Boolean): Array<String>? =
-        if (rearDisplay) original else (original.orEmpty().toList() + "StatusBar").distinct().toTypedArray()
+        if (rearDisplay || original?.contains("StatusBar") == true) original
+        else (original ?: emptyArray()) + "StatusBar"
 }
 
 internal data class ClockStyle(val bold: Boolean = false, val size: Int = 12,
@@ -26,8 +30,4 @@ internal object ClockTickPolicy {
         return false
     }
     fun delay(nowMillis: Long) = 1000L - Math.floorMod(nowMillis, 1000L)
-}
-
-internal object BatteryOrderPolicy {
-    fun shouldSwap(icon: Int, percent: Int) = icon >= 0 && percent > icon
 }

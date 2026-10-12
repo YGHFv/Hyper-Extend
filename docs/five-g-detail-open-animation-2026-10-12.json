@@ -1,0 +1,81 @@
+{
+  "date": "2026-10-12",
+  "title": "内置移动网络磁贴：打开详情页时「先整块显示 → 全部消失 → 从右上角展开」的根因与修复",
+  "feature": "control_center_fix_tiles_list",
+  "settingKey": "control_center_fix_tiles_list.5g_style",
+  "symptom": "布局已正确（条目位置、名称、间距都已修好）后，打开移动网络详情页会先显示全部内容，随后内容全部消失，最后再从右上角做一次圆形展开。",
+  "method": "仅 MT MCP 反编译取证（宿主 MiuiSystemUI.apk 工作区 82gixxhb）+ 模块单测；未操作设备、未写设备文件、未重启系统界面。",
+  "deviceTouched": false,
+  "hostVersion": "com.android.systemui versionCode=202602260",
+  "upstream": {
+    "repository": "https://github.com/ReChronoRain/HyperCeiler",
+    "file": "library/libhook/src/main/java/com/sevtinge/hyperceiler/libhook/rules/systemui/controlcenter/tiles/FiveGTile.java",
+    "note": "上游 mode 3 只 hook createDetailView / onDetailItemClick / setItems 三处，只在 createDetailView 里给 detail_container 加 45dp 的 getMaxHeight，从不介入条目绑定，也不碰任何动画相关成员。本模块此前多做的两件事正是问题来源。"
+  },
+  "animationChain": {
+    "QSTileImpl.showDetail(Z)V": "mHandler.obtainMessage(0x3eb, show, 0).sendToTarget()",
+    "MiuiCellularTile.handleSecondaryClick(Expandable)": "先 showDetail(true)，紧接着 mDetailAdapter.updateItems()（MiuiCellularTile.txt:1043-1093）",
+    "MiuiQSPanel$H.handleMessage": "case 1 → MiuiQSPanel.handleShowDetailImpl(record, show, x, y)（MiuiQSPanel_H.txt）",
+    "MiuiQSPanel.handleShowDetailImpl": "post(MiuiQSDetail$2$$ExternalSyntheticLambda1)，f$2=x(tileView 中心)、f$3=y(MiuiQSPanel.txt:416-511)",
+    "MiuiQSDetail$2$$ExternalSyntheticLambda1.run()": [
+      "打开分支先 createDetailView(context, mDetailViews.get(category), mDetailContent)，再 mDetailContent.removeAllViews() + addView(新 view)",
+      "随后把整个 MiuiQSDetail setVisibility(0)（MiuiQSDetail_2_lambda1.txt:341），即「整块可见」这一刻",
+      "再走 :goto_191，最后 setAlpha(1f) + mClipper.animateCircularClip(mOpenX, mOpenY, true, mAnimInListener)（MiuiQSDetail_2_lambda1.txt:493/507）"
+    ],
+    "QSDetailClipper.animateCircularClip(IIZL...)": "ViewAnimationUtils.createCircularReveal(mDetail, x, y, startR, endR)，p3=true 时 startR=小半径、endR=大半径，时长 ×1.5；mVisibleOnStart.onAnimationStart 会再 setVisibility(0)（QSDetailClipper.txt:67、QSDetailClipper_2.txt）",
+    "clippedView": "mClipper 的 mDetail 是 MiuiQSDetail 自身（MiuiQSDetail.onFinishInflate：mClipper = new QSDetailClipper(this)，resources 0x7f0b098b = qs_detail 根节点），不是列表",
+    "frameworkReveal": "android.animation.RevealAnimator 在 onFinished 才 setRevealClip(false,...)；揭示期间裁剪由 RenderNodeAnimator 持续生效"
+  },
+  "rootCause": [
+    {
+      "id": "duplicate-instances",
+      "confidence": "确证（宿主调用次数、模块新建行为、日志条数三者互证）；「与揭示时窗交错」这一环是基于下述时序的推断",
+      "summary": "每个 QSDetailContent 每次都新建一个 ToggleItem，导致一次开页里 2–3 次 setItems 各产生一个新对象，RecyclerView 反复按「换了条目」全量重绑，与圆形揭示时窗交错。",
+      "whySetItemsRunsRepeatedly": [
+        "MiuiCellularTile.handleSecondaryClick：showDetail(true) 之后立刻 updateItems()",
+        "MiuiQSDetail$2$$ExternalSyntheticLambda1.run → CellularDetailAdapter.createDetailView，其中 `if (this$0.mShowingDetail) updateItems()`（CellularDetailAdapter.txt:54-102）",
+        "CellSignalCallback.setAllSubs / setDefaultSim 在 mShowingDetail 为真时各再 updateItems() 一次（CellSignalCallback.txt:16-153）"
+      ],
+      "hostSideEffect": "每次 setItems → handleSetItems → updateGroupInfo() + updateVisible() + notifyDataSetChanged()（QSDetailContent.txt:433-466、703）",
+      "moduleDefect": "FiveGDetailHooks.Api.splice 每次 UnsafeAccess.allocateInstance 新建 ToggleItem，重复 setItems 就是重复新对象",
+      "logEvidence": "hyperextend.log 中同一次开页 `native 5G detail item injected` 同一秒出现 2–3 条（如 12:15:04、12:15:05 各两条；11:06:07/08/11/14/17 共 10 条），正是重复注入被逐个记账",
+      "fix": "按 QSDetailContent 用 WeakHashMap 缓存那一个 ToggleItem，重复 setItems 复用同一实例、只更新 isChecked；仅首次真正插入时才写日志"
+    },
+    {
+      "id": "extra-relayout",
+      "confidence": "确证（宿主该分支只有 iput、没有 setLayoutParams；模块多了一行 setLayoutParams）",
+      "summary": "模块给注入行补间距时多调了一次 setLayoutParams，等于在绑定收尾额外 requestLayout 一次，落在揭示动画窗口里就是第二次闪烁来源。",
+      "hostBaseline": "宿主 QSDetailContent$Adapter.onBindViewHolder(ItemHolder,int) 的 ToggleItem 分支末尾是 `iput v2, v5, LViewGroup$MarginLayoutParams;->bottomMargin:I` 后直接 return-void，**没有 setLayoutParams / requestLayout**（Adapter.txt:178-1460）",
+      "whyHostIsSafe": "RecyclerView 先 bind 再 measure：LinearLayoutManager.layoutChunk 先 LayoutState.next → RecyclerView$Recycler.getViewForPosition → tryGetViewHolderForPositionByDeadline → RecyclerView$Adapter.bindViewHolder，之后才 measureChildWithMargins（三段 smali 已逐条核对）。measureChildWithMargins 读的就是刚写好的 MarginLayoutParams，所以宿主只用字段表达间距就够，回写 layoutParams 纯属多余",
+      "moduleDefect": "空间 hook 在 params.bottomMargin = gap 之后又执行 view.layoutParams = params",
+      "fix": "删除 view.layoutParams = params，只写 bottomMargin 字段，与宿主一致"
+    }
+  ],
+  "changes": [
+    "FiveGDetailHooks：injected（IdentityHashMap 集合）改为 injectedToggles（synchronized WeakHashMap<QSDetailContent, ToggleItem>）",
+    "FiveGDetailHooks.Api.splice(content, items) 返回 sealed SpliceResult（Skipped / Injected(items, reused)），复用实例时 reused=true",
+    "注入日志只在 reused=false（首次插入）时输出，消除「一次开页刷 2–3 行」的假象",
+    "isInjected 改为按对象身份（===）判定；抽出纯函数 identityContains 供单测钉住",
+    "space() 删除 view.layoutParams = params，只保留 params.bottomMargin = gap",
+    "FiveGTilePolicyTest 新增 injectedIdentityIsObjectIdentityNotEquality 与 detailInjectionStaysIdempotentAndNeverRelayoutsDuringReveal"
+  ],
+  "unchangedSemantics": [
+    "条目文案 LABEL=\"5G网络\" 不变",
+    "插入点仍为最后一条 TextDividerItem 之后（无分组头时退回最后一个 SelectableItem 之后）",
+    "点击命中我方条目即吞事件、绝不落到原生 ToggleItem（0x91d = 智能双卡）写路径",
+    "间距值仍为 2 × qs_detail_selectable_item_margin_vertical（0x7f071743 = 4.0dp，取不到时 8dp 兜底）"
+  ],
+  "verification": {
+    "compile": ":app:compileDebugKotlin 通过",
+    "unitTests": ":app:testDebugUnitTest 137 套 / 849 用例 / 0 失败 / 0 错误 / 0 跳过",
+    "release": ":app:assembleRelease 通过",
+    "releaseApkBytes": 2914778,
+    "releaseApkSha256": "1A75A5F30CA13AFB6D1FC52A2B57196B0DA9651DB8405501D4B6EE55D2ED4C76",
+    "mtMcpReadOnly": true,
+    "installed": false,
+    "hostRestarted": false,
+    "runtimeAccepted": false,
+    "deviceFeatureActionsExecuted": false,
+    "note": "以上为代码与 smali 层面结论；实际开启动画观感需用户安装后确认。本次未安装、未重启系统界面、未操作设备。"
+  }
+}

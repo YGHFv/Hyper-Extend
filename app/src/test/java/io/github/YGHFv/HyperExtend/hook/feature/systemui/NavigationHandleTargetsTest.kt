@@ -28,7 +28,12 @@ class NavigationHandleTargetsTest {
             val signature = descriptor(NavigationHandleTargets.HANDLE) + "->" + field + ":" + descriptor(type)
             assertTrue(signature, signature in signatures)
         }
-        assertEquals(8, NavigationHandleTargets.fields.size)
-        assertEquals(24, signatures.size)
+        for ((field, type) in NavigationHandleTargets.pressFields) {
+            val signature = descriptor(NavigationHandleTargets.PRESS) + "->" + field + ":" + descriptor(type)
+            assertTrue(signature, signature in signatures)
+        }
+        assertEquals(14, NavigationHandleTargets.fields.size)
+        assertEquals(2, NavigationHandleTargets.pressFields.size)
+        assertEquals(32, signatures.size)
     }
 }

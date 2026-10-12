@@ -17,7 +17,7 @@ internal data class BatteryVisibilityPolicy(
         if (hideIcon) {
             add("mBatteryIconView")
             add("mHollowBatteryIconView")
-            // Retain the existing digital-container rule for older host layouts.
+            // Current native digital style owns its icon in this container.
             if (batteryStyle == 1) add("mBatteryDigitalView")
         }
         if (hideCharging) add("mBatteryChargingView")
@@ -26,7 +26,6 @@ internal data class BatteryVisibilityPolicy(
     fun hiddenTextFields(): List<String> = buildList {
         if (hidePercent) {
             add("mBatteryPercentView")
-            add("mBatteryTextDigitView")
         }
         if (hidesMark) add("mBatteryPercentMarkView")
     }

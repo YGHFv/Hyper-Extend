@@ -1,0 +1,177 @@
+{
+  "host": {
+    "packageName": "com.android.systemui",
+    "versionName": "17.03.260226.r",
+    "versionCode": 202602260
+  },
+  "verification": "Live MT complete members and complete dispatch xref, 2026-10-11. Not compiled or runtime tested.",
+  "xref": {
+    "workspaceId": "wot5ikcq",
+    "editSessionId": "",
+    "targetLocator": "dex_method:Lcom/miui/systemui/shade/header/ShadeHeaderClipController;->getUseGradientBlur()Z",
+    "referenceKind": "method_call",
+    "methodResolution": "dispatch",
+    "refs": [
+      {
+        "sourceLocator": "dex_method:Lcom/miui/systemui/shade/header/ShadeHeaderClipController$clipRatio$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;",
+        "referenceOperand": "Lcom/miui/systemui/shade/header/ShadeHeaderClipController;->getUseGradientBlur()Z",
+        "matchKind": "exact_reference",
+        "dispatchCertainty": "possible",
+        "opcode": "invoke-virtual",
+        "instructionIndex": 8
+      },
+      {
+        "sourceLocator": "dex_method:Lcom/miui/systemui/shade/header/ShadeHeaderClipController$gradientBlurParams$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;",
+        "referenceOperand": "Lcom/miui/systemui/shade/header/ShadeHeaderClipController;->getUseGradientBlur()Z",
+        "matchKind": "exact_reference",
+        "dispatchCertainty": "possible",
+        "opcode": "invoke-virtual",
+        "instructionIndex": 10
+      },
+      {
+        "sourceLocator": "dex_method:Lcom/miui/systemui/shade/header/ShadeHeaderClipController$gradientForegroundAlpha$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;",
+        "referenceOperand": "Lcom/miui/systemui/shade/header/ShadeHeaderClipController;->getUseGradientBlur()Z",
+        "matchKind": "exact_reference",
+        "dispatchCertainty": "possible",
+        "opcode": "invoke-virtual",
+        "instructionIndex": 7
+      },
+      {
+        "sourceLocator": "dex_method:Lcom/miui/systemui/shade/header/ShadeHeaderClipController$start$3$1$1;->emit(Ljava/lang/Object;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;",
+        "referenceOperand": "Lcom/miui/systemui/shade/header/ShadeHeaderClipController;->getUseGradientBlur()Z",
+        "matchKind": "exact_reference",
+        "dispatchCertainty": "possible",
+        "opcode": "invoke-virtual",
+        "instructionIndex": 123
+      },
+      {
+        "sourceLocator": "dex_method:Lcom/miui/systemui/shade/header/ShadeHeaderClipController$start$3$1$1;->emit(Ljava/lang/Object;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;",
+        "referenceOperand": "Lcom/miui/systemui/shade/header/ShadeHeaderClipController;->getUseGradientBlur()Z",
+        "matchKind": "exact_reference",
+        "dispatchCertainty": "possible",
+        "opcode": "invoke-virtual",
+        "instructionIndex": 165
+      },
+      {
+        "sourceLocator": "dex_method:Lcom/miui/systemui/shade/header/ShadeHeaderClipController$start$3$1$1;->emit(Ljava/lang/Object;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;",
+        "referenceOperand": "Lcom/miui/systemui/shade/header/ShadeHeaderClipController;->getUseGradientBlur()Z",
+        "matchKind": "exact_reference",
+        "dispatchCertainty": "possible",
+        "opcode": "invoke-virtual",
+        "instructionIndex": 178
+      },
+      {
+        "sourceLocator": "dex_method:Lcom/miui/systemui/shade/header/ShadeHeaderClipController;->access$adjustPaintAlpha(Lcom/miui/systemui/shade/header/ShadeHeaderClipController;FI)V",
+        "referenceOperand": "Lcom/miui/systemui/shade/header/ShadeHeaderClipController;->getUseGradientBlur()Z",
+        "matchKind": "exact_reference",
+        "dispatchCertainty": "possible",
+        "opcode": "invoke-virtual",
+        "instructionIndex": 7
+      },
+      {
+        "sourceLocator": "dex_method:Lcom/miui/systemui/shade/header/ShadeHeaderClipController;->drawChild(Lcom/miui/interfaces/shade/DrawChildParent;Landroid/graphics/Canvas;Landroid/view/View;J)Z",
+        "referenceOperand": "Lcom/miui/systemui/shade/header/ShadeHeaderClipController;->getUseGradientBlur()Z",
+        "matchKind": "exact_reference",
+        "dispatchCertainty": "possible",
+        "opcode": "invoke-virtual",
+        "instructionIndex": 0
+      },
+      {
+        "sourceLocator": "dex_method:Lcom/miui/systemui/shade/header/ShadeHeaderClipController;->invalidateContainers(Z)V",
+        "referenceOperand": "Lcom/miui/systemui/shade/header/ShadeHeaderClipController;->getUseGradientBlur()Z",
+        "matchKind": "exact_reference",
+        "dispatchCertainty": "possible",
+        "opcode": "invoke-virtual",
+        "instructionIndex": 0
+      }
+    ],
+    "pagination": {
+      "hasMore": false,
+      "nextCursor": null,
+      "returnedCount": 9,
+      "limitMax": 200,
+      "totalAvailableCount": null
+    }
+  },
+  "evidence": [
+    {
+      "locator": "dex_field:Lcom/miui/systemui/shade/header/ShadeHeaderClipController;->context:Landroid/content/Context;",
+      "contains": [
+        ".field public final context:Landroid/content/Context;"
+      ],
+      "sha256": "4179942b6f89c1ebb0cb427690bf316ec9394787214c39f2dfe1be45b8e4cda4"
+    },
+    {
+      "locator": "dex_field:Lcom/miui/systemui/util/MiBlurCompat;->gradientBlurSupported:Z",
+      "contains": [
+        ".field public static final gradientBlurSupported:Z"
+      ],
+      "sha256": "a3017ad02b05d29857d80b8416744d3cf1186d62746b704b5ad2e2f482741be9"
+    },
+    {
+      "locator": "dex_method:Lcom/miui/systemui/shade/header/ShadeHeaderClipController$clipRatio$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;",
+      "contains": [
+        ".method public final invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;"
+      ],
+      "sha256": "9f185f12b1627844b11c4ddc4a73233beee68cf0975ce15d8079a6ce695c8123"
+    },
+    {
+      "locator": "dex_method:Lcom/miui/systemui/shade/header/ShadeHeaderClipController$gradientBlurParams$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;",
+      "contains": [
+        ".method public final invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;"
+      ],
+      "sha256": "6e7932c9155dbcb695553102560b950a7352167723949b2c5336ad7b56b8b34f"
+    },
+    {
+      "locator": "dex_method:Lcom/miui/systemui/shade/header/ShadeHeaderClipController$gradientForegroundAlpha$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;",
+      "contains": [
+        ".method public final invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;"
+      ],
+      "sha256": "2d752df25304cab28a962e115d669c957b1c9157b7b1ee7d71f35973e5f2ee68"
+    },
+    {
+      "locator": "dex_method:Lcom/miui/systemui/shade/header/ShadeHeaderClipController$start$3$1$1;->emit(Ljava/lang/Object;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;",
+      "contains": [
+        ".method public final emit(Ljava/lang/Object;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;"
+      ],
+      "sha256": "917b969157b9889a9aca90235c36c401cbb9999c08b8608e547ace82a73ed445"
+    },
+    {
+      "locator": "dex_method:Lcom/miui/systemui/shade/header/ShadeHeaderClipController;->access$adjustPaintAlpha(Lcom/miui/systemui/shade/header/ShadeHeaderClipController;FI)V",
+      "contains": [
+        ".method public static final access$adjustPaintAlpha(Lcom/miui/systemui/shade/header/ShadeHeaderClipController;FI)V"
+      ],
+      "sha256": "8df749e764c7b3af868fcea9775f5a400c2ec3d81be548ecbaa56b512f66c9cb"
+    },
+    {
+      "locator": "dex_method:Lcom/miui/systemui/shade/header/ShadeHeaderClipController;->drawChild(Lcom/miui/interfaces/shade/DrawChildParent;Landroid/graphics/Canvas;Landroid/view/View;J)Z",
+      "contains": [
+        ".method public final drawChild(Lcom/miui/interfaces/shade/DrawChildParent;Landroid/graphics/Canvas;Landroid/view/View;J)Z"
+      ],
+      "sha256": "3e15ca2a47a3f01ff6e4e30ffb2b182bca89e113be10a26e6a07b93b8549878f"
+    },
+    {
+      "locator": "dex_method:Lcom/miui/systemui/shade/header/ShadeHeaderClipController;->getUseGradientBlur()Z",
+      "contains": [
+        ".method public final getUseGradientBlur()Z",
+        "->miBlurOpen:",
+        "->gradientBlurSupported:Z"
+      ],
+      "sha256": "acbb846104d2d2f56e457ebdd9bb5f139725d7f72906ebfae635a85b59a485dd"
+    },
+    {
+      "locator": "dex_method:Lcom/miui/systemui/shade/header/ShadeHeaderClipController;->invalidateContainers(Z)V",
+      "contains": [
+        ".method public final invalidateContainers(Z)V"
+      ],
+      "sha256": "bd28afe4221139815b5a817e72092fb2e84c947582b47e819eb9e5a4ad2f3464"
+    },
+    {
+      "locator": "dex_method:Lcom/miui/systemui/util/MiBlurCompat;-><clinit>()V",
+      "contains": [
+        ".method static constructor <clinit>()V"
+      ],
+      "sha256": "3bdf7c09ddc8d1ce1db97f996d61bf5c3b3b1df5f426c2e0513b8b03fd71597d"
+    }
+  ]
+}

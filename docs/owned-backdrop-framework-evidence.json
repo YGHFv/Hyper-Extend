@@ -1,0 +1,129 @@
+{
+  "artifact": ".workbuddy\\tmp\\host\\framework.jar",
+  "sha256": "f8af87fa975ca7e529aeeeb193a4e77bea650b0e9b611259e600c248ac3b4bc4",
+  "verification": "Read-only cached framework DEX declarations plus complete instruction arrays (not exception/debug metadata). Not a newly captured current-device artifact or runtime acceptance. Hidden API metadata not parsed or changed.",
+  "members": [
+    {
+      "signature": "Landroid/view/CrossWindowBlurListeners;->CROSS_WINDOW_BLUR_SUPPORTED:Z",
+      "access": 25,
+      "dex": "classes4.dex"
+    },
+    {
+      "signature": "Landroid/view/CrossWindowBlurListeners;->getInstance()Landroid/view/CrossWindowBlurListeners;",
+      "access": 9,
+      "dex": "classes4.dex",
+      "codeOffset": 3311664,
+      "instructionCount16": 26,
+      "instructionsHex": "62002a4e3900170062012b4e1d0162022a4e072039000a0022026513701045770200072069002a4e1e0128040d021e0127021100",
+      "instructionsSha256": "4519a0d3ace4ff95fbeb92d7b34317587e9d8ab9051dd3df35f950a2b05023c0"
+    },
+    {
+      "signature": "Landroid/view/CrossWindowBlurListeners;->isCrossWindowBlurEnabled()Z",
+      "access": 1,
+      "dex": "classes4.dex",
+      "codeOffset": 3311744,
+      "instructionCount16": 13,
+      "instructionsHex": "62002b4e1d007010477702005521264e1e000f010d011e002701",
+      "instructionsSha256": "d17d92a47c0e8666a3b13123fdaaec75f3d8b79a942ca9e79de7b1fa70e4ed72"
+    },
+    {
+      "signature": "Landroid/view/View;->addMiBackgroundBlendColor(II)V",
+      "access": 1,
+      "dex": "classes4.dex",
+      "codeOffset": 4023000,
+      "instructionCount16": 27,
+      "instructionsHex": "7100eaa200000a00390003000e005420c5606e30c304300454203a60220127017030570431046e2080fb100012106e30d29802000e00",
+      "instructionsSha256": "cc63d04e38a1462bde4b6aeffabc7e49e4aa33c347f65bf0046b77781bd1ae3b"
+    },
+    {
+      "signature": "Landroid/view/View;->clearMiBackgroundBlendColor()V",
+      "access": 1,
+      "dex": "classes4.dex",
+      "codeOffset": 4028220,
+      "instructionCount16": 18,
+      "instructionsHex": "7100eaa200000a00390003000e007010b59601000a003800060012106e30d29801000e00",
+      "instructionsSha256": "5907cd5fc8dc6f6ef3a753545a8336d56a888c33bfc6646fd21dd72568b4df8d"
+    },
+    {
+      "signature": "Landroid/view/View;->getViewRootImpl()Landroid/view/ViewRootImpl;",
+      "access": 1,
+      "dex": "classes4.dex",
+      "codeOffset": 3962272,
+      "instructionCount16": 11,
+      "instructionsHex": "54101e603800070054101e605400625d110012001100",
+      "instructionsSha256": "4a0ac185833a246ae701e253150db187884009aa5cc831c3706ddb17eb804158"
+    },
+    {
+      "signature": "Landroid/view/View;->setMiBackgroundBlurMode(I)V",
+      "access": 1,
+      "dex": "classes4.dex",
+      "codeOffset": 4076204,
+      "instructionCount16": 216,
+      "instructionsHex": "7100eaa200000a001a0135d73900220022005b21701008fa00001b02f15901006e2014fa20000c006e1098f904000c026e10fef802000c026e2014fa20000c006e1023fa00000c0071204f6e01000e001b00f05901003a058600122237250400290081005442c5606e20f70452000a023802780022025b21701008fa02006e2014fa02000c006e1098f904000c026e10fef802000c026e2014fa20000c001a02ae036e2014fa20000c006e200ffa50000c001a024d026e2014fa20000c006e1099f904000a026e200ffa20000c006e1023fa00000c0071204d6e010055409b6012021213380036006e10819804000c00390024005945b16022005b21701008fa00001b022c7301006e2014fa20000c006e1098f904000c026e10fef802000c026e2014fa20000c006e1023fa00000c0071204d6e01000e006e10819804000c00380504000131280201216e3057a440016e30d298340359452c607030e89924020e0022025b21701008fa02006e2014fa02000c006e1098f904000c026e10fef802000c026e2014fa20000c001a02fa016e2014fa20000c006e200ffa50000c006e1023fa00000c0071204f6e01000e00",
+      "instructionsSha256": "957085bc0c2e82aa3efe060a645e3c60f82dec858b0e196e4cc8a0e2033bf161"
+    },
+    {
+      "signature": "Landroid/view/View;->setMiBackgroundBlurRadius(I)V",
+      "access": 1,
+      "dex": "classes4.dex",
+      "codeOffset": 4076828,
+      "instructionCount16": 168,
+      "instructionsHex": "7100eaa200000a00390003000e001a004d021a0135d7130290013a06040037264b0071207ff926000a02120371207bf932000a0222035b21701008fa03001b04085f01006e2014fa43000c036e200ffa63000c031a049e0a6e2014fa43000c036e200ffa23000c031a046f0b6e2014fa43000c036e1098f905000c046e10fef804000c046e2014fa43000c036e2014fa03000c036e1099f905000a046e200ffa43000c036e1023fa03000c0371204d6e310001265452c5606e20f80462000a0238024700630235663902080052523460380204003906370022025b21701008fa02001b03f35901006e2014fa32000c026e200ffa62000c021a0322006e2014fa32000c026e1098f905000c036e10fef803000c036e2014fa32000c026e2014fa02000c006e1099f905000a026e200ffa20000c006e1023fa00000c0071204d6e010012106e30d2980500595634600e00",
+      "instructionsSha256": "65b1c8bc23995f28b9a6aa283fe6fd89cb82741b4bf3b826163ad14db07f1eb3"
+    },
+    {
+      "signature": "Landroid/view/View;->setMiViewBlurMode(I)V",
+      "access": 1,
+      "dex": "classes4.dex",
+      "codeOffset": 4079620,
+      "instructionCount16": 114,
+      "instructionsHex": "7100eaa200000a001a0135d73900220022005b21701008fa00001b024d5f01006e2014fa20000c006e1098f903000c026e10fef802000c026e2014fa20000c006e1023fa00000c0071204f6e01000e005430c5606e203e0540000a003800430022005b21701008fa00001b024c5f01006e2014fa20000c006e1098f903000c026e10fef802000c026e2014fa20000c001a02ae036e2014fa20000c006e200ffa40000c001a024d026e2014fa20000c006e1099f903000a026e200ffa20000c006e1023fa00000c0071204d6e010012106e30d29803005934016112007030e89903000e00",
+      "instructionsSha256": "3ce2b8a2cbf713c0ef864a731b508876927c5853b137d1932e821104b17b66ff"
+    },
+    {
+      "signature": "Landroid/view/View;->setPassWindowBlurEnabled(Z)Z",
+      "access": 1,
+      "dex": "classes4.dex",
+      "codeOffset": 3994112,
+      "instructionCount16": 275,
+      "instructionsHex": "7100eaa200000a0012011a0235d73900210022005b21701008fa00001a03cbeb6e2014fa30000c006e1098f906000c036e10fef803000c036e2014fa30000c006e1023fa00000c0071204d6e02000f016e10819806000c0012133900250022005b21701008fa00001a04c9eb6e2014fa40000c006e1098f906000c046e10fef804000c046e2014fa40000c006e1023fa00000c0071204d6e02005c6381605c6780600f016e10819806000c00540083656e10819806000c045444b9646e10ab0104000c046e10819806006305236638052d0038002b006e10daf900000a05390525006e20cbf940000a0539051f0022035b21701008fa03001a05cceb6e2014fa53000c036e2014fa43000c031a05cc036e2014fa53000c036e1023fa03000c0371204d6e32000f015c61816055659b6033753a00380737006e10819806000c036e2016a363000a0339032d0022035b21701008fa03001a05caeb6e2014fa53000c036e1098f906000c056e10fef805000c056e2014fa53000c031a05d3036e2014fa53000c036e1023fa03000c0371204d6e32006e10819806000c026e201ea262000f0138070a006e10819806000c016e201ea2610028086e10819806000c016e2045a261005461c5606e202105710022015b21701008fa01001a05c8eb6e2014fa51000c016e1098f906000c056e10fef805000c056e2014fa51000c011a05f2016e2014fa51000c016e2015fa71000c016e1023fa01000c0171204d6e12005c679b600f03",
+      "instructionsSha256": "31d0e5cc9ffd3c47fff999760a02b2ae64b7c45dfb56bc4af1749c47e222395c"
+    },
+    {
+      "signature": "Landroid/view/ViewRootImpl;->createBackgroundBlurDrawable()Lcom/android/internal/graphics/drawable/BackgroundBlurDrawable;",
+      "access": 1,
+      "dex": "classes4.dex",
+      "codeOffset": 3872692,
+      "instructionCount16": 9,
+      "instructionsHex": "5420a5645421b9646e203bd110000c001100",
+      "instructionsSha256": "45ab212f69dccc1357f543c2e9da7c34537cefda27411c28b5708407d9bed258"
+    },
+    {
+      "signature": "Lcom/android/internal/graphics/drawable/BackgroundBlurDrawable;->setBlurRadius(I)V",
+      "access": 1,
+      "dex": "classes5.dex",
+      "codeOffset": 3425880,
+      "instructionCount16": 15,
+      "instructionsHex": "52109b6332200c0059129b636e1003890100541097636e20de8810000e00",
+      "instructionsSha256": "12d4544c9def6958878f9bceb7954471a7660b6161e1b36360697cccdb07fab4"
+    },
+    {
+      "signature": "Lcom/android/internal/graphics/drawable/BackgroundBlurDrawable;->setColor(I)V",
+      "access": 1,
+      "dex": "classes5.dex",
+      "codeOffset": 3425968,
+      "instructionCount16": 6,
+      "instructionsHex": "5410a7636e208a0520000e00",
+      "instructionsSha256": "4cd47c4ac5942518ae157dcfd8470eaac3d1c8de1692ad6ab964c21be4c56367"
+    },
+    {
+      "signature": "Lcom/android/internal/graphics/drawable/BackgroundBlurDrawable;->setCornerRadius(F)V",
+      "access": 1,
+      "dex": "classes5.dex",
+      "codeOffset": 3426032,
+      "instructionCount16": 4,
+      "instructionsHex": "6e510c8910110e00",
+      "instructionsSha256": "848e039fa9a54ad47e8ec187c446a3a9fb25dfaf05207b9a88d339472a97959f"
+    }
+  ]
+}

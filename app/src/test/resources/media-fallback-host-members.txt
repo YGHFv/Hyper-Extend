@@ -1,0 +1,6 @@
+Lcom/android/systemui/media/controls/shared/model/MediaData;->appUid:I
+Lcom/android/systemui/media/controls/shared/model/MediaData;->packageName:Ljava/lang/String;
+Lcom/android/systemui/media/controls/shared/model/MediaData;->userId:I
+Lcom/android/systemui/statusbar/notification/mediacontrol/MiuiMediaViewControllerImpl;->appIconDrawable:Landroid/graphics/drawable/Drawable;
+Lcom/android/systemui/statusbar/notification/mediacontrol/MiuiMediaViewControllerImpl;->bindMediaData(Lcom/android/systemui/media/controls/shared/model/MediaData;)V
+Lcom/android/systemui/statusbar/notification/utils/NotificationUtil;->acquireApplicationIcon(Landroid/content/Context;Lcom/android/systemui/media/controls/shared/model/MediaData;)Landroid/graphics/drawable/Drawable;

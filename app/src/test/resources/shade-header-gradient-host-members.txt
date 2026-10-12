@@ -1,0 +1,11 @@
+Lcom/miui/systemui/shade/header/ShadeHeaderClipController;->context:Landroid/content/Context;
+Lcom/miui/systemui/util/MiBlurCompat;->gradientBlurSupported:Z
+Lcom/miui/systemui/shade/header/ShadeHeaderClipController$clipRatio$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;
+Lcom/miui/systemui/shade/header/ShadeHeaderClipController$gradientBlurParams$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;
+Lcom/miui/systemui/shade/header/ShadeHeaderClipController$gradientForegroundAlpha$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;
+Lcom/miui/systemui/shade/header/ShadeHeaderClipController$start$3$1$1;->emit(Ljava/lang/Object;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+Lcom/miui/systemui/shade/header/ShadeHeaderClipController;->access$adjustPaintAlpha(Lcom/miui/systemui/shade/header/ShadeHeaderClipController;FI)V
+Lcom/miui/systemui/shade/header/ShadeHeaderClipController;->drawChild(Lcom/miui/interfaces/shade/DrawChildParent;Landroid/graphics/Canvas;Landroid/view/View;J)Z
+Lcom/miui/systemui/shade/header/ShadeHeaderClipController;->getUseGradientBlur()Z
+Lcom/miui/systemui/shade/header/ShadeHeaderClipController;->invalidateContainers(Z)V
+Lcom/miui/systemui/util/MiBlurCompat;-><clinit>()V

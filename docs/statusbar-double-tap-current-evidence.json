@@ -1,0 +1,73 @@
+{
+  "host": {
+    "packageName": "com.android.systemui",
+    "versionCode": 202602260
+  },
+  "verification": "Current full touch dispatch/method/field evidence. No execution, tests or device action.",
+  "evidence": [
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/phone/PhoneStatusBarView;->onTouchEvent(Landroid/view/MotionEvent;)Z",
+      "contains": [
+        ".method public final onTouchEvent(Landroid/view/MotionEvent;)Z"
+      ],
+      "sha256": "ba4bf8bda1341df40d281aa57fdfe43236737283effd2853f77f5f1cb9b6b15f",
+      "raw": ".workbuddy/tmp/mt-systemui/gesture-touch-member-0.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/phone/PhoneStatusBarView;->dispatchTouchEvent(Landroid/view/MotionEvent;)Z",
+      "contains": [
+        ".method public final dispatchTouchEvent(Landroid/view/MotionEvent;)Z"
+      ],
+      "sha256": "e9de6d251d759ce09db63b05f18ae21b2f25e1884887556387d239819d980841",
+      "raw": ".workbuddy/tmp/mt-systemui/gesture-touch-member-1.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/statusbar/phone/PhoneStatusBarView;->mTouchEventHandler:Lcom/android/systemui/statusbar/phone/MiuiStatusBarTouchHandler;",
+      "contains": [
+        ".field public mTouchEventHandler:Lcom/android/systemui/statusbar/phone/MiuiStatusBarTouchHandler;"
+      ],
+      "sha256": "60a9f0ebe712565d0f0d5dff36d0642cf77e5c643fb13ff2b3fefba4b0ef74d6",
+      "raw": ".workbuddy/tmp/mt-systemui/gesture-touch-member-2.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Landroidx/appcompat/widget/ForwardingListener;->onTouch(Landroid/view/View;Landroid/view/MotionEvent;)Z",
+      "contains": [
+        ".method public final onTouch(Landroid/view/View;Landroid/view/MotionEvent;)Z"
+      ],
+      "sha256": "c9a21e5d41d96be9419d59e0760f088c514f9aa2b09a9a5aa7803dc4879a1650",
+      "raw": ".workbuddy/tmp/mt-systemui/gesture-touch-member-3.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Landroidx/appcompat/widget/ForwardingListener$TriggerLongPress;->run()V",
+      "contains": [
+        ".method public final run()V"
+      ],
+      "sha256": "9bb893989f4161b3509fe698c87fc2b0dd5714ad8be7db08495c8a4c69a6c4b4",
+      "raw": ".workbuddy/tmp/mt-systemui/gesture-touch-member-4.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Landroidx/constraintlayout/motion/widget/MotionLayout;->handlesTouchEvent(FFLandroid/view/View;Landroid/view/MotionEvent;)Z",
+      "contains": [
+        ".method public final handlesTouchEvent(FFLandroid/view/View;Landroid/view/MotionEvent;)Z"
+      ],
+      "sha256": "23177eaa33ec5f334b7751f5ac409f5c980b67461acc982e300c659ab32aef0e",
+      "raw": ".workbuddy/tmp/mt-systemui/gesture-touch-member-5.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/globalactions/GlobalActionsDialogLite$ActionsDialogLiteDelegate$$ExternalSyntheticLambda4;->onTouch(Landroid/view/View;Landroid/view/MotionEvent;)Z",
+      "contains": [
+        ".method public final onTouch(Landroid/view/View;Landroid/view/MotionEvent;)Z"
+      ],
+      "sha256": "3fa698cb04539d5449f564bd1019a3cff491dda383fe77974966f93d02c0d951",
+      "raw": ".workbuddy/tmp/mt-systemui/gesture-touch-member-6.json",
+      "complete": true
+    }
+  ],
+  "dispatchEvidence": ".workbuddy/tmp/mt-systemui/gesture-touch-xref.json"
+}

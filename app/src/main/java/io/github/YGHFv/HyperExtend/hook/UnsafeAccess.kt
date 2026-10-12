@@ -57,8 +57,24 @@ internal object UnsafeAccess {
     private val staticFieldBaseMethod: Method? by lazy { method("staticFieldBase") }
     private val staticFieldOffsetMethod: Method? by lazy { method("staticFieldOffset") }
     private val objectFieldOffsetMethod: Method? by lazy { method("objectFieldOffset") }
+    private val allocateInstanceMethod: Method? by lazy { method("allocateInstance") }
 
     val isAvailable: Boolean get() = unsafe != null
+
+    /**
+     * 只分配实例、不跑任何构造函数。
+     *
+     * 存在的理由是宿主里确实存在**没有声明构造器**的类：本机
+     * `QSDetailContent$ToggleItem` 就是（宿主自己也是 `new-instance` 之后直接
+     * `Object.<init>` + 逐个 `iput` 字段填的，见 dex 证据），所以
+     * `Class.getConstructor(...)` 在这个版本上必然失败。
+     * 调用方必须紧接着把该类自己的字段设全，不能把「分配出来」当成「构造完成」。
+     */
+    fun allocateInstance(clazz: Class<*>): Any? {
+        val instance = unsafe ?: return null
+        val allocate = allocateInstanceMethod ?: return null
+        return Reflect.attempt { allocate.invoke(instance, clazz) }
+    }
 
     /** 写一个 `static` 字段（含 `static final`）。 */
     fun putStaticBoolean(field: Field, value: Boolean): Boolean {

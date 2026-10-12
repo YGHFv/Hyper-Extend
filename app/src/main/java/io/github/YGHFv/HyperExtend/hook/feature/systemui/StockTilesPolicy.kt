@@ -8,10 +8,11 @@ internal object StockTilesPolicy {
     fun supported(systemUiVersion: Long?, pluginVersion: Long? = null, plugin: Boolean = false): Boolean =
         systemUiVersion == 202602260L && (!plugin || pluginVersion == 183022200L)
 
-    fun append(native: String?): String? {
+    fun append(native: String?, includeFiveG: Boolean = false): String? {
         if (native.isNullOrBlank() || native.length > 16384) return native
         val present = native.split(',').map { it.trim() }.toSet()
-        val missing = candidates.filterNot { it in present }
+        val available = if (includeFiveG) candidates + FiveGTilePolicy.SPEC else candidates
+        val missing = available.filterNot { it in present }
         if (missing.isEmpty()) return native
         // Keep the native list byte-for-byte, including unknown and custom tile specs.
         return native + (if (native.endsWith(',')) "" else ",") + missing.joinToString(",")

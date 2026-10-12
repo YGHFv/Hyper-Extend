@@ -1,0 +1,319 @@
+{
+  "host": {
+    "packageName": "com.android.systemui",
+    "versionName": "17.03.260226.r",
+    "versionCode": 202602260
+  },
+  "verification": "Live read-only MT full member bodies, 2026-10-11; source review only. No compilation, tests or runtime acceptance.",
+  "evidence": [
+    {
+      "locator": "dex_field:Lcom/android/systemui/media/controls/ui/viewmodel/SeekBarViewModel$Progress;->enabled:Z",
+      "contains": [
+        ".field public final enabled:Z"
+      ],
+      "sha256": "cfeab8f15a851310f4e0a8367cbfa65b7697a9091cccca093e058650ac53ccce"
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/media/controls/ui/viewmodel/SeekBarViewModel$Progress;->listening:Z",
+      "contains": [
+        ".field public final listening:Z"
+      ],
+      "sha256": "f211bd862a77b640e242fe88db618dcfdaabcb6f3e41964f0eafbca50a2a14db"
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/media/controls/ui/viewmodel/SeekBarViewModel$Progress;->playing:Z",
+      "contains": [
+        ".field public final playing:Z"
+      ],
+      "sha256": "e27677d874a5e82de6afb955ad0ee918e9f65747e8072449599ba888c1030739"
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/media/controls/ui/viewmodel/SeekBarViewModel$Progress;->scrubbing:Z",
+      "contains": [
+        ".field public final scrubbing:Z"
+      ],
+      "sha256": "a350f09870b2c253863345b56e32bbc6f08b3476d8dccb468ac54a40cbdf73bb"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/notification/mediacontrol/MiuiMediaNotificationControllerImpl$configurationCallback$1;->onMaxBoundsChanged(Z)V",
+      "contains": [
+        ".method public final onMaxBoundsChanged(Z)V"
+      ],
+      "sha256": "5fad4f607f6c7fe956a57dc37b859b0190cd22ad4bef5252b47b2c3c5f6d7f76"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/notification/mediacontrol/MiuiMediaSeekBarProgressOwner$progressObserver$1;->onChanged(Ljava/lang/Object;)V",
+      "contains": [
+        ".method public final onChanged(Ljava/lang/Object;)V",
+        "->consumers:",
+        "->onRenderState(",
+        "->enabled:Z"
+      ],
+      "sha256": "0c2ead7d6a1a65f08b5e4eb604c662c78e68cb42439da25213fa6066b1bddf26"
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/statusbar/notification/mediacontrol/MiuiMediaSeekBarProgressOwner$progressObserver$1;->this$0:Lcom/android/systemui/statusbar/notification/mediacontrol/MiuiMediaSeekBarProgressOwner;",
+      "contains": [
+        ".field public synthetic this$0:Lcom/android/systemui/statusbar/notification/mediacontrol/MiuiMediaSeekBarProgressOwner;"
+      ],
+      "sha256": "a7ed72cca40aee001449b87ef25ad5aff1130a1dbea41fe61b3881a14903ecc3"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/notification/mediacontrol/MiuiMediaSeekBarProgressOwner;->register(Lcom/android/systemui/statusbar/notification/mediacontrol/MiuiMediaSeekBarProgressOwner$RenderStateConsumer;)V",
+      "contains": [
+        ".method public final register(Lcom/android/systemui/statusbar/notification/mediacontrol/MiuiMediaSeekBarProgressOwner$RenderStateConsumer;)V"
+      ],
+      "sha256": "f32ca65f6ce02494493454cbe4c5c18b71ee02c47be63b3c89f93f509cda090c"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/notification/mediacontrol/MiuiMediaSeekBarProgressOwner;->unregister(Lcom/android/systemui/statusbar/notification/mediacontrol/MiuiMediaSeekBarProgressOwner$RenderStateConsumer;)V",
+      "contains": [
+        ".method public final unregister(Lcom/android/systemui/statusbar/notification/mediacontrol/MiuiMediaSeekBarProgressOwner$RenderStateConsumer;)V"
+      ],
+      "sha256": "1f943d200a88e4486bf0e256c4fb70355a80088116aa3c7e9059940a19282d3e"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/notification/mediacontrol/MiuiMediaViewControllerImpl;->attach(Lcom/android/systemui/statusbar/notification/mediacontrol/MiuiMediaViewHolder;)V",
+      "contains": [
+        ".method public final attach(Lcom/android/systemui/statusbar/notification/mediacontrol/MiuiMediaViewHolder;)V",
+        "->holder:",
+        "->setOnSeekBarChangeListener"
+      ],
+      "sha256": "7927ab2082eba1074448913ec611561757c745a8ef6f8dfaa65447e7aa60774c"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/notification/mediacontrol/MiuiMediaViewControllerImpl;->detach()V",
+      "contains": [
+        ".method public final detach()V"
+      ],
+      "sha256": "980bfd3d1844daa5e0bd076447bb09487eb73f749d40ea64ad331c0e2edb775a"
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/statusbar/notification/mediacontrol/MiuiMediaViewControllerImpl;->holder:Lcom/android/systemui/statusbar/notification/mediacontrol/MiuiMediaViewHolder;",
+      "contains": [
+        ".field public holder:Lcom/android/systemui/statusbar/notification/mediacontrol/MiuiMediaViewHolder;"
+      ],
+      "sha256": "3813a9c415cf8f0985c125996d390f3bf130755da7334f08826dd33205f65578"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/notification/mediacontrol/MiuiMediaViewControllerImpl;->onRenderState(Lcom/android/systemui/statusbar/notification/mediacontrol/MiuiSeekBarRenderState;)V",
+      "contains": [
+        ".method public final onRenderState(Lcom/android/systemui/statusbar/notification/mediacontrol/MiuiSeekBarRenderState;)V",
+        "MiuiSeekBarRenderStateApplier;->apply"
+      ],
+      "sha256": "709f326a1ef4734892e715b04a69ea935495e2079c9ca517752f7ce1b5250373"
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/statusbar/notification/mediacontrol/MiuiMediaViewControllerImpl;->seekBarProgressOwner:Lcom/android/systemui/statusbar/notification/mediacontrol/MiuiMediaSeekBarProgressOwner;",
+      "contains": [
+        ".field public final seekBarProgressOwner:Lcom/android/systemui/statusbar/notification/mediacontrol/MiuiMediaSeekBarProgressOwner;"
+      ],
+      "sha256": "20c8cdf549572262d3c47084bf63c13190c5c6a51cf8b81e133f68cf3dc3f51f"
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/statusbar/notification/mediacontrol/MiuiMediaViewHolder;->seekBar:Lmiuix/miuixbasewidget/widget/HyperProgressSeekBar;",
+      "contains": [
+        ".field public seekBar:Lmiuix/miuixbasewidget/widget/HyperProgressSeekBar;"
+      ],
+      "sha256": "25043d72d80e03f4cfc86d49e4302ae1cace3a5b1cc44010edd884dbca6726b7"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/notification/stack/NotificationSectionsManager;->reinflateViews()V",
+      "contains": [
+        ".method public final reinflateViews()V"
+      ],
+      "sha256": "560d59d066fa705e2914b63911f8050ade13eb333b9d3f65f2c24673def40b89"
+    },
+    {
+      "locator": "dex_method:Lcom/miui/utils/configs/MiuiConfigs;->isFlipTinyScreen(Landroid/content/Context;)Z",
+      "contains": [
+        ".method public static isFlipTinyScreen(Landroid/content/Context;)Z"
+      ],
+      "sha256": "75ccdb3d988bcd64d9d429a51ef554c83771a8f5a652baa7db31afddcbadbd5a"
+    },
+    {
+      "locator": "dex_method:Lmiuix/miuixbasewidget/widget/HyperProgressSeekBar;->drawHighEndMode(Landroid/graphics/Canvas;)V",
+      "contains": [
+        ".method public final drawHighEndMode(Landroid/graphics/Canvas;)V",
+        "->mProgressHeight:I",
+        "->setFloatUniform"
+      ],
+      "sha256": "7c70c81bf89285165d01093985407e6d8aba3d956064abba20324896bf7dca9f"
+    },
+    {
+      "locator": "dex_method:Lmiuix/miuixbasewidget/widget/HyperProgressSeekBar;->drawPrimaryMode(Landroid/graphics/Canvas;)V",
+      "contains": [
+        ".method public final drawPrimaryMode(Landroid/graphics/Canvas;)V"
+      ],
+      "sha256": "703eec81070b76d1f6fe1f503aae2852aa86d8207a17bcaa95407989c2163778"
+    },
+    {
+      "locator": "dex_field:Lmiuix/miuixbasewidget/widget/HyperProgressSeekBar;->mBackgroundPrimaryColor:I",
+      "contains": [
+        ".field public mBackgroundPrimaryColor:I"
+      ],
+      "sha256": "30cc8b3709973c0ea86d1a12512b82ba4a29b207d2afa001161b9c65bd4daa67"
+    },
+    {
+      "locator": "dex_field:Lmiuix/miuixbasewidget/widget/HyperProgressSeekBar;->mBackgroundPrimaryDisableColor:I",
+      "contains": [
+        ".field public mBackgroundPrimaryDisableColor:I"
+      ],
+      "sha256": "7d581ba1c11dfae6c84578b1881fe0d9b3c82eb67bd1f131c6a7509d3d450bf2"
+    },
+    {
+      "locator": "dex_field:Lmiuix/miuixbasewidget/widget/HyperProgressSeekBar;->mDeviceLevel:I",
+      "contains": [
+        ".field public final mDeviceLevel:I"
+      ],
+      "sha256": "a92d0a93c2b4c28662155648aa9b5cc6f7269439a837e0d1d541bf505c8a4931"
+    },
+    {
+      "locator": "dex_field:Lmiuix/miuixbasewidget/widget/HyperProgressSeekBar;->mForegroundPrimaryColor:I",
+      "contains": [
+        ".field public mForegroundPrimaryColor:I"
+      ],
+      "sha256": "7ad86c83c9f7755aad3f2acc94bd68e21bae87a4b350cbc5ee3499005c58d585"
+    },
+    {
+      "locator": "dex_field:Lmiuix/miuixbasewidget/widget/HyperProgressSeekBar;->mForegroundPrimaryDisableColor:I",
+      "contains": [
+        ".field public mForegroundPrimaryDisableColor:I"
+      ],
+      "sha256": "b016e2e3970f48fb826ad4d26e33a423b67f6d94120b739b563db6a556a04b80"
+    },
+    {
+      "locator": "dex_field:Lmiuix/miuixbasewidget/widget/HyperProgressSeekBar;->mIsDragging:Z",
+      "contains": [
+        ".field public mIsDragging:Z"
+      ],
+      "sha256": "a8009bd07f6588394730c014fe468691e6ddcbfaf5e9a0d31f354037c95fc018"
+    },
+    {
+      "locator": "dex_field:Lmiuix/miuixbasewidget/widget/HyperProgressSeekBar;->mProgressHeight:I",
+      "contains": [
+        ".field public mProgressHeight:I"
+      ],
+      "sha256": "d9e33ba5b799a1a958320dc82cdd3440fdf7962a1474f78c7fc1dda9844632ad"
+    },
+    {
+      "locator": "dex_field:Lmiuix/miuixbasewidget/widget/HyperProgressSeekBar;->mProgressSeekBarMaxHeight:I",
+      "contains": [
+        ".field public final mProgressSeekBarMaxHeight:I"
+      ],
+      "sha256": "f97bd9cb7a8c7adeb07d5f6f5206db682bc5fd511ab5cc705055539f1daf9a63"
+    },
+    {
+      "locator": "dex_method:Lmiuix/miuixbasewidget/widget/HyperProgressSeekBar;->onDraw(Landroid/graphics/Canvas;)V",
+      "contains": [
+        ".method public final declared-synchronized onDraw(Landroid/graphics/Canvas;)V"
+      ],
+      "sha256": "a5b8dfaaa265c186582012378fa75736f9c5920945e121b1a35cb26437308668"
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/statusbar/notification/mediacontrol/MiuiMediaViewHolder;->elapsedTimeView:Landroid/widget/TextView;",
+      "contains": [
+        ".field public elapsedTimeView:Landroid/widget/TextView;"
+      ],
+      "sha256": "0e763063a8d3d958da4f96b4e2128436f050219eeba2eed95d1a7477b94e2858"
+    },
+    {
+      "locator": "dex_method:Lmiuix/miuixbasewidget/widget/HyperProgressSeekBar;->setForegroundPrimaryColor(I)V",
+      "contains": [
+        ".method public setForegroundPrimaryColor(I)V",
+        "->mDeviceLevel:I",
+        "if-eqz",
+        "return-void",
+        "->mForegroundPrimaryColor:I"
+      ],
+      "sha256": "a211502e4e08f927946c4ff6ac9a30be1616430d315c18f7d25aa64f0d73b782"
+    },
+    {
+      "locator": "dex_method:Lmiuix/miuixbasewidget/widget/HyperProgressSeekBar;->setBackgroundPrimaryColor(I)V",
+      "contains": [
+        ".method public setBackgroundPrimaryColor(I)V"
+      ],
+      "sha256": "551bc4074925850cf8f7fd34fe3d33cd2771c61e101bc433b3af6eda627ea8c1"
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/statusbar/notification/mediacontrol/MiuiMediaViewControllerImpl;->notificationMaterialStateInteractor:Lcom/android/systemui/statusbar/notification/style/domain/NotificationMaterialStateInteractor;",
+      "contains": [
+        ".field public final notificationMaterialStateInteractor:Lcom/android/systemui/statusbar/notification/style/domain/NotificationMaterialStateInteractor;"
+      ],
+      "sha256": "76b88d4e1934cefa4d52cc43684a2427b1f2bfbbae6039bf955c0146cf76b64e"
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/statusbar/notification/mediacontrol/MiuiMediaViewControllerImpl;->fullAodController:Ldagger/Lazy;",
+      "contains": [
+        ".field public final fullAodController:Ldagger/Lazy;"
+      ],
+      "sha256": "5bc5b0d3628ac6487a0a7fd2a7835f58d5cce9053184789e0629f68cdd71048f"
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/statusbar/notification/style/domain/NotificationMaterialStateInteractor;->isOnKeyguard:Lkotlinx/coroutines/flow/ReadonlyStateFlow;",
+      "contains": [
+        ".field public final isOnKeyguard:Lkotlinx/coroutines/flow/ReadonlyStateFlow;"
+      ],
+      "sha256": "fe1b2762819d2e144c75f66040912d1c801d68bfff1ebe84475aa6b74c003bc6"
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/statusbar/notification/style/domain/NotificationMaterialStateInteractor;->isShowingKeyguardNotification:Lkotlinx/coroutines/flow/StateFlow;",
+      "contains": [
+        ".field public final isShowingKeyguardNotification:Lkotlinx/coroutines/flow/StateFlow;"
+      ],
+      "sha256": "d93ca774f1d26a5ad9ab48a5e208ca45f5a289b35bdfbbc2d61d5ad930246559"
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/statusbar/notification/style/domain/NotificationMaterialStateInteractor;->enterFullAod:Lkotlinx/coroutines/flow/ReadonlyStateFlow;",
+      "contains": [
+        ".field public final enterFullAod:Lkotlinx/coroutines/flow/ReadonlyStateFlow;"
+      ],
+      "sha256": "f95723a43f9610306a9a4321055c38d7d190d23df6601fd6662f275993f6f5f2"
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/statusbar/notification/fullaod/NotifiFullAodController;->mWillDoAodAnim:Z",
+      "contains": [
+        ".field public mWillDoAodAnim:Z"
+      ],
+      "sha256": "270b8caa67bdb14b70eb0148a2d42fae79f8e0b141a60cec8a9b1d5479a611fc"
+    },
+    {
+      "locator": "dex_method:Lkotlinx/coroutines/flow/StateFlow;->getValue()Ljava/lang/Object;",
+      "contains": [
+        ".method public abstract getValue()Ljava/lang/Object;"
+      ],
+      "sha256": "e0b2fd729a62d36d4f4ee7ce042bf0e3038003d11fde242780fde7f194c1d39d"
+    },
+    {
+      "locator": "dex_method:Ldagger/Lazy;->get()Ljava/lang/Object;",
+      "contains": [
+        ".method public abstract get()Ljava/lang/Object;"
+      ],
+      "sha256": "afbc280673d163ce39658cd3c7156d88dd1311bd90be124e38354ac40fc4b793"
+    },
+    {
+      "locator": "dex_method:Landroidx/lifecycle/LiveData;->considerNotify(Landroidx/lifecycle/LiveData$ObserverWrapper;)V",
+      "sha256": "2eba008a70abeca07aff8864f67ef6b084597b9a7311e3216241ce03022c3cc6",
+      "raw": ".workbuddy/tmp/mt-systemui/progress-current-caller-0.json",
+      "pages": 1
+    },
+    {
+      "locator": "dex_method:Landroidx/lifecycle/MediatorLiveData$Source;->onChanged(Ljava/lang/Object;)V",
+      "sha256": "a514cce7c8c3a672669143de8f493eccdf5a6a127b39f45bbd040cec28e1cad8",
+      "raw": ".workbuddy/tmp/mt-systemui/progress-current-caller-1.json",
+      "pages": 1
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/notification/collection/NotifLiveDataImpl$$ExternalSyntheticLambda0;->invoke()Ljava/lang/Object;",
+      "sha256": "f64d126fe34cae8c8e2e76d310266b8e470415a192a3f52a7caf3dc8270de1b0",
+      "raw": ".workbuddy/tmp/mt-systemui/progress-current-caller-2.json",
+      "pages": 1
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/notification/collection/NotifLiveDataImpl$setValueAndProvideDispatcher$1$2;->run()V",
+      "sha256": "0591c8e1086fe8f76577011f6cf9cb3af97e5b3b724396e13e8f512d824c6a59",
+      "raw": ".workbuddy/tmp/mt-systemui/progress-current-caller-3.json",
+      "pages": 1
+    }
+  ]
+}

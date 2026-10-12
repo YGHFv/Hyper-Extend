@@ -22,15 +22,11 @@ class StatusBarPoliciesTest {
             assertEquals(0L, Math.floorMod(now + delay, 1000L))
         }
     }
-    @Test fun batteryMovesGroupsOnlyOnceAndLeavesMiddleChargeIndicator() {
-        val children = mutableListOf("icon", "charging", "percent")
+    @Test fun batterySwapsFreshNativeLayoutWithoutAccumulatingOffsets() {
         repeat(3) {
-            val icon = children.indexOf("icon"); val percent = children.indexOf("percent")
-            if (BatteryOrderPolicy.shouldSwap(icon, percent)) java.util.Collections.swap(children, icon, percent)
+            assertEquals(30 to 0, BatteryPositionPolicy.swap(50, 0, 20, 20, 50, false))
         }
-        assertEquals(listOf("percent", "charging", "icon"), children)
-        assertFalse(BatteryOrderPolicy.shouldSwap(-1, 2))
-        assertFalse(BatteryOrderPolicy.shouldSwap(0, -1))
+        assertNull(BatteryPositionPolicy.swap(50, 30, 50, 0, 30, false))
     }
     @Test fun screenshotExclusionIsPerCallAndPreservesAllHostFilters() {
         val original = arrayOf("ScreenshotAnimation", "SensitiveLayer")
@@ -42,5 +38,34 @@ class StatusBarPoliciesTest {
         assertArrayEquals(arrayOf("StatusBar"), ScreenshotLayerPolicy.exclusions(null, false))
         assertSame(original, ScreenshotLayerPolicy.exclusions(original, true))
         assertNull(ScreenshotLayerPolicy.exclusions(null, true))
+    }
+    @Test fun screenshotEligibilityIsVersionBoundAndNeverChangesRearOrNativeDuplicates() {
+        assertTrue(ScreenshotLayerPolicy.eligible(10603038, 0, true, emptyList()))
+        assertFalse(ScreenshotLayerPolicy.eligible(10603039, 0, true, emptyList()))
+        assertFalse(ScreenshotLayerPolicy.eligible(10603038, 1, true, emptyList()))
+        assertFalse(ScreenshotLayerPolicy.eligible(10603038, 0, false, emptyList()))
+        assertFalse(ScreenshotLayerPolicy.eligible(10603038, 0, true, listOf("RearScreenshotWindow")))
+        val native = arrayOf("Sensitive", "Sensitive", "StatusBar")
+        assertSame(native, ScreenshotLayerPolicy.exclusions(native, false))
+        assertArrayEquals(arrayOf("Sensitive", "Sensitive", "StatusBar"),
+            ScreenshotLayerPolicy.exclusions(arrayOf("Sensitive", "Sensitive"), false))
+    }
+    @Test fun screenshotUsesOnlyTheExactCurrentStrategyAndFrameworkContracts() {
+        val signatures = javaClass.getResourceAsStream("/screenshot-layer-cached-host-members.txt")!!
+            .bufferedReader().use { it.readLines().toSet() }
+        fun descriptor(type: String): String = when {
+            type == "int" -> "I"
+            type.startsWith("[") -> type.replace('.', '/')
+            else -> "L${type.replace('.', '/')};"
+        }
+        val t = ScreenshotCaptureTargets
+        for (method in listOf(t.capture, t.caller, t.exclude, t.mode)) {
+            val signature = descriptor(method.owner) + "->" + method.name +
+                "(" + method.parameters.joinToString("") { descriptor(it) } + ")" + descriptor(method.returns)
+            assertTrue(signature, signature in signatures)
+        }
+        assertFalse(t.capture.isStatic)
+        assertTrue(t.caller.isStatic)
+        assertEquals(10, signatures.size)
     }
 }

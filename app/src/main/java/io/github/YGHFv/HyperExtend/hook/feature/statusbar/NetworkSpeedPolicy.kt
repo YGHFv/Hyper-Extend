@@ -5,12 +5,16 @@ package io.github.YGHFv.HyperExtend.hook.feature.statusbar
 import java.util.Locale
 
 internal object NetworkSpeedText {
+    fun hideUnit(style: Int, unit: String?): Boolean = style in 1..4 && unit?.isEmpty() == true
+    fun lineSpacing(stored: Int): Float = stored.coerceIn(14, 22) * 0.05f
     data class Options(val style: Int, val icon: Int = 2, val hide: Boolean = false,
         val hideAll: Boolean = false, val swap: Boolean = false, val lowLevel: Long = 65536,
         val suffix: String = "B/s")
 
     fun render(tx: Long, rx: Long, options: Options): Array<String>? = with(options) {
-        val total = tx.coerceAtLeast(0) + rx.coerceAtLeast(0)
+        val sent = tx.coerceAtLeast(0)
+        val received = rx.coerceAtLeast(0)
+        val total = if (Long.MAX_VALUE - sent < received) Long.MAX_VALUE else sent + received
         if (style == 0) return if (hide && total < lowLevel) arrayOf("", "") else null
         fun format(bytes: Long): String {
             val (divisor, unit) = when {
@@ -49,22 +53,40 @@ internal object NetworkSpeedText {
 }
 
 internal class NetworkSpeedSampler {
+    var valid: Boolean = false
+        private set
     private var last: Long? = null
     private var tx = 0L
     private var rx = 0L
+    private var loopbackTx = 0L
+    private var loopbackRx = 0L
     private var speed = 0L to 0L
 
-    fun sample(now: Long, sent: Long, received: Long): Pair<Long, Long> {
+    fun sample(now: Long, sent: Long, received: Long, loopbackSent: Long = 0,
+               loopbackReceived: Long = 0): Pair<Long, Long> {
         val elapsed = last?.let { now - it }
-        if (sent < 0 || received < 0) { last = null; speed = 0L to 0L; return speed }
-        if (elapsed != null && elapsed in 0 until 150_000_000 && sent >= tx && received >= rx) return speed
+        if (sent < 0 || received < 0 || loopbackSent !in 0..sent || loopbackReceived !in 0..received) {
+            last = null; valid = false; speed = 0L to 0L; return speed
+        }
+        val countersAdvanced = sent >= tx && received >= rx && loopbackSent >= loopbackTx &&
+            loopbackReceived >= loopbackRx
+        val sentDelta = sent - tx
+        val receivedDelta = received - rx
+        val loopbackSentDelta = loopbackSent - loopbackTx
+        val loopbackReceivedDelta = loopbackReceived - loopbackRx
+        val coherent = countersAdvanced && sentDelta >= loopbackSentDelta && receivedDelta >= loopbackReceivedDelta
+        if (elapsed != null && elapsed in 0 until 150_000_000 && coherent) return speed
         // The exposed maximum cadence is 10s; allow dispatch jitter before treating it as sleep.
-        speed = if (elapsed == null || elapsed <= 0 || elapsed > 30_000_000_000 || sent < tx || received < rx) {
+        valid = elapsed != null && elapsed in 1..30_000_000_000 && coherent
+        speed = if (!valid) {
             0L to 0L
         } else {
-            ((sent - tx) / (elapsed / 1e9)).toLong() to ((received - rx) / (elapsed / 1e9)).toLong()
+            val seconds = requireNotNull(elapsed) / 1e9
+            ((sentDelta - loopbackSentDelta) / seconds).toLong() to
+                ((receivedDelta - loopbackReceivedDelta) / seconds).toLong()
         }
         last = now; tx = sent; rx = received
+        loopbackTx = loopbackSent; loopbackRx = loopbackReceived
         return speed
     }
 }

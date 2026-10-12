@@ -378,28 +378,6 @@ val FEATURES: List<HyperFeature> = listOf(
         requirement = "在接收端启用并重启互传。需 Android 11+，不限制互传版本；目标方法不匹配时跳过。仅处理 Download/MiShare，不删除索引或主动覆盖文件。",
     ),
     HyperFeature(
-        id = "gesture_line",
-        group = ScopeFeatureGroup.SYSTEM_UI_OTHER,
-        title = "隐藏手势横条",
-        summary = "隐藏底部横条，保留手势操作",
-        scopes = listOf("systemui"),
-        origin = "HideLine",
-        license = "未声明开源协议 —— 按逆向结果自行实现",
-        defaultEnabled = false,
-        options = listOf(
-            HyperOption(
-                id = "gesture_line.skip_draw",
-                title = "拦截横条绘制",
-                summary = "阻止手势横条绘制",
-            ),
-            HyperOption(
-                id = "gesture_line.report_hidden",
-                title = "按原生「隐藏手势提示线」处理",
-                summary = "同时隐藏横条及其高亮动画",
-            ),
-        ),
-    ),
-    HyperFeature(
         id = "wallpaper_monet",
         group = ScopeFeatureGroup.SYSTEM_UI_OTHER,
         title = "壁纸取色修复",

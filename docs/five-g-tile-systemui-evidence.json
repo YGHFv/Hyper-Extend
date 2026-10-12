@@ -1,0 +1,289 @@
+{
+  "host": {
+    "packageName": "com.android.systemui",
+    "versionName": "17.03.260226.r",
+    "versionCode": 202602260
+  },
+  "verification": "Read-only full host bodies and interface signatures, source-only review. No build/tests, deployment, live network writes or UI acceptance.",
+  "evidence": [
+    {
+      "locator": "dex_method:Lcom/android/systemui/qs/tileimpl/MiuiQSFactory;->createTile(Ljava/lang/String;)Lcom/android/systemui/plugins/qs/QSTile;",
+      "contains": [
+        ".method public final createTile(Ljava/lang/String;)",
+        "\"reduce_brightness\"",
+        "\"nfc\""
+      ],
+      "sha256": "0bdd4b1d1ff9948e315b903bda17b34f011011d860b11c5e5f7db6e9ae9a39bd"
+    },
+    {
+      "locator": "dex_class:Lcom/android/systemui/qs/tileimpl/MiuiQSFactory;",
+      "contains": [
+        ".field public final qsHostLazy:Ldagger/Lazy;",
+        ".field public final falsingManager:Ldagger/Lazy;"
+      ],
+      "sha256": "e29408cd94951f93c7827022d7a7e2cbd1153f757f8fb22b6d3ed258ea8c1f0a"
+    },
+    {
+      "locator": "dex_class:Lcom/android/systemui/plugins/qs/QSTile;",
+      "contains": [
+        ".class public interface abstract",
+        "getDetailsViewModel(Ljava/util/function/Consumer;)Z",
+        "populate(Landroid/metrics/LogMaker;)Landroid/metrics/LogMaker;",
+        "setListening(Ljava/lang/Object;Z)V"
+      ],
+      "sha256": "2baa4560965ff79606d2a5f3b5aed1c0960693648408eab3a52590168423c73d"
+    },
+    {
+      "locator": "dex_class:Lcom/android/systemui/plugins/qs/QSTile$Callback;",
+      "contains": [
+        "onStateChanged(Lcom/android/systemui/plugins/qs/QSTile$State;)V",
+        "getCallbackType()I"
+      ],
+      "sha256": "a44b2f1fc89db6e25b708f2f1b7d88aae1d0738f788246f5b97d57d1dd890a3b"
+    },
+    {
+      "locator": "dex_class:Lcom/android/systemui/plugins/qs/QSTile$State;",
+      "contains": [
+        ".field public state:I",
+        ".field public spec:Ljava/lang/String;",
+        ".field public label:Ljava/lang/CharSequence;",
+        ".field public contentDescription:Ljava/lang/CharSequence;",
+        ".field public stateDescription:Ljava/lang/CharSequence;",
+        ".field public expandedAccessibilityClassName:Ljava/lang/String;",
+        ".field public handlesLongClick:Z",
+        ".field public icon:Lcom/android/systemui/plugins/qs/QSTile$Icon;"
+      ],
+      "sha256": "b67f1aa66896ca22ce63bb0315ebb72ae417314b990b23a2077b6d7302d8b2c9"
+    },
+    {
+      "locator": "dex_class:Lcom/android/systemui/plugins/qs/QSTile$BooleanState;",
+      "contains": [
+        ".super Lcom/android/systemui/plugins/qs/QSTile$AdapterState;",
+        ".method public constructor <init>()V",
+        ".method public copy()Lcom/android/systemui/plugins/qs/QSTile$State;"
+      ],
+      "sha256": "3ebb142ba8da7059ba6ea5aae41b5601012fcc0aaa524028662536202b6c05ee"
+    },
+    {
+      "locator": "dex_class:Lcom/android/systemui/plugins/qs/QSTile$AdapterState;",
+      "contains": [
+        ".field public value:Z",
+        "copyTo(Lcom/android/systemui/plugins/qs/QSTile$State;)Z"
+      ],
+      "sha256": "da76952d4e0c0e7d9a559702f402fb124c29d398e5fd300785c53880b789d063"
+    },
+    {
+      "locator": "dex_class:Lcom/android/systemui/qs/tileimpl/QSTileImpl$DrawableIcon;",
+      "contains": [
+        ".super Lcom/android/systemui/plugins/qs/QSTile$Icon;",
+        ".method public constructor <init>(Landroid/graphics/drawable/Drawable;)V",
+        "getInvisibleDrawable(Landroid/content/Context;)Landroid/graphics/drawable/Drawable;"
+      ],
+      "sha256": "b8da9d9aab9e4a0609f413eeda8d966990ebb708b70e12b73b8362c6b12a8d89"
+    },
+    {
+      "locator": "dex_class:Ldagger/Lazy;",
+      "contains": [
+        ".method public abstract get()Ljava/lang/Object;"
+      ],
+      "sha256": "37ddd892a13a9bae0f0f89c99c4bcbe4562b1782be28ea60b030ba30ff578772"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/plugins/qs/QSFactory;->createTile(Ljava/lang/String;Z)Lcom/android/systemui/plugins/qs/QSTile;",
+      "contains": [
+        "->createTile(Ljava/lang/String;)Lcom/android/systemui/plugins/qs/QSTile;"
+      ],
+      "sha256": "50a37ab83beff45f472d0270e7c4a7cb06d6d52402ee7a25d318a056009878b1"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/qs/panels/domain/interactor/TilesAvailabilityInteractor;->getUnavailableTiles(Ljava/lang/Iterable;Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;",
+      "contains": [
+        "->createTile(Ljava/lang/String;)Lcom/android/systemui/plugins/qs/QSTile;",
+        "->isAvailable()Z",
+        "->destroy()V"
+      ],
+      "sha256": "9a2d9e12d5ca45b26392317d6d36b7eaa5bc4b0c9c4d1475a00fc18158f5ccc9"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/qs/pipeline/domain/interactor/CurrentTilesInteractorImpl;->createTileSync(Lcom/android/systemui/qs/pipeline/shared/TileSpec;)Lcom/android/systemui/plugins/qs/QSTile;",
+      "contains": [
+        "->createTile(Ljava/lang/String;)Lcom/android/systemui/plugins/qs/QSTile;",
+        "instance-of p1, p0, Lcom/android/systemui/qs/tileimpl/QSTileImpl;",
+        "return-object p0"
+      ],
+      "sha256": "5a0829b5c2d00636f4b8bf6f380b8caf2aa35f839f54666e5014ded49135665b"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/qs/tileimpl/MiuiQSFactory;->createTile(Ljava/lang/String;Z)Lcom/android/systemui/plugins/qs/QSTile;",
+      "contains": [
+        "->createTile(Ljava/lang/String;)Lcom/android/systemui/plugins/qs/QSTile;",
+        "->mInControlCenter:Z"
+      ],
+      "sha256": "035d38e737bf40b6b76887f9c24ac1d44bd2c28005b3b3dbcfacd82363f1b7bd"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/qs/pipeline/domain/adapter/MiuiQSHostAdapter;->getUserContext()Landroid/content/Context;",
+      "contains": [
+        ".method public final getUserContext()Landroid/content/Context;"
+      ],
+      "sha256": "f52a2393a5a2f1b3fc9ba21bbd1fbd3eb0b200a102ebe093b7e66b46e4039814"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/plugins/FalsingManager;->isFalseTap(I)Z",
+      "contains": [
+        ".method public abstract isFalseTap(I)Z"
+      ],
+      "sha256": "9aedcab50478da8589b5b97337082172dcc858dd1f64f5d65d57d2e88fa82a8b"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/qs/pipeline/domain/adapter/MiuiQSHostAdapter;->createTile(Ljava/lang/String;)Lcom/android/systemui/plugins/qs/QSTile;",
+      "contains": [
+        "->createTileSync(Lcom/android/systemui/qs/pipeline/shared/TileSpec;)Lcom/android/systemui/plugins/qs/QSTile;"
+      ],
+      "sha256": "b96a5145124a85a504a9899a4a85b5ece9dd379d5024b6f035399f2140a84966"
+    },
+    {
+      "locator": "dex_class:Lcom/android/systemui/qs/customize/MiuiTileQueryHelper$TileCollector;",
+      "contains": [
+        "->isTileReady()Z",
+        "->setListening(Ljava/lang/Object;Z)V",
+        "->getState()Lcom/android/systemui/plugins/qs/QSTile$State;",
+        "->destroy()V"
+      ],
+      "sha256": "0216042c6b94db1bbd0a4eb1733744d54d60b38883407dc21d8e57b3daa3d8e4"
+    },
+    {
+      "locator": "dex_class:Lcom/android/systemui/qs/QsEventLoggerImpl;",
+      "contains": [
+        "Lcom/android/internal/logging/InstanceIdSequence;-><init>(I)V"
+      ],
+      "sha256": "97fc6777f39aaeace5e4c5e722ddc9679bf5d5e200eee7dd56452e3e78a9eaa7"
+    },
+    {
+      "locator": "dex_class:Lcom/android/systemui/qs/tiles/MiuiNfcTile;",
+      "contains": [
+        "Lcom/android/systemui/qs/tiles/MiuiNfcTile;"
+      ],
+      "sha256": "5c6905a1e9eec5301d661fb29aa6d62d52d50a0b88c74257cdf4f1af9d093a7b"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/qs/pipeline/shared/TileSpec$Companion;->create(Ljava/lang/String;)Lcom/android/systemui/qs/pipeline/shared/TileSpec;",
+      "contains": [
+        "\"custom(\"",
+        "Lcom/android/systemui/qs/pipeline/shared/TileSpec$PlatformTileSpec;"
+      ],
+      "sha256": "5562318fb17b5bc0cc868a47fbf52a37a0000102969d8228b60d02ffde370bcc"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/qs/tileimpl/MiuiQSTileBaseView$$ExternalSyntheticLambda0;->onClick(Landroid/view/View;)V",
+      "contains": [
+        "->click(Lcom/android/systemui/animation/Expandable;)V",
+        "->secondaryClick(Lcom/android/systemui/animation/Expandable;)V"
+      ],
+      "sha256": "2b57c299468fc11d425a7200fe9a26151afa7672298193c5c06bab5559ebf460"
+    }
+  ],
+  "proxyInterfaceMethods": [
+    "addCallback(Lcom/android/systemui/plugins/qs/QSTile$Callback;)V",
+    "clearState()V",
+    "click()V",
+    "click(Lcom/android/systemui/animation/Expandable;)V",
+    "destroy()V",
+    "getCurrentTileUser()I",
+    "getDetailAdapter()Ljava/lang/Object;",
+    "getDetailsViewModel()Lcom/android/systemui/plugins/qs/TileDetailsViewModel;",
+    "getDetailsViewModel(Ljava/util/function/Consumer;)Z",
+    "getInstanceId()Lcom/android/internal/logging/InstanceId;",
+    "getMetricsCategory()I",
+    "getMetricsSpec()Ljava/lang/String;",
+    "getState()Lcom/android/systemui/plugins/qs/QSTile$State;",
+    "getTileLabel()Ljava/lang/CharSequence;",
+    "getTileSpec()Ljava/lang/String;",
+    "isAvailable()Z",
+    "isConnected()Z",
+    "isDestroyed()Z",
+    "isListening()Z",
+    "isTileReady()Z",
+    "longClick()V",
+    "longClick(Lcom/android/systemui/animation/Expandable;)V",
+    "populate(Landroid/metrics/LogMaker;)Landroid/metrics/LogMaker;",
+    "refreshState()V",
+    "removeCallback(Lcom/android/systemui/plugins/qs/QSTile$Callback;)V",
+    "removeCallbacks()V",
+    "removeCallbacksByType(I)V",
+    "secondaryClick()V",
+    "secondaryClick(Lcom/android/systemui/animation/Expandable;)V",
+    "setDetailListening(Z)V",
+    "setListening(Ljava/lang/Object;Z)V",
+    "setTileSpec(Ljava/lang/String;)V",
+    "showDetail(Z)V",
+    "userSwitch(I)V"
+  ],
+  "nativeFactoryHasNoFiveGSpec": true,
+  "note": "NFC class is audit-only evidence for rejecting provider reuse; no NFC hook or provider mutation is installed.",
+  "callerXrefs": [
+    {
+      "workspaceId": "wot5ikcq",
+      "editSessionId": "",
+      "targetLocator": "dex_method:Lcom/android/systemui/qs/tileimpl/MiuiQSFactory;->createTile(Ljava/lang/String;)Lcom/android/systemui/plugins/qs/QSTile;",
+      "referenceKind": "method_call",
+      "methodResolution": "dispatch",
+      "refs": [
+        {
+          "sourceLocator": "dex_method:Lcom/android/systemui/plugins/qs/QSFactory;->createTile(Ljava/lang/String;Z)Lcom/android/systemui/plugins/qs/QSTile;",
+          "referenceOperand": "Lcom/android/systemui/plugins/qs/QSFactory;->createTile(Ljava/lang/String;)Lcom/android/systemui/plugins/qs/QSTile;",
+          "matchKind": "possible_virtual_dispatch",
+          "dispatchCertainty": "possible",
+          "opcode": "invoke-interface",
+          "instructionIndex": 0
+        },
+        {
+          "sourceLocator": "dex_method:Lcom/android/systemui/qs/panels/domain/interactor/TilesAvailabilityInteractor;->getUnavailableTiles(Ljava/lang/Iterable;Lkotlin/coroutines/jvm/internal/ContinuationImpl;)Ljava/lang/Object;",
+          "referenceOperand": "Lcom/android/systemui/plugins/qs/QSFactory;->createTile(Ljava/lang/String;)Lcom/android/systemui/plugins/qs/QSTile;",
+          "matchKind": "possible_virtual_dispatch",
+          "dispatchCertainty": "possible",
+          "opcode": "invoke-interface",
+          "instructionIndex": 74
+        },
+        {
+          "sourceLocator": "dex_method:Lcom/android/systemui/qs/pipeline/domain/interactor/CurrentTilesInteractorImpl;->createTileSync(Lcom/android/systemui/qs/pipeline/shared/TileSpec;)Lcom/android/systemui/plugins/qs/QSTile;",
+          "referenceOperand": "Lcom/android/systemui/plugins/qs/QSFactory;->createTile(Ljava/lang/String;)Lcom/android/systemui/plugins/qs/QSTile;",
+          "matchKind": "possible_virtual_dispatch",
+          "dispatchCertainty": "possible",
+          "opcode": "invoke-interface",
+          "instructionIndex": 107
+        },
+        {
+          "sourceLocator": "dex_method:Lcom/android/systemui/qs/tileimpl/MiuiQSFactory;->createTile(Ljava/lang/String;Z)Lcom/android/systemui/plugins/qs/QSTile;",
+          "referenceOperand": "Lcom/android/systemui/qs/tileimpl/MiuiQSFactory;->createTile(Ljava/lang/String;)Lcom/android/systemui/plugins/qs/QSTile;",
+          "matchKind": "exact_reference",
+          "dispatchCertainty": "possible",
+          "opcode": "invoke-virtual",
+          "instructionIndex": 0
+        }
+      ],
+      "pagination": {
+        "hasMore": false,
+        "nextCursor": null,
+        "returnedCount": 4,
+        "limitMax": 200,
+        "totalAvailableCount": null
+      }
+    },
+    {
+      "workspaceId": "wot5ikcq",
+      "editSessionId": "",
+      "targetLocator": "dex_method:Lcom/android/systemui/plugins/qs/QSFactory;->createTile(Ljava/lang/String;Z)Lcom/android/systemui/plugins/qs/QSTile;",
+      "referenceKind": "method_call",
+      "methodResolution": "dispatch",
+      "refs": [],
+      "pagination": {
+        "hasMore": false,
+        "nextCursor": null,
+        "returnedCount": 0,
+        "limitMax": 200,
+        "totalAvailableCount": null
+      }
+    }
+  ]
+}

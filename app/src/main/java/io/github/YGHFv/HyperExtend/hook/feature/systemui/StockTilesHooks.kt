@@ -47,9 +47,14 @@ internal object StockTilesHooks {
         val read = HookRuntime.hookAfter(Context::class.java.getDeclaredMethod("getString", Int::class.javaPrimitiveType),
             "$FEATURE/classicRead") { chain, original ->
             if (ready.get() && scope.take(chain.thisObject, chain.args[0] as Int) && settings.isOn(FEATURE)) {
-                val result = StockTilesPolicy.append(original as? String)
+                // 只有「独立磁贴」两档才把 5G spec 放进候选列表；选了「内置移动网络磁贴」
+                // 就不新增磁贴（那条路径改为往原生详情页注入）。
+                val includeFiveG = FiveGTilePolicy.includeInCandidates(
+                    settings.string(FiveGTilePolicy.STYLE), FiveGTileHooks.ready,
+                )
+                val result = StockTilesPolicy.append(original as? String, includeFiveG)
                 if (result != original && logged.compareAndSet(false, true))
-                    ModuleLog.info("$FEATURE: classic editor candidates reached (device acceptance pending)")
+                    ModuleLog.info("$FEATURE: classic editor candidates reached; fiveGFactoryReady=${FiveGTileHooks.ready}; fiveGIncluded=${FiveGTilePolicy.SPEC in result.orEmpty().split(',')} (device acceptance pending)")
                 result ?: original
             } else original
         }
@@ -73,6 +78,8 @@ internal object StockTilesHooks {
 
     fun installPlugin(loader: ClassLoader, hostLoader: ClassLoader, settings: HookSettings): Int {
         checkFactory(hostLoader)
+        val fiveGReady = FiveGTileHooks.ready && runCatching { FiveGTileHooks.preparePlugin(loader) }.getOrDefault(false)
+        ModuleLog.info("$FEATURE: plugin 5G readiness=$fiveGReady; factoryReady=${FiveGTileHooks.ready}")
         val targets = StockTilesTargets
         val methods = targets.pluginMethods.associateWith { NotificationHooks.resolve(loader, it) ?: return 0 }
         val contextField = methods.getValue(targets.pluginAdd).declaringClass.getDeclaredField("context").apply {
@@ -84,9 +91,12 @@ internal object StockTilesHooks {
         val logged = AtomicBoolean(false)
         val read = HookRuntime.hookAfter(methods.getValue(targets.pluginStock), "$FEATURE/pluginRead") { chain, original ->
             if (ready.get() && scope.take(chain.thisObject, 0) && settings.isOn(FEATURE)) {
-                val result = StockTilesPolicy.append(original as? String)
+                val includeFiveG = FiveGTilePolicy.includeInCandidates(
+                    settings.string(FiveGTilePolicy.STYLE), fiveGReady,
+                )
+                val result = StockTilesPolicy.append(original as? String, includeFiveG)
                 if (result != original && logged.compareAndSet(false, true))
-                    ModuleLog.info("$FEATURE: plugin editor candidates reached (device acceptance pending)")
+                    ModuleLog.info("$FEATURE: plugin editor candidates reached; fiveGFactoryReady=$fiveGReady; fiveGIncluded=${FiveGTilePolicy.SPEC in result.orEmpty().split(',')} (device acceptance pending)")
                 result ?: original
             } else original
         }

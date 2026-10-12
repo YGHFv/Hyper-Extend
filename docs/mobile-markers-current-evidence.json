@@ -1,0 +1,270 @@
+{
+  "host": {
+    "packageName": "com.android.systemui",
+    "versionCode": 202602260
+  },
+  "verification": "Complete read-only current MT members; no compile, test or device acceptance.",
+  "evidence": [
+    {
+      "locator": "dex_field:Lcom/android/systemui/statusbar/pipeline/mobile/ui/binder/MiuiMobileIconBinder$bind$1$1$11$1;->$r8$classId:I",
+      "contains": [
+        ".field public final synthetic $r8$classId:I"
+      ],
+      "sha256": "8a7f08d897e90aa5eb8f02546e8a14cdb1c22870627f66da8a93d1635d43d3d1",
+      "raw": ".workbuddy/tmp/mt-systemui/mobile-markers-current-member-0.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/statusbar/pipeline/mobile/ui/binder/MiuiMobileIconBinder$bind$1$1$11$1;->$voWifi:Landroid/widget/ImageView;",
+      "contains": [
+        ".field public synthetic $voWifi:Landroid/widget/ImageView;"
+      ],
+      "sha256": "a85df2d1b2450562919885333f4f956a257eaf76406eeb0a93e4adef4611cc5c",
+      "raw": ".workbuddy/tmp/mt-systemui/mobile-markers-current-member-1.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/statusbar/pipeline/mobile/ui/binder/MiuiMobileIconBinder$bind$1$1$13$1;->$r8$classId:I",
+      "contains": [
+        ".field public final synthetic $r8$classId:I"
+      ],
+      "sha256": "8a7f08d897e90aa5eb8f02546e8a14cdb1c22870627f66da8a93d1635d43d3d1",
+      "raw": ".workbuddy/tmp/mt-systemui/mobile-markers-current-member-2.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/statusbar/pipeline/mobile/ui/binder/MiuiMobileIconBinder$bind$1$1$13$1;->$satellite:Landroid/widget/ImageView;",
+      "contains": [
+        ".field public synthetic $satellite:Landroid/widget/ImageView;"
+      ],
+      "sha256": "d66b8c5608343534120b8570a718c96185d8493d975ad7e72ee1b4f3dd5185c6",
+      "raw": ".workbuddy/tmp/mt-systemui/mobile-markers-current-member-3.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/statusbar/pipeline/mobile/ui/viewmodel/MiuiCellularIconVM;->inOutVisible:Lkotlinx/coroutines/flow/ReadonlyStateFlow;",
+      "contains": [
+        ".field public inOutVisible:Lkotlinx/coroutines/flow/ReadonlyStateFlow;"
+      ],
+      "sha256": "3f399dc7e03e9560427a5a8117c22657858ca526f1539c239d7f7326d9b092f4",
+      "raw": ".workbuddy/tmp/mt-systemui/mobile-markers-current-member-4.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/statusbar/pipeline/mobile/ui/viewmodel/MiuiCellularIconVM;->mobileRoamVisible:Lkotlinx/coroutines/flow/FlowKt__ZipKt$combine$$inlined$combineUnsafe$FlowKt__ZipKt$1;",
+      "contains": [
+        ".field public mobileRoamVisible:Lkotlinx/coroutines/flow/FlowKt__ZipKt$combine$$inlined$combineUnsafe$FlowKt__ZipKt$1;"
+      ],
+      "sha256": "64ffd34d5bce13eccea4886d8c17c3a0f401349ffd3903c9748d950a4f26d387",
+      "raw": ".workbuddy/tmp/mt-systemui/mobile-markers-current-member-5.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/statusbar/pipeline/mobile/ui/viewmodel/MiuiCellularIconVM;->smallRoamVisible:Lkotlinx/coroutines/flow/FlowKt__ZipKt$combine$$inlined$combineUnsafe$FlowKt__ZipKt$1;",
+      "contains": [
+        ".field public smallRoamVisible:Lkotlinx/coroutines/flow/FlowKt__ZipKt$combine$$inlined$combineUnsafe$FlowKt__ZipKt$1;"
+      ],
+      "sha256": "1eff6d84cdd072ac7c6c72731e49764c847dc9b65d470d02ada52d206bdaf124",
+      "raw": ".workbuddy/tmp/mt-systemui/mobile-markers-current-member-6.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/pipeline/mobile/ui/binder/MiuiMobileIconBinder$bind$1$1$11$1;-><init>(I)V",
+      "contains": [
+        ".method public synthetic constructor <init>(I)V"
+      ],
+      "sha256": "05300ea7f967a613125635332d4008cc06d74a3934459e0b4a3debecd8f9d23a",
+      "raw": ".workbuddy/tmp/mt-systemui/mobile-markers-current-member-7.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/pipeline/mobile/ui/binder/MiuiMobileIconBinder$bind$1$1$11$1;->emit(Ljava/lang/Object;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;",
+      "contains": [
+        ".method public final emit(Ljava/lang/Object;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;"
+      ],
+      "sha256": "970c256f1c788dc545e852b075b9efa293d998f803bdc7425526bf800fb25168",
+      "raw": ".workbuddy/tmp/mt-systemui/mobile-markers-current-member-8.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/pipeline/mobile/ui/binder/MiuiMobileIconBinder$bind$1$1$11;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;",
+      "contains": [
+        ".method public final invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;"
+      ],
+      "sha256": "df2e4726f9efa8e81cab0ea966573cdfc7f19d3df32ff333afd29518f9a618f2",
+      "raw": ".workbuddy/tmp/mt-systemui/mobile-markers-current-member-9.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/pipeline/mobile/ui/binder/MiuiMobileIconBinder$bind$1$1$12;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;",
+      "contains": [
+        ".method public final invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;"
+      ],
+      "sha256": "019d0a024ca6ec6c5278a9880128fb5e82c9309260f4f161395e618beb56fd3c",
+      "raw": ".workbuddy/tmp/mt-systemui/mobile-markers-current-member-10.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/pipeline/mobile/ui/binder/MiuiMobileIconBinder$bind$1$1$13$1;-><init>(I)V",
+      "contains": [
+        ".method public synthetic constructor <init>(I)V"
+      ],
+      "sha256": "6caab53000b06e5378a2b348e170003cfeb9912062f05f3d8757c677ce68eefb",
+      "raw": ".workbuddy/tmp/mt-systemui/mobile-markers-current-member-11.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/pipeline/mobile/ui/binder/MiuiMobileIconBinder$bind$1$1$13$1;->emit(Ljava/lang/Object;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;",
+      "contains": [
+        ".method public final emit(Ljava/lang/Object;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;"
+      ],
+      "sha256": "b830f5904135b15eff669acff51347afbeeb3b24c79467e8d1190d053e2e301f",
+      "raw": ".workbuddy/tmp/mt-systemui/mobile-markers-current-member-12.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/pipeline/mobile/ui/binder/MiuiMobileIconBinder$bind$1$1$13;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;",
+      "contains": [
+        ".method public final invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;"
+      ],
+      "sha256": "b4b46a7c4561cd3e5c84df8ad5f8221eefbb15b4e9addb66757da298bcb5f391",
+      "raw": ".workbuddy/tmp/mt-systemui/mobile-markers-current-member-13.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/pipeline/mobile/ui/binder/MiuiMobileIconBinder$bind$1$1$14;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;",
+      "contains": [
+        ".method public final invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;"
+      ],
+      "sha256": "78f3819dfb0ea3bb52da8446d339085a051d3e1b6f7f85eb91ebbe3942f23997",
+      "raw": ".workbuddy/tmp/mt-systemui/mobile-markers-current-member-14.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/pipeline/mobile/ui/binder/MiuiMobileIconBinder$bind$1$1$15;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;",
+      "contains": [
+        ".method public final invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;"
+      ],
+      "sha256": "4b7bc5df716d4da18a6add4ced3f55765770f27c1bf9eb4acd05aeeccb7d3f37",
+      "raw": ".workbuddy/tmp/mt-systemui/mobile-markers-current-member-15.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/pipeline/mobile/ui/binder/MiuiMobileIconBinder$bind$1$1$16;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;",
+      "contains": [
+        ".method public final invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;"
+      ],
+      "sha256": "db1e03c11923580c4ddbe190b4a368e3c2d9d6753be9f67a31361bc0b4934673",
+      "raw": ".workbuddy/tmp/mt-systemui/mobile-markers-current-member-16.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/pipeline/mobile/ui/binder/MiuiMobileIconBinder$bind$1$1$17;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;",
+      "contains": [
+        ".method public final invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;"
+      ],
+      "sha256": "ac7672de4192c68097c230334a8882b532715362d305eb495323156036ef07a8",
+      "raw": ".workbuddy/tmp/mt-systemui/mobile-markers-current-member-17.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/pipeline/mobile/ui/binder/MiuiMobileIconBinder$bind$1$1$19;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;",
+      "contains": [
+        ".method public final invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;"
+      ],
+      "sha256": "e51bfa8a8b09e52221f9e950e1f03f0c6b5728ff6764de29e355d0f22d513376",
+      "raw": ".workbuddy/tmp/mt-systemui/mobile-markers-current-member-18.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/pipeline/mobile/ui/binder/MiuiMobileIconBinder$bind$1$1$20;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;",
+      "contains": [
+        ".method public final invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;"
+      ],
+      "sha256": "c0d48b37f147b9e08bca8a6ee83838b4f7933f15a208fbc6551cafe26038c07f",
+      "raw": ".workbuddy/tmp/mt-systemui/mobile-markers-current-member-19.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/pipeline/mobile/ui/viewmodel/MiuiCellularIconVM;->getInOutVisible()Lkotlinx/coroutines/flow/Flow;",
+      "contains": [
+        ".method public final getInOutVisible()Lkotlinx/coroutines/flow/Flow;"
+      ],
+      "sha256": "83e4d68a1cdb9725300e49e8e4dafc265b023533e7c67e72bf5d035c9eb06b54",
+      "raw": ".workbuddy/tmp/mt-systemui/mobile-markers-current-member-20.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/pipeline/mobile/ui/viewmodel/MiuiCellularIconVM;->getMobileRoamVisible()Lkotlinx/coroutines/flow/Flow;",
+      "contains": [
+        ".method public final getMobileRoamVisible()Lkotlinx/coroutines/flow/Flow;"
+      ],
+      "sha256": "8339705d6a503db0089976c4a028080de74e429cadec7a07b5f28bab48d94abe",
+      "raw": ".workbuddy/tmp/mt-systemui/mobile-markers-current-member-21.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/pipeline/mobile/ui/viewmodel/MiuiCellularIconVM;->getSmallRoamVisible()Lkotlinx/coroutines/flow/Flow;",
+      "contains": [
+        ".method public final getSmallRoamVisible()Lkotlinx/coroutines/flow/Flow;"
+      ],
+      "sha256": "98367d2cc3acc6c03306f0bf0eadf61f78bba10125b9b00815bc3a96ff49855a",
+      "raw": ".workbuddy/tmp/mt-systemui/mobile-markers-current-member-22.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/pipeline/mobile/ui/viewmodel/MiuiMobileIconVMImpl$special$$inlined$flatMapLatest$10;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;",
+      "contains": [
+        ".method public final invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;"
+      ],
+      "sha256": "8b82279e37ade214784a2e5851fc8fd75af95d71fccaeed0bce33061116934f9",
+      "raw": ".workbuddy/tmp/mt-systemui/mobile-markers-current-member-23.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/pipeline/mobile/ui/viewmodel/MiuiMobileIconVMImpl$special$$inlined$flatMapLatest$11;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;",
+      "contains": [
+        ".method public final invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;"
+      ],
+      "sha256": "2ede3626a0e081fca65d2918923cbd3742f41415a34a224967d06fd3902b3d09",
+      "raw": ".workbuddy/tmp/mt-systemui/mobile-markers-current-member-24.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/pipeline/mobile/ui/viewmodel/MiuiMobileIconVMImpl$special$$inlined$flatMapLatest$12;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;",
+      "contains": [
+        ".method public final invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;"
+      ],
+      "sha256": "ed603263c4463eb054fe3a019ecf86fd801f389cc3198ba1865f1de179786e98",
+      "raw": ".workbuddy/tmp/mt-systemui/mobile-markers-current-member-25.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lkotlin/Pair;-><init>(Ljava/lang/Object;Ljava/lang/Object;)V",
+      "contains": [
+        ".method public constructor <init>(Ljava/lang/Object;Ljava/lang/Object;)V"
+      ],
+      "sha256": "641f40feb4c43ccedd369d3b61515138dcd0084c51b0c0bacaa6777d6e80897a",
+      "raw": ".workbuddy/tmp/mt-systemui/mobile-markers-current-member-26.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lkotlin/Pair;->getFirst()Ljava/lang/Object;",
+      "contains": [
+        ".method public final getFirst()Ljava/lang/Object;"
+      ],
+      "sha256": "534628b543807b7a3bffcc71f25e2a2bb88fc6ae95fdf65d525915afd277ca36",
+      "raw": ".workbuddy/tmp/mt-systemui/mobile-markers-current-member-27.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lkotlin/Pair;->getSecond()Ljava/lang/Object;",
+      "contains": [
+        ".method public final getSecond()Ljava/lang/Object;"
+      ],
+      "sha256": "82275b02c8bb6fab5d453d8064885ae94b4f4d845f3b58419fbfaf082544c76e",
+      "raw": ".workbuddy/tmp/mt-systemui/mobile-markers-current-member-28.json",
+      "complete": true
+    }
+  ]
+}

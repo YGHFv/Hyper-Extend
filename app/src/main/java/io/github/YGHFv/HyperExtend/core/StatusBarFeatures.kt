@@ -13,46 +13,10 @@
 package io.github.YGHFv.HyperExtend.core
 
 /**
- * 系统界面作用域里的「状态栏」功能。
- *
- * ## 它们是哪来的
- *
- * 逐条对应参考项目（西米露 / HyperCeiler）「系统界面 → 状态栏」整页里的条目，
- * 选项与数值的默认值也照抄原页面。**界面文案照抄参考项目**：用户是按自己熟悉的名字
- * 找开关的，改写得更通顺也不如原名好找。
- *
- * ## 只做 OS4
- *
- * 参考项目把功能按系统版本拆成了两条线（新线 / `os2` 支线），这里只按**澎湃 OS 4
- * （Android 17）的系统界面**写 hook：靶子类名、图标槽位名、字段名都以本机
- * `com.android.systemui`（17.03.x）的 dex 逐个校对过（见 `.workbuddy/tools/dexconst.py`、
- * `dexdump.py`）。找不到的靶子一律安静跳过并记日志，不猜、也不给旧版本留分支。
- *
- * 单独一个文件而不是塞进 `FeatureCatalog`：这一页光条目就有上百行，混在一起之后
- * 目录本身（也就是「功能有哪些、怎么归类」的那份）就没法一眼看完了。
- * 它们仍然是 [FEATURES] 的一部分 —— 界面、设置、搜索都只认那一份。
- *
- * ## 参考项目那一页里有、这里没有的条目
- *
- * 迁移是逐条对靶子做的，靶子在 OS4 上不存在的条目**不留空壳开关**（拨了没反应的开关
- * 比没有这个开关更糟 —— 用户会以为是自己没配对）。当前明确没做的是这几块：
- *
- * - **焦点通知 / 灵动岛**（媒体卡片、焦点歌词、隐藏灵动舞台强提示）：参考项目依赖的
- *   `FocusedNotifPromptView`、`CollapsedStatusBarFragment`、`FakeStatusBarClockController`
- *   等类在 OS4 的系统界面 dex 里一个都没有，整块能力已经换了实现。要做得先重新定位靶子。
- * - **电池信息卡片**（状态栏电量条里那行温度 / 电流 / 功率）：参考项目的入口是
- *   `com.miui.charge.ChargeUtils`，OS4 没有这个类。同样是先定位再迁移。
- * - **移动网络类型**：独立显示、显示策略和文字已接入原生绑定，待统一真机验收。
- *   上游隐藏的「大网络类型图标」入口仍待确认适用性，不新增空壳开关。
- *   移动信号显示逻辑四档、隐藏 SIM 卡 1 / 2 已接入 OS4 可变状态流。
- *   双排移动网络图标已接入 OS4 原生绑定，尚待双卡设备视觉验收。
- * - **时钟**：双行排列、各角色样式、平板日期隐藏与可选格式同步已接入；
- *   当前仅静态核验，尚未统一真机验收。
- *
- * 另外两项**换成了做得成的形态**而不是原样照搬：
- * 图标页的「交换 WIFI 与移动网络」在 OS4 没有落脚点（`StatusBarIconList` 已经没有
- * 「用一串槽位名构造」的那个构造器，槽位顺序改由第一次 `findOrInsertSlot` 决定）；
- * 闹钟的「仅在响铃前显示」依赖的 `PhoneStatusBarPolicy#onAlarmChanged` 也不存在了。
+ * SystemUI status-bar catalog. Current member evidence is version-bounded, not
+ * proof of full upstream parity. Missing old class names do not establish that
+ * island, battery-detail, alarm timing, or Wi-Fi/mobile reordering cannot migrate.
+ * Those paths and every explicitly partial record remain in the recovery queue.
  */
 
 /** 图标槽位的五态。取值与语义同参考项目：`RIGHT_BLOCK_LIST` / `CONTROL_CENTER_BLOCK_LIST` 的两张黑名单。 */
@@ -64,24 +28,17 @@ private val ICON_MODES = listOf(
     ChoiceEntry("2", "始终隐藏"),
 )
 
-/**
- * 「只做得到隐藏」的那一类图标开关。
- *
- * WIFI 标准（图标旁边那个 5 / 6 的小角标）不是「进哪张名单」的问题，而是系统算出来的一个值。
- * 参考项目给它三档，其中「始终显示」要拦下宿主里那个把值清零的函数 —— 那个函数在 OS4 上
- * 换成了协程状态机里的一段，靠类名与常量特征定位（参考项目用的是 dexkit 特征搜索）。
- * 本模块不做特征搜索，所以**只保留做得成的两档**：用五态或三态去表达它，
- * 用户会得到拨了没有任何反应的选项，那比少一个选项更糟。
- */
-private val ICON_MODES_HIDE_ONLY = listOf(
+/** Preserve native Wi-Fi availability; show also allows the native 4/5 standard values. */
+private val WIFI_STANDARD_MODES = listOf(
     ChoiceEntry("0", "默认"),
+    ChoiceEntry("1", "始终显示"),
     ChoiceEntry("2", "始终隐藏"),
 )
 
 /**
  * WIFI 标准的设置键。
  *
- * 它不是「某个槽位」而是宿主算出来的一个值（见 [ICON_MODES_HIDE_ONLY]），所以不进
+ * 它不是「某个槽位」而是宿主算出来的一个值（见 [WIFI_STANDARD_MODES]），所以不进
  * [ICON_SLOT_NAMES]，单独一个键、单独一处 hook。公开出去是为了让注入侧直接引用它 ——
  * 界面写一个键、hook 读另一个键是这类模块最典型的失效方式。
  */
@@ -96,14 +53,10 @@ private class IconSlot(
     val key: String get() = iconSlotKey(suffix)
 }
 
-/**
- * 可管理的图标槽位。
- *
- * ## 为什么一个槽位配多个名字
- *
- * OS4 的系统界面里同一类图标换过写法（无 SIM 卡一处写 `nosim`、别处写 `no_sim`），
- * 而模块只能按字符串比对命中它们。多给一个名字的代价是列表里多一条谁也不匹配的字符串
- * （行为完全不变）；少给一个的代价是「这个开关点了没反应」。两边的代价不对称，宁可多写。
+/** Catalog mappings retained while producer evidence is completed.
+ * A candidate alias is NOT migration evidence. In particular no_sim, hd and
+ * record are not validated by the current exact-string searches; the recovery
+ * log tracks their real producer/resource routes separately.
  */
 private class IconSlotGroup(val title: String, val slots: List<IconSlot>)
 
@@ -197,9 +150,89 @@ val ICON_SLOT_NAMES: Map<String, List<String>> =
 
 val STATUS_BAR_FEATURES: List<HyperFeature> = listOf(
     HyperFeature(
+        id = IslandMediaSettings.BACKGROUND,
+        title = "灵动岛媒体背景",
+        summary = "为原生主视图及过渡视图独立配置封面、配色和氛围光",
+        scopes = listOf("systemui"),
+        origin = "HyperCeiler / CustomBackground / AmbientLight",
+        license = "AGPL-3.0",
+        defaultEnabled = false,
+        requirement = "仅系统界面 202602260 的主屏亮屏解锁状态。保留原生 MusicBgView、着色器子视图、同步和变换；只管理自有背景、配色及子视图透明度，关闭、隐藏、分离或安全模式恢复仍归模块所有的值。原生着色器并未停止运行，不承诺省电。使用有界封面采样和莫奈，原生进度着色器保持形状与透明度；并非完整 AGSL、转场和对比度验收。源码未编译；首次启用需要用户重启宿主。",
+        config = IslandMediaSettings.background,
+        options = IslandMediaSettings.backgroundOptions,
+    ),
+    HyperFeature(
+        id = IslandMediaSettings.PROGRESS,
+        title = "灵动岛媒体进度条",
+        summary = "为独立媒体面板调整原生粗细或绘制波浪、直线",
+        scopes = listOf("systemui"),
+        origin = "HyperCeiler · MediaProgress（当前独立 Binder/Holder 适配）",
+        license = "AGPL-3.0",
+        defaultEnabled = false,
+        requirement = "仅当前主屏解锁、亮屏的展开媒体及过渡副本，不作用普通通知媒体。保留原生 SeekBar、范围、监听器、会话、拖动、无障碍和 RenderState；按压/拖动、锁屏/息屏保持原生。原生粗细仅在绘制期间临时修改，结束恢复；自定义样式使用实际主题颜色，不假定高端 shader 的旧颜色字段有效。动画服从原生播放/监听/拖动状态及系统动画开关，不启动轮询任务。关闭后下一帧恢复，首次启用需用户重启；仍非原生 shader 全量视觉一致，源码未编译或真机验收。",
+        config = IslandMediaSettings.progress,
+        options = IslandMediaSettings.progressOptions,
+    ),
+    HyperFeature(
+        id = "status_bar_hide_strong_toast",
+        title = "隐藏强提醒",
+        summary = "阻止外部强提醒命令新建临时灵动岛提示",
+        scopes = listOf("systemui"),
+        origin = "HyperCeiler · HideStrongToast（当前设备通知入口适配）",
+        license = "AGPL-3.0",
+        defaultEnabled = false,
+        requirement = "仅系统界面 202602260 主屏已解析的 strong_toast_action。保留原生解析和日志，不取消整帧绘制，不隐藏全局灵动岛窗口，不干预内部充电动画、移除或普通通知。关闭后下一条命令恢复，已显示的提示由原生到期清理；首次启用需用户重启。旧格式测试动作与其他灵动岛消息不由本功能改写。源码未编译，未真机验收。",
+    ),
+    HyperFeature(
+        id = IslandMediaSettings.LAYOUT,
+        title = "灵动岛媒体布局",
+        summary = "独立调整灵动岛展开媒体的布局与操作图标",
+        scopes = listOf("systemui"),
+        origin = "HyperCeiler · MediaViewLayout（当前独立 Binder/Holder 适配）",
+        license = "AGPL-3.0",
+        defaultEnabled = false,
+        requirement = "仅当前主屏解锁媒体，真实与过渡副本使用同一布局。只复制当前原生 ConstraintSet，不替换视图、点击或播放会话。图标尺寸不缩小触摸区域；140 保留原生，语义中间三槽为主要操作，其他槽及普通通知动作使用自定义尺寸。布局更改/关闭需用户重启重建；自有字号、图标矩阵与可见性在分离、关闭或安全模式下恢复未被原生接管的值。完整背景、进度与 AOD 仍待适配。源码未编译或真机验收。",
+        options = IslandMediaSettings.options,
+        config = IslandMediaSettings.layout,
+    ),
+    HyperFeature(
+        id = IslandMediaSettings.TEXT,
+        title = "灵动岛媒体字号",
+        summary = "独立调整标题、艺术家与播放时间字号",
+        scopes = listOf("systemui"),
+        origin = "HyperCeiler · MediaViewSize（当前独立 Binder/Holder 适配）",
+        license = "AGPL-3.0",
+        defaultEnabled = false,
+        requirement = "主屏解锁展开媒体及其过渡副本；保留原生文字、字体、颜色和无障碍信息。字号为 sp，与上游实际 SP 设置一致而非 XML 的 dp 标签；关闭、分离或安全模式恢复自有改动，原生新值优先成为恢复基线。首次启用需用户重启，未编译或真机验收。",
+        config = IslandMediaSettings.text,
+    ),
+    HyperFeature(
+        id = "status_bar_signal_order",
+        title = "交换 WIFI 与移动网络位置",
+        summary = "在原生图标列表发布前调整信号组顺序",
+        scopes = listOf("systemui"),
+        origin = "HyperCeiler · SwapWiFiAndMobileNetwork（当前宿主适配）",
+        license = "AGPL-3.0",
+        defaultEnabled = false,
+        requirement = "仅系统界面 202602260 的新建图标列表。保留每个原生槽位及其对象，WIFI 与移动信号组交换，不重复插入热点、飞行模式或无 SIM 槽位。不调整已绑定视图，不改变网络、SIM、显示/隐藏规则或双卡内部顺序。列表按宿主设计共享，各使用方会看到同一顺序，并非仅主屏。首次启用、关闭、修改与安全模式完整恢复需用户重启。当前源码未编译，演示、双卡、外屏和各面板显示待统一验收。",
+    ),
+    HyperFeature(
+        id = BatteryDetailSettings.FEATURE,
+        title = "状态栏电池信息",
+        summary = "在左侧时钟旁显示温度、电流与电池侧估算功率",
+        scopes = listOf("systemui"),
+        origin = "HyperCeiler · BatteryDetailIndicator（当前宿主适配）",
+        license = "AGPL-3.0",
+        defaultEnabled = false,
+        requirement = "仅当前主屏解锁状态栏，跟随原生时钟可见性、颜色及剩余宽度。不替换时钟或网速，不读写 sysfs。读数来自 BatteryManager 和电池广播，异常或过期读数不显示；功率不是充电器输入功率。不可见、锁屏、息屏、解绑或安全模式停止采样并移除自有文字。关闭后下次视图回调清理；首次启用和配置变更需用户重启。右侧独立图标槽位仍待适配，未提供空开关。此实现尚未编译或真机验收。",
+        options = BatteryDetailSettings.options,
+        config = BatteryDetailSettings.config,
+    ),
+    HyperFeature(
         id = "status_bar_icons",
         title = "状态栏图标",
         summary = "设置系统图标的显隐与显示位置",
+        requirement = "仅系统界面 202602260。图标名单改为原生实例列表及真实父容器过滤，不在安装期改共享静态名单；保留系统精简模式、用户隐藏、可用性与灵动岛空间限制。WIFI 小箭头/标准隐藏接原生绑定与显示回调，不替换状态流；标准号强显仅恢复原生已计算但被过滤的 4/5，通过临时接口转发保留原生挂起/恢复。强显作用于原生共享视图模型，不承诺仅主屏；隐藏仍只作用主屏。通知数量仅主屏状态栏，在原生绑定前复制数量输入，保留通知筛选、失败计数及布局，AOD/通知架保持原生。电池隐藏与自定义样式使用同一组精确刷新入口。改动仍需重建宿主；已有列表在下一次原生更新恢复，WIFI 自有隐藏在分离/下次绘制关闭时恢复；电池和安全模式完整恢复需用户重启。无 SIM、HD、录音等尚无完整当前槽位生产证据，不因本次链路修复视为迁完。当前源码未编译或真机验收。",
         scopes = listOf("systemui"),
         origin = "西米露 / HyperCeiler · StatusBarIcon、NotificationIconColumns、HideBatteryIcon",
         license = "AGPL-3.0",
@@ -214,9 +247,15 @@ val STATUS_BAR_FEATURES: List<HyperFeature> = listOf(
                             key = slot.key,
                             title = slot.title,
                             group = group.title,
-                            entries = ICON_MODES,
+                            entries = if (slot.suffix == "alarm_clock")
+                                ICON_MODES + ChoiceEntry("3", "响铃前显示") else ICON_MODES,
                         ),
                     )
+                    if (slot.suffix == "alarm_clock") {
+                        add(HyperSlider("status_bar_icons.alarm_clock_hours", "提前显示小时数",
+                            0, 48, 0, unit = " h", group = group.title,
+                            summary = "配合响铃前显示；0 不干预。使用当前用户已有闹钟时间，最多 30 秒刷新，未知时间保持原生。不更改闹钟或锁屏闹钟文字；完整恢复及首次启用需用户重启"))
+                    }
                     // 「WIFI 标准」紧跟在 WIFI 图标后面：它是同一个图标的另一个方面
                     // （图标旁边那个 5 / 6 的小角标）。
                     if (slot.suffix == "wifi") {
@@ -225,7 +264,7 @@ val STATUS_BAR_FEATURES: List<HyperFeature> = listOf(
                                 key = WIFI_STANDARD_KEY,
                                 title = "WIFI 标准",
                                 group = group.title,
-                                entries = ICON_MODES_HIDE_ONLY,
+                            entries = WIFI_STANDARD_MODES,
                             ),
                         )
                     }
@@ -315,6 +354,7 @@ val STATUS_BAR_FEATURES: List<HyperFeature> = listOf(
         id = "status_bar_battery_style",
         title = "电池自定义",
         summary = "调整电量百分比样式与位置",
+        requirement = "仅系统界面 202602260 主屏。四个精确刷新入口共同就绪后生效，保留原生电量/充电/主题更新。加粗保留原生字体家族；隐藏百分号时右边距归可见数字，百分号默认偏移保留原生基线。尺寸限制与界面滑块一致，隐藏策略优先，不显示原本隐藏的文字。设置固定于宿主创建时，关闭、修改和安全模式完整恢复需要用户重启系统界面；不进行在线重排恢复。新的边距/精确签名修复尚未编译，非真机验收。",
         scopes = listOf("systemui"),
         origin = "西米露 / HyperCeiler · BatteryStyle",
         license = "AGPL-3.0",
@@ -413,7 +453,7 @@ val STATUS_BAR_FEATURES: List<HyperFeature> = listOf(
         origin = "西米露 / HyperCeiler · MobilePublicHookV（HideVoWiFiIcon 并入）",
         license = "AGPL-3.0",
         defaultEnabled = false,
-        requirement = "仅隐藏信号图标，不停用 SIM 卡。仅在连接时显示、仅显示上网卡模式下，隐藏 SIM 卡选项不生效。修改后重启系统界面生效。",
+        requirement = "仅隐藏图标，不停用 SIM 或改变通话/网络。仅在连接时显示、仅显示上网卡模式下，隐藏 SIM 卡选项不生效。漫游、活动指示器与 VoWiFi 只处理主屏原生显示回调，保留有效更新标记、动画容器及订阅取消，不向具体 Flow 字段写入不兼容类型。VoLTE 仅在当前宿主完整生成尚未发布的显示配置后置隐藏标记，保留其余运营商字段，不在构造或安装期初始化服务；此配置按原生设计跨显示共享。关闭后等待原生回调/配置重建，缓存、旧版本替换流和安全模式完整恢复需用户重启。新迁移未编译，非真机验收。",
         config = listOf(
             HyperChoice(
                 key = MobileSignalSettings.MODE,
@@ -536,7 +576,7 @@ val STATUS_BAR_FEATURES: List<HyperFeature> = listOf(
             "NetworkSpeedSpacing、NetworkSpeedSec",
         license = "AGPL-3.0",
         defaultEnabled = false,
-        requirement = "网速按流量差值计算，可能与系统数值不同。",
+        requirement = "仅系统界面 202602260 的原生网速控制器与视图；所有已选 hook 和精确调用方共同就绪后生效。上下行分别扣除 lo 回环流量；首次采样、任一计数不可用/重置、非一致读数或长时间休眠保留原生数值与非空单位，已确认差值才进入自定义格式，汇总防溢出。保留原生隐藏、图标阻止和消息停止策略；只调整已存在的后台采样消息，不新建采样线程或复活已停止循环。关闭后下次原生采样恢复间隔，原有字体/布局和安全模式完整恢复需重启系统界面。采样时点仍跟随原生文字回调，非后台同一快照；固定宽度、布局动画仍待验收。非真机验收。",
         options = listOf(
             HyperOption(
                 id = "status_bar_network_speed.font_size_enable",
@@ -662,13 +702,14 @@ val STATUS_BAR_FEATURES: List<HyperFeature> = listOf(
             ),
             HyperSlider(
                 key = "status_bar_network_speed.spacing_margin",
-                title = "行间距",
+                title = "行间距倍数",
+                summary = "双排文字行高的倍数，不是额外 dp 间距",
                 group = "扩展",
                 min = 14,
                 max = 22,
                 default = 16,
                 divisor = 20,
-                unit = " dp",
+                unit = " 倍",
             ),
             HyperSlider(
                 key = "status_bar_network_speed.left_margin",
@@ -720,6 +761,7 @@ val STATUS_BAR_FEATURES: List<HyperFeature> = listOf(
         id = "status_bar_double_tap",
         title = "双击状态栏锁屏",
         summary = "双击状态栏空白处息屏",
+        requirement = "仅系统界面 202602260 主屏，观察原生 PhoneStatusBarView 已接受的背景触摸，不替换触摸监听器、不消费或重放事件。保留子控件、原生可触区域、状态栏交互和长按/下拉处理。触摸探索、遮挡、多指、鼠标/手写笔、越界、拖动、取消、分离或配置变化重置双击；包含历史移动采样。通过精确 PowerManager.goToSleep(long) 请求，失败保留原生，不提前初始化服务。关闭/安全模式停止处理，首次开启需要重建宿主；源代码修复尚未编译或实际息屏验收。",
         scopes = listOf("systemui"),
         origin = "西米露 / HyperCeiler · DoubleTapToSleep",
         license = "AGPL-3.0",
@@ -735,6 +777,6 @@ val STATUS_BAR_FEATURES: List<HyperFeature> = listOf(
         origin = "西米露 / HyperCeiler · HideStatusBarBeforeScreenshot",
         license = "AGPL-3.0",
         defaultEnabled = false,
-        requirement = "需启用截屏作用域。OS4 原生取图时排除状态栏图层，不改变屏幕上状态栏的可见性；背屏和不支持图层排除的旧宿主保持原样。待真机验收。",
+        requirement = "需启用截屏作用域。仅截屏 10603038 实际选中的 ScreenCaptureInternal 策略和完整图层排除 API；旧策略、背屏和外屏保持原样。只在本次主屏取图的最终排除名单追加 StatusBar，保留原生一次性排除、工作资料名单、裁剪、安全/受保护内容检查及缓冲区释放，不改变屏幕或 Surface、不发送广播、不延时等待。关闭后下次取图恢复，首次启用需用户重启宿主。证据来自已缓存 APK/框架，不代表重新核实了当前安装；源码未编译或真机验收。",
     ),
 ).map { it.copy(group = ScopeFeatureGroup.STATUS_BAR) }

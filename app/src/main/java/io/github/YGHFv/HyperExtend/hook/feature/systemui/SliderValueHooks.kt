@@ -10,6 +10,7 @@ import io.github.YGHFv.HyperExtend.core.compatibleVersionCode
 import android.os.Looper
 import android.text.Spanned
 import android.view.View
+import android.view.ViewTreeObserver
 import android.view.accessibility.AccessibilityManager
 import android.widget.SeekBar
 import android.widget.TextView
@@ -90,7 +91,7 @@ internal object SliderValueHooks {
 
         fun safely(block: () -> Unit) {
             runCatching(block).onFailure {
-                if (warned.compareAndSet(false, true)) ModuleLog.error("$feature: label update skipped (logic reviewed; not built or device-tested)", it)
+                if (warned.compareAndSet(false, true)) ModuleLog.error("$feature: label update skipped", it)
             }
         }
 
@@ -105,7 +106,8 @@ internal object SliderValueHooks {
                 text.addOnAttachStateChangeListener(it)
             }
             label.restore()
-            if (!ready.get() || SafeModeRuntime.blocked || !settings.isOn(feature)) return
+            if (!ready.get() || SafeModeRuntime.blocked ||
+                !settings.isOn(feature) && !PercentageHooks.inlineEnabled(settings, feature)) return
             val slider = methods.getValue(targets.slider).invoke(holder) as? SeekBar ?: return
             val context = text.context
             val accessibility = context.getSystemService(AccessibilityManager::class.java) ?: return
@@ -136,35 +138,46 @@ internal object SliderValueHooks {
             label.show(value)
         }
 
-        inner class Label(controller: Any, text: TextView) : View.OnAttachStateChangeListener {
+        inner class Label(controller: Any, text: TextView) : View.OnAttachStateChangeListener,
+            ViewTreeObserver.OnPreDrawListener {
             val controller = WeakReference(controller)
             val view = WeakReference(text)
-            var originalText = ""
-            var originalVisibility = View.GONE
-            var applied: String? = null
+            private val state = SliderLabelState()
+            private var observer: ViewTreeObserver? = null
 
             fun show(value: String) {
                 val text = view.get() ?: return
                 // Rich text is excluded; keep no spans that could retain the host view/controller.
-                originalText = text.text.toString()
-                originalVisibility = text.visibility
-                applied = value
+                state.capture(text.text.toString(), text.visibility, value)
                 text.text = value
                 text.visibility = View.VISIBLE
+                observer = text.viewTreeObserver.also { it.addOnPreDrawListener(this) }
             }
 
             fun restore() {
-                val value = applied ?: return
-                applied = null
-                val text = view.get() ?: return
+                observer?.takeIf { it.isAlive }?.removeOnPreDrawListener(this)
+                observer = null
+                val text = view.get()
                 // Do not overwrite a newer native text/visibility write.
-                if (text.text.toString() == value && text.visibility == View.VISIBLE) {
-                    text.text = originalText
-                    text.visibility = originalVisibility
+                val original = state.release(text?.text?.toString().orEmpty(),
+                    text?.visibility == View.VISIBLE, text?.text is Spanned)
+                if (text != null && original != null) {
+                    text.text = original.text
+                    text.visibility = original.visibility
                 }
-                originalText = ""
             }
 
+            override fun onPreDraw(): Boolean {
+                // Safety mode bypasses hook callbacks; cleanup must not depend on another native update.
+                safely {
+                    val text = view.get()
+                    val enabled = settings.isOn(feature) || PercentageHooks.inlineEnabled(settings, feature)
+                    if (state.shouldRelease(enabled, SafeModeRuntime.blocked,
+                            text?.isAttachedToWindow == true,
+                            text?.isShown == true && text.windowVisibility == View.VISIBLE)) restore()
+                }
+                return true
+            }
             fun dispose() { restore(); view.get()?.removeOnAttachStateChangeListener(this) }
             override fun onViewAttachedToWindow(view: View) = safely {
                 controller.get()?.let { if (entries[it] === this && active.get() !== it) refresh(it) }

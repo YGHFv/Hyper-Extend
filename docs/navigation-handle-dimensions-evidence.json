@@ -1,0 +1,101 @@
+{
+  "host": {
+    "packageName": "com.android.systemui",
+    "versionCode": 202602260
+  },
+  "verification": "Complete paginated MT class reads, extracted complete field declarations/methods. Hashes are of the exact extracted text. No build/test/runtime acceptance.",
+  "evidence": [
+    {
+      "locator": "dex_field:Lcom/android/systemui/navigationbar/gestural/NavigationHandle;->mBottom:F",
+      "contains": [
+        "mBottom:F"
+      ],
+      "sha256": "119a0c53d1ff8ced591dcdeead8d09e9edf7301dbd3a3e086b270ac17f3df5a6",
+      "raw": ".workbuddy\\tmp\\mt-systemui\\continuous-handle.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/navigationbar/gestural/NavigationHandle;->mHandleWidth:F",
+      "contains": [
+        "mHandleWidth:F"
+      ],
+      "sha256": "2eff15120ffb209e68224735dec2e712d83183dd019e210ada5ae2aee56cc9d9",
+      "raw": ".workbuddy\\tmp\\mt-systemui\\continuous-handle.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/navigationbar/gestural/NavigationHandle;->mAdditionalHeightForAnimation:F",
+      "contains": [
+        "mAdditionalHeightForAnimation:F"
+      ],
+      "sha256": "8b159b729cd5201432c1424be82dd983751c12108c8717a84b5cd4c1c272bd0d",
+      "raw": ".workbuddy\\tmp\\mt-systemui\\continuous-handle.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/navigationbar/gestural/NavigationHandle;->mAdditionalWidthForAnimation:F",
+      "contains": [
+        "mAdditionalWidthForAnimation:F"
+      ],
+      "sha256": "1e5a18c64412434fb01beda482457ab7c99205f908cf024d57c3fbe170f2cbf1",
+      "raw": ".workbuddy\\tmp\\mt-systemui\\continuous-handle.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/navigationbar/gestural/NavigationHandle;->mPulseAnimationProgress:F",
+      "contains": [
+        "mPulseAnimationProgress:F"
+      ],
+      "sha256": "b1369b76c7e790080ed074ee5a7cabeff0e6b86ef98eb9c4f02afb15c874842b",
+      "raw": ".workbuddy\\tmp\\mt-systemui\\continuous-handle.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/navigationbar/gestural/NavigationHandle;->mPressAnimator:Lcom/android/systemui/navigationbar/gestural/NavigationHandlePressAnimator;",
+      "contains": [
+        "mPressAnimator:Lcom/android/systemui/navigationbar/gestural/NavigationHandlePressAnimator;"
+      ],
+      "sha256": "a095cc49cfa02c60141eb9c30b025af434abc9aca10716452e1811647a0d5011",
+      "raw": ".workbuddy\\tmp\\mt-systemui\\continuous-handle.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/navigationbar/gestural/NavigationHandlePressAnimator;->mWidthScale:F",
+      "contains": [
+        "mWidthScale:F"
+      ],
+      "sha256": "073c80e235e89af72787e870a1104972d0bc4f553af01c0bf8bdc3b0f52f38c4",
+      "raw": ".workbuddy\\tmp\\mt-systemui\\continuous-handle-press.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/navigationbar/gestural/NavigationHandlePressAnimator;->mHeightScale:F",
+      "contains": [
+        "mHeightScale:F"
+      ],
+      "sha256": "0e1db3906c0132469ebb0478a1b4c22024c401a0ce52b1e194e329a916a4f127",
+      "raw": ".workbuddy\\tmp\\mt-systemui\\continuous-handle-press.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/navigationbar/gestural/NavigationHandle;->computePillGeometry(Z)V",
+      "contains": [
+        "->mBottom:F",
+        "->mWidthScale:F",
+        "->mHeightScale:F"
+      ],
+      "sha256": "d9c92fff10402c124c7e58a2ff3c706d5d513c0bff9f6ae6af2b862198c5b005",
+      "raw": ".workbuddy\\tmp\\mt-systemui\\continuous-handle.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/navigationbar/gestural/NavigationHandle;->onDraw(Landroid/graphics/Canvas;)V",
+      "contains": [
+        "->computePillGeometry(Z)V"
+      ],
+      "sha256": "72448b1342e0af765b9739f2433202b92493aa212c52021f2908d288e89df8c3",
+      "raw": ".workbuddy\\tmp\\mt-systemui\\continuous-handle.json",
+      "complete": true
+    }
+  ]
+}

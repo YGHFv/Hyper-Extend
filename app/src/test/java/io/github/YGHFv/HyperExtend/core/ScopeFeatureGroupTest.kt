@@ -22,8 +22,11 @@ class ScopeFeatureGroupTest {
 
     @Test fun systemUiMainPageContainsOnlySubmenusAndLegacyKeysStayInOther() {
         assertTrue(featuresOfScopePage("systemui").isEmpty())
+        // gesture_line 卡片已并入 navigation_handle_custom（见 core/MergedCardMigration）。
+        // 新增的「隐藏底部手势横条」在 SYSTEM_UI_FEATURES 里，所以这里仍只剩
+        // wallpaper_monet 与 rotation_suggestion 两个非目录内的历史键。
         assertEquals(
-            setOf("gesture_line", "wallpaper_monet", "rotation_suggestion"),
+            setOf("wallpaper_monet", "rotation_suggestion"),
             featuresOfScopePage("systemui", ScopeFeatureGroup.SYSTEM_UI_OTHER)
                 .filterNot { it in SYSTEM_UI_FEATURES }.map { it.id }.toSet(),
         )

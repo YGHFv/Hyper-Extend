@@ -1,0 +1,177 @@
+{
+  "time": "2026-10-11T19:27:47+08:00",
+  "scope": "Bounded migrated-feature source review, repair of GMS transaction final-state verification, then optional GMS settings long-click continuation. Not a full337 functional review or device acceptance.",
+  "reviewDocument": "docs/migrated-feature-review-2026-10-11.md",
+  "reproduction": {
+    "tests": 12,
+    "failedTests": [
+      "finalFamilyReadDetectsTakeoverAfterAnEarlierWriteSucceeded",
+      "matchingRawOverrideDoesNotProveTheEffectiveStateWasApplied",
+      "finalReadAlsoChecksPackagesAlreadyAtTheRequestedOverride"
+    ]
+  },
+  "reproductionLog": "build/gms-audit-reproduction-2026-10-11.log",
+  "reviewRegression": {
+    "suites": [
+      {
+        "name": "io.github.YGHFv.HyperExtend.hook.feature.statusbar.NetworkSpeedPolicyTest",
+        "tests": "14",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0"
+      },
+      {
+        "name": "io.github.YGHFv.HyperExtend.hook.feature.systemui.CardTileListTest",
+        "tests": "6",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0"
+      },
+      {
+        "name": "io.github.YGHFv.HyperExtend.hook.feature.systemui.FiveGTilePolicyTest",
+        "tests": "9",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0"
+      },
+      {
+        "name": "io.github.YGHFv.HyperExtend.hook.feature.systemui.GmsTileMigrationTest",
+        "tests": "12",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0"
+      },
+      {
+        "name": "io.github.YGHFv.HyperExtend.hook.feature.systemui.HeaderWeatherRefreshTest",
+        "tests": "6",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0"
+      },
+      {
+        "name": "io.github.YGHFv.HyperExtend.hook.feature.systemui.HeaderWeatherTest",
+        "tests": "5",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0"
+      }
+    ],
+    "tests": 52,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "continuationRegression": {
+    "suites": [
+      {
+        "name": "io.github.YGHFv.HyperExtend.core.ScopeFeatureGroupTest",
+        "tests": "5",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0"
+      },
+      {
+        "name": "io.github.YGHFv.HyperExtend.core.SystemUiFeaturesTest",
+        "tests": "13",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0"
+      },
+      {
+        "name": "io.github.YGHFv.HyperExtend.hook.feature.systemui.GmsSettingsTest",
+        "tests": "4",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0"
+      },
+      {
+        "name": "io.github.YGHFv.HyperExtend.hook.feature.systemui.GmsTileMigrationTest",
+        "tests": "13",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0"
+      }
+    ],
+    "tests": 35,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "fullUnitTests": {
+    "suites": 128,
+    "tests": 767,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "report": "app/build/test-results/testDebugUnitTest/"
+  },
+  "lint": {
+    "errors": 0,
+    "warnings": 454,
+    "hints": 2,
+    "report": "app/build/reports/lint-results-debug.xml"
+  },
+  "newTestDefinitions": 9,
+  "commands": [
+    ".\\gradlew.bat --console=plain :app:testDebugUnitTest --tests *GmsTileMigrationTest (expected pre-fix failure)",
+    ".\\gradlew.bat --console=plain :app:testDebugUnitTest --tests *GmsTileMigrationTest --tests *CardTileListTest --tests *FiveGTilePolicyTest --tests *HeaderWeather*Test --tests *NetworkSpeedPolicyTest",
+    ".\\gradlew.bat --console=plain :app:testDebugUnitTest --tests *Gms*Test --tests *SystemUiFeaturesTest --tests *ScopeFeatureGroupTest",
+    ".\\gradlew.bat --console=plain :app:testDebugUnitTest :app:lint",
+    "python tools/systemui_inventory.py .workbuddy/refsrc/HyperCeiler",
+    "python tools/systemui_migration_audit.py .workbuddy/refsrc/HyperCeiler"
+  ],
+  "logs": [
+    "build/migrated-feature-audit-tests-2026-10-11.log",
+    "build/gms-continuation-tests-2026-10-11.log",
+    "build/migrated-feature-review-full-2026-10-11.log"
+  ],
+  "sourceHashFormat": "SHA256 after CRLF-to-LF normalization. These are scoped reviewed/repaired/continuation inputs, not a cumulative whole-tree promotion gate.",
+  "sourceInputs": {
+    "app/src/main/java/io/github/YGHFv/HyperExtend/core/SystemUiFeatures.kt": "bb405aae02279ce6ff55e385c734fa2f99d89ba368d65eff3cd426dc1b8b7d16",
+    "app/src/main/java/io/github/YGHFv/HyperExtend/hook/feature/systemui/GmsTileHooks.kt": "17b307a49c324a1c6ed825885d1f78181d0e29de36faa4d9c55c92f8f85a1004",
+    "app/src/main/java/io/github/YGHFv/HyperExtend/hook/feature/systemui/GmsTilePolicy.kt": "2954d20ce22e46ca7e64a421395bf8aaf885348a5357a699ec87120c1d694d03",
+    "app/src/main/java/io/github/YGHFv/HyperExtend/hook/feature/systemui/GmsTileTargets.kt": "0fcba8e06291783f37ac7343bc76d77fbbdea44fe185d839158b26a518a7ee2e",
+    "app/src/main/java/io/github/YGHFv/HyperExtend/hook/feature/systemui/GmsSettingsTargets.kt": "1456d2179170771e0fa5feaadba32445c782c6e0b0b09d5dae4aeb19402b8c3d",
+    "app/src/main/java/io/github/YGHFv/HyperExtend/hook/feature/systemui/GmsSettingsPolicy.kt": "b612392779456eaabf6d670c9fc96b2c08e23a45ffe2ccfb1c370cdf83baf083",
+    "app/src/main/java/io/github/YGHFv/HyperExtend/hook/feature/systemui/FiveGSettingsTargets.kt": "854643b47e9af423cbc6880f421f5aa283f6d3c2bdceeca283998e2f39ff05a2",
+    "app/src/main/java/io/github/YGHFv/HyperExtend/hook/feature/systemui/CardTileListHooks.kt": "098373a6ccb16c04d569d6399df7ae1228e079a62a2de860ec934a12dcb70cdb",
+    "app/src/main/java/io/github/YGHFv/HyperExtend/hook/feature/systemui/CardTileListPolicy.kt": "ffdecdbd2b8e9744a66dd870dd56cab788cf8554b34567b39c6c90581b7b96fa",
+    "app/src/main/java/io/github/YGHFv/HyperExtend/hook/feature/systemui/CardTileListTargets.kt": "24095c1ce7fef5140bdf6cbeed10a5241fd58801fa48019f12fc92caded0bda6",
+    "app/src/main/java/io/github/YGHFv/HyperExtend/core/CardTileListSettings.kt": "d716ed0d237097aa8cb8047d46a546f05dd277b38dd84a62168b2ca88b8a010a",
+    "app/src/main/java/io/github/YGHFv/HyperExtend/hook/feature/statusbar/StatusBarNetworkSpeed.kt": "24ed9b22ff9ca4a6cf10d4e283f02f8c02c77135914c2b5e7081086f519cf37e",
+    "app/src/main/java/io/github/YGHFv/HyperExtend/hook/feature/statusbar/NetworkSpeedPolicy.kt": "b5948c93928fa4e662eaa5571fd589bd87c2e0789a6d964ac2f2ce53de18e393",
+    "app/src/main/java/io/github/YGHFv/HyperExtend/hook/feature/systemui/HeaderWeatherHooks.kt": "22bb171e7d57d4967fc62c085b78c8e75b86230cd286bce87d81e87e78000d02",
+    "app/src/main/java/io/github/YGHFv/HyperExtend/hook/feature/systemui/HeaderWeatherRefresh.kt": "222c4787dff7edb7661715b278e5ad943258399892f9438fbda5bd599a15a66f",
+    "app/src/test/java/io/github/YGHFv/HyperExtend/hook/feature/systemui/GmsTileMigrationTest.kt": "3817cf98b7bff42341c1c25e9a1b237a336d6e15f1bf0cdf910ca733bff7180a",
+    "app/src/test/java/io/github/YGHFv/HyperExtend/hook/feature/systemui/GmsSettingsTest.kt": "0235e91216857740b41cd1ebfefbce5134a61271d094ded993fd4f1d4d2eba8c",
+    "app/src/test/java/io/github/YGHFv/HyperExtend/hook/feature/systemui/CardTileListTest.kt": "69f47b162a179812f7cc8109099bf607e3efa23d7fd07e46070624e10051ce49",
+    "app/src/test/resources/gms-settings-host-members.txt": "f8764415ecbb8174e440216c46761242f19db5653ba0b0a1151e47e13cc822c1",
+    "app/src/test/resources/gms-tile-systemui-host-members.txt": "91ecfa8fee35adb913cf11c188ef418c0a0f2a42e58baa3f89b7fb1de5c37a52",
+    "app/src/test/resources/gms-tile-framework-host-members.txt": "e379c6422c510747e085e785ad35fccbac2a49a31f1b38a9e409a71364ff62e1",
+    "app/src/test/resources/card-tile-list-host-members.txt": "8f9d030373a48d80e0451f6c3596f444cb6a9871d691ea0127617f772a926ef6"
+  },
+  "evidence": [
+    "docs/gms-settings-evidence.json",
+    "docs/gms-tile-systemui-evidence.json",
+    "docs/gms-tile-framework-evidence.json",
+    "docs/card-tile-list-evidence.json"
+  ],
+  "ledger": {
+    "rows": 337,
+    "pending": 14,
+    "existingPartialAudits": 27,
+    "statusesPromoted": 0
+  },
+  "allMigrationComplete": false,
+  "full337FunctionalReview": false,
+  "runtimeAcceptance": false,
+  "releasePackagingExecuted": false,
+  "deviceOperationsExecuted": false,
+  "remaining": [
+    "Current SecurityCenter target presence and real Activity launch are not captured; the MT endpoint refused a connection. Runtime exact target checks fail closed.",
+    "Only the recorded native LegacyActivityStarterInternalImpl is offered. Known inert refactor and unknown backends are unavailable.",
+    "Package transactions/final reads are not atomic. Later external changes remain possible; compensation cannot continue after permission/lifecycle/time revocation.",
+    "Network sampling geometry, weather provider/lifecycle acceptance, arbitrary card VoWiFi editing, other partial residuals and the pending queue remain open.",
+    "Previous installed Release does not contain either this continuation or the preceding network/weather repairs."
+  ]
+}

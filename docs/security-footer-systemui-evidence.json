@@ -1,0 +1,48 @@
+{
+  "host": {
+    "packageName": "com.android.systemui",
+    "versionName": "17.03.260226.r",
+    "versionCode": 202602260
+  },
+  "verification": "Live read-only MT full member bodies, 2026-10-11; source review only. No compilation, tests or runtime acceptance.",
+  "evidence": [
+    {
+      "locator": "dex_field:Lcom/android/systemui/qs/MiuiQSSecurityFooter$1;->$r8$classId:I",
+      "contains": [
+        ".field public final synthetic $r8$classId:I"
+      ],
+      "sha256": "223bea1a135a8a13a13c348d6d5c4f774d28569e461b93635411a1b13a8ce7b2"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/qs/MiuiQSSecurityFooter$1;->run()V",
+      "contains": [
+        ".method public final run()V",
+        "->$r8$classId:I",
+        "->isDeviceOwnerReminderInfoHide()Z",
+        "->setVisibility(I)V"
+      ],
+      "sha256": "69cb89147e854803a74f80e296ba160503e798807c213d6eb329fac3a7a8a2ac"
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/qs/MiuiQSSecurityFooter$1;->this$0:Lcom/android/systemui/qs/MiuiQSSecurityFooter;",
+      "contains": [
+        ".field public synthetic this$0:Lcom/android/systemui/qs/MiuiQSSecurityFooter;"
+      ],
+      "sha256": "7442265080dae903b2469ecb0cc84320e6279ca2f77e4138a300da5b3645b7a0"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/qs/MiuiQSSecurityFooter;->-$$Nest$mhandleRefreshState(Lcom/android/systemui/qs/MiuiQSSecurityFooter;)V",
+      "contains": [
+        ".method public static -$$Nest$mhandleRefreshState(Lcom/android/systemui/qs/MiuiQSSecurityFooter;)V"
+      ],
+      "sha256": "09ba629e89672a9f2bb1e9c8e13b4fb36f42054589fb650a9d687c312f352ccc"
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/qs/MiuiQSSecurityFooter;->mRootView:Landroid/view/View;",
+      "contains": [
+        ".field public mRootView:Landroid/view/View;"
+      ],
+      "sha256": "feb8c1ae52efbed5c8e8eb0e1ec1bb4456c4c1f6cebbfed9b2fa6b93157e0855"
+    }
+  ]
+}

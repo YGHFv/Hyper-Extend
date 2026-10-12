@@ -1,0 +1,25 @@
+{
+  "host": {
+    "packageName": "com.android.systemui",
+    "versionCode": 202602260
+  },
+  "verification": "Re-read cached complete SystemUI handler evidence. Exact static counter calls, not fresh device capture or standalone framework method bodies. Runtime resolution requires matching static methods, String parameter and long return.",
+  "evidence": [
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/policy/NetworkSpeedController$5;->handleMessage(Landroid/os/Message;)V",
+      "contains": [
+        ".method public final handleMessage(Landroid/os/Message;)V"
+      ],
+      "sha256": "263795c01d1c2d64cdb907d650981fa4530277a983052d2a5608ab16da99f8a2",
+      "raw": ".workbuddy/tmp/mt-systemui/speed-member-10.json",
+      "complete": true
+    }
+  ],
+  "sourceTextSha256": "57d0d1a2224bbb590aab5eee038be895a30b9134d444ff5c5638a4cba9aa691e",
+  "counterCalls": [
+    "Landroid/net/TrafficStats;->getRxBytes(Ljava/lang/String;)J",
+    "Landroid/net/TrafficStats;->getTxBytes(Ljava/lang/String;)J"
+  ],
+  "nativeBehavior": "Background SAMPLE reads total Tx/Rx and subtracts both lo counters before calculating native speed. The adapter now subtracts per-direction deltas and rejects unavailable, reset or inconsistent snapshots.",
+  "remaining": "The local adapter still samples at the UI updateText callback, not from the exact native background snapshot. Counter reads are not atomic. No device rendering or runtime acceptance."
+}

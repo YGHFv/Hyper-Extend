@@ -8,10 +8,12 @@ package io.github.YGHFv.HyperExtend.hook.feature.systemui
 import io.github.YGHFv.HyperExtend.core.compatibleVersionCode
 
 import android.annotation.TargetApi
+import android.animation.ValueAnimator
 import android.content.Context
 import android.content.res.Configuration
 import android.graphics.drawable.Drawable
 import android.os.Looper
+import android.os.SystemClock
 import android.view.View
 import android.view.ViewTreeObserver
 import io.github.YGHFv.HyperExtend.core.ModuleLog
@@ -25,11 +27,17 @@ import java.lang.reflect.Method
 import java.util.WeakHashMap
 
 @TargetApi(28) // Only the audited OS4 host is admitted.
-internal class MediaDarkHooks private constructor(loader: ClassLoader, settings: HookSettings) {
+internal class MediaDarkHooks private constructor(loader: ClassLoader, private val settings: HookSettings) {
     private val alwaysDark = settings.isOn(FEATURE)
     private val artworkMode = if (settings.isOn(Artwork.FEATURE)) Artwork.mode(settings.string(Artwork.MODE)) else 0
     private val artworkBlur = settings.number(Artwork.BLUR, 10, 0, 20)
     private val artworkTransition = settings.isOn(Artwork.TRANSITION)
+    private val inverse = settings.isOn(Artwork.INVERSE)
+    private val ambientEnabled = artworkMode == 0 && settings.isOn(Artwork.FEATURE) && settings.isOn(Artwork.AMBIENT)
+    private val optimizedAmbient = settings.isOn(Artwork.AMBIENT_OPTIMIZED)
+    private val hasEffects = artworkMode != 0 || ambientEnabled
+    private val paletteResolver = if (hasEffects) MediaPaletteResolver(loader) else null
+    private val paletteAccess = if (hasEffects) MediaPaletteAccess(loader) else null
     private val controllerType = type(loader, SystemUiTargets.MEDIA_CONTROLLER)
     private val holderType = type(loader, SystemUiTargets.MEDIA_HOLDER)
     private val headerType = type(loader, MediaDarkTargets.HEADER)
@@ -49,8 +57,15 @@ internal class MediaDarkHooks private constructor(loader: ClassLoader, settings:
     private val lazyGet = type(loader, "dagger.Lazy").getDeclaredMethod("get")
     private val pendingAod = aodType.getDeclaredField("mWillDoAodAnim").apply { isAccessible = true }
     private val artwork = controllerType.getDeclaredField("artWorkDrawable").apply { isAccessible = true }
+    private val appIcon = controllerType.getDeclaredField("appIconDrawable").apply {
+        require(type == Drawable::class.java); isAccessible = true
+    }
     private val mediaData = controllerType.getDeclaredField("mediaData").apply { isAccessible = true }
     private val hasArtwork = mediaData.type.getDeclaredField("artwork").apply { isAccessible = true }
+    private val identityFields = listOf("userId" to Int::class.javaPrimitiveType, "appUid" to Int::class.javaPrimitiveType,
+        "packageName" to String::class.java).associate { (name, type) ->
+        name to mediaData.type.getDeclaredField(name).apply { require(this.type == type); isAccessible = true }
+    }
     private val artworkChanged = controllerType.getDeclaredField("isArtWorkUpdate").apply { isAccessible = true }
     private val material = controllerType.getDeclaredField("notificationMaterialStateInteractor").apply { isAccessible = true }
     private val keyguard = material.type.getDeclaredField("isOnKeyguard").apply { isAccessible = true }
@@ -65,7 +80,7 @@ internal class MediaDarkHooks private constructor(loader: ClassLoader, settings:
     private val states = WeakHashMap<View, WeakReference<Binding>>()
     private val nested = ThreadLocal<Boolean>()
     private var hostVersion: Long? = null
-    private var ready = false
+    @Volatile private var ready = false
 
     private data class Effect(val method: Method, val receiver: Any, val context: Context)
 
@@ -79,6 +94,8 @@ internal class MediaDarkHooks private constructor(loader: ClassLoader, settings:
         private var restoreFailed = false
         private val job = MediaArtworkJob()
         private val request = MediaArtworkRequestState()
+        private var artworkIdentity: MediaBackgroundPolicy.Identity? = null
+        private val paletteColors = paletteAccess?.let(::MediaPaletteBinding)
         var mediaBound = true
         private var processed: MediaArtworkDrawable? = null
         private var custom: Drawable? = null
@@ -88,6 +105,11 @@ internal class MediaDarkHooks private constructor(loader: ClassLoader, settings:
         private var effectReplacedCustom = false
         private var boundHolder = WeakReference<Any>(null)
         private var boundBackground = WeakReference<View>(null)
+        private var ambient: MediaAmbientDrawable? = null
+        private var ambientColors: Pair<Int, Int>? = null
+        private var ambientPhase = 0f
+        private var ambientTime = 0L
+        private var ambientFrame = 0L
         val hasCustom get() = custom != null
 
         fun beforeHolderChange(next: Any?) {
@@ -98,6 +120,9 @@ internal class MediaDarkHooks private constructor(loader: ClassLoader, settings:
             val current = getHolder.invoke(header)
             if (current === boundHolder.get()) return
             job.cancel()
+            paletteColors?.restore()
+            removeAmbient()
+            ambientColors = null
             processed?.finishTransition()
             boundBackground.get()?.let { if (custom != null && it.background === custom) it.background = nativeBackground }
             request.invalidate(); processed = null; custom = null; nativeBackground = null; nativeEffect = null
@@ -109,9 +134,11 @@ internal class MediaDarkHooks private constructor(loader: ClassLoader, settings:
 
         fun wantsArtwork(): Boolean {
             val owner = controller.get() ?: return false
-            if (!mediaBound || !ownsHolder(owner) || artworkMode == 0) return false
+            if (!mediaBound || !ownsHolder(owner) || !hasEffects || !settings.isOn(Artwork.FEATURE) ||
+                header.display?.displayId != 0 || ambientEnabled && !settings.isOn(Artwork.AMBIENT)) return false
             val interactor = material.get(owner) ?: return false
-            return MediaBackgroundPolicy.eligible(artworkMode, header.isAttachedToWindow, tiny.invoke(null, header.context) != false, SafeModeRuntime.blocked,
+            return MediaBackgroundPolicy.eligible(if (ambientEnabled) 1 else artworkMode,
+                header.isAttachedToWindow, tiny.invoke(null, header.context) != false, SafeModeRuntime.blocked,
                 flowValue.invoke(keyguard.get(interactor)) as? Boolean,
                 flowValue.invoke(showingKeyguard.get(interactor)) as? Boolean,
                 flowValue.invoke(fullAod.get(interactor)) as? Boolean,
@@ -119,39 +146,56 @@ internal class MediaDarkHooks private constructor(loader: ClassLoader, settings:
         }
 
         fun updateArtwork(force: Boolean = false) {
-            if (artworkMode == 0) return
+            if (!hasEffects) return
             val owner = controller.get()
             val bound = owner != null && mediaBound && ownsHolder(owner)
             val data = if (bound) mediaData.get(owner) else null
-            val next = if (data != null && hasArtwork.get(data) != null) artwork.get(owner) as? Drawable else null
+            val identity = data?.let { MediaBackgroundPolicy.identity(identityFields.getValue("userId").getInt(it),
+                identityFields.getValue("appUid").getInt(it), identityFields.getValue("packageName").get(it) as? String) }
+            if (artworkIdentity != identity) {
+                // Never cross-fade pixels from another package/user into a new session.
+                request.invalidate(); discardArtwork(); artworkIdentity = identity
+            }
+            val next = MediaBackgroundPolicy.source(bound && data != null, data != null && hasArtwork.get(data) != null,
+                if (bound) artwork.get(owner) as? Drawable else null,
+                if (bound) appIcon.get(owner) as? Drawable else null, identity)
             when (request.next(next, bound, wantsArtwork(), force)) {
                 MediaArtworkRequestState.Action.KEEP -> return
                 MediaArtworkRequestState.Action.CLEAR -> { discardArtwork(); return }
                 MediaArtworkRequestState.Action.PROCESS -> Unit
             }
             job.cancel()
-            // Keep the last owned frame while processing; missing/failed art still restores native.
+            // bindMediaData already resolves appIconDrawable for MediaData.userId. No
+            // additional PackageManager/Icon load, URI read, or owner-user fallback here.
             val pixels = MediaArtworkJob.snapshot(next!!) ?: run { discardArtwork(); return }
             val weak = WeakReference(this)
-            job.submit(pixels, artworkMode, artworkBlur) { result ->
+            job.submit(pixels, artworkMode, artworkBlur,
+                { paletteResolver!!.resolve(it, artworkMode, inverse, optimizedAmbient) }) { result ->
                 weak.get()?.publish(result)
             }
         }
 
-        private fun publish(pixels: IntArray?) {
+        private fun publish(result: MediaArtworkResult?) {
             try {
                 if (getHolder.invoke(header) !== boundHolder.get()) { syncHolder(); return }
                 if (!wantsArtwork()) { request.invalidate(); discardArtwork(); return }
-                if (pixels == null) { discardArtwork(); return }
+                if (result == null) { discardArtwork(); return }
                 val id = header.resources.getIdentifier("notification_item_bg_radius", "dimen", "com.android.systemui")
                 if (id == 0) { discardArtwork(); return }
+                if (ambientEnabled) {
+                    ambientColors = result.ambientLight to result.ambientDark
+                    updateAmbient()
+                    return
+                }
+                val palette = result.palette ?: run { discardArtwork(); return }
                 val current = processed
                 if (current != null && custom === current && backgroundView()?.background === current) {
-                    current.update(pixels, artworkTransition)
+                    current.update(result.pixels, palette, artworkTransition)
                 } else {
-                    processed = MediaArtworkDrawable(pixels, artworkMode, header.resources.getDimension(id))
+                    processed = MediaArtworkDrawable(result.pixels, palette, artworkMode, header.resources.getDimension(id))
                 }
                 updateVisual()
+                applyPalette()
             } catch (failure: Throwable) { fail(failure) }
         }
 
@@ -175,6 +219,7 @@ internal class MediaDarkHooks private constructor(loader: ClassLoader, settings:
         }
 
         private fun updateVisual() {
+            if (ambientEnabled) { updateAmbient(); return }
             if (artworkMode == 0) return
             if (!wantsArtwork() || processed == null) { restoreArtwork(); return }
             val view = backgroundView() ?: return
@@ -199,7 +244,7 @@ internal class MediaDarkHooks private constructor(loader: ClassLoader, settings:
                 custom = null; processed = null
                 unmodified {
                     view.background = nativeBackground
-                    val restoreContext = if (alwaysDark) dark(native.context) else native.context
+                    val restoreContext = if (alwaysDarkActive()) dark(native.context) else native.context
                     native.method.invoke(native.receiver, header, restoreContext)
                 }
                 throw failure
@@ -208,6 +253,8 @@ internal class MediaDarkHooks private constructor(loader: ClassLoader, settings:
         }
 
         private fun restoreArtwork() {
+            paletteColors?.restore()
+            removeAmbient()
             val view = backgroundView()
             val owned = custom != null && view?.background === custom
             if (owned) view!!.background = nativeBackground
@@ -217,7 +264,7 @@ internal class MediaDarkHooks private constructor(loader: ClassLoader, settings:
             val owner = controller.get()
             if (owner != null && ownsHolder(owner) && !pendingAod.getBoolean(lazyGet.invoke(aod.get(owner)))) {
                 retryMaterial.take(view?.background)?.let { value -> unmodified {
-                    val restoreContext = if (alwaysDark && !SafeModeRuntime.blocked && tiny.invoke(null, header.context) == false) dark(value.context) else value.context
+                    val restoreContext = if (alwaysDarkActive() && tiny.invoke(null, header.context) == false) dark(value.context) else value.context
                     value.method.invoke(value.receiver, header, restoreContext)
                     nativeBackground = view?.background
                     // Reapplication can allocate another drawable; update always-dark ownership.
@@ -230,6 +277,7 @@ internal class MediaDarkHooks private constructor(loader: ClassLoader, settings:
 
         fun detachArtwork() {
             request.invalidate()
+            artworkIdentity = null
             discardArtwork()
             nativeEffect = null; nativeBackground = null
             controller.clear()
@@ -237,8 +285,51 @@ internal class MediaDarkHooks private constructor(loader: ClassLoader, settings:
 
         private fun discardArtwork() {
             job.cancel()
+            ambientColors = null
             restoreArtwork()
             processed = null
+        }
+
+        fun beforeForeground() { paletteColors?.restore() }
+        fun applyPalette() {
+            if (custom !== processed || custom == null || !wantsArtwork()) return
+            val owner = controller.get() ?: return
+            val current = holder.get(owner) ?: return
+            paletteColors?.apply(current, processed!!.palette())
+        }
+
+        private fun removeAmbient() {
+            val owned = ambient
+            if (owned != null) boundBackground.get()?.overlay?.remove(owned)
+            ambient = null; ambientTime = 0L; ambientFrame = 0L
+        }
+
+        private fun updateAmbient() {
+            val colors = ambientColors
+            val view = backgroundView()
+            if (!ambientEnabled || colors == null || view == null || !wantsArtwork() ||
+                !header.isShown || header.windowVisibility != View.VISIBLE) { removeAmbient(); return }
+            val id = header.resources.getIdentifier("notification_item_bg_radius", "dimen", "com.android.systemui")
+            if (id == 0 || view.width <= 0 || view.height <= 0) { removeAmbient(); return }
+            val drawable = ambient ?: MediaAmbientDrawable(header.resources.getDimension(id)).also {
+                view.overlay.add(it); ambient = it
+            }
+            drawable.setBounds(0, 0, view.width, view.height)
+            val owner = controller.get()
+            val data = owner?.let { mediaData.get(it) }
+            val playing = data != null && paletteAccess!!.field(
+                "com.android.systemui.media.controls.shared.model.MediaData", "isPlaying").get(data) == true
+            val animate = playing && ValueAnimator.areAnimatorsEnabled()
+            val now = SystemClock.uptimeMillis()
+            if (animate && ambientTime != 0L) ambientPhase = (ambientPhase + (now - ambientTime).coerceIn(0, 100) / 8000f) % 6.2831855f
+            ambientTime = if (animate) now else 0L
+            val light = !alwaysDarkActive() &&
+                header.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK != Configuration.UI_MODE_NIGHT_YES
+            if (now - ambientFrame >= 33 || !animate) {
+                drawable.frame(if (light) colors.first else colors.second, light, ambientPhase)
+                ambientFrame = now
+            }
+            if (animate) view.postInvalidateDelayed(33)
         }
 
         fun backgroundView(): View? = getHolder.invoke(header)?.let { background.get(it) as? View }
@@ -260,6 +351,7 @@ internal class MediaDarkHooks private constructor(loader: ClassLoader, settings:
             observer?.takeIf { it.isAlive }?.removeOnPreDrawListener(this)
             observer = null
             job.cancel(); request.invalidate(); processed?.finishTransition()
+            paletteColors?.restore(); removeAmbient()
             // No detached-view rendering work. The retained ownership is checked on
             // reattach; the native repeatWhenAttached binder refreshes material state.
         }
@@ -274,8 +366,9 @@ internal class MediaDarkHooks private constructor(loader: ClassLoader, settings:
                     if (changed) { discardArtwork(); request.invalidate() }
                 }
                 if (!restoreFailed) {
-                    if (artworkMode != 0) { updateArtwork(); updateVisual() }
+                    if (hasEffects) { updateArtwork(); updateVisual(); applyPalette() }
                     if (SafeModeRuntime.blocked || isTiny) restoreSafely()
+                    else if (alwaysDark && !alwaysDarkActive() && !hasCustom) restoreSafely(includeArtwork = false)
                 }
             } catch (failure: Throwable) {
                 fail(failure)
@@ -296,13 +389,13 @@ internal class MediaDarkHooks private constructor(loader: ClassLoader, settings:
             SafeModeRuntime.trip("Hook failed: media color restoration")
         }
 
-        private fun restoreSafely() {
+        private fun restoreSafely(includeArtwork: Boolean = true) {
             try {
                 val owner = controller.get()
                 // Preserve native AOD transition ownership; retry on the next frame.
                 if (owner != null && pendingAod.getBoolean(lazyGet.invoke(aod.get(owner)))) return
                 unmodified {
-                    restoreArtwork()
+                    if (includeArtwork) restoreArtwork()
                     effect.take(backgroundView()?.background)?.let { it.method.invoke(it.receiver, header, it.context) }
                     if (colorsChanged && owner != null && ownsHolder(owner)) {
                         foreground.invoke(owner)
@@ -332,6 +425,7 @@ internal class MediaDarkHooks private constructor(loader: ClassLoader, settings:
     }
 
     private fun active(source: Context): Boolean = supported(source) && tiny.invoke(null, source) == false
+    private fun alwaysDarkActive(): Boolean = alwaysDark && settings.isOn(FEATURE) && !SafeModeRuntime.blocked
 
     private fun dark(source: Context): Context {
         val config = source.resources.configuration
@@ -350,25 +444,25 @@ internal class MediaDarkHooks private constructor(loader: ClassLoader, settings:
         val effectMethods = MediaDarkTargets.effects.map { method(loader, it) }
         // Glass variants call this typed overload, whereas the binder uses the Object bridge.
         val blur = method(loader, MediaDarkTargets.typedBlur)
-        val callers = (MediaDarkTargets.callers + if (artworkMode != 0) MediaDarkTargets.artworkCallers else emptyList()).map { method(loader, it) }
-        val artworkMethods = if (artworkMode == 0) emptyList() else
+        val callers = (MediaDarkTargets.callers + if (hasEffects) MediaDarkTargets.artworkCallers else emptyList()).map { method(loader, it) }
+        val artworkMethods = if (!hasEffects) emptyList() else
             listOf(MediaDarkTargets.bind, MediaDarkTargets.detach, MediaDarkTargets.replaceHolder).map { method(loader, it) }
         if (!(callers + effectMethods).map { HookRuntime.deoptimize(it, "$FEATURE/${it.name}") }.all { it }) return 0
+        val shaderInstalled = !hasEffects || paletteAccess!!.installShaderHook()
         val foregroundInstalled = HookRuntime.hook(foreground, "$FEATURE/foreground") { chain ->
             val owner = chain.thisObject ?: return@hook chain.proceed()
             val source = context.get(owner) as Context
             if (!active(source)) return@hook chain.proceed()
             val state = holder.get(owner)?.let { player.get(it) as? View }?.parent?.let(::binding) ?: return@hook chain.proceed()
             state.controller = WeakReference(owner)
-            val next = if (alwaysDark || state.hasCustom && state.wantsArtwork()) dark(source) else source
-            if (next === source) {
-                state.colorsChanged = false
-                return@hook chain.proceed()
-            }
-            state.colorsChanged = true
-            unmodified {
+            state.beforeForeground()
+            val next = if (alwaysDarkActive() || state.hasCustom && state.wantsArtwork()) dark(source) else source
+            state.colorsChanged = next !== source
+            val result = unmodified {
                 withMediaColorContext({ context.get(owner) as Context }, { context.set(owner, it) }, next) { chain.proceed() }
             }
+            state.applyPalette()
+            result
         }
         val installed = (effectMethods + blur).count { method ->
             HookRuntime.hook(method, "$FEATURE/${method.declaringClass.simpleName}/${method.parameterTypes[0].simpleName}") { chain ->
@@ -376,7 +470,7 @@ internal class MediaDarkHooks private constructor(loader: ClassLoader, settings:
                 if (!active(source)) return@hook chain.proceed()
                 val state = binding(chain.args[0]) ?: return@hook chain.proceed()
                 state.beforeEffect()
-                val next = if (alwaysDark) dark(source) else source
+                val next = if (alwaysDarkActive()) dark(source) else source
                 if (next === source) state.effect.clear()
                 val receiver = chain.thisObject ?: return@hook chain.proceed()
                 val result = unmodified { chain.proceed(arrayOf(chain.args[0], next)) }
@@ -387,7 +481,7 @@ internal class MediaDarkHooks private constructor(loader: ClassLoader, settings:
         }
         // Partially installed hooks remain pass-through; no half-dark card on installation failure.
         var artworkHooks = 0
-        if (artworkMode != 0) {
+        if (hasEffects) {
             if (HookRuntime.hookAfter(artworkMethods[0], "${Artwork.FEATURE}/bind") { chain, result ->
                     val owner = chain.thisObject!!
                     // Tiny-screen binds still invalidate old media; they never start pixel work.
@@ -410,8 +504,9 @@ internal class MediaDarkHooks private constructor(loader: ClassLoader, settings:
                     chain.proceed()
                 }) artworkHooks++
         }
-        ready = foregroundInstalled && installed == effectMethods.size + 1 && artworkHooks == artworkMethods.size
-        return if (ready) installed + 1 + artworkHooks else 0
+        ready = shaderInstalled && foregroundInstalled && installed == effectMethods.size + 1 && artworkHooks == artworkMethods.size
+        paletteAccess?.ready = ready
+        return if (ready) installed + 1 + artworkHooks + (if (hasEffects) 1 else 0) else 0
     }
 
     companion object {

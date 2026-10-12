@@ -1,0 +1,134 @@
+{
+  "host": {
+    "packageName": "com.android.systemui",
+    "versionCode": 202602260
+  },
+  "verification": "Complete current MT members; no compilation, tests or device acceptance.",
+  "evidence": [
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/dagger/CentralSurfacesDependenciesModule_ProvideStatusBarIconListFactory;->provideStatusBarIconList(Landroid/content/Context;)Lcom/android/systemui/statusbar/phone/ui/StatusBarIconList;",
+      "sha256": "ea840fc6463cd65721e39d58ae6464cefafca573e6f9cd5b9943a46ec024d3bf",
+      "raw": ".workbuddy/tmp/mt-systemui/signal-order-current-member-0.json",
+      "pages": 1,
+      "contains": [
+        ".method public static provideStatusBarIconList(Landroid/content/Context;)Lcom/android/systemui/statusbar/phone/ui/StatusBarIconList;"
+      ],
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/dagger/DaggerReferenceGlobalRootComponent$ReferenceSysUIComponentImpl$SwitchingProvider;->get2()Ljava/lang/Object;",
+      "sha256": "e57ea06dbceb9ad55951bd5b206afaa89b6904b4934c65c63a768af8d07ba943",
+      "raw": ".workbuddy/tmp/mt-systemui/signal-order-current-member-1.json",
+      "pages": 4,
+      "contains": [
+        ".method public final get2()Ljava/lang/Object;"
+      ],
+      "complete": true
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/statusbar/phone/ui/StatusBarIconList;->mSlots:Ljava/util/ArrayList;",
+      "sha256": "fa3ef681c2de5828f4e39641d3413c3cd7f41da9ba5def9f5e27351ac48166bb",
+      "raw": ".workbuddy/tmp/mt-systemui/signal-order-current-member-2.json",
+      "pages": 1,
+      "contains": [
+        ".field public mSlots:Ljava/util/ArrayList;"
+      ],
+      "complete": true
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/statusbar/phone/ui/StatusBarIconList;->mViewOnlySlots:Ljava/util/List;",
+      "sha256": "3b8b3471247c6b0b1bdcfd65abe10c92561a48e116fb7c18cbf660b0ae02691f",
+      "raw": ".workbuddy/tmp/mt-systemui/signal-order-current-member-3.json",
+      "pages": 1,
+      "contains": [
+        ".field public mViewOnlySlots:Ljava/util/List;"
+      ],
+      "complete": true
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/statusbar/phone/ui/StatusBarIconList$Slot;->mName:Ljava/lang/String;",
+      "sha256": "575589904c44959995dd1d471db3f28b8a8dacc67cc2e68f62f3e813e9e455dc",
+      "raw": ".workbuddy/tmp/mt-systemui/signal-order-current-member-4.json",
+      "pages": 1,
+      "contains": [
+        ".field public final mName:Ljava/lang/String;"
+      ],
+      "complete": true
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/statusbar/phone/ui/StatusBarIconList$Slot;->mHolder:Lcom/android/systemui/statusbar/phone/StatusBarIconHolder;",
+      "sha256": "adcbfc952de7ae263e1a56fef6b3ae12124bb7c65217c53d0a313c2fe5f720a6",
+      "raw": ".workbuddy/tmp/mt-systemui/signal-order-current-member-5.json",
+      "pages": 1,
+      "contains": [
+        ".field public mHolder:Lcom/android/systemui/statusbar/phone/StatusBarIconHolder;"
+      ],
+      "complete": true
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/statusbar/phone/ui/StatusBarIconList$Slot;->mSubSlots:Ljava/util/ArrayList;",
+      "sha256": "7c4edc4d261a44bedfe0f303b65529fed71c0854e04f05df920dd539d01bb58c",
+      "raw": ".workbuddy/tmp/mt-systemui/signal-order-current-member-6.json",
+      "pages": 1,
+      "contains": [
+        ".field public mSubSlots:Ljava/util/ArrayList;"
+      ],
+      "complete": true
+    }
+  ],
+  "slotResource": {
+    "locator": "resource:0x7f030082",
+    "name": "config_statusBarIcons",
+    "variant": "default",
+    "complete": true,
+    "raw": ".workbuddy/tmp/mt-systemui/order-resource.json",
+    "items": [
+      "handle",
+      "network_speed",
+      "mute",
+      "micphone",
+      "headset",
+      "mikey",
+      "privacy_mode",
+      "nfc",
+      "gps",
+      "missed_call",
+      "managed_profile",
+      "second_space",
+      "ime",
+      "cast",
+      "location",
+      "stealth",
+      "tty",
+      "alarm_clock",
+      "vpn",
+      "ethernet",
+      "handle_battery",
+      "bluetooth",
+      "bluetooth_handsfree_battery",
+      "hotspot",
+      "sound_box_group",
+      "stereo",
+      "sound_box_screen",
+      "sound_box",
+      "wireless_headset",
+      "zen",
+      "volume",
+      "dist_compute",
+      "camera",
+      "glasses",
+      "car",
+      "tv",
+      "pc",
+      "pad",
+      "phone",
+      "hd",
+      "airplane",
+      "mobile",
+      "demo_mobile",
+      "no_sim",
+      "wifi",
+      "demo_wifi"
+    ]
+  }
+}

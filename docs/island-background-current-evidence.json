@@ -1,0 +1,413 @@
+{
+  "host": {
+    "packageName": "com.android.systemui",
+    "versionCode": 202602260,
+    "workspaceId": "wot5ikcq"
+  },
+  "boundary": "Source-only exact current dual island holders, owned parent background and shader child alpha; owned text/button/time/seekbar fields and per-draw shader Paint tint. Retains all native start/pause/sync/geometry, no new view or shader initialization. No full AGSL or all visual transition parity, no native shader power saving claim. No build or device acceptance.",
+  "evidence": [
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/notification/mediaisland/MiuiIslandMediaViewBinderImpl;->attach(Lcom/android/systemui/statusbar/notification/mediaisland/MiuiIslandMediaViewHolder;Lcom/android/systemui/statusbar/notification/mediaisland/MiuiIslandMediaViewHolder;)V",
+      "sha256": "2b7184f5a30e5ec153926b8d13a9e5483954c7c593ab86331082549788873a7b",
+      "raw": ".workbuddy/tmp/mt-systemui/island-media-current-member-0.json",
+      "pages": 1
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/notification/mediaisland/MiuiIslandMediaViewBinderImpl;->detach()V",
+      "sha256": "71a4b04dcb9c3ab18d8e4e2a2b38a4293854106b41e77520654a4e00f40d07f2",
+      "raw": ".workbuddy/tmp/mt-systemui/island-media-current-member-1.json",
+      "pages": 1
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/notification/mediaisland/MiuiIslandMediaControllerImpl$mediaDataChangeListener$1$$ExternalSyntheticLambda0;->invoke()Ljava/lang/Object;",
+      "sha256": "96a9760593e7b2f0b88f25680e397c6afaa02a5460e31826d9b6a7a61d0d0afd",
+      "raw": ".workbuddy/tmp/mt-systemui/island-media-current-member-15.json",
+      "pages": 1
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/notification/mediaisland/MiuiIslandMediaControllerImpl;->reInflateView$2()V",
+      "sha256": "2537a93e3bf4bea48850b15a00eff86bc70df14bfc88b7389ece716be6966e17",
+      "raw": ".workbuddy/tmp/mt-systemui/island-media-current-member-16.json",
+      "pages": 1
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/notification/mediaisland/MiuiIslandMediaViewBinderImpl$callback$1;->onMetadataChanged(Landroid/media/MediaMetadata;)V",
+      "sha256": "c3f7de64a1720743a2cf6a142bbb37304366efbd7f64549c7aff25dc406a4355",
+      "raw": ".workbuddy/tmp/mt-systemui/island-media-current-member-17.json",
+      "pages": 1
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/notification/mediaisland/MiuiIslandMediaViewBinderImpl;->bindMediaData(Lcom/android/systemui/media/controls/shared/model/MediaData;)V",
+      "sha256": "0d207d0f7ce04eb05864f6b6e3f3ac1c1a16dbb8ae3e57079e486813728184b0",
+      "raw": ".workbuddy/tmp/mt-systemui/island-media-current-member-18.json",
+      "pages": 1
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/notification/mediaisland/MiuiIslandMediaViewBinderImpl;->onMediaDataChanged(Ljava/util/Map;)V",
+      "sha256": "313853db585e97778d0541362967dc43f1bb945249c8c815059edfa6069a3594",
+      "raw": ".workbuddy/tmp/mt-systemui/island-media-current-member-19.json",
+      "pages": 1
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/statusbar/notification/mediaisland/MiuiIslandMediaViewBinderImpl;->holder:Lcom/android/systemui/statusbar/notification/mediaisland/MiuiIslandMediaViewHolder;",
+      "sha256": "5e90484c9a4de176f60c0e05e36d4dab8f654ab202a2ab25a267c7e8ca25b8e2",
+      "raw": ".workbuddy/tmp/mt-systemui/island-media-current-member-20.json",
+      "pages": 1
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/statusbar/notification/mediaisland/MiuiIslandMediaViewBinderImpl;->dummyHolder:Lcom/android/systemui/statusbar/notification/mediaisland/MiuiIslandMediaViewHolder;",
+      "sha256": "09dd4fd15c293590e9ca24bc5c6c1ac10bc7c6c7a308f9981b2832f62749bc74",
+      "raw": ".workbuddy/tmp/mt-systemui/island-media-current-member-21.json",
+      "pages": 1
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/statusbar/notification/mediaisland/MiuiIslandMediaViewBinderImpl;->mediaData:Lcom/android/systemui/media/controls/shared/model/MediaData;",
+      "sha256": "989068b7dcf5ebbfecebd647bff75f54ef23d453b341441d10bf79e9001309d6",
+      "raw": ".workbuddy/tmp/mt-systemui/island-media-current-member-22.json",
+      "pages": 1
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/statusbar/notification/mediaisland/MiuiIslandMediaViewHolder;->player:Landroid/view/View;",
+      "sha256": "e07267a9bef3dc74f9a99ca27d4ca84ef8bd8aad8e7eaf1f6fd700fda230ddc0",
+      "raw": ".workbuddy/tmp/mt-systemui/island-media-current-member-28.json",
+      "pages": 1
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/statusbar/notification/mediaisland/MiuiIslandMediaViewHolder;->titleText:Landroid/widget/TextView;",
+      "sha256": "67833f729581e24c6161777a4e5d2234b91722a66546f80b148bd2c7ab95a2de",
+      "raw": ".workbuddy/tmp/mt-systemui/island-media-current-member-32.json",
+      "pages": 1
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/statusbar/notification/mediaisland/MiuiIslandMediaViewHolder;->artistText:Landroid/widget/TextView;",
+      "sha256": "58e1b4cc86caa1f8b636115bcfc73f0f881d613aa16a6386441004e971e8cc2f",
+      "raw": ".workbuddy/tmp/mt-systemui/island-media-current-member-33.json",
+      "pages": 1
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/statusbar/notification/mediaisland/MiuiIslandMediaViewHolder;->elapsedTimeView:Landroid/widget/TextView;",
+      "sha256": "d1f4072187dcd099356c407d91e01fc740701d006c0fa411e2e1769dcc7165f8",
+      "raw": ".workbuddy/tmp/mt-systemui/island-media-current-member-34.json",
+      "pages": 1
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/statusbar/notification/mediaisland/MiuiIslandMediaViewHolder;->totalTimeView:Landroid/widget/TextView;",
+      "sha256": "1fb416a7733b7df516b3db84439d357b0578fdc41acb58dd9dba297d90748b8c",
+      "raw": ".workbuddy/tmp/mt-systemui/island-media-current-member-35.json",
+      "pages": 1
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/statusbar/notification/mediaisland/MiuiIslandMediaViewHolder;->action0:Landroid/widget/ImageButton;",
+      "sha256": "0cb3d3455ad3756c47101fe759275fd845ca33c899763320fb9c38db3506883f",
+      "raw": ".workbuddy/tmp/mt-systemui/island-media-current-member-36.json",
+      "pages": 1
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/statusbar/notification/mediaisland/MiuiIslandMediaViewHolder;->action1:Landroid/widget/ImageButton;",
+      "sha256": "a7c45c6429f33c826ed1b9f5aecbf2ce06eb8dad4c8996b37d4d56e96960cd06",
+      "raw": ".workbuddy/tmp/mt-systemui/island-media-current-member-37.json",
+      "pages": 1
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/statusbar/notification/mediaisland/MiuiIslandMediaViewHolder;->action2:Landroid/widget/ImageButton;",
+      "sha256": "4029eb8e2b1f83fcec0b4858f45043584ca1c3db6abaa9b57f03925e37134c21",
+      "raw": ".workbuddy/tmp/mt-systemui/island-media-current-member-38.json",
+      "pages": 1
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/statusbar/notification/mediaisland/MiuiIslandMediaViewHolder;->action3:Landroid/widget/ImageButton;",
+      "sha256": "c57aa3df97e4284eb7fa1f627e53facab7a83238530df16339ed6b1e4c5a8a22",
+      "raw": ".workbuddy/tmp/mt-systemui/island-media-current-member-39.json",
+      "pages": 1
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/statusbar/notification/mediaisland/MiuiIslandMediaViewHolder;->action4:Landroid/widget/ImageButton;",
+      "sha256": "fb8fd473a90d84dfe94a0ca8cbcebe66d5d9d804b4c71eeab8625c4a56a93c8b",
+      "raw": ".workbuddy/tmp/mt-systemui/island-media-current-member-40.json",
+      "pages": 1
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/notification/mediaisland/MiuiIslandMediaViewBinderImpl;->updateForegroundColors(Lcom/android/systemui/statusbar/notification/mediaisland/MiuiIslandMediaViewHolder;)V",
+      "sha256": "37067867ed470ce47c9b69476187d51cc6bcf4a3440232e721a9a73081b67088",
+      "raw": ".workbuddy/tmp/mt-systemui/island-bg-member-0.json",
+      "pages": 1
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/notification/mediaisland/MiuiIslandMediaViewBinderImpl;->setMusicBgShader(Lcom/android/systemui/media/controls/shared/model/MediaData;Landroid/graphics/drawable/Drawable;)V",
+      "sha256": "924ee9d5e9b243318f06d0babca39394b6ac36dfa1c38dad7230fa54be62d158",
+      "raw": ".workbuddy/tmp/mt-systemui/island-bg-member-1.json",
+      "pages": 1
+    },
+    {
+      "locator": "dex_method:Lcom/mi/widget/shader/MusicBgShader;->getBgCornerRadius()F",
+      "sha256": "c026d777276d009e8a4b9ca0fbe8541f60f57250dd98a072175b6992b0cb9b91",
+      "raw": ".workbuddy/tmp/mt-systemui/island-bg-member-2.json",
+      "pages": 1
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/media/controls/shared/model/MediaData;->isPlaying:Ljava/lang/Boolean;",
+      "sha256": "e17562beb1ecd62c6af6373e432a4580d5bcd531105422b773266b3ce1cb421a",
+      "raw": ".workbuddy/tmp/mt-systemui/island-bg-member-3.json",
+      "pages": 1
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/statusbar/notification/mediaisland/MiuiIslandMediaViewBinderImpl;->artWorkDrawable:Landroid/graphics/drawable/Drawable;",
+      "sha256": "5fadc7c94a372947023dcc0723d79e04ae2b1966998dc46cd44e89f8cd34e1f0",
+      "raw": ".workbuddy/tmp/mt-systemui/island-bg-member-4.json",
+      "pages": 1
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/statusbar/notification/mediaisland/MiuiIslandMediaViewBinderImpl;->appIconDrawable:Landroid/graphics/drawable/Drawable;",
+      "sha256": "a6e13e931ab543056d451b4b3922d555c4eb8c83d5083a5bec06cecae5078117",
+      "raw": ".workbuddy/tmp/mt-systemui/island-bg-member-5.json",
+      "pages": 1
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/statusbar/notification/mediaisland/MiuiIslandMediaViewHolder;->mediaBgView:Lcom/mi/widget/view/MusicBgView;",
+      "sha256": "c2a971300997d5101f5cfd49a60e398b26b2d97b17c1e7cca4c0a9b76a6fc583",
+      "raw": ".workbuddy/tmp/mt-systemui/island-bg-member-6.json",
+      "pages": 1
+    },
+    {
+      "locator": "dex_field:Lcom/mi/widget/view/MusicBgView;->mShader:Lcom/mi/widget/shader/MusicBgShader;",
+      "sha256": "38498847316205317981c5a5b9f48af0c393e3fc5e3c18a0cd25aa937c3dbcbc",
+      "raw": ".workbuddy/tmp/mt-systemui/island-bg-member-7.json",
+      "pages": 1
+    },
+    {
+      "locator": "dex_field:Lcom/mi/widget/shader/MusicBgShader;->view:Landroid/view/View;",
+      "sha256": "cac2f85c182caa3cff464841b77007f5da71aa3c80373b414f33605b75be30a0",
+      "raw": ".workbuddy/tmp/mt-systemui/island-bg-member-8.json",
+      "pages": 1
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/statusbar/notification/mediaisland/MiuiIslandMediaViewHolder;->seamlessIcon:Landroid/widget/ImageView;",
+      "sha256": "7d3be19ad82caeb33e35f92365c724fc527a30cd297f3480151b444e99c2681e",
+      "raw": ".workbuddy/tmp/mt-systemui/island-bg-member-9.json",
+      "pages": 1
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/notification/mediaisland/MiuiIslandMediaControllerImpl$configurationCallback$1;->onUiModeChanged()V",
+      "sha256": "44ebe99da574df378a94a15566295a67c53451ba59172762ee253ad994bd1f68",
+      "raw": ".workbuddy/tmp/mt-systemui/island-bg-more-0.json",
+      "pages": 1
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/statusbar/notification/mediaisland/MiuiIslandMediaViewHolder;->seekBar:Lmiuix/miuixbasewidget/widget/HyperProgressSeekBar;",
+      "sha256": "170cf671e230e71ab09159fcb9f61f63f85d1d54221becd7205975c7dd716284",
+      "raw": ".workbuddy/tmp/mt-systemui/island-bg-more-1.json",
+      "pages": 1
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/monet/ColorScheme;->mAccent1:Lcom/android/systemui/monet/TonalPalette;",
+      "contains": [
+        ".field public final mAccent1:Lcom/android/systemui/monet/TonalPalette;"
+      ],
+      "sha256": "e0853222ee75e4a4cce93b7fe371c5059dacd7beb6ce5f7b9019b657ddcae9a7",
+      "raw": ".workbuddy\\tmp\\mt-systemui\\continuous-palette.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/monet/ColorScheme;->mAccent2:Lcom/android/systemui/monet/TonalPalette;",
+      "contains": [
+        ".field public final mAccent2:Lcom/android/systemui/monet/TonalPalette;"
+      ],
+      "sha256": "4953bdafae1b82236104dfb84c1414d2125225883f6f2baab4badf6d579bb587",
+      "raw": ".workbuddy\\tmp\\mt-systemui\\continuous-palette.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/monet/ColorScheme;->mNeutral1:Lcom/android/systemui/monet/TonalPalette;",
+      "contains": [
+        ".field public final mNeutral1:Lcom/android/systemui/monet/TonalPalette;"
+      ],
+      "sha256": "5db3108917a4926c358d4b909b0f421ef3068ca265ea8051f11fc507dfd49f0e",
+      "raw": ".workbuddy\\tmp\\mt-systemui\\continuous-palette.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/monet/ColorScheme;->mNeutral2:Lcom/android/systemui/monet/TonalPalette;",
+      "contains": [
+        ".field public final mNeutral2:Lcom/android/systemui/monet/TonalPalette;"
+      ],
+      "sha256": "dd828f0895299fdef4721c8a80b86c76298019e0af25ebf180c08cab19f5f4e6",
+      "raw": ".workbuddy\\tmp\\mt-systemui\\continuous-palette.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/monet/ColorScheme;-><init>(Landroid/app/WallpaperColors;ZI)V",
+      "contains": [
+        ".method public constructor <init>(Landroid/app/WallpaperColors;ZI)V"
+      ],
+      "sha256": "67fe1ce0201ed29fc623d55558863f31e32d28930a0eada5d4067baccc12ed67",
+      "raw": ".workbuddy\\tmp\\mt-systemui\\continuous-palette.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/monet/ColorScheme;-><init>(Ljava/util/List;ZID)V",
+      "contains": [
+        ".method public constructor <init>(Ljava/util/List;ZID)V"
+      ],
+      "sha256": "1aeb09dc5cf6e494d37db59f0b9bf7fb07e3282abb65f4c6535b57743b4b9b80",
+      "raw": ".workbuddy\\tmp\\mt-systemui\\continuous-palette.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/monet/TonalPalette;->allShades:Ljava/util/List;",
+      "contains": [
+        ".field public final allShades:Ljava/util/List;"
+      ],
+      "sha256": "efddac9134b6ff950b39ac4990b23f8de23c414bdce355231d502421c2738885",
+      "raw": ".workbuddy\\tmp\\mt-systemui\\continuous-tonal.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/monet/TonalPalette;-><clinit>()V",
+      "contains": [
+        ".method static constructor <clinit>()V"
+      ],
+      "sha256": "9533d0190c95a1eaef860984c6aad73b470fff057e7a6080693a627fa9289a10",
+      "raw": ".workbuddy\\tmp\\mt-systemui\\continuous-tonal.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/statusbar/notification/mediacontrol/MiuiMediaViewHolder;->seekBar:Lmiuix/miuixbasewidget/widget/HyperProgressSeekBar;",
+      "contains": [
+        ".field public seekBar:Lmiuix/miuixbasewidget/widget/HyperProgressSeekBar;"
+      ],
+      "sha256": "25043d72d80e03f4cfc86d49e4302ae1cace3a5b1cc44010edd884dbca6726b7",
+      "raw": ".workbuddy\\tmp\\mt-systemui\\continuous-palette-holder.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_field:Lmiuix/miuixbasewidget/widget/HyperProgressSeekBar;->mDeviceLevel:I",
+      "contains": [
+        ".field public final mDeviceLevel:I"
+      ],
+      "sha256": "a92d0a93c2b4c28662155648aa9b5cc6f7269439a837e0d1d541bf505c8a4931",
+      "raw": ".workbuddy\\tmp\\mt-systemui\\continuous-palette-seek.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_field:Lmiuix/miuixbasewidget/widget/HyperProgressSeekBar;->mForegroundPrimaryColor:I",
+      "contains": [
+        ".field public mForegroundPrimaryColor:I"
+      ],
+      "sha256": "7ad86c83c9f7755aad3f2acc94bd68e21bae87a4b350cbc5ee3499005c58d585",
+      "raw": ".workbuddy\\tmp\\mt-systemui\\continuous-palette-seek.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_field:Lmiuix/miuixbasewidget/widget/HyperProgressSeekBar;->mForegroundPrimaryDisableColor:I",
+      "contains": [
+        ".field public mForegroundPrimaryDisableColor:I"
+      ],
+      "sha256": "b016e2e3970f48fb826ad4d26e33a423b67f6d94120b739b563db6a556a04b80",
+      "raw": ".workbuddy\\tmp\\mt-systemui\\continuous-palette-seek.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_field:Lmiuix/miuixbasewidget/widget/HyperProgressSeekBar;->mBackgroundPrimaryColor:I",
+      "contains": [
+        ".field public mBackgroundPrimaryColor:I"
+      ],
+      "sha256": "30cc8b3709973c0ea86d1a12512b82ba4a29b207d2afa001161b9c65bd4daa67",
+      "raw": ".workbuddy\\tmp\\mt-systemui\\continuous-palette-seek.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_field:Lmiuix/miuixbasewidget/widget/HyperProgressSeekBar;->mBackgroundPrimaryDisableColor:I",
+      "contains": [
+        ".field public mBackgroundPrimaryDisableColor:I"
+      ],
+      "sha256": "7d581ba1c11dfae6c84578b1881fe0d9b3c82eb67bd1f131c6a7509d3d450bf2",
+      "raw": ".workbuddy\\tmp\\mt-systemui\\continuous-palette-seek.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lmiuix/miuixbasewidget/widget/HyperProgressSeekBar;->setForegroundPrimaryColor(I)V",
+      "contains": [
+        ".method public setForegroundPrimaryColor(I)V"
+      ],
+      "sha256": "a211502e4e08f927946c4ff6ac9a30be1616430d315c18f7d25aa64f0d73b782",
+      "raw": ".workbuddy\\tmp\\mt-systemui\\continuous-palette-seek.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lmiuix/miuixbasewidget/widget/HyperProgressSeekBar;->setForegroundPrimaryDisableColor(I)V",
+      "contains": [
+        ".method public setForegroundPrimaryDisableColor(I)V"
+      ],
+      "sha256": "da154f7323accbe3e5036a4777494f73ae229287583ecd85f9539aaf675c3942",
+      "raw": ".workbuddy\\tmp\\mt-systemui\\continuous-palette-seek.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lmiuix/miuixbasewidget/widget/HyperProgressSeekBar;->setBackgroundPrimaryColor(I)V",
+      "contains": [
+        ".method public setBackgroundPrimaryColor(I)V"
+      ],
+      "sha256": "551bc4074925850cf8f7fd34fe3d33cd2771c61e101bc433b3af6eda627ea8c1",
+      "raw": ".workbuddy\\tmp\\mt-systemui\\continuous-palette-seek.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lmiuix/miuixbasewidget/widget/HyperProgressSeekBar;->setBackgroundPrimaryDisableColor(I)V",
+      "contains": [
+        ".method public setBackgroundPrimaryDisableColor(I)V"
+      ],
+      "sha256": "a5e5931907e1daed065a1a9b6e627f7675405b1502ac5448f4490049e7887adc",
+      "raw": ".workbuddy\\tmp\\mt-systemui\\continuous-palette-seek.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lmiuix/miuixbasewidget/widget/HyperProgressSeekBar;->drawHighEndMode(Landroid/graphics/Canvas;)V",
+      "contains": [
+        ".method public final drawHighEndMode(Landroid/graphics/Canvas;)V"
+      ],
+      "sha256": "7c70c81bf89285165d01093985407e6d8aba3d956064abba20324896bf7dca9f",
+      "raw": ".workbuddy\\tmp\\mt-systemui\\continuous-palette-seek.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lmiuix/miuixbasewidget/widget/HyperProgressSeekBar;->onDraw(Landroid/graphics/Canvas;)V",
+      "contains": [
+        ".method public final declared-synchronized onDraw(Landroid/graphics/Canvas;)V"
+      ],
+      "sha256": "a5b8dfaaa265c186582012378fa75736f9c5920945e121b1a35cb26437308668",
+      "raw": ".workbuddy\\tmp\\mt-systemui\\continuous-palette-seek.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_field:Lmiuix/miuixbasewidget/widget/HyperProgressSeekBar;->mPaint:Landroid/graphics/Paint;",
+      "contains": [
+        ".field public final mPaint:Landroid/graphics/Paint;"
+      ],
+      "sha256": "f2facb1a78c92827dcad9906acdd75d615fb5dcb131fe9738486805fc97f399b",
+      "raw": ".workbuddy\\tmp\\mt-systemui\\continuous-palette-seek.json",
+      "complete": true
+    }
+  ],
+  "supplementalClasses": [
+    {
+      "raw": ".workbuddy/tmp/mt-systemui/next-MusicBgView.json",
+      "sha256": "eb4c4887b6e11bb40ebce7b9533611bdd4f75e356d2039299c91b227eb7bc57b",
+      "pages": 1
+    },
+    {
+      "raw": ".workbuddy/tmp/mt-systemui/island-MusicBgShader.json",
+      "sha256": "a87394a772681c6e2a328c5987347b6b78d0987a321855c50e6f9595dc4cdd8e",
+      "pages": 1
+    },
+    {
+      "raw": ".workbuddy/tmp/mt-systemui/island-MusicBgShader-BgDrawable.json",
+      "sha256": "a385262bd4dbc19a5d2fae9801c596402d7060ec960c3a378bf3dbacb36350a4",
+      "pages": 1
+    },
+    {
+      "raw": ".workbuddy/tmp/mt-systemui/island-MusicBgShader-BgShader.json",
+      "sha256": "3b9e53b2f3134137bd8bf5bb3a96f0675b8ddd6f9da06be66dcc11d7a639637b",
+      "pages": 1
+    }
+  ]
+}

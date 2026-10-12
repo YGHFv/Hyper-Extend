@@ -15,20 +15,20 @@ class ClassicQsSettingsTest {
         assertNull(ClassicQsSettings.row(3, false))
     }
     @Test fun valuesKeepUpstreamDefaultsAndBounds() {
-        assertEquals(listOf(3, 2, 5, 6), ClassicQsSettings.config.map { ClassicQsSettings.value("", it) })
+        assertEquals(listOf(3, 2, 4, 5, 5, 6), ClassicQsSettings.config.map { ClassicQsSettings.value("", it) })
         for (row in ClassicQsSettings.config) {
             assertEquals(row.min, ClassicQsSettings.value("-99", row))
             assertEquals(row.max, ClassicQsSettings.value("999", row))
             assertEquals(row.default, ClassicQsSettings.value("999999999999999", row))
         }
     }
-    @Test fun catalogIsOptInPartialAndContainsNoFakeColumnControls() {
+    @Test fun catalogIsOptInAndColumnsAreWiredWithTouchBounds() {
         val feature = featureById(ClassicQsSettings.FEATURE)!!
         assertFalse(feature.defaultEnabled)
         assertEquals(FeaturePanel.CLASSIC_CONTROL_CENTER, feature.panel)
-        assertEquals(4, feature.config.size)
+        assertEquals(6, feature.config.size)
         assertTrue(feature.config.all { it.key in CONFIG_KEYS })
-        assertTrue(feature.requirement!!.contains("不含展开列数"))
+        assertTrue(feature.requirement!!.contains("48dp"))
         assertTrue(feature.requirement.contains("待真机验收"))
     }
 }

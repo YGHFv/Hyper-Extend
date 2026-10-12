@@ -1,0 +1,62 @@
+{
+  "date": "2026-10-11",
+  "scope": "Source/evidence consistency only; not compilation or full functional logic acceptance",
+  "compiled": false,
+  "testsExecuted": false,
+  "installed": false,
+  "restarted": false,
+  "settingsChanged": false,
+  "backgroundWorkersStarted": false,
+  "allMigrationComplete": false,
+  "postBuildFullLogicAuditComplete": false,
+  "evidenceCounts": {
+    "native-systemui": 19,
+    "card-tile-color": 32,
+    "card-tile-color-systemui": 4,
+    "shade-header-gradient": 11
+  },
+  "inventoryCounts": {
+    "code_reviewed_partial_unbuilt": 30,
+    "pending": 44,
+    "structural_navigation_only": 12,
+    "implemented_static_verified": 93,
+    "repaired_static_pending_device": 19,
+    "code_reviewed_repair_unbuilt": 4,
+    "partially_implemented_static_verified": 7,
+    "covered_by_existing_feature_per_user": 1,
+    "already_supported_by_current_host": 1,
+    "needs_audit_existing_partial": 126
+  },
+  "newTestDefinitions": 10,
+  "checks": [
+    "66 complete member refresh hashes match manifests",
+    "Signature fixtures exactly match manifest unions",
+    "337 unique records retained; 12 explicitly audited structural records do not promote their children",
+    "Current sources do not match the historical cumulative build",
+    "Touched source whitespace check and git diff --check passed"
+  ],
+  "sourceInputsSha256": {
+    "app/src/main/java/io/github/YGHFv/HyperExtend/core/CardTileColorSettings.kt": "bd72a50f0a908f607a91e79a4f4b1ba059c5aadd17870139bc9cdac800be03c2",
+    "app/src/main/java/io/github/YGHFv/HyperExtend/core/FeaturePanels.kt": "9e6d91919d1f9a74dd59f7973858176dd14a42d4146ec89e5031d57b006ef79c",
+    "app/src/main/java/io/github/YGHFv/HyperExtend/core/NativeSystemUiSettings.kt": "8fd40e42c705dc8281243654d2f4da6e8be100763402fdfd4f1437456c65ecda",
+    "app/src/main/java/io/github/YGHFv/HyperExtend/core/SystemUiFeatures.kt": "553757b83d21e9cbb83b4b09d70626db5a40aad1fd3e424d054346420c5bb8d2",
+    "app/src/main/java/io/github/YGHFv/HyperExtend/hook/feature/systemui/CardTileColorHooks.kt": "2278eb322c82802e81dddfd36085fb256e2afdd87ad0ac29d56e3e92546e0885",
+    "app/src/main/java/io/github/YGHFv/HyperExtend/hook/feature/systemui/CardTileColorTargets.kt": "e81d7f310ef15196aec8650aabd6903c5e6f92fda54370685f4c17c0407f47c1",
+    "app/src/main/java/io/github/YGHFv/HyperExtend/hook/feature/systemui/ControlCenterHooks.kt": "574c202969ab4ffab17bb9e09cd6048e035487fa81b92793a545452d78e15d72",
+    "app/src/main/java/io/github/YGHFv/HyperExtend/hook/feature/systemui/NativeSystemUiHooks.kt": "85669b434073d8f87735f9c7a15aec7bd57c9ef6da67a21e7fb69aabf2bc4133",
+    "app/src/main/java/io/github/YGHFv/HyperExtend/hook/feature/systemui/NativeSystemUiPolicy.kt": "31f0d7120c326b52f18399618b919ee21efecafc51e6eb22ef1e631d036ab000",
+    "app/src/main/java/io/github/YGHFv/HyperExtend/hook/feature/systemui/NativeSystemUiTargets.kt": "ecde7c056772615066eda9840c77f0210e857dd626c3b829d524e8df887a58f5",
+    "app/src/main/java/io/github/YGHFv/HyperExtend/hook/feature/systemui/ShadeHeaderBlurHooks.kt": "07e6c9cbe608952c71ee7982cc217078ceb97641156b98c6df141d22f3c8dd04",
+    "app/src/main/java/io/github/YGHFv/HyperExtend/hook/feature/systemui/ShadeHeaderBlurTargets.kt": "840d9999c81f311128fabcfc7f16ab1cbb49dd8a5e2fa2ea4e3bc5f12d2625ec",
+    "app/src/main/java/io/github/YGHFv/HyperExtend/hook/feature/systemui/SystemUiCustomHooks.kt": "1a5c6e24fa8c3387a65b28eb1490cf1887dc15376c17c7e00c63156cfc6235b4",
+    "app/src/main/java/io/github/YGHFv/HyperExtend/hook/feature/systemui/SystemUiPluginHooks.kt": "75eb6cc4a0fadc5d6407ee8e5b861a3745bf18b14b2f6d36eda8547a82b48c2c",
+    "app/src/test/java/io/github/YGHFv/HyperExtend/core/NativeAndCardFeaturesTest.kt": "b93c807226683a2f74a7f521452ad30b5238f340ebcc5af5eacccb482b1d691f",
+    "app/src/test/java/io/github/YGHFv/HyperExtend/core/SystemUiFeaturesTest.kt": "f51564b9968e714b8229ea9be763c380838c685f532f9f0b253cd6a834bdfaaa",
+    "app/src/test/java/io/github/YGHFv/HyperExtend/hook/feature/systemui/CardTileColorTargetsTest.kt": "7645840fa4b395783c8cd89b0dab325b8b1f99d0780f342ce29aadc923e9f0f4",
+    "app/src/test/java/io/github/YGHFv/HyperExtend/hook/feature/systemui/NativeSystemUiPolicyTest.kt": "620e5062b1c1f6c98c17be1e9332b33a2c32ff0e787a32a63701a87992d44830",
+    "app/src/test/java/io/github/YGHFv/HyperExtend/hook/feature/systemui/NativeSystemUiTargetsTest.kt": "928c8915d84e068b2322159f5446e98cac567c91747ccab73d700b6e150cd410",
+    "app/src/test/java/io/github/YGHFv/HyperExtend/hook/feature/systemui/ShadeHeaderBlurTest.kt": "bcb3060646bc0f64e09b9557ac51b27afe53efe74cd8e2d369afff71aaa994f0",
+    "tools/systemui_inventory.py": "4b39e617a0501da3b1309fb2371111a0fdd76b3c66432366e7d8fbf6c89a9882",
+    "tools/systemui_migration_audit.py": "c142b1f663de19cb6aa46219820de8a772e5c6f99a76711bb1b098b1c24e3021"
+  }
+}

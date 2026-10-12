@@ -45,7 +45,7 @@ internal object TileCornerHooks {
         }
         val theme = Class.forName(t.THEME, false, loader).getDeclaredField("INSTANCE").apply {
             require(type.name == t.THEME && java.lang.reflect.Modifier.isStatic(modifiers)); isAccessible = true
-        }.get(null)
+        }
         val constructor = Class.forName(t.VIEW, false, loader).getDeclaredConstructor(
             android.content.Context::class.java, android.content.Context::class.java,
             Boolean::class.javaPrimitiveType, Boolean::class.javaPrimitiveType)
@@ -64,7 +64,7 @@ internal object TileCornerHooks {
             val display = view.display?.displayId ?: view.context.hostDisplayIdOrNull()
             if (!TileCornerPolicy.eligible(true, host.first, host.second, display,
                     fields.getValue("card").getBoolean(view), fields.getValue("isDetailTile").getBoolean(view),
-                    methods.getValue(t.theme).invoke(theme) == true, methods.getValue(t.material).invoke(null, view.context) != false))
+                    methods.getValue(t.theme).invoke(theme.get(null)) == true, methods.getValue(t.material).invoke(null, view.context) != false))
                 return@runCatching false
             true
         }.getOrDefault(false)

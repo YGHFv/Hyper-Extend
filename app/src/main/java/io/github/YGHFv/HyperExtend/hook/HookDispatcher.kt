@@ -18,7 +18,6 @@ import io.github.YGHFv.HyperExtend.core.AppVolumeSettings
 import io.github.YGHFv.HyperExtend.hook.feature.systemui.SystemUiPluginHooks
 import io.github.YGHFv.HyperExtend.hook.feature.volume.MiSoundVolumeHooks
 import io.github.YGHFv.HyperExtend.core.NFC_IMAGE_KEY
-import io.github.YGHFv.HyperExtend.hook.feature.GestureLineHider
 import io.github.YGHFv.HyperExtend.hook.feature.ScreenshotClipboard
 import io.github.YGHFv.HyperExtend.hook.feature.MilinkClipboardGuard
 import io.github.YGHFv.HyperExtend.hook.feature.mishare.MiShareReceiveGuard
@@ -29,6 +28,9 @@ import io.github.YGHFv.HyperExtend.hook.feature.RotationSuggestionHider
 import io.github.YGHFv.HyperExtend.hook.feature.WallpaperMonetFix
 import io.github.YGHFv.HyperExtend.hook.feature.statusbar.ScreenshotStatusBar
 import io.github.YGHFv.HyperExtend.hook.feature.statusbar.StatusBarBatteryStyle
+import io.github.YGHFv.HyperExtend.hook.feature.statusbar.BatteryDetailHooks
+import io.github.YGHFv.HyperExtend.hook.feature.statusbar.SignalOrderHooks
+import io.github.YGHFv.HyperExtend.hook.feature.statusbar.StrongToastHooks
 import io.github.YGHFv.HyperExtend.hook.feature.statusbar.StatusBarClock
 import io.github.YGHFv.HyperExtend.hook.feature.statusbar.StatusBarGestures
 import io.github.YGHFv.HyperExtend.hook.feature.statusbar.StatusBarIcons
@@ -117,6 +119,7 @@ internal object HookDispatcher {
         HostPlatform.TSM_CLIENT -> { loader, settings -> installNfcCardFace(loader, settings) }
         HostPlatform.SETTINGS -> { loader, settings ->
             (ControlCenterHooks.installSettings(loader, settings) +
+                io.github.YGHFv.HyperExtend.hook.feature.systemui.NotificationManagementHooks.installSettings(loader, settings) +
                 NotificationImportanceHooks.installSettings(loader, settings) +
                 PasskeyFix.installPackage(packageName, loader, settings)).joinToString()
         }
@@ -234,12 +237,18 @@ internal object HookDispatcher {
         parts += MediaCardHooks.install(loader, settings)
         parts += SystemUiPluginHooks.install(loader, settings)
         parts.installSystemUiFeature(settings, "clipboard_native_overlay") { ClipboardOverlayHooks.install(loader) }
-        parts.installSystemUiFeature(settings, "gesture_line") { GestureLineHider.install(loader, settings) }
+        // 「隐藏手势横条」已并入 navigation_handle_custom 的隐藏方式，
+        // 由 SystemUiCustomHooks 安装（见 core/NavigationHandleSettings 与 MergedCardMigration）。
         parts.installSystemUiFeature(settings, "wallpaper_monet") { WallpaperMonetFix.install(loader, settings) }
         parts.installSystemUiFeature(settings, "native_notify_icon") { NativeNotifyIcon.install(loader, settings) }
         parts.installSystemUiFeature(settings, "rotation_suggestion") { RotationSuggestionHider.install(loader) }
         parts.installSystemUiFeature(settings, "status_bar_icons") { StatusBarIcons.install(loader, settings) }
+        parts.installSystemUiFeature(settings, SignalOrderHooks.FEATURE) { SignalOrderHooks.install(loader) }
+        parts.installSystemUiFeature(settings, StrongToastHooks.FEATURE) { StrongToastHooks.install(loader) }
         parts.installSystemUiFeature(settings, "status_bar_battery_style") { StatusBarBatteryStyle.install(loader, settings) }
+        parts.installSystemUiFeature(settings, io.github.YGHFv.HyperExtend.core.BatteryDetailSettings.FEATURE) {
+            BatteryDetailHooks.install(loader, settings)
+        }
         parts.installSystemUiFeature(settings, "status_bar_mobile") { StatusBarMobile.install(loader, settings) }
         parts.installSystemUiFeature(settings, "status_bar_dual_row_signal") { DualRowSignalHooks.install(loader, settings) }
         parts.installSystemUiFeature(settings, "status_bar_mobile_type_text") { MobileTypeTextHooks.install(loader, settings) }

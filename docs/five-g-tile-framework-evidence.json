@@ -1,0 +1,131 @@
+{
+  "verification": "Read-only DEX signatures and exact-class JADX code inspection of pulled device frameworks, SDK 37. No framework method was invoked on device; in particular no network getter/setter or state changes were tested.",
+  "artifacts": [
+    {
+      "devicePath": "/system_ext/framework/miui-framework.jar",
+      "sha256": "23dc896b8441d4874e2b813c8de322be3619a86d1d2db2230e51d1757be0c974",
+      "methods": [
+        {
+          "owner": "miui.telephony.IMiuiTelephony",
+          "name": "isFiveGCapable",
+          "parameters": [],
+          "returns": "Z",
+          "access": "public"
+        },
+        {
+          "owner": "miui.telephony.IMiuiTelephony",
+          "name": "isUserFiveGEnabled",
+          "parameters": [
+            "I"
+          ],
+          "returns": "Z",
+          "access": "public"
+        },
+        {
+          "owner": "miui.telephony.IMiuiTelephony",
+          "name": "setUserFiveGEnabled",
+          "parameters": [
+            "Z",
+            "I"
+          ],
+          "returns": "V",
+          "access": "public"
+        },
+        {
+          "owner": "miui.telephony.TelephonyManagerEx",
+          "name": "getDefault",
+          "parameters": [],
+          "returns": "miui.telephony.TelephonyManagerEx",
+          "access": "public static"
+        },
+        {
+          "owner": "miui.telephony.TelephonyManagerEx",
+          "name": "getMiuiTelephony",
+          "parameters": [],
+          "returns": "miui.telephony.IMiuiTelephony",
+          "access": "public"
+        },
+        {
+          "owner": "miui.telephony.TelephonyManagerEx",
+          "name": "isFiveGCapable",
+          "parameters": [],
+          "returns": "Z",
+          "access": "public"
+        },
+        {
+          "owner": "miui.telephony.TelephonyManagerEx",
+          "name": "isUserFiveGEnabled",
+          "parameters": [],
+          "returns": "Z",
+          "access": "public"
+        },
+        {
+          "owner": "miui.telephony.TelephonyManagerEx",
+          "name": "isUserFiveGEnabled",
+          "parameters": [
+            "I"
+          ],
+          "returns": "Z",
+          "access": "public"
+        },
+        {
+          "owner": "miui.telephony.TelephonyManagerEx",
+          "name": "setUserFiveGEnabled",
+          "parameters": [
+            "Z"
+          ],
+          "returns": "V",
+          "access": "public"
+        },
+        {
+          "owner": "miui.telephony.TelephonyManagerEx",
+          "name": "setUserFiveGEnabled",
+          "parameters": [
+            "Z",
+            "I"
+          ],
+          "returns": "V",
+          "access": "public"
+        }
+      ]
+    },
+    {
+      "devicePath": "/system/framework/framework.jar",
+      "sha256": "f8af87fa975ca7e529aeeeb193a4e77bea650b0e9b611259e600c248ac3b4bc4",
+      "methods": [
+        {
+          "owner": "com.android.internal.logging.InstanceIdSequence",
+          "name": "<init>",
+          "parameters": [
+            "I"
+          ],
+          "returns": "V",
+          "access": "public"
+        },
+        {
+          "owner": "com.android.internal.logging.InstanceIdSequence",
+          "name": "newInstanceId",
+          "parameters": [],
+          "returns": "com.android.internal.logging.InstanceId",
+          "access": "public"
+        }
+      ]
+    }
+  ],
+  "telephonyManagerExBodyEvidence": {
+    "sha256": "8f438b85075e994878ba1719c9e19cda8fb97099e4faac1aeb6f36fb102f53b5",
+    "contains": [
+      "int dataSlotId = Holder.SUBSCRIPTION_MANAGER.getDefaultDataSlotId();",
+      "telephony.setUserFiveGEnabled(enabled, slotId);",
+      "return telephony.isUserFiveGEnabled(slotId);",
+      "ServiceManager.getService(\"miui.radio.extphone\")",
+      "public static TelephonyManagerEx getDefault()"
+    ],
+    "finding": "Base TelephonyManager contains stub false/no-op methods; use concrete Ex to acquire binder. Ex convenience getters swallow errors as false, so query IMiuiTelephony directly and treat reflection/Binder failure as unavailable, never an off state."
+  },
+  "limits": [
+    "No live permission/capability or radio operation acceptance.",
+    "UserManager restriction gate and Binder enforcement are not complete carrier/enterprise UI-policy parity.",
+    "No atomic snapshot across subscription, keyguard and telephony services; a request already dispatched cannot be recalled."
+  ]
+}

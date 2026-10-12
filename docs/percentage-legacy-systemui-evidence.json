@@ -1,0 +1,153 @@
+{
+  "host": {
+    "packageName": "com.android.systemui",
+    "versionCode": 202602260
+  },
+  "verification": "Complete read-only MT members and dispatch callers. Source-only, no compilation/tests/device acceptance.",
+  "evidence": [
+    {
+      "locator": "dex_method:Lcom/android/systemui/settings/brightness/MiuiBrightnessSlider$2;->onProgressChanged(Landroid/widget/SeekBar;IZ)V",
+      "contains": [
+        ".method public final onProgressChanged(Landroid/widget/SeekBar;IZ)V"
+      ],
+      "sha256": "c453be034e2f24da40316fee04022830d4f3208a50143cbd7c13764fbf4fd91e",
+      "raw": ".workbuddy/tmp/mt-systemui/continuation-classic-caller-3.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/settings/brightness/MiuiBrightnessSlider$2;->onStartTrackingTouch(Landroid/widget/SeekBar;)V",
+      "contains": [
+        ".method public final onStartTrackingTouch(Landroid/widget/SeekBar;)V"
+      ],
+      "sha256": "5f2e3268c75cb2197038ff9cdc7534488c4a43060c9fc72297cb6712b80855db",
+      "raw": ".workbuddy/tmp/mt-systemui/continuation-classic-miui.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/settings/brightness/MiuiBrightnessSlider$2;->onStopTrackingTouch(Landroid/widget/SeekBar;)V",
+      "contains": [
+        ".method public final onStopTrackingTouch(Landroid/widget/SeekBar;)V"
+      ],
+      "sha256": "e2d14d598326293f393999f5dd08ceea39ffd3494d84e530dd738b1f796cb0cf",
+      "raw": ".workbuddy/tmp/mt-systemui/continuation-classic-miui.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/common/ui/view/SeekBarWithIconButtonsView$SeekBarChangeListener;->onProgressChanged(Landroid/widget/SeekBar;IZ)V",
+      "contains": [
+        ".method public final onProgressChanged(Landroid/widget/SeekBar;IZ)V"
+      ],
+      "sha256": "2d110dea273f74f9b23942d4773684b67c0f01248278b52401e9a8695f05dec1",
+      "raw": ".workbuddy/tmp/mt-systemui/continuation-classic-caller-0.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/common/ui/view/SeekBarWithIconButtonsView$SeekBarChangeListener;->onStartTrackingTouch(Landroid/widget/SeekBar;)V",
+      "contains": [
+        ".method public final onStartTrackingTouch(Landroid/widget/SeekBar;)V"
+      ],
+      "sha256": "dc31e5a0264f52ddfe3e8888b88b2219b26ef7d92745084aec77d256fc410b1d",
+      "raw": ".workbuddy/tmp/mt-systemui/continuation-classic-caller-1.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/common/ui/view/SeekBarWithIconButtonsView$SeekBarChangeListener;->onStopTrackingTouch(Landroid/widget/SeekBar;)V",
+      "contains": [
+        ".method public final onStopTrackingTouch(Landroid/widget/SeekBar;)V"
+      ],
+      "sha256": "0012704153f66dacab500020c5241404bf61e397550e19d776b3549084d28f39",
+      "raw": ".workbuddy/tmp/mt-systemui/continuation-classic-caller-2.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lmiuix/androidbasewidget/widget/SeekBar$2;->onProgressChanged(Landroid/widget/SeekBar;IZ)V",
+      "contains": [
+        ".method public final onProgressChanged(Landroid/widget/SeekBar;IZ)V"
+      ],
+      "sha256": "9f6562e76a3778a9018a29c18d9adcdb689ea31395877183df38655dae36d095",
+      "raw": ".workbuddy/tmp/mt-systemui/continuation-classic-caller-4.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lmiuix/androidbasewidget/widget/SeekBar$2;->onStartTrackingTouch(Landroid/widget/SeekBar;)V",
+      "contains": [
+        ".method public final onStartTrackingTouch(Landroid/widget/SeekBar;)V"
+      ],
+      "sha256": "26c0f62fcee4abd96642ec7fc2a051f0cd5d5ce172eb834f551296e26b3cad1a",
+      "raw": ".workbuddy/tmp/mt-systemui/continuation-classic-caller-5.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lmiuix/androidbasewidget/widget/SeekBar$2;->onStopTrackingTouch(Landroid/widget/SeekBar;)V",
+      "contains": [
+        ".method public final onStopTrackingTouch(Landroid/widget/SeekBar;)V"
+      ],
+      "sha256": "c74ae432a4603f1eb4589f5ebc662e393bc07a242e55a20cee9eabe867cb120b",
+      "raw": ".workbuddy/tmp/mt-systemui/continuation-classic-caller-6.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lmiuix/miuixbasewidget/widget/HyperProgressSeekBar$7;->onProgressChanged(Landroid/widget/SeekBar;IZ)V",
+      "contains": [
+        ".method public final onProgressChanged(Landroid/widget/SeekBar;IZ)V"
+      ],
+      "sha256": "85705fda4ae6f596bbdfcebd640591062843440fc232516a95617f333b63c8e3",
+      "raw": ".workbuddy/tmp/mt-systemui/continuation-classic-caller-7.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lmiuix/miuixbasewidget/widget/HyperProgressSeekBar$7;->onStartTrackingTouch(Landroid/widget/SeekBar;)V",
+      "contains": [
+        ".method public final onStartTrackingTouch(Landroid/widget/SeekBar;)V"
+      ],
+      "sha256": "fbcdacf3a2358e7d9079d77521ba277b8d47e4e65aff01cbc066455862bf973f",
+      "raw": ".workbuddy/tmp/mt-systemui/continuation-classic-caller-8.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lmiuix/miuixbasewidget/widget/HyperProgressSeekBar$7;->onStopTrackingTouch(Landroid/widget/SeekBar;)V",
+      "contains": [
+        ".method public final onStopTrackingTouch(Landroid/widget/SeekBar;)V"
+      ],
+      "sha256": "0e4ff3c46d18adc64d4a830df3ed4c02665548d40f43d634ccec3019b1790d38",
+      "raw": ".workbuddy/tmp/mt-systemui/continuation-classic-caller-9.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/plugins/VolumeDialogController$StreamState;->level:I",
+      "contains": [
+        ".field public level:I"
+      ],
+      "sha256": "9b7f03cee551ab469f2281dc3dbd1dccda9dfb82e96ac473481a2a374fb87d49",
+      "raw": ".workbuddy/tmp/mt-systemui/continuation-volume-state.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/plugins/VolumeDialogController$StreamState;->levelMax:I",
+      "contains": [
+        ".field public levelMax:I"
+      ],
+      "sha256": "8a7f785222bcc49b788862dd3dde7a01fd9f433993e65b1678e1021ec972d97f",
+      "raw": ".workbuddy/tmp/mt-systemui/continuation-volume-state.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/plugins/VolumeDialogController$StreamState;->levelMin:I",
+      "contains": [
+        ".field public levelMin:I"
+      ],
+      "sha256": "c9abed05be0e372723739bfc84a2c5a10cc0aaabbe82673a75233e32a40f9f42",
+      "raw": ".workbuddy/tmp/mt-systemui/continuation-volume-state.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/plugins/VolumeDialogController$StreamState;->muted:Z",
+      "contains": [
+        ".field public muted:Z"
+      ],
+      "sha256": "76c3011e08f4a91d69dd0382f4d21bc076742832fdc0ace46846174539c93be2",
+      "raw": ".workbuddy/tmp/mt-systemui/continuation-volume-state.json",
+      "complete": true
+    }
+  ]
+}

@@ -5,12 +5,11 @@ import org.junit.Assert.*
 import org.junit.Test
 
 class NavigationHandlePolicyTest {
-    @Test fun exactVersionMainThreadAndHidePriorityAreRequired() {
-        assertTrue(NavigationHandlePolicy.supported(202602260L, true, false))
-        assertFalse(NavigationHandlePolicy.supported(null, true, false))
-        assertFalse(NavigationHandlePolicy.supported(202602261L, true, false))
-        assertFalse(NavigationHandlePolicy.supported(202602260L, false, false))
-        assertFalse(NavigationHandlePolicy.supported(202602260L, true, true))
+    @Test fun exactVersionAndMainThreadAreRequired() {
+        assertTrue(NavigationHandlePolicy.supported(202602260L, true))
+        assertFalse(NavigationHandlePolicy.supported(null, true))
+        assertFalse(NavigationHandlePolicy.supported(202602261L, true))
+        assertFalse(NavigationHandlePolicy.supported(202602260L, false))
     }
 
     @Test fun dimensionsFollowCurrentDensityNotFontScale() {
@@ -68,5 +67,32 @@ class NavigationHandlePolicyTest {
             assertEquals(5f, radius, 0f)
         }
         assertEquals(2f, radius, 0f)
+    }
+
+    @Test fun dimensionsRetainNativeInputsUnlessExplicitlyRequested() {
+        assertEquals(NavigationHandlePolicy.Dimensions(null, null),
+            NavigationHandlePolicy.dimensions(null, null, 0f, 0, 0, 0f, 0f, 0f, 0f, 0f, 0f))
+        val result = NavigationHandlePolicy.dimensions(100f, 8f, 2f, 500, 80, 4f, 0f, 10f, 4f, 1f, 1f)!!
+        assertEquals(200f, result.width!!, 0f)
+        assertEquals(16f, result.bottom!!, 0f)
+    }
+
+    @Test fun pressAndPulseGeometryCannotOverflowViewBounds() {
+        val result = NavigationHandlePolicy.dimensions(400f, 0f, 3f, 300, 40, 4f, 1f, 20f, 8f, 1.5f, 2f)!!
+        assertEquals(180f, result.width!!, 0f)
+        assertEquals(12f, result.bottom!!, 0f)
+        assertEquals(300f, (result.width!! + 20f) * 1.5f, 0f)
+        val centerY = 40f - result.bottom!! - 4f
+        val halfHeight = (8f + 8f) * 2f / 2
+        assertTrue(centerY - halfHeight >= 0f)
+        assertTrue(centerY + halfHeight <= 40f)
+    }
+
+    @Test fun invalidAnimationOrUnavailableLayoutFallsBackToNative() {
+        assertNull(NavigationHandlePolicy.dimensions(100f, 0f, 2f, 0, 40, 4f, 0f, 0f, 0f, 1f, 1f))
+        assertNull(NavigationHandlePolicy.dimensions(100f, 0f, 2f, 100, 4, 4f, 1f, 20f, 8f, 1f, 2f))
+        for (bad in listOf(Float.NaN, Float.POSITIVE_INFINITY, 0f, -1f)) {
+            assertNull(NavigationHandlePolicy.dimensions(100f, 0f, 2f, 100, 40, 4f, 0f, 0f, 0f, bad, 1f))
+        }
     }
 }

@@ -12,7 +12,7 @@ class ClassicQsTargetsTest {
     private val signatures get() = javaClass.getResourceAsStream("/classic-qs-host-members.txt")!!
         .bufferedReader().use { it.readLines().toSet() }
     @Test fun methodsAndConstructorHaveExactHostEvidence() {
-        assertEquals(5, ClassicQsTargets.methods.size)
+        assertEquals(12, ClassicQsTargets.methods.size)
         for (spec in ClassicQsTargets.methods) {
             assertFalse(spec.isStatic)
             val signature = descriptor(spec.owner) + "->" + spec.name + "(" +

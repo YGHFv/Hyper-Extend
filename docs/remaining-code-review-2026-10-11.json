@@ -1,0 +1,49 @@
+{
+  "date": "2026-10-11",
+  "scope": "Source and evidence metadata verification only; not a Kotlin build or unit-test run",
+  "compiled": false,
+  "testsExecuted": false,
+  "installed": false,
+  "allMigrationComplete": false,
+  "postBuildFullLogicAuditComplete": false,
+  "evidenceCounts": {
+    "classic-columns": 30,
+    "media-progress": 39,
+    "security-footer-systemui": 5,
+    "security-footer-plugin": 5
+  },
+  "inventoryCounts": {
+    "pending": 56,
+    "implemented_static_verified": 93,
+    "repaired_static_pending_device": 19,
+    "code_reviewed_repair_unbuilt": 4,
+    "code_reviewed_partial_unbuilt": 24,
+    "partially_implemented_static_verified": 7,
+    "covered_by_existing_feature_per_user": 1,
+    "already_supported_by_current_host": 1,
+    "needs_audit_existing_partial": 132
+  },
+  "checks": [
+    "79 complete MT member texts/abstract query declarations have matching hashes and required fragments",
+    "All four signature fixtures exactly match evidence members",
+    "337 unique page/key records enumerated without completion promotion",
+    "Current source is not covered by historical cumulative build",
+    "Touched feature rows retain explicit unbuilt status"
+  ],
+  "sourceInputsSha256": {
+    "app/src/main/java/io/github/YGHFv/HyperExtend/core/ClassicQsSettings.kt": "c8beece7b11a73fc47b2e3aa561d953cb2e85d3eb58daa821c135a5974c883df",
+    "app/src/main/java/io/github/YGHFv/HyperExtend/core/MediaProgressSettings.kt": "9a44d7c88711f945459bd1758cd4259e4f8036fe8aaa07bbaeebd14971a142d4",
+    "app/src/main/java/io/github/YGHFv/HyperExtend/core/SystemUiFeatures.kt": "6979c3e3f5f4222bad850ded621bef1e998b8812e650aba6f91e6025acd50e05",
+    "app/src/main/java/io/github/YGHFv/HyperExtend/core/FeaturePanels.kt": "9592c0c99672de12da8afdbef3191afe25f234a0a678550cd819fc9fe6e36efe",
+    "app/src/main/java/io/github/YGHFv/HyperExtend/hook/feature/systemui/ClassicQsHooks.kt": "5b5dd1cffdd679605d10316df4db850236d81cf4c513e779b39e709985663e80",
+    "app/src/main/java/io/github/YGHFv/HyperExtend/hook/feature/systemui/ClassicQsPolicy.kt": "6f0488a42bf1b83a195a53d5f531c0c46b33bab60ec155b3538484aa4be23960",
+    "app/src/main/java/io/github/YGHFv/HyperExtend/hook/feature/systemui/ClassicQsTargets.kt": "27d87911c66aaf2244b46d784ca01b0b91fa61a2dd2374f187ca23b77cb67002",
+    "app/src/main/java/io/github/YGHFv/HyperExtend/hook/feature/systemui/MediaCardHooks.kt": "665cfce1c3ec73bb49331e1b5b1a5fc1e334277a135786ed3c4093f30b49c07a",
+    "app/src/main/java/io/github/YGHFv/HyperExtend/hook/feature/systemui/MediaProgressHooks.kt": "3c1f4d161e98895720759dd62ad4c1475a8ca9d3505a7663072bceb2ff1e2eed",
+    "app/src/main/java/io/github/YGHFv/HyperExtend/hook/feature/systemui/MediaProgressDrawing.kt": "995758c377a804c451042008a91d78c85baaf57e907d71bffcb83020c5c0ea0d",
+    "app/src/main/java/io/github/YGHFv/HyperExtend/hook/feature/systemui/MediaProgressTargets.kt": "648a17edc22e0127bfe6d18058c0475f9f6d074b348cf9ac0147f26193b049cf",
+    "app/src/main/java/io/github/YGHFv/HyperExtend/hook/feature/systemui/SecurityFooterHooks.kt": "98d4c0cab773fddc864e9a987b7b556e4ae91d8c57fedfa1dc6e30411eb7a360",
+    "app/src/main/java/io/github/YGHFv/HyperExtend/hook/feature/systemui/ControlCenterHooks.kt": "dceb7d3486999d9f8f463258177f92f1447f48a9bfc11104e46fbfc5939f26de",
+    "app/src/main/java/io/github/YGHFv/HyperExtend/hook/feature/systemui/SystemUiPluginHooks.kt": "95a34918ae96b2c6dab26aeff017f7872233b76ccb80bd60e64346b721be7aec"
+  }
+}

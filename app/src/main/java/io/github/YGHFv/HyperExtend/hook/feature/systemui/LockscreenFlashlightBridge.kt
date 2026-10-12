@@ -9,7 +9,7 @@ internal class LockscreenFlashlightBridge(loader: ClassLoader) {
         requireNotNull(NotificationHooks.resolve(loader, it))
     }
     private val stubType = Class.forName("miui.stub.MiuiStub", false, loader)
-    private val stub = stubType.getDeclaredField("INSTANCE").get(null)
+    private val stubField = stubType.getDeclaredField("INSTANCE")
     private val provider = stubType.getDeclaredField("mSysUIProvider")
     private val lazy = provider.type.getDeclaredField("mFlashlightController")
     private val lazyGet = methods.getValue(LockscreenFlashlightTargets.queries.last())
@@ -21,6 +21,7 @@ internal class LockscreenFlashlightBridge(loader: ClassLoader) {
     }
 
     fun controller(): Any? {
+        val stub = stubField.get(null) ?: return null
         val source = provider.get(stub) ?: return null
         val value = lazy.get(source) ?: return null
         return lazyGet.invoke(value)?.takeIf { methods.getValue(LockscreenFlashlightTargets.enabled).declaringClass.isInstance(it) }

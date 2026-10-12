@@ -1,0 +1,10 @@
+Landroid/window/ScreenCaptureInternal$CaptureArgs$Builder;->setExcludeOrIncludeLayerNames([Ljava/lang/String;)Landroid/window/ScreenCaptureInternal$CaptureArgs$Builder;
+Landroid/window/ScreenCaptureInternal$CaptureArgs$Builder;->setMiCaptureMode(I)Landroid/window/ScreenCaptureInternal$CaptureArgs$Builder;
+Lcom/miui/screenshot/core/util/DisplayCapture;->captureDisplay(Landroid/content/Context;ILandroid/graphics/Rect;[Ljava/lang/String;)Landroid/graphics/Bitmap;
+Lcom/miui/screenshot/core/util/DisplayCapture;->createStrategy()Ld1/a;
+Ld1/a;->a(Landroid/content/Context;ILandroid/graphics/Rect;[Ljava/lang/String;)Landroid/graphics/Bitmap;
+Ld1/c;->a(Landroid/content/Context;ILandroid/graphics/Rect;[Ljava/lang/String;)Landroid/graphics/Bitmap;
+Ld1/d$a;->b([Ljava/lang/String;)Ld1/d$a;
+Ld1/d;->a(Landroid/content/Context;ILandroid/graphics/Rect;[Ljava/lang/String;)Landroid/graphics/Bitmap;
+Ld1/d;->h()V
+Ls1/A;->c()Z

@@ -16,20 +16,23 @@
 package io.github.YGHFv.HyperExtend.hook.feature.statusbar
 
 import android.graphics.Typeface
-import android.os.Build
+import android.os.Looper
 import android.util.TypedValue
-import android.view.ViewGroup
 import android.view.View
 import android.widget.TextView
-import io.github.YGHFv.HyperExtend.core.ModuleLog
+import io.github.YGHFv.HyperExtend.core.compatibleVersionCode
+import io.github.YGHFv.HyperExtend.core.hostDisplayIdOrNull
 import io.github.YGHFv.HyperExtend.hook.HookRuntime
 import io.github.YGHFv.HyperExtend.hook.HookSettings
-import io.github.YGHFv.HyperExtend.hook.Reflect
+import io.github.YGHFv.HyperExtend.hook.feature.systemui.NotificationHooks
+import java.lang.reflect.Field
+import java.lang.reflect.Modifier
+import java.util.concurrent.atomic.AtomicBoolean
 
 /**
  * 「电池自定义」。作用域：com.android.systemui。
  *
- * ## 挂三个刷新入口而不是一个
+ * ## 挂四个精确刷新入口而不是一个
  *
  * 电池视图有好几条刷新路径：切换样式、整体刷新、充放电与文字刷新。它们的调用时机不同
  * （插上充电器、切换深浅色、改字号……），只挂其中一个的结果是「刚开始好了，充一次电又回去了」——
@@ -62,54 +65,60 @@ internal object StatusBarBatteryStyle {
     private const val DEFAULT_VERTICAL_OFFSET = 12
     private const val DEFAULT_VERTICAL_OFFSET_MARK = 27
 
-    private const val BATTERY_VIEW = "com.android.systemui.statusbar.views.MiuiBatteryMeterView"
-
-    private val REFRESH_METHODS = arrayOf("onBatteryStyleChanged", "updateAll", "updateChargeAndText", "onAttachedToWindow")
-
     fun install(loader: ClassLoader, settings: HookSettings): Int {
         val wantsChangeLocation = settings.isOn(OPT_CHANGE_LOCATION)
         val wantsCustom = settings.isOn(OPT_CUSTOM)
         if (!wantsChangeLocation && !wantsCustom) return 0
+        val orderHooks = if (wantsChangeLocation) runCatching { BatteryOrderHooks.install(loader) }.getOrDefault(0) else 0
+        if (!wantsCustom) return orderHooks
 
-        val view = Reflect.loadClass(loader, BATTERY_VIEW) ?: run {
-            ModuleLog.warn("$FEATURE: $BATTERY_VIEW not found")
-            return 0
+        val t = BatteryStyleTargets
+        val methods = (t.refresh + t.callers).associateWith { NotificationHooks.resolve(loader, it) ?: return orderHooks }
+        val view = Class.forName(t.OWNER, false, loader)
+        val fields = t.fields.associate { (name, expected) ->
+            name to view.getDeclaredField(name).apply {
+                require(type.name == expected && !Modifier.isStatic(modifiers)); isAccessible = true
+            }
         }
+        if (!methods.values.all { HookRuntime.deoptimize(it, "$FEATURE/caller") }) return orderHooks
 
         // 设置在整个进程生命周期里读一次就够：改完开关本来就要重启系统界面（见 HookDispatcher）。
         // 把值先取出来，拦截体里就只剩纯几何计算，不必每次刷新都碰一遍设置代理。
         val visibility = BatteryVisibilityPolicy.from(settings)
         val style = Style(
             visibility = visibility,
-            changeLocation = wantsChangeLocation && !visibility.hidePercent,
             custom = wantsCustom,
             bold = settings.isOn(OPT_BOLD),
-            fontSize = settings.number(KEY_FONT_SIZE, DEFAULT_FONT_SIZE, 0, 200),
-            fontSizeMark = settings.number(KEY_FONT_MARK_SIZE, DEFAULT_FONT_SIZE, 0, 200),
-            leftMargin = settings.number(KEY_LEFT_MARGIN, 0, 0, 200),
-            rightMargin = settings.number(KEY_RIGHT_MARGIN, 0, 0, 200),
-            verticalOffset = settings.number(KEY_VERTICAL_OFFSET, DEFAULT_VERTICAL_OFFSET, -200, 200),
+            fontSize = settings.number(KEY_FONT_SIZE, DEFAULT_FONT_SIZE, 15, 40),
+            fontSizeMark = settings.number(KEY_FONT_MARK_SIZE, DEFAULT_FONT_SIZE, 15, 40),
+            leftMargin = settings.number(KEY_LEFT_MARGIN, 0, 0, 10),
+            rightMargin = settings.number(KEY_RIGHT_MARGIN, 0, 0, 10),
+            verticalOffset = settings.number(KEY_VERTICAL_OFFSET, DEFAULT_VERTICAL_OFFSET, 0, 24),
             verticalOffsetMark = settings.number(
                 KEY_VERTICAL_OFFSET_MARK,
                 DEFAULT_VERTICAL_OFFSET_MARK,
-                -200,
-                200,
+                0,
+                27,
             ),
         )
 
-        var installed = 0
-        for (name in REFRESH_METHODS) {
-            val method = Reflect.findMethods(view, name).firstOrNull() ?: continue
-            val ok = HookRuntime.hookAfter(method, "$FEATURE/$name") { chain, original ->
-                apply(chain.thisObject, style)
+        val ready = AtomicBoolean(false)
+        var version: Long? = null
+        val hooks = t.refresh.map { target ->
+            HookRuntime.hookAfter(methods.getValue(target), "$FEATURE/${target.name}") { chain, original ->
+                if (!ready.get() || Looper.myLooper() != Looper.getMainLooper()) return@hookAfter original
+                val root = chain.thisObject as? View ?: return@hookAfter original
+                val allowed = runCatching {
+                    val host = version ?: root.context.packageManager.getPackageInfo("com.android.systemui", 0)
+                        .compatibleVersionCode.also { version = it }
+                    host == 202602260L && (root.display?.displayId ?: root.context.hostDisplayIdOrNull()) == 0
+                }.getOrDefault(false)
+                if (allowed) apply(root, style, fields)
                 original
             }
-            if (ok) installed++
         }
-        if (installed == 0) {
-            ModuleLog.warn("$FEATURE: MiuiBatteryMeterView has none of ${REFRESH_METHODS.toList()}")
-        }
-        return installed
+        ready.set(hooks.all { it })
+        return orderHooks + if (ready.get()) hooks.size else 0
     }
 
     /**
@@ -120,7 +129,6 @@ internal object StatusBarBatteryStyle {
      */
     private class Style(
         val visibility: BatteryVisibilityPolicy,
-        val changeLocation: Boolean,
         val custom: Boolean,
         val bold: Boolean,
         val fontSize: Int,
@@ -131,12 +139,10 @@ internal object StatusBarBatteryStyle {
         val verticalOffsetMark: Int,
     )
 
-    private fun apply(target: Any?, style: Style) {
-        if (target == null) return
-        val percent = Reflect.readField(target, "mBatteryPercentView") as? TextView ?: return
-        val mark = Reflect.readField(target, "mBatteryPercentMarkView") as? TextView
+    private fun apply(target: View, style: Style, fields: Map<String, Field>) {
+        val percent = fields.getValue("mBatteryPercentView").get(target) as? TextView ?: return
+        val mark = fields.getValue("mBatteryPercentMarkView").get(target) as? TextView
 
-        if (style.changeLocation) changeLocation(target)
         if (!style.custom) return
 
         style.visibility.percentSizeDp(style.fontSize)?.let { size ->
@@ -147,55 +153,18 @@ internal object StatusBarBatteryStyle {
         }
         if (style.visibility.hidePercent) return
         if (style.bold) {
-            percent.typeface = Typeface.DEFAULT_BOLD
-            if (!style.visibility.hidesMark) mark?.typeface = Typeface.DEFAULT_BOLD
+            percent.typeface = Typeface.create(percent.typeface, Typeface.BOLD)
+            if (!style.visibility.hidesMark && mark != null) mark.typeface = Typeface.create(mark.typeface, Typeface.BOLD)
         }
 
-        val density = percent.resources.displayMetrics.density
-        val px = { dp: Float -> (dp * density).toInt() }
-        val left = px(style.leftMargin * 0.5f)
-        val right = px(style.rightMargin * 0.5f)
-        // 偏移量是按「离默认值多远」给的：默认 12（= 6dp）表示不偏移。
-        val top = if (style.verticalOffset != DEFAULT_VERTICAL_OFFSET) {
-            px((style.verticalOffset - DEFAULT_VERTICAL_OFFSET) * 0.5f)
-        } else {
-            0
-        }
-        // 百分号是这一排里最右边那个元素，所以右边距归它；数字只负责左边距与上下偏移。
-        percent.setPaddingRelative(left, top, if (mark == null) right else 0, 0)
+        val (numberPadding, markPadding) = BatteryStylePolicy.padding(style.leftMargin, style.rightMargin,
+            style.verticalOffset, style.verticalOffsetMark, percent.resources.displayMetrics.density,
+            mark != null, mark?.visibility == View.VISIBLE, style.visibility.hidesMark, mark?.paddingTop ?: 0) ?: return
+        // A hidden percent mark must not consume the visible number's trailing margin.
+        percent.setPaddingRelative(numberPadding.start, numberPadding.top, numberPadding.end, 0)
         if (mark != null) {
-            // 百分号那一档的门限与数字不同（参考项目用的就是 8 这个基准），照抄。
-            val markTop = if (style.verticalOffsetMark != DEFAULT_VERTICAL_OFFSET_MARK) {
-                px((style.verticalOffsetMark - MARK_OFFSET_BASELINE) * 0.5f)
-            } else {
-                top
-            }
-            mark.setPaddingRelative(0, markTop, right, 0)
+            mark.setPaddingRelative(markPadding.start, markPadding.top, markPadding.end, 0)
         }
     }
 
-    /** OS4 has sibling icon/percentage groups, with a charging indicator between them. */
-    private fun changeLocation(target: Any) {
-        val icon = Reflect.readField(target, "mBatteryDigitalView") as? View ?: return
-        val percent = Reflect.readField(target, "mBatteryPercentContainer") as? View ?: return
-        val parent = icon.parent as? ViewGroup ?: return
-        if (percent.parent !== parent) return
-        val iconIndex = parent.indexOfChild(icon)
-        val percentIndex = parent.indexOfChild(percent)
-        if (!BatteryOrderPolicy.shouldSwap(iconIndex, percentIndex)) return
-        val iconParams = icon.layoutParams
-        val percentParams = percent.layoutParams
-        if (Build.VERSION.SDK_INT >= 29) parent.suppressLayout(true)
-        try {
-            parent.removeViewAt(percentIndex)
-            parent.removeViewAt(iconIndex)
-            parent.addView(percent, iconIndex, percentParams)
-            parent.addView(icon, percentIndex, iconParams)
-        } finally {
-            if (Build.VERSION.SDK_INT >= 29) parent.suppressLayout(false)
-        }
-    }
-
-    /** 百分号偏移量的基准值（参考项目里那个写死的 8）。 */
-    private const val MARK_OFFSET_BASELINE = 8
 }

@@ -1,0 +1,225 @@
+{
+  "host": {
+    "packageName": "com.android.systemui",
+    "versionCode": 202602260
+  },
+  "verification": "Complete read-only current MT members; no compile, test or device acceptance.",
+  "evidence": [
+    {
+      "locator": "dex_field:Lcom/android/systemui/statusbar/views/MiuiBatteryMeterView;->mBatteryChargingView:Landroid/widget/ImageView;",
+      "contains": [
+        ".field public final mBatteryChargingView:Landroid/widget/ImageView;"
+      ],
+      "sha256": "0c7e77b76777e18d7cb497b94d498464b62ef378a7565e37e4c90c81f897d924",
+      "raw": ".workbuddy/tmp/mt-systemui/battery-visibility-current-member-0.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/statusbar/views/MiuiBatteryMeterView;->mBatteryDigitalView:Landroid/widget/FrameLayout;",
+      "contains": [
+        ".field public final mBatteryDigitalView:Landroid/widget/FrameLayout;"
+      ],
+      "sha256": "4f54dc8b2a2d5aae38be193c2b7467f4b38a54b8150602a8f5211d83fe68d455",
+      "raw": ".workbuddy/tmp/mt-systemui/battery-visibility-current-member-1.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/statusbar/views/MiuiBatteryMeterView;->mBatteryIconView:Lcom/android/systemui/statusbar/views/MiuiBatteryMeterIconView;",
+      "contains": [
+        ".field public final mBatteryIconView:Lcom/android/systemui/statusbar/views/MiuiBatteryMeterIconView;"
+      ],
+      "sha256": "cdf6a96bc3c32ef3f6ab10840e6cdb827ed82a4c4fe8f2be6e0027dc96b5f821",
+      "raw": ".workbuddy/tmp/mt-systemui/battery-visibility-current-member-2.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/statusbar/views/MiuiBatteryMeterView;->mBatteryPercentContainer:Landroid/widget/LinearLayout;",
+      "contains": [
+        ".field public final mBatteryPercentContainer:Landroid/widget/LinearLayout;"
+      ],
+      "sha256": "0c807f5d562cd171f583ba49f87aa59dbbab36ae9e5b803b0b407088292cb2e2",
+      "raw": ".workbuddy/tmp/mt-systemui/battery-visibility-current-member-3.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/statusbar/views/MiuiBatteryMeterView;->mBatteryPercentMarkView:Landroid/widget/TextView;",
+      "contains": [
+        ".field public final mBatteryPercentMarkView:Landroid/widget/TextView;"
+      ],
+      "sha256": "40ae67b03e5d428b0c296ffeaea7d6411faccb96bc9e4cbf726a8182a35b7bdd",
+      "raw": ".workbuddy/tmp/mt-systemui/battery-visibility-current-member-4.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/statusbar/views/MiuiBatteryMeterView;->mBatteryPercentView:Landroid/widget/TextView;",
+      "contains": [
+        ".field public final mBatteryPercentView:Landroid/widget/TextView;"
+      ],
+      "sha256": "c38123b29a033afd2c63dfa87ec09d90389a834291b2d0521c7d39f47059fd63",
+      "raw": ".workbuddy/tmp/mt-systemui/battery-visibility-current-member-5.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/statusbar/views/MiuiBatteryMeterView;->mBatteryStyle:I",
+      "contains": [
+        ".field public mBatteryStyle:I"
+      ],
+      "sha256": "b25bdd79585e0f51b8c47404c0a2556c2008798bc3d91b7752b3a6d201e5e7df",
+      "raw": ".workbuddy/tmp/mt-systemui/battery-visibility-current-member-6.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/statusbar/views/MiuiBatteryMeterView;->mHollowBatteryIconView:Lcom/android/systemui/statusbar/views/MiuiHollowBatteryMeterIconView;",
+      "contains": [
+        ".field public final mHollowBatteryIconView:Lcom/android/systemui/statusbar/views/MiuiHollowBatteryMeterIconView;"
+      ],
+      "sha256": "4553550848c6b692c6703396801116e1fa1c1e30531337bc056cf0842fa18de0",
+      "raw": ".workbuddy/tmp/mt-systemui/battery-visibility-current-member-7.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/policy/MiuiBatteryControllerImpl$4$1;->run()V",
+      "contains": [
+        ".method public final run()V"
+      ],
+      "sha256": "b8951aa0263caa06f0b7e5de02cc4882470da7f0701c13696d3039e44f5393fb",
+      "raw": ".workbuddy/tmp/mt-systemui/battery-visibility-current-member-8.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/policy/MiuiBatteryControllerImpl;->addCallback(Lcom/android/systemui/statusbar/policy/BatteryController$BatteryStateChangeCallback;)V",
+      "contains": [
+        ".method public final addCallback(Lcom/android/systemui/statusbar/policy/BatteryController$BatteryStateChangeCallback;)V"
+      ],
+      "sha256": "2a92aa63c916c623717807576f87d16ecc08d0e56886d35fc4ff347225f479d5",
+      "raw": ".workbuddy/tmp/mt-systemui/battery-visibility-current-member-9.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/views/MiuiBatteryMeterView;->onAttachedToWindow()V",
+      "contains": [
+        ".method public final onAttachedToWindow()V"
+      ],
+      "sha256": "0f3dc9c81c7a4e5db207ebf2a3c962855a181b44bc9aa909414a1633547b7ceb",
+      "raw": ".workbuddy/tmp/mt-systemui/battery-visibility-current-member-10.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/views/MiuiBatteryMeterView;->onBatteryLevelChanged(IZZ)V",
+      "contains": [
+        ".method public final onBatteryLevelChanged(IZZ)V"
+      ],
+      "sha256": "1bb57de2f0f93bde0ca028327705ab303c6a7658ad7bcfd70f29a73839f4cdb5",
+      "raw": ".workbuddy/tmp/mt-systemui/battery-visibility-current-member-11.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/views/MiuiBatteryMeterView;->onBatteryStyleChanged(I)V",
+      "contains": [
+        ".method public final onBatteryStyleChanged(I)V"
+      ],
+      "sha256": "96765597cfcb23e23ffe5d907ab41b0e2e39180a820f2be68034f38ff20265dc",
+      "raw": ".workbuddy/tmp/mt-systemui/battery-visibility-current-member-12.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/views/MiuiBatteryMeterView;->onChargeStateChanged(ZZ)V",
+      "contains": [
+        ".method public final onChargeStateChanged(ZZ)V"
+      ],
+      "sha256": "3702b3bcc5a6a5de5fbbb7bec4ac12f50e5e7283f1d04ef6b278a66ea6b13acb",
+      "raw": ".workbuddy/tmp/mt-systemui/battery-visibility-current-member-13.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/views/MiuiBatteryMeterView;->onDensityOrFontScaleChanged()V",
+      "contains": [
+        ".method public final onDensityOrFontScaleChanged()V"
+      ],
+      "sha256": "26865bb08a5096615624e8cd01125e8f79569e4eccb9635be29b8b946389b1f9",
+      "raw": ".workbuddy/tmp/mt-systemui/battery-visibility-current-member-14.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/views/MiuiBatteryMeterView;->onFinishInflate()V",
+      "contains": [
+        ".method public final onFinishInflate()V"
+      ],
+      "sha256": "072995f04113c619dce3682cc27b2b979391f445ce8311a48bf8736ddd9bba9c",
+      "raw": ".workbuddy/tmp/mt-systemui/battery-visibility-current-member-15.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/views/MiuiBatteryMeterView;->onMiuiThemeChanged(Z)V",
+      "contains": [
+        ".method public final onMiuiThemeChanged(Z)V"
+      ],
+      "sha256": "8f7b119e9830b429a6abbeb18260a725f2ce126d963a66753cee91a324ff0b55",
+      "raw": ".workbuddy/tmp/mt-systemui/battery-visibility-current-member-16.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/views/MiuiBatteryMeterView;->onUiModeChanged()V",
+      "contains": [
+        ".method public final onUiModeChanged()V"
+      ],
+      "sha256": "659fcf80199521fd1c471fec82191633fc1832da19823249c2c565fcc5e745df",
+      "raw": ".workbuddy/tmp/mt-systemui/battery-visibility-current-member-17.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/views/MiuiBatteryMeterView;->toggleAodMode(Z)V",
+      "contains": [
+        ".method public final toggleAodMode(Z)V"
+      ],
+      "sha256": "0e94ddd5ee415e169ae00ff5d8c8658ba3feea0e24d5c3174aab110d15c8ac58",
+      "raw": ".workbuddy/tmp/mt-systemui/battery-visibility-current-member-18.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/views/MiuiBatteryMeterView;->updateAll()V",
+      "contains": [
+        ".method public final updateAll()V"
+      ],
+      "sha256": "e6e752ae5ed753dfe90e0ab31e1c2341d5c68d114b63686c42ed225efeefc531",
+      "raw": ".workbuddy/tmp/mt-systemui/battery-visibility-current-member-19.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/views/MiuiBatteryMeterView;->updateChargeAndText()V",
+      "contains": [
+        ".method public final updateChargeAndText()V"
+      ],
+      "sha256": "db1bee83934b9bb6f44d96e2f281f489047906900659fce01561e887aef9c660",
+      "raw": ".workbuddy/tmp/mt-systemui/battery-visibility-current-member-20.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/views/MiuiBatteryMeterView;->updateIslandChanged(ZZ)V",
+      "contains": [
+        ".method public final updateIslandChanged(ZZ)V"
+      ],
+      "sha256": "f9effa331117fcabd3d94af219f0445b32db7dfb58fcb00ba2c1823602b71de6",
+      "raw": ".workbuddy/tmp/mt-systemui/battery-visibility-current-member-21.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/views/MiuiBatteryMeterView;->updateIslandShowing(ZZZ)V",
+      "contains": [
+        ".method public final updateIslandShowing(ZZZ)V"
+      ],
+      "sha256": "a2caed0ccdbcc22d410c4e0c7ef12f9d3dd6b9ac9b3a9db874eb5d2a7c544c49",
+      "raw": ".workbuddy/tmp/mt-systemui/battery-visibility-current-member-22.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/views/MiuiBatteryMeterView;->updateState(I)V",
+      "contains": [
+        ".method public final updateState(I)V"
+      ],
+      "sha256": "8cfea0e0f16e335ea9fadf35a3a3353f3823f2bf549049383536d378e8f006b1",
+      "raw": ".workbuddy/tmp/mt-systemui/battery-visibility-current-member-23.json",
+      "complete": true
+    }
+  ]
+}

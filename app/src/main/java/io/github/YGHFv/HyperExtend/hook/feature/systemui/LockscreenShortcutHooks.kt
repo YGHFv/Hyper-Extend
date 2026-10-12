@@ -16,6 +16,7 @@ import android.view.ViewConfiguration
 import android.view.ViewTreeObserver
 import android.widget.ImageView
 import io.github.YGHFv.HyperExtend.core.ModuleLog
+import io.github.YGHFv.HyperExtend.core.LockscreenShortcutSettings
 import io.github.YGHFv.HyperExtend.hook.HookRuntime
 import io.github.YGHFv.HyperExtend.hook.HookSettings
 import io.github.YGHFv.HyperExtend.hook.Reflect
@@ -25,9 +26,18 @@ import java.util.WeakHashMap
 
 @TargetApi(28)
 internal class LockscreenShortcutHooks private constructor(loader: ClassLoader, private val hostLoader: ClassLoader, settings: HookSettings) {
-    private val hideLeft = settings.isOn(LockscreenShortcutPolicy.LEFT)
+    /**
+     * 左侧按钮的三选一（见 `core/LockscreenShortcutSettings`）。合并前这里是两张独立卡片，
+     * 靠代码里写死的「隐藏优先」收场（那正是现在被删掉的 `LockscreenShortcutPolicy.replaceLeft`）；
+     * 现在两者是同一个选择项的两个取值，互斥由数据保证，不再需要一个隐藏的优先规则。
+     * 卡片关着时按「保持原生」处理 —— 与「用户没进过界面」读出来一致。
+     */
+    private val leftMode = if (settings.isOn(LockscreenShortcutPolicy.LEFT)) {
+        LockscreenShortcutSettings.modeOf(settings.string(LockscreenShortcutSettings.MODE))
+    } else LockscreenShortcutSettings.MODE_DEFAULT
+    private val hideLeft = leftMode == LockscreenShortcutSettings.MODE_HIDE
     private val hideRight = settings.isOn(LockscreenShortcutPolicy.RIGHT)
-    private val replaceLeft = LockscreenShortcutPolicy.replaceLeft(settings.isOn(LockscreenShortcutPolicy.FLASHLIGHT), hideLeft)
+    private val replaceLeft = leftMode == LockscreenShortcutSettings.MODE_FLASHLIGHT
     private val flashlight = if (replaceLeft) runCatching { LockscreenFlashlightBridge(hostLoader) }
         .onFailure { ModuleLog.error("lockscreen flashlight controller unsupported; retaining native left entry", it) }.getOrNull() else null
     private val type = requireNotNull(Reflect.loadClass(loader, LockscreenShortcutTargets.VIEW))
@@ -121,14 +131,15 @@ internal class LockscreenShortcutHooks private constructor(loader: ClassLoader, 
             val touch = requireNotNull(NotificationHooks.resolve(loader, LockscreenFlashlightTargets.touch))
             val intercept = requireNotNull(NotificationHooks.resolve(loader, LockscreenFlashlightTargets.intercept))
             val queries = LockscreenFlashlightTargets.pluginQueries.associateWith { requireNotNull(NotificationHooks.resolve(loader, it)) }
-            val manager = Class.forName("com.miui.keyguard.shortcuts.manager.MiuiShortcutManager", false, loader).getDeclaredField("INSTANCE").get(null)
+            val managerField = Class.forName("com.miui.keyguard.shortcuts.manager.MiuiShortcutManager", false, loader).getDeclaredField("INSTANCE")
             ordinaryLockscreen = {
+                val manager = managerField.get(null)
                 queries.getValue(LockscreenFlashlightTargets.interactive).invoke(manager) == true &&
                     queries.getValue(LockscreenFlashlightTargets.showing).invoke(manager) == true &&
                     queries.getValue(LockscreenFlashlightTargets.occluded).invoke(manager) == false &&
                     queries.getValue(LockscreenFlashlightTargets.goingAway).invoke(manager) == false
             }
-            talkbackEnabled = { queries.getValue(LockscreenFlashlightTargets.talkback).invoke(manager) == true }
+            talkbackEnabled = { queries.getValue(LockscreenFlashlightTargets.talkback).invoke(managerField.get(null)) == true }
             val moveType = touch.declaringClass
             fun moveField(name: String) = moveType.getDeclaredField(name).apply { isAccessible = true }
             val icon = moveField("leftIcon")

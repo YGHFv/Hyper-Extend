@@ -9,13 +9,22 @@ import io.github.YGHFv.HyperExtend.core.SYSTEM_UI_FOCUS_PACKAGES
 import io.github.YGHFv.HyperExtend.core.SYSTEM_UI_MONET_COLOR
 import io.github.YGHFv.HyperExtend.core.SystemUiCustomSettings
 import io.github.YGHFv.HyperExtend.core.NavigationHandleSettings
+import io.github.YGHFv.HyperExtend.core.NativeSystemUiSettings
 import io.github.YGHFv.HyperExtend.hook.HookRuntime
 import io.github.YGHFv.HyperExtend.hook.HookSettings
 import io.github.YGHFv.HyperExtend.hook.Reflect
 
 internal object SystemUiCustomHooks {
     fun install(loader: ClassLoader, settings: HookSettings): List<String> = buildList {
+        addAll(WindowDecorationHooks.install(loader, settings))
+        val nativeFeature = if (settings.isOn(NativeSystemUiSettings.VOLUME)) NativeSystemUiSettings.VOLUME
+            else NativeSystemUiSettings.POWER
+        installSystemUiFeature(settings, nativeFeature) { NativeSystemUiHooks.install(loader, settings) }
         installSystemUiFeature(settings, NavigationHandleSettings.FEATURE) { NavigationHandleHooks.install(loader, settings) }
+        installSystemUiFeature(settings, ToastMaterialTargets.FEATURE) { ToastMaterialHooks.install(loader, settings) }
+        installSystemUiFeature(settings, io.github.YGHFv.HyperExtend.core.ForceBlurSettings.FEATURE) {
+            ForceBlurHooks.install(loader, settings)
+        }
         installSystemUiFeature(settings, "systemui_monet_custom") { monet(loader, settings) }
         installSystemUiFeature(settings, "notification_unlock_focus") { focus(loader, settings) }
         installSystemUiFeature(settings, "notification_disable_auto_fold") { NotificationFoldHooks.install(loader) }

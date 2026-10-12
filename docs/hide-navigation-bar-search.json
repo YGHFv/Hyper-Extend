@@ -1,0 +1,26 @@
+{
+  "verification": "Current host carrier search only; no implementation selected. Home APK DEX has no NavStubView/RecentsContainer; actual gesture-line/navigation code is Rust libapp.so with no traced DEX or Java bridge.",
+  "evidence": [
+    {
+      "artifact": "sysui",
+      "locator": "dex_class:Lcom/android/systemui/navigationbar/NavigationModeController;",
+      "sha256": "a468e886878651048f032b2dfb55967786f6706dc83c789315dfea1fe61a1c2b",
+      "raw": ".workbuddy/tmp/mt-systemui/hide-nav-0.json",
+      "pages": 1,
+      "contains": [
+        "hide_gesture"
+      ]
+    },
+    {
+      "artifact": "sysui",
+      "locator": "dex_class:Lcom/miui/systemui/SettingsManager;",
+      "sha256": "ae870a9da65d9b4926a3e9737be081e01070858b99ec2c69a0839dbc12d60fed",
+      "raw": ".workbuddy/tmp/mt-systemui/hide-nav-1.json",
+      "pages": 1,
+      "contains": [
+        "hide_gesture",
+        "onHideGestureLineChanged"
+      ]
+    }
+  ]
+}

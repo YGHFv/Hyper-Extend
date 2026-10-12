@@ -5,6 +5,13 @@ import kotlin.math.roundToInt
 
 internal object MediaBackgroundPolicy {
     const val SIZE = 192
+    data class Identity(val userId: Int, val uid: Int, val packageName: String)
+    fun identity(userId: Int, uid: Int, packageName: String?): Identity? =
+        if (userId >= 0 && uid >= 0 && uid / 100_000 == userId && !packageName.isNullOrBlank())
+            Identity(userId, uid, packageName) else null
+    fun <T> source(bound: Boolean, hasArtwork: Boolean, artwork: T?, appIcon: T?, identity: Identity?): T? =
+        if (!bound) null else if (hasArtwork && artwork != null) artwork else appIcon?.takeIf { identity != null }
+
     fun eligible(mode: Int, attached: Boolean, tiny: Boolean, blocked: Boolean, keyguard: Boolean?, showingKeyguard: Boolean?, aod: Boolean?, pendingAod: Boolean): Boolean =
         mode in 1..4 && attached && !tiny && !blocked && keyguard == false && showingKeyguard == false && aod == false && !pendingAod
 

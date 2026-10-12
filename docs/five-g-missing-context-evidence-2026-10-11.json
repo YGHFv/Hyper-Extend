@@ -1,0 +1,83 @@
+{
+  "host": {
+    "packageName": "com.android.systemui",
+    "versionCode": 202602260
+  },
+  "verification": "Read-only live module logs and host/framework body inspection. Source repair only; no new APK, runtime injection, tests, or network/SIM changes in this follow-up. Existing factory log lacks branch-level diagnostics, so runtime gate return was not directly observed.",
+  "evidence": [
+    {
+      "locator": "dex_method:Lcom/android/systemui/settings/UserTrackerImpl;->setUserIdInternal(I)Lkotlin/Pair;",
+      "sha256": "4cd78ba1adb37c4f22db8fd8b00b7db1ba5a732d9131cb38a0494db3ccc89ce6",
+      "contains": [
+        "const/4 v3, 0x0",
+        "->createContextAsUser(Landroid/os/UserHandle;I)Landroid/content/Context;",
+        "->userContext$delegate:"
+      ]
+    }
+  ],
+  "contextChain": [
+    "MiuiQSHostAdapter.getUserContext -> CurrentTilesInteractorImpl.userContext -> UserTrackerImpl.getUserContext",
+    "UserTrackerImpl.setUserIdInternal -> createContextAsUser(user, 0)",
+    "ContextImpl.createContextAsUser -> createPackageContextAsUser -> ActivityThread resource-only LoadedApk cache for flags without CONTEXT_INCLUDE_CODE",
+    "ContextImpl.getApplicationContext reads that LoadedApk.getApplication; it can be null after real Application is created",
+    "ActivityThread.currentApplication returns mInitialApplication, the same process lifecycle source used by MIUI TelephonyManagerEx.Holder"
+  ],
+  "framework": {
+    "devicePath": "/system/framework/framework.jar",
+    "sha256": "f8af87fa975ca7e529aeeeb193a4e77bea650b0e9b611259e600c248ac3b4bc4",
+    "methodEvidence": [
+      {
+        "declaration": "public Context getApplicationContext()",
+        "bodySha256": "d7db1201885f2c40569b462bf1342eb3310658cfd1e99f265e034ab918289843",
+        "contains": [
+          "public Context getApplicationContext() {",
+          "return this.mPackageInfo != null ? this.mPackageInfo.getApplication() : this.mMainThread.getApplication();"
+        ]
+      },
+      {
+        "declaration": "public Context createContextAsUser(UserHandle user, int flags)",
+        "bodySha256": "c95208c5bcdc13708c4d4406ae821d7092198a6daeafffc0df0e1c5892d52001",
+        "contains": [
+          "public Context createContextAsUser(UserHandle user, int flags) {",
+          "return createPackageContextAsUser(getPackageName(), flags, user);"
+        ]
+      },
+      {
+        "declaration": "public Context createPackageContextAsUser(String packageName, int flags, UserHandle user)",
+        "bodySha256": "4080848f58b2d14a27299c17d184b68c8518811790254e2e5b7d807eec53eedc",
+        "contains": [
+          "public Context createPackageContextAsUser(String packageName, int flags, UserHandle user) throws PackageManager.NameNotFoundException {",
+          "return new ContextImpl(this, this.mMainThread, this.mPackageInfo, this.mParams, this.mAttributionSource.getAttributionTag(), this.mAttributionSource.getNext(), null, this.mToken, user, flags, null, null, this.mDeviceId, this.mIsExplicitDeviceId);",
+          "LoadedApk pi = this.mMainThread.getPackageInfo(packageName, this.mResources.getCompatibilityInfo(), flags | 1073741824, user.getIdentifier());",
+          "ContextImpl c = new ContextImpl(this, this.mMainThread, pi, this.mParams, this.mAttributionSource.getAttributionTag(), this.mAttributionSource.getNext(), null, this.mToken, user, flags, null, null, this.mDeviceId, this.mIsExplicitDeviceId);"
+        ]
+      },
+      {
+        "declaration": "public static Application currentApplication()",
+        "bodySha256": "17dfb155d315f4816cb3bbe937c2b10fc636392b6f5855fa021e29e5d432111a",
+        "contains": [
+          "public static Application currentApplication() {",
+          "return am.mInitialApplication;",
+          "return null;"
+        ]
+      },
+      {
+        "declaration": "public LoadedApk getPackageInfo(String packageName, CompatibilityInfo compatInfo, int flags, int userId)",
+        "bodySha256": "5f704e233b8d17939d35c6790e2f4150f74e98a76381fd7beb1efcd0129fdba3",
+        "contains": [
+          "public LoadedApk getPackageInfo(String packageName, CompatibilityInfo compatInfo, int flags, int userId) {",
+          "ref = this.mResourcePackages.get(packageName);",
+          "return null;",
+          "return getPackageInfo(ai, compatInfo, flags);"
+        ]
+      }
+    ],
+    "extractionNote": "JADX reports unrelated errors in both whole classes. Only listed complete method bodies without decompilation errors were used; no whole-class correctness claim."
+  },
+  "runtimeObserved": [
+    "PID 8042 loaded stock_tiles/5g_factory and plugin editor candidate hooks at 00:10:53/58.",
+    "User reports 5G absent in the editor.",
+    "Current log has no explicit 5G creation exception or per-return diagnostics; hook installation is not proof of tile creation."
+  ],
+  "fix": "Resolve currentApplication during installation without invocation; check process Application/package at factory and binder access. Retain user Context for owner/SIM/policy/resources; do not create Application or change context flags. Add bounded once-per-stage diagnostics and readiness/list-inclusion logging."
+}

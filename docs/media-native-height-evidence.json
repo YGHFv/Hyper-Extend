@@ -1,0 +1,28 @@
+{
+  "verification": "Complete current native primary-mode draw and sole dispatch caller; complete cached framework getter instruction bytes. No build/tests/runtime acceptance.",
+  "host": {
+    "workspaceId": "wot5ikcq",
+    "versionCode": 202602260
+  },
+  "evidence": [
+    {
+      "locator": "dex_method:Lmiuix/miuixbasewidget/widget/HyperProgressSeekBar;->drawPrimaryMode(Landroid/graphics/Canvas;)V",
+      "sha256": "5cc9e00b967efd2c2d7fbe7fd770b8562a44e172ef2415e8625d4fbfc6477f3e",
+      "raw": ".workbuddy/tmp/mt-systemui/media-native-height-primary.json",
+      "pages": 1
+    }
+  ],
+  "framework": {
+    "artifact": ".workbuddy/tmp/host/framework.jar",
+    "sha256": "f8af87fa975ca7e529aeeeb193a4e77bea650b0e9b611259e600c248ac3b4bc4",
+    "members": [
+      {
+        "signature": "Landroid/widget/ProgressBar;->getMaxHeight()I",
+        "dex": "classes5.dex",
+        "access": 1,
+        "instructionsHex": "5210130f0f00",
+        "instructionsSha256": "0c8df395199e3106db8414928ba8d86ba5d8f0284e81733b855fa57c612f1ac1"
+      }
+    ]
+  }
+}

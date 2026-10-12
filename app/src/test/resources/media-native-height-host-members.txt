@@ -1,0 +1,2 @@
+Lmiuix/miuixbasewidget/widget/HyperProgressSeekBar;->drawPrimaryMode(Landroid/graphics/Canvas;)V
+Landroid/widget/ProgressBar;->getMaxHeight()I

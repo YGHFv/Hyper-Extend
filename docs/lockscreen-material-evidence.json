@@ -1,0 +1,140 @@
+{
+  "host": {
+    "packageName": "com.miui.aod",
+    "versionCode": 22446301,
+    "systemUi": 202602260
+  },
+  "verification": "Complete read-only MT current plugin lifecycle/scene and SystemUI capability methods. Cached framework APIs recorded separately; no build/tests/runtime acceptance.",
+  "evidence": [
+    {
+      "locator": "dex_method:Lcom/miui/keyguard/shortcuts/controller/ShortcutViewLayoutController;->updateShortcutView(Lcom/miui/keyguard/shortcuts/data/ShortcutEntity;Landroid/widget/ImageView;Landroid/view/View;)V",
+      "contains": [
+        ".method public final updateShortcutView(Lcom/miui/keyguard/shortcuts/data/ShortcutEntity;Landroid/widget/ImageView;Landroid/view/View;)V"
+      ],
+      "sha256": "7ec8003edf5491e18ef283409ed7938a7216119bac9392c6c7931b4a76bd6fb7",
+      "raw": ".workbuddy\\tmp\\mt-systemui\\continuous-shortcut-material.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lcom/miui/keyguard/shortcuts/controller/ShortcutViewLayoutController;->release()V",
+      "contains": [
+        ".method public final release()V"
+      ],
+      "sha256": "cbf5cb4f71e3ba8bdf3b18fb5e8b630df9da50fcb83d6b9a435122e5a0b62ab1",
+      "raw": ".workbuddy\\tmp\\mt-systemui\\continuous-shortcut-material.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lcom/miui/keyguard/shortcuts/controller/ShortcutViewLayoutController;->onShortcutDataChanged(Lcom/miui/keyguard/shortcuts/data/ShortcutEntity;Z)V",
+      "contains": [
+        ".method public onShortcutDataChanged(Lcom/miui/keyguard/shortcuts/data/ShortcutEntity;Z)V"
+      ],
+      "sha256": "5bae9f0a65573015f17711efe21aff3d1b37549ba19895de8591daa95783107f",
+      "raw": ".workbuddy\\tmp\\mt-systemui\\continuous-shortcut-material.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lcom/miui/keyguard/shortcuts/controller/ShortcutViewLayoutController;-><init>(Landroid/content/Context;Landroid/content/Context;Landroid/view/ViewGroup;ZZLcom/miui/keyguard/shortcuts/controller/ShortcutViewLayoutController$ShortcutTipsAnimCallback;)V",
+      "contains": [
+        ".method public constructor <init>(Landroid/content/Context;Landroid/content/Context;Landroid/view/ViewGroup;ZZLcom/miui/keyguard/shortcuts/controller/ShortcutViewLayoutController$ShortcutTipsAnimCallback;)V"
+      ],
+      "sha256": "09c30641875dcdbae07cfc7d343a031dbf20410ecf07e36fc1c152cbc87437c8",
+      "raw": ".workbuddy\\tmp\\mt-systemui\\continuous-shortcut-material.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lcom/miui/keyguard/shortcuts/manager/ShortcutManager;->getInteractive()Z",
+      "contains": [
+        ".method public final getInteractive()Z"
+      ],
+      "sha256": "c5f380f06ba8f432507dcf9b186638fe58f07812fe2a887538691070cddfc04b",
+      "raw": ".workbuddy\\tmp\\mt-systemui\\continuous-shortcut-base-manager.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lcom/miui/keyguard/shortcuts/manager/ShortcutManager;->isKeyguardShowing()Z",
+      "contains": [
+        ".method public final isKeyguardShowing()Z"
+      ],
+      "sha256": "ac1c5c64a0bcb0f58de4697da266dc0fccfd2b07d630bc01f9a2be9b1888a586",
+      "raw": ".workbuddy\\tmp\\mt-systemui\\continuous-shortcut-base-manager.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lcom/miui/keyguard/shortcuts/manager/ShortcutManager;->isOccluded()Z",
+      "contains": [
+        ".method public final isOccluded()Z"
+      ],
+      "sha256": "4ef3bdb7baf28ba9514d71932bf1e1b47fbfd3d4af416d731c910e683713c35d",
+      "raw": ".workbuddy\\tmp\\mt-systemui\\continuous-shortcut-base-manager.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lcom/miui/keyguard/shortcuts/manager/ShortcutManager;->isKeyguardGoingAway()Z",
+      "contains": [
+        ".method public final isKeyguardGoingAway()Z"
+      ],
+      "sha256": "81522c776892b08b7ac1e017dce2d6fdff58e4d29649664b3def8c507b0db2da",
+      "raw": ".workbuddy\\tmp\\mt-systemui\\continuous-shortcut-base-manager.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_field:Lcom/miui/keyguard/shortcuts/manager/MiuiShortcutManager;->INSTANCE:Lcom/miui/keyguard/shortcuts/manager/MiuiShortcutManager;",
+      "contains": [
+        ".field public static final INSTANCE:Lcom/miui/keyguard/shortcuts/manager/MiuiShortcutManager;"
+      ],
+      "sha256": "cfddc60fccaf7a481bb5c3b19194c0d88cca92ea12e1e404af97485e54625d69",
+      "raw": ".workbuddy\\tmp\\mt-systemui\\continuous-shortcut-manager.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lcom/miui/systemui/notification/MiuiBaseNotifUtil;->isBackgroundBlurOpened(Landroid/content/Context;)Z",
+      "contains": [
+        ".method public static isBackgroundBlurOpened(Landroid/content/Context;)Z"
+      ],
+      "sha256": "787eb03475210ee265428016253229e9f8297eeb9fcce2b40c7c6e793d2eaad5",
+      "raw": ".workbuddy\\tmp\\mt-systemui\\continuous-material-enabled.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lcom/miui/systemui/util/MiBlurCompat;->getBackgroundBlurOpened(Landroid/content/Context;)Z",
+      "contains": [
+        ".method public static final getBackgroundBlurOpened(Landroid/content/Context;)Z"
+      ],
+      "sha256": "f9b514868506689b820cbf3c0bad8aaea3a9f9f0d914cd7f50c379bf65fded6a",
+      "raw": ".workbuddy\\tmp\\mt-systemui\\continuous-material-mi-enabled.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lcom/miui/systemui/util/MiBlurCompat;->getBackgroundBlurOpened(Landroid/content/res/Configuration;)Z",
+      "contains": [
+        ".method public static final getBackgroundBlurOpened(Landroid/content/res/Configuration;)Z"
+      ],
+      "sha256": "5327b8201c93ba1658066575cb4d934bffdf7ec264c7badce76de45c8374aab7",
+      "raw": ".workbuddy\\tmp\\mt-systemui\\continuous-material-config-enabled.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lcom/miui/keyguard/shortcuts/ShortcutPluginImpl;->inflateShortcutViews()V",
+      "contains": [
+        ".method public final inflateShortcutViews()V"
+      ],
+      "sha256": "aa21707bf2a1e81aac2f31b798bceba256a95b5ba3f176a563e74dd6c6437c3e",
+      "raw": ".workbuddy\\tmp\\mt-systemui\\continuous-material-release-0.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lcom/miui/keyguard/shortcuts/ShortcutPluginImpl;->onDestroy()V",
+      "contains": [
+        ".method public onDestroy()V"
+      ],
+      "sha256": "d6a9be832efa599e47c3498b987c83a1c1d475e703d470153ed9187f64b7e017",
+      "raw": ".workbuddy\\tmp\\mt-systemui\\continuous-material-release-1.json",
+      "complete": true
+    }
+  ],
+  "dispatchXrefs": [
+    ".workbuddy/tmp/mt-systemui/continuous-material-bind-xref.json",
+    ".workbuddy/tmp/mt-systemui/continuous-material-release-xref.json"
+  ]
+}

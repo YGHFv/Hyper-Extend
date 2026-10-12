@@ -1,0 +1,126 @@
+{
+  "host": {
+    "packageName": "com.android.systemui",
+    "versionCode": 202602260
+  },
+  "verification": "Complete current MT members and dispatch/field consumers. No compile, tests or device acceptance.",
+  "evidence": [
+    {
+      "locator": "dex_field:Lcom/android/systemui/MiuiOperatorCustomizedPolicy;->mContext:Landroid/content/Context;",
+      "contains": [
+        ".field public final mContext:Landroid/content/Context;"
+      ],
+      "sha256": "6e70305832f1ce0157b2c6a710349cbad62813ad0591d0e4cecabb3138810a6d",
+      "raw": ".workbuddy/tmp/mt-systemui/operator-icons-current-member-0.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_field:Lcom/miui/interfaces/IOperatorCustomizedPolicy$OperatorConfig;->hideVolte:Z",
+      "contains": [
+        ".field public hideVolte:Z"
+      ],
+      "sha256": "68ba446862b109cb2b1bd832f150e2fedbf09a0311e0b60a38be27181e5dd13a",
+      "raw": ".workbuddy/tmp/mt-systemui/operator-icons-current-member-1.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/MiuiOperatorCustomizedPolicy;->getMiuiOperatorConfig(I)Lcom/miui/interfaces/IOperatorCustomizedPolicy$OperatorConfig;",
+      "contains": [
+        ".method public final getMiuiOperatorConfig(I)Lcom/miui/interfaces/IOperatorCustomizedPolicy$OperatorConfig;"
+      ],
+      "sha256": "9c98737f01e598ccc108184f772631e8210af0e9f2512d7e0e83b90af2359b89",
+      "raw": ".workbuddy/tmp/mt-systemui/operator-icons-current-member-2.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/MiuiOperatorCustomizedPolicy;->updateMiuiOperatorConfig(I)V",
+      "contains": [
+        ".method public final updateMiuiOperatorConfig(I)V"
+      ],
+      "sha256": "d46be07fc219cba537909b05f0d512fc7f6a37137b77957aa21c8517906a29c3",
+      "raw": ".workbuddy/tmp/mt-systemui/operator-icons-current-member-3.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/pipeline/mobile/domain/interactor/MiuiMobileIconInteractorImpl$special$$inlined$flatMapLatest$2;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;",
+      "contains": [
+        ".method public final invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;"
+      ],
+      "sha256": "8d5776070070f50a453dadd0ad591ef7c46b2def30a1396007a686dc9088944f",
+      "raw": ".workbuddy/tmp/mt-systemui/operator-icons-current-member-4.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/pipeline/mobile/domain/interactor/MiuiMobileIconInteractorImpl$volteNoService$2;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;",
+      "contains": [
+        ".method public final invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;"
+      ],
+      "sha256": "d4a359f0b7aaefb15e453bf22539533906daa134a1ed8401f37ac41b0c34ba35",
+      "raw": ".workbuddy/tmp/mt-systemui/operator-icons-current-member-5.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/pipeline/mobile/domain/interactor/MiuiMobileIconsInteractorImpl;->getMiuiMobileConnectionInterForSubId(ILcom/android/systemui/statusbar/pipeline/mobile/domain/interactor/MobileIconInteractor;)Lcom/android/systemui/statusbar/pipeline/mobile/domain/interactor/MiuiMobileIconInteractorImpl;",
+      "contains": [
+        ".method public final getMiuiMobileConnectionInterForSubId(ILcom/android/systemui/statusbar/pipeline/mobile/domain/interactor/MobileIconInteractor;)Lcom/android/systemui/statusbar/pipeline/mobile/domain/interactor/MiuiMobileIconInteractorImpl;"
+      ],
+      "sha256": "f7ea514f275bae7d196d4994ada074db56d46e13f5155051a76556eaf3030041",
+      "raw": ".workbuddy/tmp/mt-systemui/operator-icons-current-member-6.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/pipeline/mobile/ui/viewmodel/MiuiCellularIconVM$special$$inlined$map$1$2;->emit(Ljava/lang/Object;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;",
+      "contains": [
+        ".method public final emit(Ljava/lang/Object;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;"
+      ],
+      "sha256": "93878708fe995b5abc80b9f742da9082bde3c8a16670caf13cf5b839d463562b",
+      "raw": ".workbuddy/tmp/mt-systemui/operator-icons-current-member-7.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/pipeline/mobile/ui/viewmodel/MiuiMobileIconVMImpl$$ExternalSyntheticLambda0;->invoke()Ljava/lang/Object;",
+      "contains": [
+        ".method public final invoke()Ljava/lang/Object;"
+      ],
+      "sha256": "5877e821a96dbb1c78ba59ec042b2229ced62ba8df8103a039ec3b3ddd8eecd7",
+      "raw": ".workbuddy/tmp/mt-systemui/operator-icons-current-member-8.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/policy/HDController;->isVisible(I)Z",
+      "contains": [
+        ".method public final isVisible(I)Z"
+      ],
+      "sha256": "023bb582423e2ddabb66f44e7928c99e1b4551e0b9aa6be3379648e71d645a25",
+      "raw": ".workbuddy/tmp/mt-systemui/operator-icons-current-member-9.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lcom/miui/interfaces/IOperatorCustomizedPolicy$OperatorConfig;->equals(Ljava/lang/Object;)Z",
+      "contains": [
+        ".method public final equals(Ljava/lang/Object;)Z"
+      ],
+      "sha256": "7dfeba5fb10ba5ae3f9417b9193e7ae9bfc04c010c95e8d36a267899ac4699f6",
+      "raw": ".workbuddy/tmp/mt-systemui/operator-icons-current-member-10.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lcom/miui/interfaces/IOperatorCustomizedPolicy$OperatorConfig;->hashCode()I",
+      "contains": [
+        ".method public final hashCode()I"
+      ],
+      "sha256": "75dd9490e5a8655424aef33b650da60b1ecbebae181fe932cfc1647c06ed2d41",
+      "raw": ".workbuddy/tmp/mt-systemui/operator-icons-current-member-11.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lcom/miui/interfaces/IOperatorCustomizedPolicy$OperatorConfig;->toString()Ljava/lang/String;",
+      "contains": [
+        ".method public final toString()Ljava/lang/String;"
+      ],
+      "sha256": "fa43e06c171da270e38508daa9bb4c3bc43cf70b4bef151ddad956113d0c645b",
+      "raw": ".workbuddy/tmp/mt-systemui/operator-icons-current-member-12.json",
+      "complete": true
+    }
+  ]
+}

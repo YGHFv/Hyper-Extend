@@ -1,0 +1,15 @@
+Lcom/android/systemui/statusbar/views/MiuiBatteryMeterView;->onLayout(ZIIII)V
+Lcom/android/systemui/statusbar/views/MiuiBatteryMeterView;->onMeasure(II)V
+Lcom/android/systemui/statusbar/views/MiuiBatteryMeterView;->mBatteryDigitalView:Landroid/widget/FrameLayout;
+Lcom/android/systemui/statusbar/views/MiuiBatteryMeterView;->mBatteryPercentContainer:Landroid/widget/LinearLayout;
+Lcom/android/systemui/statusbar/views/MiuiBatteryMeterView;->mBatteryChargingView:Landroid/widget/ImageView;
+Lcom/android/systemui/statusbar/views/MiuiBatteryMeterView;->mBatteryStyle:I
+Lcom/android/systemui/statusbar/views/MiuiBatteryMeterView;->mLayoutFromTag:I
+Lcom/android/systemui/statusbar/views/MiuiBatteryMeterView;->mStatusBarState:I
+Lcom/android/systemui/statusbar/views/MiuiBatteryMeterView;->mAnimToAod:Z
+Lcom/android/systemui/statusbar/views/MiuiBatteryMeterView;->mIsAodAnimate:Z
+Lcom/android/systemui/statusbar/views/MiuiBatteryMeterView;->mToAod:Z
+Lcom/android/systemui/statusbar/views/MiuiBatteryMeterView;->mIslandAnimate:Z
+Lcom/android/systemui/statusbar/views/MiuiBatteryMeterView;->mIsIslandShowing:Z
+Lcom/android/systemui/statusbar/views/MiuiBatteryMeterView;->mIsAddBatteryIsland:Z
+Lcom/android/systemui/statusbar/views/MiuiBatteryMeterView;->mIsControlCenterExpanding:Z

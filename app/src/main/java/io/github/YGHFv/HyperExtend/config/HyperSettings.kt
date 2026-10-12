@@ -19,7 +19,12 @@ import io.github.YGHFv.HyperExtend.core.FRAMEWORK_FUSE_RESET_KEY
 import io.github.YGHFv.HyperExtend.core.FrameworkBridge
 import io.github.YGHFv.HyperExtend.core.CONFIG_KEYS
 import io.github.YGHFv.HyperExtend.core.MONET_SCHEME_KEY
+import io.github.YGHFv.HyperExtend.core.MergedCardMigration
 import io.github.YGHFv.HyperExtend.core.ModuleLog
+import io.github.YGHFv.HyperExtend.core.LockscreenShortcutSettings
+import io.github.YGHFv.HyperExtend.core.NavigationHandleSettings
+import io.github.YGHFv.HyperExtend.core.NotificationImportanceSettings
+import io.github.YGHFv.HyperExtend.core.PercentageSettings
 import io.github.YGHFv.HyperExtend.core.NFC_IMAGE_KEY
 import io.github.YGHFv.HyperExtend.core.NOTIFY_ICON_AUTO_TIME_KEY
 import io.github.YGHFv.HyperExtend.core.NOTIFY_ICON_SOURCE_KEY
@@ -58,7 +63,22 @@ object HyperSettings {
     /** 一次性版本标记：以后改默认值时可以据此做迁移，不必让用户手动恢复默认。 */
     const val KEY_SCHEMA = "schema_version"
 
-    const val SCHEMA_VERSION = 1
+    /**
+     * 当前设置结构版本。**加一次合并/改名就要 +1**，并在 [mergedCardKeyMigration] 里补上搬迁规则。
+     *
+     * v1：初始版本，没有搬迁逻辑。
+     * v2：`control_center_brightness_value` / `control_center_volume_value` 两张卡片并入
+     *     `slider_percentage`（见 `core/PercentageSettings`），老用户的开关需要搬过去。
+     * v3：`gesture_line` 卡片并入 `navigation_handle_custom` 的「隐藏提示线」方式
+     *     （见 `core/NavigationHandleSettings`）。
+     * v4：`notification_channel_settings` 卡片并入 `notification_importance` 的菜单目标选择项
+     *     （见 `core/NotificationImportanceSettings`）。
+     * v5：`systemui_hide_navigation_bar` 卡片并入 `navigation_handle_custom` 的
+     *     「改系统原生隐藏偏好」档（见 `core/NavigationHandleSettings.MODE_NATIVE`）。
+     * v6：`lockscreen_left_flashlight` 卡片并入 `lockscreen_hide_left_shortcut` 的
+     *     「处理方式」选择项（见 `core/LockscreenShortcutSettings`）：上游本来就是一个三选一下拉框。
+     */
+    const val SCHEMA_VERSION = 6
     /**
      * 字符串型设置。
      *
@@ -89,6 +109,108 @@ object HyperSettings {
      * 原样读出来会让界面上出现一个「幽灵开关」，而 hook 侧根本不认识它。
      */
     fun read(context: Context): Map<String, Boolean> = readFrom(localPrefs(context))
+
+    /**
+     * 按 [KEY_SCHEMA] 做一次结构迁移。**只读一次版本号，幂等**，没升级就直接返回。
+     *
+     * 为什么放在这里而不是每次 `read` 里顺手做：迁移会写 prefs（还可能要同步给框架），
+     * 而 `read` 会被界面和入口行频繁调用；在模块启动时做一次，
+     * 既保证后续所有读取/投影拿到的都是迁移后的值，又不会把写操作混进只读路径。
+     *
+     * 迁移**不做**「用户没设过就补默认值」这类推断：老键没出现过时一个字节都不写，
+     * 免得给「从没配过的用户」凭空造出一批开关。
+     */
+    fun migrateIfNeeded(context: Context) {
+        val prefs = localPrefs(context)
+        val stored = runCatching { prefs.getInt(KEY_SCHEMA, 1) }.getOrDefault(1)
+        if (stored >= SCHEMA_VERSION) return
+        runCatching {
+            val editor = prefs.edit()
+            // v1 -> v2：两张「控制中心亮度值 / 音量值」卡片并入 slider_percentage。
+            applySliderValueMerge(prefs, editor)
+            // v2 -> v3：独立卡片「隐藏手势横条」「自定义导航栏几何」并入 navigation_handle_custom。
+            applyNavigationMerge(prefs, editor)
+            // v3 -> v4：独立卡片「通知设置跳转到通知渠道」并入 notification_importance。
+            applyNotificationMenuMerge(prefs, editor)
+            // v4 -> v5：独立卡片「隐藏底部手势横条」并入 navigation_handle_custom 的原生隐藏档。
+            applyNativeHideMerge(prefs, editor)
+            // v5 -> v6：独立卡片「锁屏左侧入口替换为手电筒」并入锁屏左侧按钮卡片的三选一。
+            applyLeftButtonMerge(prefs, editor)
+            editor.putInt(KEY_SCHEMA, SCHEMA_VERSION)
+            editor.apply()
+            ModuleLog.info("settings migrated schema $stored -> $SCHEMA_VERSION")
+        }.onFailure { ModuleLog.error("settings schema migration failed; keeping stored values", it) }
+    }
+
+    /** v1→v2 的键搬迁。老键读到就搬走并删除；老键不存在则完全不动。 */
+    private fun applySliderValueMerge(prefs: SharedPreferences, editor: SharedPreferences.Editor) {
+        val legacyBrightness = prefs.booleanOrNull(PercentageSettings.LEGACY_BRIGHTNESS_CARD)
+        val legacyVolume = prefs.booleanOrNull(PercentageSettings.LEGACY_VOLUME_CARD)
+        val plan = MergedCardMigration.sliderValuePlan(
+            legacyBrightness, legacyVolume, prefs.stringOrNull(PercentageSettings.STYLE),
+        ) ?: return
+        plan.applyTo(editor)
+        editor.remove(PercentageSettings.LEGACY_BRIGHTNESS_CARD)
+        editor.remove(PercentageSettings.LEGACY_VOLUME_CARD)
+    }
+
+    /** v2→v3 的键搬迁：「隐藏手势横条」「自定义导航栏几何」并入 navigation_handle_custom。 */
+    private fun applyNavigationMerge(prefs: SharedPreferences, editor: SharedPreferences.Editor) {
+        val plan = MergedCardMigration.navigationMergePlan(
+            prefs.booleanOrNull(NavigationHandleSettings.LEGACY_HIDE_FEATURE),
+            prefs.booleanOrNull(NavigationHandleSettings.LEGACY_GEOMETRY_FEATURE),
+            prefs.stringOrNull(NavigationHandleSettings.MODE),
+        ) ?: return
+        plan.applyTo(editor)
+        editor.remove(NavigationHandleSettings.LEGACY_HIDE_FEATURE)
+        editor.remove(NavigationHandleSettings.LEGACY_GEOMETRY_FEATURE)
+    }
+
+    /** v3→v4 的键搬迁：「通知设置跳转到通知渠道」并入 notification_importance 的菜单目标。 */
+    private fun applyNotificationMenuMerge(prefs: SharedPreferences, editor: SharedPreferences.Editor) {
+        val plan = MergedCardMigration.notificationMenuPlan(
+            prefs.booleanOrNull(NotificationImportanceSettings.LEGACY_CHANNEL_FEATURE),
+            prefs.stringOrNull(NotificationImportanceSettings.MENU_TARGET),
+        ) ?: return
+        plan.applyTo(editor)
+        editor.remove(NotificationImportanceSettings.LEGACY_CHANNEL_FEATURE)
+    }
+
+    /** v4→v5 的键搬迁：「隐藏底部手势横条」并入 navigation_handle_custom 的「改系统原生隐藏偏好」。 */
+    private fun applyNativeHideMerge(prefs: SharedPreferences, editor: SharedPreferences.Editor) {
+        val plan = MergedCardMigration.nativeHideMergePlan(
+            prefs.booleanOrNull(NavigationHandleSettings.LEGACY_NATIVE_HIDE_FEATURE),
+            prefs.booleanOrNull(NavigationHandleSettings.LEGACY_NATIVE_RESTORE),
+            prefs.stringOrNull(NavigationHandleSettings.MODE),
+        ) ?: return
+        plan.applyTo(editor)
+        editor.remove(NavigationHandleSettings.LEGACY_NATIVE_HIDE_FEATURE)
+        editor.remove(NavigationHandleSettings.LEGACY_NATIVE_RESTORE)
+    }
+
+    /** v5→v6 的键搬迁：「锁屏左侧入口替换为手电筒」并入锁屏左侧按钮卡片的「处理方式」。 */
+    private fun applyLeftButtonMerge(prefs: SharedPreferences, editor: SharedPreferences.Editor) {
+        val plan = MergedCardMigration.leftButtonMergePlan(
+            prefs.booleanOrNull(LockscreenShortcutSettings.FEATURE),
+            prefs.booleanOrNull(LockscreenShortcutSettings.LEGACY_FLASHLIGHT_CARD),
+            prefs.stringOrNull(LockscreenShortcutSettings.MODE),
+        ) ?: return
+        plan.applyTo(editor)
+        editor.remove(LockscreenShortcutSettings.LEGACY_FLASHLIGHT_CARD)
+    }
+
+    private fun MergedCardMigration.Plan.applyTo(editor: SharedPreferences.Editor) {
+        switches.forEach { (key, value) -> editor.putBoolean(key, value) }
+        configs.forEach { (key, value) -> editor.putString(key, value) }
+    }
+
+    /** 键存在时返回它的布尔值；不存在（或类型不对）返回 null —— 与「值恰好是 false」区分开。 */
+    private fun SharedPreferences.booleanOrNull(key: String): Boolean? =
+        if (contains(key)) getBoolean(key, false) else null
+
+    /** 同 [booleanOrNull]：区分「没存过」与「存了空串」。 */
+    private fun SharedPreferences.stringOrNull(key: String): String? =
+        if (contains(key)) getString(key, null) else null
 
     fun readFrom(prefs: SharedPreferences): Map<String, Boolean> {
         val all = prefs.all
@@ -286,6 +408,17 @@ object HyperSettings {
                     if (applyBoolean(editor, switches, option.id, option.defaultEnabled)) applied++
                 }
             }
+            // 老备份里的两张合并前卡片键：按同一套规则搬进 slider_percentage。
+            // 不这么做的话，用户从旧版本导出的备份恢复后会「少两个开关」且查不出原因。
+            val legacy = MergedCardMigration.sliderValuePlan(
+                switches.booleanOrNull(PercentageSettings.LEGACY_BRIGHTNESS_CARD),
+                switches.booleanOrNull(PercentageSettings.LEGACY_VOLUME_CARD),
+                switches.stringOrNull(PercentageSettings.STYLE),
+            )
+            legacy?.let { plan ->
+                plan.switches.forEach { (key, value) -> editor.putBoolean(key, value); applied++ }
+                plan.configs.forEach { (key, value) -> editor.putString(key, value); applied++ }
+            }
         }
         root.optJSONObject("strings")?.let { strings ->
             for (key in STRING_KEYS) {
@@ -312,4 +445,10 @@ object HyperSettings {
         editor.putBoolean(key, source.optBoolean(key, fallback))
         return true
     }
+
+    private fun JSONObject.booleanOrNull(key: String): Boolean? =
+        if (has(key)) optBoolean(key, false) else null
+
+    private fun JSONObject.stringOrNull(key: String): String? =
+        if (has(key)) optString(key, "") else null
 }

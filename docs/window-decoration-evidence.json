@@ -1,0 +1,199 @@
+{
+  "host": {
+    "packageName": "io.github.yghfv.evidence",
+    "versionCode": 1,
+    "versionName": "analysis-only"
+  },
+  "loadedBy": "com.android.systemui",
+  "sourceArtifact": {
+    "path": "/system_ext/framework/Miui-WindowManager-Shell.jar",
+    "sha256": "aae1827abff92240c405a77794506bebbb801b06a57c7f66e501ec181af42ded",
+    "dexSha256": "c479b411136ceeb6055c5dd301ea008c79993600e7818b7e9dea64926b9a1515",
+    "deviceSdk": 37,
+    "syntheticManifest": true,
+    "wrapperNeverInstall": true
+  },
+  "verification": "Complete live MT member reads; raw JAR copied with root, byte-identical DEX wrapper for analysis only. Source-only, no tests/build/runtime acceptance. Select the WMShell workspace explicitly when refreshing this synthetic package.",
+  "evidence": [
+    {
+      "locator": "dex_method:Lcom/android/wm/shell/multitasking/miuimultiwinswitch/miuiwindowdecor/decoration/MiuiDecorationDotView;->onDraw(Landroid/graphics/Canvas;)V",
+      "sha256": "5f1df0d3476166938ea9a73183badf9d12bc3bb43dc23402495baf127c829708",
+      "raw": ".workbuddy/tmp/mt-systemui/pending14-wm-member-0.json",
+      "pages": 1,
+      "contains": [
+        ".method public onDraw(Landroid/graphics/Canvas;)V"
+      ]
+    },
+    {
+      "locator": "dex_method:Lcom/android/wm/shell/multitasking/miuimultiwinswitch/miuiwindowdecor/decoration/MiuiDecorationDot;->createHandleMenu(ILjava/lang/String;)V",
+      "sha256": "a724065d365dd014df867bddde2ad11d93a8438945b63dbf658c1198af032b97",
+      "raw": ".workbuddy/tmp/mt-systemui/pending14-wm-member-1.json",
+      "pages": 1,
+      "contains": [
+        ".method private createHandleMenu(ILjava/lang/String;)V"
+      ]
+    },
+    {
+      "locator": "dex_method:Lcom/android/wm/shell/multitasking/miuimultiwinswitch/miuiwindowdecor/decoration/MiuiDecorationDot;->handleCaptionClicked()V",
+      "sha256": "db5cb23c33d4a1660b5d0b5033e8336dff5e89d8311cb496766348c36132afb1",
+      "raw": ".workbuddy/tmp/mt-systemui/pending14-wm-member-2.json",
+      "pages": 1,
+      "contains": [
+        ".method public handleCaptionClicked()V"
+      ]
+    },
+    {
+      "locator": "dex_method:Lcom/android/wm/shell/multitasking/stubs/infinitymode/MiuiInfinityModeStatus;->isEnabled()Z",
+      "sha256": "c80768cdf10963ad3558ea999454c6e2c366b176ff9f9a562e3b2b484e90a8d1",
+      "raw": ".workbuddy/tmp/mt-systemui/pending14-wm-member-3.json",
+      "pages": 1,
+      "contains": [
+        ".method public static isEnabled()Z"
+      ]
+    },
+    {
+      "locator": "dex_method:Lcom/android/wm/shell/multitasking/miuimultiwinswitch/miuiwindowdecor/MulWinSwitchEventHandler;->handleReceivedMotionEvent(Landroid/view/MotionEvent;Landroid/view/InputMonitor;)V",
+      "sha256": "1b344e640e941109e97b6e28f2c508a2ca1ade0fc1c62b0178572c625765467e",
+      "raw": ".workbuddy/tmp/mt-systemui/pending14-wm-member-4.json",
+      "pages": 1,
+      "contains": [
+        ".method private handleReceivedMotionEvent(Landroid/view/MotionEvent;Landroid/view/InputMonitor;)V"
+      ]
+    },
+    {
+      "locator": "dex_method:Lcom/android/wm/shell/multitasking/miuifreeform/MiuiFreeformModeGestureHandler;->findActiveMiuiFreeformTask(FF)Lcom/android/wm/shell/multitasking/common/taskmanager/MiuiFreeformModeTaskInfo;",
+      "sha256": "0e90dd119de7cc3c59b5b14b8d352fda3d32ed136619832769e0f30e0ff13136",
+      "raw": ".workbuddy/tmp/mt-systemui/pending14-wm-member-5.json",
+      "pages": 1,
+      "contains": [
+        ".method public findActiveMiuiFreeformTask(FF)Lcom/android/wm/shell/multitasking/common/taskmanager/MiuiFreeformModeTaskInfo;"
+      ]
+    },
+    {
+      "locator": "dex_method:Lcom/android/wm/shell/multitasking/miuimultiwinswitch/miuiwindowdecor/decoration/MiuiDecorationInfo;->getFreeformBottomCaptionHeight()I",
+      "sha256": "f04f8008b9190631374be1f368990e7462b89c62e9b2ddac7614f93380d12296",
+      "raw": ".workbuddy/tmp/mt-systemui/pending14-wm-member-6.json",
+      "pages": 1,
+      "contains": [
+        ".method public static getFreeformBottomCaptionHeight()I"
+      ]
+    },
+    {
+      "locator": "dex_method:Lcom/android/wm/shell/multitasking/miuimultiwinswitch/miuiwindowdecor/decoration/MiuiDecorationBottom;->getBottomCaptionHeight()I",
+      "sha256": "1eae89543b4bab8f5d5593fac87c699b1b9e8e13ffae8fb0f473ed4bf7a3744e",
+      "raw": ".workbuddy/tmp/mt-systemui/pending14-wm-member-7.json",
+      "pages": 1,
+      "contains": [
+        ".method public getBottomCaptionHeight()I"
+      ]
+    },
+    {
+      "locator": "dex_method:Lcom/android/wm/shell/multitasking/miuimultiwinswitch/miuiwindowdecor/decoration/MiuiDecorationBottomView;->onDraw(Landroid/graphics/Canvas;)V",
+      "sha256": "6502aa63c0371fad390901767d04761603a7ede5b0e85d093b704dbec871d265",
+      "raw": ".workbuddy/tmp/mt-systemui/pending14-wm-member-8.json",
+      "pages": 1,
+      "contains": [
+        ".method public onDraw(Landroid/graphics/Canvas;)V"
+      ]
+    },
+    {
+      "locator": "dex_method:Lcom/android/wm/shell/multitasking/miuimultiwinswitch/miuiwindowdecor/decoration/MiuiDecorationRootViewHost;->getDecorationRootView()Lcom/android/wm/shell/multitasking/miuimultiwinswitch/miuiwindowdecor/decoration/MiuiDecorationRootView;",
+      "sha256": "19d80c2b33fb2dd764a4391f17eb0e2b865fcb6e5e9f8a686a09e20c050b91fd",
+      "raw": ".workbuddy/tmp/mt-systemui/pending14-wm-member-9.json",
+      "pages": 1,
+      "contains": [
+        ".method public getDecorationRootView()Lcom/android/wm/shell/multitasking/miuimultiwinswitch/miuiwindowdecor/decoration/MiuiDecorationRootView;"
+      ]
+    },
+    {
+      "locator": "dex_method:Lcom/android/wm/shell/multitasking/miuimultiwinswitch/miuiwindowdecor/decoration/MiuiDecorationBottom;->updateCaptionGeometry(Lcom/android/wm/shell/multitasking/miuimultiwinswitch/miuiwindowdecor/decoration/MiuiDecorationBase$RelayoutResult;)V",
+      "sha256": "6b9015b122be826eb217a145b61b6345a77c4d852ce1e0548ff1f2be297ae8ad",
+      "raw": ".workbuddy/tmp/mt-systemui/pending14-wm-member-10.json",
+      "pages": 1,
+      "contains": [
+        ".method private updateCaptionGeometry(Lcom/android/wm/shell/multitasking/miuimultiwinswitch/miuiwindowdecor/decoration/MiuiDecorationBase$RelayoutResult;)V"
+      ]
+    },
+    {
+      "locator": "dex_method:Lcom/android/wm/shell/multitasking/miuimultiwinswitch/miuiwindowdecor/decoration/MiuiDecorationBottom;->updateCornerRadius(Landroid/view/SurfaceControl$Transaction;FZ)V",
+      "sha256": "eb04c412041af3c3180ad2cceb001e36424a9170ff6c652e1ae22527ed7a69a8",
+      "raw": ".workbuddy/tmp/mt-systemui/pending14-wm-member-11.json",
+      "pages": 1,
+      "contains": [
+        ".method private updateCornerRadius(Landroid/view/SurfaceControl$Transaction;FZ)V"
+      ]
+    },
+    {
+      "locator": "dex_method:Lcom/android/wm/shell/multitasking/miuimultiwinswitch/miuiwindowdecor/decoration/MiuiDecorationBottom;->isTouchedInSplitBottomCaption(Landroid/view/MotionEvent;)Z",
+      "sha256": "6c3bcbd1a61e1bb8ecd6fb6372a686f8ace0b28e3e94df27b0e4f644f9190b0f",
+      "raw": ".workbuddy/tmp/mt-systemui/pending14-wm-member-12.json",
+      "pages": 1,
+      "contains": [
+        ".method public isTouchedInSplitBottomCaption(Landroid/view/MotionEvent;)Z"
+      ]
+    },
+    {
+      "locator": "dex_method:Lcom/android/wm/shell/multitasking/miuimultiwinswitch/miuiwindowdecor/decoration/MiuiDecorationBottom;->updateBottomCaptionSurface(Landroid/view/SurfaceControl$Transaction;Landroid/graphics/Rect;FFZ)V",
+      "sha256": "57fc99145e12138a133efe80ac1cf5da509910d1a29d2c1cd3d9142075e77d44",
+      "raw": ".workbuddy/tmp/mt-systemui/pending14-wm-member-13.json",
+      "pages": 1,
+      "contains": [
+        ".method public updateBottomCaptionSurface(Landroid/view/SurfaceControl$Transaction;Landroid/graphics/Rect;FFZ)V"
+      ]
+    },
+    {
+      "locator": "dex_method:Lcom/android/wm/shell/multitasking/miuimultiwinswitch/miuiwindowdecor/decoration/MiuiDecorationHomeBottom;->updateCaptionContainerSurface(Lcom/android/wm/shell/multitasking/miuimultiwinswitch/miuiwindowdecor/decoration/MiuiDecorationBase$RelayoutResult;Landroid/view/SurfaceControl$Transaction;)V",
+      "sha256": "abaf2e4c728955d1c6ac11ef7c67c6fcd20e7067918911c82005e4e85581ab40",
+      "raw": ".workbuddy/tmp/mt-systemui/pending14-wm-member-14.json",
+      "pages": 1,
+      "contains": [
+        ".method public updateCaptionContainerSurface(Lcom/android/wm/shell/multitasking/miuimultiwinswitch/miuiwindowdecor/decoration/MiuiDecorationBase$RelayoutResult;Landroid/view/SurfaceControl$Transaction;)V"
+      ]
+    },
+    {
+      "locator": "dex_method:Lcom/android/wm/shell/multitasking/miuimultiwinswitch/miuiwindowdecor/MulWinSwitchEventHandler;->lambda$sendCancelEvent$1()V",
+      "sha256": "383f519ce4e39a3332d1506bc9da4e21187fccafbc93b0b300a397a837f10184",
+      "raw": ".workbuddy/tmp/mt-systemui/pending14-wm-member-15.json",
+      "pages": 1,
+      "contains": [
+        ".method private synthetic lambda$sendCancelEvent$1()V"
+      ]
+    },
+    {
+      "locator": "dex_method:Lcom/android/wm/shell/multitasking/miuimultiwinswitch/miuiwindowdecor/MulWinSwitchEventHandler;->onEvent(Landroid/view/MotionEvent;Landroid/view/InputMonitor;)Z",
+      "sha256": "2777769e0801c2cf393af84a1fde21841cec71c9643f46afa2e56ddcbc256e97",
+      "raw": ".workbuddy/tmp/mt-systemui/pending14-wm-member-16.json",
+      "pages": 1,
+      "contains": [
+        ".method public onEvent(Landroid/view/MotionEvent;Landroid/view/InputMonitor;)Z"
+      ]
+    },
+    {
+      "locator": "dex_method:Lcom/android/wm/shell/multitasking/miuifreeform/MiuiFreeformModeGestureHandler;->handleMotionEvents(Landroid/view/MotionEvent;Landroid/view/InputMonitor;)Lcom/android/wm/shell/multitasking/miuifreeform/MiuiFreeformModeTouchResult;",
+      "sha256": "a4a5e4ea29c9f402918e45d48a150c5a3269167300cb6c48a1f76b6b5b9f3d30",
+      "raw": ".workbuddy/tmp/mt-systemui/pending14-wm-member-17.json",
+      "pages": 1,
+      "contains": [
+        ".method public handleMotionEvents(Landroid/view/MotionEvent;Landroid/view/InputMonitor;)Lcom/android/wm/shell/multitasking/miuifreeform/MiuiFreeformModeTouchResult;"
+      ]
+    },
+    {
+      "locator": "dex_field:Lcom/android/wm/shell/multitasking/miuimultiwinswitch/miuiwindowdecor/decoration/MiuiDecorationBase;->mWindowingMode:I",
+      "sha256": "85672643383a97cfff672897cee8ee5f7c2cd0ceb6c96836ea379e914f809445",
+      "raw": ".workbuddy/tmp/mt-systemui/pending14-wm-member-18.json",
+      "pages": 1,
+      "contains": [
+        ".field protected mWindowingMode:I"
+      ]
+    },
+    {
+      "locator": "dex_field:Lcom/android/wm/shell/multitasking/miuimultiwinswitch/miuiwindowdecor/decoration/MiuiDecorationBase;->mMiuiDecorationRootViewHost:Lcom/android/wm/shell/multitasking/miuimultiwinswitch/miuiwindowdecor/decoration/MiuiDecorationRootViewHost;",
+      "sha256": "67b77259b5160bdad086c2fb65737cc9ac1627f7bee7951b5cbc9065a3297450",
+      "raw": ".workbuddy/tmp/mt-systemui/pending14-wm-member-19.json",
+      "pages": 1,
+      "contains": [
+        ".field protected volatile mMiuiDecorationRootViewHost:Lcom/android/wm/shell/multitasking/miuimultiwinswitch/miuiwindowdecor/decoration/MiuiDecorationRootViewHost;"
+      ]
+    }
+  ]
+}

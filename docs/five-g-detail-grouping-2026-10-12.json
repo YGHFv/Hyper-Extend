@@ -1,0 +1,33 @@
+{
+  "date": "2026-10-12",
+  "title": "内置移动网络磁贴：5G 项被并进 SIM 卡的分组根因与修复",
+  "feature": "control_center_fix_tiles_list",
+  "settingKey": "control_center_fix_tiles_list.5g_style",
+  "symptom": "真机上「使用 5G 网络」开关被塞进上面那张 SIM 卡片里，而不是独立成型",
+  "method": "仅 MT MCP 反编译取证 + 模块单测，未操作设备",
+  "evidence": {
+    "QSDetailContent$Adapter.updateGroupInfo()V": [
+      "只按 getItemViewType(i)=Item.getType() 分组：SelectableItem=0xe9、ToggleItem=0x91d，其余视为 INT_MIN",
+      "TextDividerItem=0x5b25；isForceSingle() 用 Item.isForceSingle() 判定",
+      "相邻同类且 !isForceSingle 时续进上一组；分组值 1=单独/2=组首/3=组尾/4=组中"
+    ],
+    "QSDetailContent$ToggleItem->isForceSingle()Z": "const/4 p0, 0x1 —— 恒为 true",
+    "QSDetailContent$TextDividerItem->isForceSingle()Z": "Item 接口默认实现 const/4 p0, 0x0（见 dex_method:Lcom/android/systemui/qs/QSDetailContent$Item;->isForceSingle()Z）",
+    "MiuiCellularTile$CellularDetailAdapter.updateItems()V": [
+      "数组 = [每个 SIM 一张 SelectableItem(isForceSingle=true), (可选) TextDividerItem(\"其他设置\", 资源 0x7f140db7) + ToggleItem(智能双卡)]",
+      "宿主自己就是「分组头紧跟一个 ToggleItem」的写法，这是本机唯一被认作新一组的形态"
+    ],
+    "rootCause": "原实现把注入的 ToggleItem 插在最后一个 SelectableItem 之后、原生分组头之前，前面没有 TextDividerItem，于是按 0x91d 规则续进 SIM 那张卡",
+    "fix": "插入点改为最后一条 TextDividerItem 之后（即原生「其他设置」分组头后、智能双卡前）；无分组头时退回最后一个 SelectableItem 之后",
+    "heightCheck": "MiuiQSDetail.onFinishInflate 用 adapter.getContainerHeight() 设置 mDetailContainer.height；CellularDetailAdapter 竖屏返回 -2(WRAP_CONTENT)，故新增一行会撑高而不会被裁切，无需上游的 +45dp 补偿"
+  },
+  "hostVersion": "com.android.systemui versionCode=202602260",
+  "verification": {
+    "compile": ":app:compileDebugKotlin / :app:assembleRelease 通过",
+    "unitTests": ":app:testDebugUnitTest 137 suites / 847 tests / 0 failures",
+    "regressionTest": "FiveGTilePolicyTest.fiveGEntryJoinsTheNativeGroupHeaderAndFallsBackWithoutOne（纯函数断言插入顺序）+ nativeDetailCarriersMatchTheHostExactly 增补分组断言"
+  },
+  "releaseApkSha256": "4266c8705967eec04a90705f68ceffcce7165af2d884999ddafd69a4e3bd50d2",
+  "deviceTouched": false,
+  "releaseApkBytes": 2898394
+}

@@ -1,0 +1,13 @@
+Lcom/android/systemui/navigationbar/gestural/EdgeBackGestureHandler;->mIsButtonForcedVisible:Z
+Lcom/android/systemui/navigationbar/views/NavigationBar$9;->getSampledRegion(Landroid/view/View;)Landroid/graphics/Rect;
+Lcom/android/systemui/navigationbar/views/NavigationBar;->getBarLayoutParamsForRotation(I)Landroid/view/WindowManager$LayoutParams;
+Lcom/android/systemui/navigationbar/views/NavigationBar;->mContext:Landroid/content/Context;
+Lcom/android/systemui/navigationbar/views/NavigationBar;->mEdgeBackGestureHandler:Lcom/android/systemui/navigationbar/gestural/EdgeBackGestureHandler;
+Lcom/android/systemui/navigationbar/views/NavigationBar;->mNavBarMode:I
+Lcom/android/systemui/navigationbar/views/NavigationBar;->onInit()V
+Lcom/android/systemui/navigationbar/views/NavigationBar;->updateViewLayout(I)V
+Lcom/android/systemui/navigationbar/views/NavigationBarView;->getNavBarHeight()I
+Lcom/android/systemui/navigationbar/views/NavigationBarView;->mEdgeBackGestureHandler:Lcom/android/systemui/navigationbar/gestural/EdgeBackGestureHandler;
+Lcom/android/systemui/navigationbar/views/NavigationBarView;->mNavBarMode:I
+Lcom/android/systemui/navigationbar/views/NavigationBarView;->onMeasure(II)V
+Landroid/content/res/Resources;->getDimensionPixelSize(I)I

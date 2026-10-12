@@ -1,0 +1,234 @@
+{
+  "host": {
+    "packageName": "com.android.systemui",
+    "versionCode": 202602260
+  },
+  "verification": "Complete read-only current MT members; no compile, test or device acceptance.",
+  "evidence": [
+    {
+      "locator": "dex_field:Lcom/android/systemui/statusbar/phone/MiuiIconManagerUtils;->CONTROL_CENTER_BLOCK_LIST:Ljava/util/ArrayList;",
+      "contains": [
+        ".field public static final CONTROL_CENTER_BLOCK_LIST:Ljava/util/ArrayList;"
+      ],
+      "sha256": "e7422b859b6fdcf8fb00e7eb18be0cae433ee3cd2ce7574fa09fcce072821d95",
+      "raw": ".workbuddy/tmp/mt-systemui/icon-block-list-current-member-0.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/statusbar/phone/MiuiIconManagerUtils;->MINI_RIGHT_BLOCK_LIST:Ljava/util/ArrayList;",
+      "contains": [
+        ".field public static final MINI_RIGHT_BLOCK_LIST:Ljava/util/ArrayList;"
+      ],
+      "sha256": "cb86dc7f1f2dfcd2ad8c4410efe7667785826255efd2bb5ee68e7079519df66d",
+      "raw": ".workbuddy/tmp/mt-systemui/icon-block-list-current-member-1.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/statusbar/phone/MiuiIconManagerUtils;->RIGHT_BLOCK_LIST:Ljava/util/ArrayList;",
+      "contains": [
+        ".field public static final RIGHT_BLOCK_LIST:Ljava/util/ArrayList;"
+      ],
+      "sha256": "2cda9f607fb9dfbc04ea8d908cc381a97bd3147797d84b363b2474d9dbce127c",
+      "raw": ".workbuddy/tmp/mt-systemui/icon-block-list-current-member-2.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/statusbar/phone/ui/IconManager;->mGroup:Landroid/view/ViewGroup;",
+      "contains": [
+        ".field public final mGroup:Landroid/view/ViewGroup;"
+      ],
+      "sha256": "677a10e03295eca8aec73f27b1961f55626ea852308ba5b14718896c5e1ddd12",
+      "raw": ".workbuddy/tmp/mt-systemui/icon-block-list-current-member-3.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/statusbar/phone/ui/IconManager;->mLocation:Lcom/android/systemui/statusbar/phone/StatusBarLocation;",
+      "contains": [
+        ".field public final mLocation:Lcom/android/systemui/statusbar/phone/StatusBarLocation;"
+      ],
+      "sha256": "3fd529abf63bfbeb25a82d81858cb2c14120cad798e27a534b8c05034abdbc3b",
+      "raw": ".workbuddy/tmp/mt-systemui/icon-block-list-current-member-4.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/statusbar/views/MiuiStatusIconContainer;->ignoredSlots:Ljava/util/List;",
+      "contains": [
+        ".field public final ignoredSlots:Ljava/util/List;"
+      ],
+      "sha256": "d207c911719a52326a2c24d666e7305a5b19d610d6826a2e792deffbb27bd3de",
+      "raw": ".workbuddy/tmp/mt-systemui/icon-block-list-current-member-5.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/controlcenter/phone/widget/ControlCenterFakeStatusIcons;->onAttachedToWindow()V",
+      "contains": [
+        ".method public final onAttachedToWindow()V"
+      ],
+      "sha256": "707f65e0d7b72ef4259ce482ad3818547d4a90a50f232a8dc6756f78cfbca351",
+      "raw": ".workbuddy/tmp/mt-systemui/icon-block-list-current-member-6.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/controlcenter/phone/widget/ControlCenterFakeStatusIcons;->onFinishInflate()V",
+      "contains": [
+        ".method public final onFinishInflate()V"
+      ],
+      "sha256": "997dfa8696d9e046be8ee15647d0753390c585f864a715e3359bd330cf308e74",
+      "raw": ".workbuddy/tmp/mt-systemui/icon-block-list-current-member-7.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/controlcenter/phone/widget/ControlCenterStatusBarIcon;->onAttachedToWindow()V",
+      "contains": [
+        ".method public final onAttachedToWindow()V"
+      ],
+      "sha256": "39d4c552fdb866ef1f9b3ffc9e1c707a06313149ec093d2afd1eee2bc3aea64b",
+      "raw": ".workbuddy/tmp/mt-systemui/icon-block-list-current-member-8.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/controlcenter/phone/widget/ControlCenterStatusBarIcon;->onFinishInflate()V",
+      "contains": [
+        ".method public final onFinishInflate()V"
+      ],
+      "sha256": "9a576293bd6b54bb0ff76587bc746679c2c74ba3f793aeb5912e9a557045b4f0",
+      "raw": ".workbuddy/tmp/mt-systemui/icon-block-list-current-member-9.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/qs/MiuiQSHeaderView;->onAttachedToWindow()V",
+      "contains": [
+        ".method public final onAttachedToWindow()V"
+      ],
+      "sha256": "b879008194e73bb588a53740dfd6f1b00d22d588b364489cae12330575788ec0",
+      "raw": ".workbuddy/tmp/mt-systemui/icon-block-list-current-member-10.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/phone/KeyguardStatusBarViewController;->onViewAttached()V",
+      "contains": [
+        ".method public final onViewAttached()V"
+      ],
+      "sha256": "03d67cbfb791146c08e8ea947aad94861e183aa28a2f6b8d2e6ede1eedbc8e34",
+      "raw": ".workbuddy/tmp/mt-systemui/icon-block-list-current-member-11.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/phone/MiuiIconManagerUtils;-><clinit>()V",
+      "contains": [
+        ".method static constructor <clinit>()V"
+      ],
+      "sha256": "ca7357e3ad2a1505ca1e291b584b48ce439b8808e15883bd9082546747308f6f",
+      "raw": ".workbuddy/tmp/mt-systemui/icon-block-list-current-member-12.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/phone/MiuiPhoneStatusBarView;->updateCutoutLocation()V",
+      "contains": [
+        ".method public final updateCutoutLocation()V"
+      ],
+      "sha256": "6a1a83401d257f3628255762ac86f1cd1e310108c03dc45a36c61f2d58769269",
+      "raw": ".workbuddy/tmp/mt-systemui/icon-block-list-current-member-13.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/phone/StatusBarLocation;-><clinit>()V",
+      "contains": [
+        ".method static constructor <clinit>()V"
+      ],
+      "sha256": "ededab79ec7ec2a4020789816059984cdb402a894a8504dd07849d51e6f0593f",
+      "raw": ".workbuddy/tmp/mt-systemui/icon-block-list-current-member-14.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/phone/ui/IconManager;->setBlockList(Ljava/util/List;)V",
+      "contains": [
+        ".method public final setBlockList(Ljava/util/List;)V"
+      ],
+      "sha256": "2acb298906fe732f5a7c379bf07e5c2736dfeec461acc122577c05602f4e5363",
+      "raw": ".workbuddy/tmp/mt-systemui/icon-block-list-current-member-15.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/phone/ui/StatusBarIconControllerImpl$$ExternalSyntheticLambda2;->accept(Ljava/lang/Object;)V",
+      "contains": [
+        ".method public final accept(Ljava/lang/Object;)V"
+      ],
+      "sha256": "fc5493344d42ef6298a08072f2673913bca43c0dc4bd89c1f725c7994526e950",
+      "raw": ".workbuddy/tmp/mt-systemui/icon-block-list-current-member-16.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/phone/ui/StatusBarIconControllerImpl;->refreshIconGroup(Lcom/android/systemui/statusbar/phone/ui/IconManager;)V",
+      "contains": [
+        ".method public final refreshIconGroup(Lcom/android/systemui/statusbar/phone/ui/IconManager;)V"
+      ],
+      "sha256": "9c00ca80506ede801e187d37225cc36db023cb8df2d4d948d8be9364f269edb3",
+      "raw": ".workbuddy/tmp/mt-systemui/icon-block-list-current-member-17.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/pipeline/shared/ui/binder/HomeStatusBarIconBlockListBinder$bind$1$1$1;->emit(Ljava/lang/Object;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;",
+      "contains": [
+        ".method public final emit(Ljava/lang/Object;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;"
+      ],
+      "sha256": "8e2005872d3c7f6a9bfc2a4bef6762894da9ce4a28f6a1e16aa5f0fb2d888cc4",
+      "raw": ".workbuddy/tmp/mt-systemui/icon-block-list-current-member-18.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/views/MiuiStatusIconContainer;->addIgnoredSlots(Ljava/util/List;)V",
+      "contains": [
+        ".method public final addIgnoredSlots(Ljava/util/List;)V"
+      ],
+      "sha256": "9d5ebe63559c0807ba5004e7c38623ee260848d4454dab717ec5e2568d5b3aca",
+      "raw": ".workbuddy/tmp/mt-systemui/icon-block-list-current-member-19.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/views/MiuiStatusIconContainer;->setIgnoredSlots(Ljava/util/List;)V",
+      "contains": [
+        ".method public final setIgnoredSlots(Ljava/util/List;)V"
+      ],
+      "sha256": "605a4cad5c677eab2481abbf3e72493c790150cfc796e19c576780a05e722d49",
+      "raw": ".workbuddy/tmp/mt-systemui/icon-block-list-current-member-20.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/phone/ui/IconManager;->addHolder(ILjava/lang/String;ZLcom/android/systemui/statusbar/phone/StatusBarIconHolder;)Lcom/android/systemui/statusbar/StatusIconDisplayable;",
+      "contains": [
+        ".method public final addHolder(ILjava/lang/String;ZLcom/android/systemui/statusbar/phone/StatusBarIconHolder;)Lcom/android/systemui/statusbar/StatusIconDisplayable;"
+      ],
+      "sha256": "e976dc9e665c2011e9de75f2d94530941b3abb2a0b60f901b24a8e341d695661",
+      "raw": ".workbuddy/tmp/mt-systemui/icon-block-list-current-member-21.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/pipeline/shared/ui/view/ModernStatusBarView;->setBlocked(Z)V",
+      "contains": [
+        ".method public bridge synthetic setBlocked(Z)V"
+      ],
+      "sha256": "fda6769717740484de2452e2417eb0573cc72656e5ec510341ef4cbeadb6044b",
+      "raw": ".workbuddy/tmp/mt-systemui/icon-block-list-current-member-22.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/views/MiuiStatusIconContainer;->onLayout(ZIIII)V",
+      "contains": [
+        ".method public final onLayout(ZIIII)V"
+      ],
+      "sha256": "7ca76c56ca4aaf6333c29900683f9582a917442905305c5f2a7d4597a48712e5",
+      "raw": ".workbuddy/tmp/mt-systemui/icon-block-list-current-member-23.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/views/MiuiStatusIconContainer;->onMeasure(II)V",
+      "contains": [
+        ".method public final onMeasure(II)V"
+      ],
+      "sha256": "4fa957de807cbb8b0b73f9205dcee3f31ec26685e6bd9cf6d9d54e9a989c036c",
+      "raw": ".workbuddy/tmp/mt-systemui/icon-block-list-current-member-24.json",
+      "complete": true
+    }
+  ]
+}

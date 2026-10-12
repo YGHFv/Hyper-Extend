@@ -31,12 +31,12 @@ class BatteryVisibilityPolicyTest {
         }
     }
 
-    @Test fun hidingPercentIncludesMarkAndLegacyDigitButMarkAloneKeepsNumbers() {
+    @Test fun hidingPercentIncludesMarkButMarkAloneKeepsNumbers() {
         for (percent in listOf(false, true)) for (mark in listOf(false, true)) {
             val policy = BatteryVisibilityPolicy(hidePercent = percent, hideMark = mark)
             val fields = policy.hiddenTextFields()
             assertEquals(percent, "mBatteryPercentView" in fields)
-            assertEquals(percent, "mBatteryTextDigitView" in fields)
+            assertFalse("mBatteryTextDigitView" in fields)
             assertEquals(percent || mark, "mBatteryPercentMarkView" in fields)
             assertTrue(policy.hiddenViewFields(1).isEmpty())
         }
@@ -82,12 +82,10 @@ class BatteryVisibilityPolicyTest {
                     repeat(4) {
                         text["mBatteryPercentView"] = 13f
                         text["mBatteryPercentMarkView"] = 11f
-                        text["mBatteryTextDigitView"] = 12f
                         if (styleLast) { hide(); style() } else { style(); hide() }
                         val customSize = (stored * 0.5f).takeIf { custom && it > 7.5f }
                         assertEquals(if (percent) 0f else customSize ?: 13f, text["mBatteryPercentView"]!!, 0f)
                         assertEquals(if (percent || mark) 0f else customSize ?: 11f, text["mBatteryPercentMarkView"]!!, 0f)
-                        assertEquals(if (percent) 0f else 12f, text["mBatteryTextDigitView"]!!, 0f)
                     }
                 }
             }

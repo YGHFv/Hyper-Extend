@@ -1,0 +1,6 @@
+Landroid/app/ApplicationPackageManager;->getApplicationEnabledSetting(Ljava/lang/String;)I
+Landroid/app/ApplicationPackageManager;->getPackageInfo(Ljava/lang/String;I)Landroid/content/pm/PackageInfo;
+Landroid/app/ApplicationPackageManager;->setApplicationEnabledSetting(Ljava/lang/String;II)V
+Landroid/content/Context;->getString(I)Ljava/lang/String;
+Lcom/android/internal/logging/InstanceIdSequence;-><init>(I)V
+Lcom/android/internal/logging/InstanceIdSequence;->newInstanceId()Lcom/android/internal/logging/InstanceId;

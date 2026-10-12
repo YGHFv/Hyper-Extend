@@ -17,16 +17,21 @@
 package io.github.YGHFv.HyperExtend.hook.feature.statusbar
 
 import android.graphics.Typeface
+import android.content.Context
+import android.os.Looper
 import android.net.TrafficStats
 import android.util.TypedValue
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import io.github.YGHFv.HyperExtend.core.ModuleLog
+import io.github.YGHFv.HyperExtend.core.compatibleVersionCode
 import io.github.YGHFv.HyperExtend.hook.HookRuntime
 import io.github.YGHFv.HyperExtend.hook.HookSettings
-import io.github.YGHFv.HyperExtend.hook.Reflect
+import io.github.YGHFv.HyperExtend.hook.SafeModeRuntime
+import io.github.YGHFv.HyperExtend.hook.feature.systemui.NotificationHooks
+import io.github.YGHFv.HyperExtend.hook.feature.systemui.SystemUiMethod
+import java.lang.reflect.Modifier
 import android.os.Handler
 import android.os.Message
 import java.util.WeakHashMap
@@ -67,35 +72,72 @@ internal object StatusBarNetworkSpeed {
 
     private val samplers = WeakHashMap<Any, NetworkSpeedSampler>()
 
+    private class Access(loader: ClassLoader, private val settings: HookSettings, sampleTraffic: Boolean) {
+        val methods = NetworkSpeedTargets.methods.associateWith { requireNotNull(NotificationHooks.resolve(loader, it)) }
+        val counters = if (sampleTraffic) NetworkSpeedTargets.counters.associateWith {
+            requireNotNull(NotificationHooks.resolve(loader, it))
+        } else emptyMap()
+        val fields = NetworkSpeedTargets.fields.associate { (owner, name, expected) ->
+            (owner to name) to Class.forName(owner, false, loader).getDeclaredField(name).apply {
+                require(type.name == expected && !Modifier.isStatic(modifiers)); isAccessible = true
+            }
+        }
+        @Volatile var ready = false
+        @Volatile private var version: Long? = null
+        val ownedUnits = WeakHashMap<TextView, Int>()
+        fun enabled(context: Context, ui: Boolean = true) = runCatching {
+            if (!ready || SafeModeRuntime.blocked || !settings.isOn(FEATURE) ||
+                ui && Looper.myLooper() != Looper.getMainLooper()) return@runCatching false
+            val current = version ?: context.packageManager.getPackageInfo("com.android.systemui", 0)
+                .compatibleVersionCode.also { version = it }
+            current == 202602260L
+        }.getOrDefault(false)
+        fun method(owner: String, name: String, returns: String = "void", vararg parameters: String) =
+            methods.getValue(SystemUiMethod(owner, name, returns, parameters.toList()))
+        fun field(owner: String, name: String) = fields.getValue(owner to name)
+    }
+
     fun install(loader: ClassLoader, settings: HookSettings): Int {
         val config = Config.of(settings)
+        val access = Access(loader, settings, config.style != STYLE_DEFAULT || config.hide)
+        if (!access.methods.values.all { HookRuntime.deoptimize(it, "$FEATURE/caller") }) return 0
         var installed = 0
-        installed += installUpdateText(loader, config)
-        installed += installViewStyle(loader, config)
-        installed += installUnitSuffix(loader, settings)
-        installed += installUpdateInterval(loader, config)
-        return installed
+        installed += installUpdateText(access, config)
+        installed += installViewStyle(access, config)
+        installed += installUnitSuffix(access, settings, config)
+        installed += installUpdateInterval(access, config)
+        val expected = 6 +
+            (if (config.updateIntervalMs != DEFAULT_UPDATE_INTERVAL_MS) 1 else 0)
+        access.ready = installed == expected
+        return if (access.ready) installed else 0
     }
 
     // ------------------------------------------------------------------ 速率文本
 
-    private fun installUpdateText(loader: ClassLoader, config: Config): Int {
-        val controller = Reflect.loadClass(loader, CONTROLLER) ?: run {
-            ModuleLog.warn("$FEATURE: $CONTROLLER not found")
-            return 0
-        }
-        val updateText = Reflect.firstMethod(controller, "updateText") {
-            it.parameterTypes.contentEquals(arrayOf(Array<String>::class.java))
-        } ?: run {
-            ModuleLog.warn("$FEATURE: NetworkSpeedController#updateText(String[]) is gone")
-            return 0
-        }
+    private fun installUpdateText(access: Access, config: Config): Int {
+        val updateText = access.method(CONTROLLER, "updateText", "void", "[Ljava.lang.String;")
         val ok = HookRuntime.hook(updateText, "$FEATURE/NetworkSpeedController#updateText") { chain ->
             val owner = chain.thisObject ?: return@hook chain.proceed()
-            val speeds = synchronized(samplers) {
-                samplers.getOrPut(owner) { NetworkSpeedSampler() }.sample(
-                    System.nanoTime(), TrafficStats.getTotalTxBytes(), TrafficStats.getTotalRxBytes())
+            val context = access.field(CONTROLLER, "mContext").get(owner) as? Context ?: return@hook chain.proceed()
+            if (!access.enabled(context) || access.field(CONTROLLER, "mIsStatusBarHidden").getBoolean(owner)) {
+                synchronized(samplers) { samplers.remove(owner) }
+                return@hook chain.proceed()
             }
+            if (config.style == STYLE_DEFAULT && !config.hide) return@hook chain.proceed()
+            val speeds = synchronized(samplers) {
+                val sampler = samplers.getOrPut(owner) { NetworkSpeedSampler() }
+                runCatching {
+                    val sent = TrafficStats.getTotalTxBytes()
+                    val received = TrafficStats.getTotalRxBytes()
+                    val loopbackSent = access.counters.getValue(NetworkSpeedTargets.loopbackTx).invoke(null, "lo") as Long
+                    val loopbackReceived = access.counters.getValue(NetworkSpeedTargets.loopbackRx).invoke(null, "lo") as Long
+                    sampler.sample(System.nanoTime(), sent, received, loopbackSent, loopbackReceived)
+                        .takeIf { sampler.valid }
+                }.getOrElse {
+                    samplers.remove(owner)
+                    null
+                }
+            } ?: return@hook chain.proceed()
             val replacement = NetworkSpeedText.render(speeds.first, speeds.second, config.text)
             if (replacement == null) chain.proceed() else chain.proceed(arrayOf<Any?>(replacement))
         }
@@ -104,16 +146,14 @@ internal object StatusBarNetworkSpeed {
 
     // ------------------------------------------------------------------ 视图样式
 
-    private fun installViewStyle(loader: ClassLoader, config: Config): Int {
-        val view = Reflect.loadClass(loader, SPEED_VIEW) ?: run {
-            ModuleLog.warn("$FEATURE: $SPEED_VIEW not found — view style skipped")
-            return 0
-        }
+    private fun installViewStyle(access: Access, config: Config): Int {
         var installed = 0
         for (name in VIEW_RESTYLE_METHODS) {
-            val method = Reflect.findMethods(view, name).firstOrNull() ?: continue
+            val method = if (name == "onMiuiThemeChanged") access.method(SPEED_VIEW, name, "void", "boolean")
+                else access.method(SPEED_VIEW, name)
             val ok = HookRuntime.hookAfter(method, "$FEATURE/NetworkSpeedView#$name") { chain, original ->
-                restyle(chain.thisObject as? View ?: return@hookAfter original, config)
+                val view = chain.thisObject as? View ?: return@hookAfter original
+                if (access.enabled(view.context)) restyle(view, config, access)
                 original
             }
             if (ok) installed++
@@ -121,9 +161,9 @@ internal object StatusBarNetworkSpeed {
         return installed
     }
 
-    private fun restyle(meter: View, config: Config) {
-        val number = Reflect.readField(meter, "mNetworkSpeedNumberText") as? TextView ?: return
-        val unit = Reflect.readField(meter, "mNetworkSpeedUnitText") as? TextView
+    private fun restyle(meter: View, config: Config, access: Access) {
+        val number = access.field(SPEED_VIEW, "mNetworkSpeedNumberText").get(meter) as? TextView ?: return
+        val unit = access.field(SPEED_VIEW, "mNetworkSpeedUnitText").get(meter) as? TextView
 
         if (config.fixedWidth > DEFAULT_FIXED_WIDTH) {
             val width = (meter.resources.displayMetrics.density * config.fixedWidth).toInt()
@@ -134,8 +174,7 @@ internal object StatusBarNetworkSpeed {
 
         val single = arrayOf(number, unit)
         if (config.style != STYLE_DEFAULT) {
-            // Custom text includes its unit, but still supplies the host's empty second slot.
-            unit?.visibility = View.GONE
+            // Unit visibility follows actual two-slot data, including native fallback.
             if (config.style == STYLE_VALUE_UNIT_TWO_LINE || config.style == STYLE_TX_RX_TWO_LINE) {
                 number.isSingleLine = false
                 number.maxLines = 2
@@ -180,6 +219,7 @@ internal object StatusBarNetworkSpeed {
     }
 
     private fun applyAlign(number: TextView, config: Config) {
+        if (config.align == 1) return
         number.gravity = when (config.align) {
             2 -> Gravity.START or Gravity.CENTER_VERTICAL
             4 -> Gravity.END or Gravity.CENTER_VERTICAL
@@ -195,44 +235,50 @@ internal object StatusBarNetworkSpeed {
      * 拦的是视图那个 `setNetworkSpeed(value, unit)`：把单位里那几个字符抹掉，
      * 数字那一半原样放行。这样「默认样式」下也能只留数字。
      */
-    private fun installUnitSuffix(loader: ClassLoader, settings: HookSettings): Int {
-        if (!settings.isOn(OPT_SEC_UNIT)) return 0
-        val view = Reflect.loadClass(loader, SPEED_VIEW) ?: return 0
-        val method = Reflect.findMethods(view, "setNetworkSpeed", 2).firstOrNull() ?: run {
-            ModuleLog.warn("$FEATURE: NetworkSpeedView#setNetworkSpeed(String,String) is gone")
-            return 0
-        }
+    private fun installUnitSuffix(access: Access, settings: HookSettings, config: Config): Int {
+        val method = access.method(SPEED_VIEW, "setNetworkSpeed", "void", "java.lang.String", "java.lang.String")
         val ok = HookRuntime.hook(method, "$FEATURE/NetworkSpeedView#setNetworkSpeed") { chain ->
+            val view = chain.thisObject as? View ?: return@hook chain.proceed()
+            val enabled = access.enabled(view.context)
             val args = chain.args.toMutableList()
             val unit = args.getOrNull(1) as? String
-            if (unit == null) {
-                chain.proceed()
-            } else {
+            if (enabled && settings.isOn(OPT_SEC_UNIT) && unit != null) {
                 var cleaned: String = unit
                 UNIT_CHARS.forEach { cleaned = cleaned.replace(it, "") }
                 args[1] = cleaned
-                chain.proceed(args.toTypedArray())
             }
+            val original = chain.proceed(args.toTypedArray())
+            if (Looper.myLooper() == Looper.getMainLooper()) {
+                val label = access.field(SPEED_VIEW, "mNetworkSpeedUnitText").get(view) as? TextView
+                if (label != null) {
+                    if (enabled && NetworkSpeedText.hideUnit(config.style, args[1] as? String)) {
+                        if (label !in access.ownedUnits) access.ownedUnits[label] = label.visibility
+                        label.visibility = View.GONE
+                    } else access.ownedUnits.remove(label)?.let {
+                        if (label.visibility == View.GONE) label.visibility = it
+                    }
+                }
+            }
+            original
         }
         return if (ok) 1 else 0
     }
 
     // ------------------------------------------------------------------ 更新间隔
 
-    private fun installUpdateInterval(loader: ClassLoader, config: Config): Int {
+    private fun installUpdateInterval(access: Access, config: Config): Int {
         if (config.updateIntervalMs == DEFAULT_UPDATE_INTERVAL_MS) return 0
-        val controller = Reflect.loadClass(loader, CONTROLLER) ?: return 0
         // R8 merges UI and background handlers into $5 and strips MemberClasses.
-        val bg = Reflect.findField(controller, "mBgHandler") ?: return 0
-        if (!Handler::class.java.isAssignableFrom(bg.type)) return 0
-        val handle = Reflect.findMethod(bg.type, "handleMessage", Message::class.java) ?: return 0
-        val owner = Reflect.findField(bg.type, "this\$0") ?: return 0
-        val hidden = Reflect.findField(controller, "mIsStatusBarHidden") ?: return 0
+        val bg = access.field(CONTROLLER, "mBgHandler")
+        val handle = access.method("$CONTROLLER\$5", "handleMessage", "void", "android.os.Message")
+        val owner = access.field("$CONTROLLER\$5", "this\$0")
+        val hidden = access.field(CONTROLLER, "mIsStatusBarHidden")
         return if (HookRuntime.hookAfter(handle, "$FEATURE/backgroundSample") { chain, result ->
-                val handler = chain.thisObject as? Handler
+                val handler = chain.thisObject as? Handler ?: return@hookAfter result
                 val message = chain.args[0] as? Message
-                val host = owner.get(handler)
-                if (handler != null && host != null && NetworkSpeedSchedule.shouldReschedule(
+                val host = owner.get(handler) ?: return@hookAfter result
+                val context = access.field(CONTROLLER, "mContext").get(host) as? Context ?: return@hookAfter result
+                if (access.enabled(context, false) && Looper.myLooper() == handler.looper && NetworkSpeedSchedule.shouldReschedule(
                         message?.what ?: -1, bg.get(host) === handler, hidden.getBoolean(host),
                         handler.hasMessages(NetworkSpeedSchedule.SAMPLE))) {
                     handler.removeMessages(NetworkSpeedSchedule.SAMPLE)
@@ -272,17 +318,17 @@ internal object StatusBarNetworkSpeed {
                 hide = settings.isOn(OPT_HIDE),
                 hideAll = settings.isOn(OPT_HIDE_ALL),
                 swap = settings.isOn(OPT_SWAP),
-                lowLevel = settings.number(KEY_HIDE_SLOW, 64, 0, Int.MAX_VALUE).toLong() * 1024L,
+                lowLevel = settings.number(KEY_HIDE_SLOW, 64, 1, 2048).toLong() * 1024L,
                 unitSuffix = if (settings.isOn(OPT_SEC_UNIT)) "" else "B/s",
                 fontStyle = settings.number(KEY_FONT_STYLE, 0, 0, 2),
-                fontSize = settings.number(KEY_FONT_SIZE, 13, 0, 200),
+                fontSize = settings.number(KEY_FONT_SIZE, 13, 8, 40),
                 fontSizeEnabled = settings.isOn(OPT_FONT_SIZE_ENABLE),
                 align = settings.number(KEY_ALIGN, 1, 1, 4),
-                fixedWidth = settings.number(KEY_FIXED_WIDTH, 10, 0, 1000),
-                lineSpacing = settings.number(KEY_SPACING_MARGIN, 16, 0, 200) * 0.05f,
-                leftMargin = settings.number(KEY_LEFT_MARGIN, 0, 0, 200).toFloat(),
-                rightMargin = settings.number(KEY_RIGHT_MARGIN, 0, 0, 200).toFloat(),
-                verticalOffset = settings.number(KEY_VERTICAL_OFFSET, 40, 0, 800),
+                fixedWidth = settings.number(KEY_FIXED_WIDTH, 10, 10, 150),
+                lineSpacing = NetworkSpeedText.lineSpacing(settings.number(KEY_SPACING_MARGIN, 16, 14, 22)),
+                leftMargin = settings.number(KEY_LEFT_MARGIN, 0, 0, 16).toFloat(),
+                rightMargin = settings.number(KEY_RIGHT_MARGIN, 0, 0, 16).toFloat(),
+                verticalOffset = settings.number(KEY_VERTICAL_OFFSET, 40, 0, 80),
                 updateIntervalMs = settings.number(KEY_UPDATE_SPACING, 40, 10, 100) * 100L,
             )
         }

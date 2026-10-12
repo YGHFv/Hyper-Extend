@@ -15,6 +15,7 @@ import io.github.YGHFv.HyperExtend.hook.HookRuntime
 import io.github.YGHFv.HyperExtend.hook.HookSettings
 import io.github.YGHFv.HyperExtend.hook.Reflect
 import io.github.YGHFv.HyperExtend.core.ClassicQsSettings
+import io.github.YGHFv.HyperExtend.core.ModuleLog
 
 internal object ControlCenterHooks {
     private val menuNotification = ThreadLocal<StatusBarNotification?>()
@@ -34,15 +35,69 @@ internal object ControlCenterHooks {
         }
     }
     fun install(loader: ClassLoader, settings: HookSettings): List<String> = buildList {
+        installSystemUiFeature(settings, io.github.YGHFv.HyperExtend.core.PercentageSettings.FEATURE) {
+            PercentageHooks.installClassic(loader, settings)
+        }
+        installSystemUiFeature(settings, io.github.YGHFv.HyperExtend.core.HeaderWeatherSettings.FEATURE) {
+            HeaderWeatherHooks.install(loader, settings)
+        }
+        installSystemUiFeature(settings, io.github.YGHFv.HyperExtend.core.NotificationBlendSettings.FEATURE) {
+            NotificationBlendHooks.install(loader, settings)
+        }
+        installSystemUiFeature(settings, ShadeHeaderBlurTargets.FEATURE) { ShadeHeaderBlurHooks.install(loader, settings) }
+        installSystemUiFeature(settings, SecurityFooterHooks.FEATURE) { SecurityFooterHooks.installClassic(loader, settings) }
         installSystemUiFeature(settings, ClassicQsSettings.FEATURE) { ClassicQsHooks.install(loader, settings) }
         installSystemUiFeature(settings, DimTileIconPolicy.FEATURE) { DimTileIconHooks.install(loader, settings) }
-        installSystemUiFeature(settings, StockTilesPolicy.FEATURE) { StockTilesHooks.installClassic(loader, settings) }
+        installSystemUiFeature(settings, GmsTilePolicy.FEATURE) {
+            GmsTileHooks.install(loader) + GmsTileEditorHooks.installClassic(loader)
+        }
+        installSystemUiFeature(settings, TaplusTilePolicy.FEATURE) {
+            TaplusTileHooks.install(loader) + TaplusTileEditorHooks.installClassic(loader)
+        }
+        installSystemUiFeature(settings, SunlightTilePolicy.FEATURE) {
+            SunlightTileHooks.install(loader) + SunlightTileHooks.installLifecycle(loader, settings)
+        }
+        installSystemUiFeature(settings, io.github.YGHFv.HyperExtend.core.AudioMuteSettings.FEATURE) {
+            AudioMuteHooks.install(loader)
+        }
+        installSystemUiFeature(settings, io.github.YGHFv.HyperExtend.core.QsLabelSettings.FEATURE) {
+            QsLabelHooks.install(loader, settings)
+        }
+        installSystemUiFeature(settings, io.github.YGHFv.HyperExtend.core.FlashlightStrengthSettings.FEATURE) {
+            FlashlightStrengthHooks.install(loader, settings)
+        }
+        installSystemUiFeature(settings, StockTilesPolicy.FEATURE) {
+            // 样式档在安装期只走其中一条路径：独立磁贴（样式一/二）装工厂，
+            // 「内置移动网络磁贴」装原生详情页注入，两者互斥，不会同时装。
+            val fiveG = runCatching { FiveGTileHooks.install(loader, settings) }.getOrElse {
+                ModuleLog.error("stock_tiles: independent 5G factory unavailable; keep native candidates", it)
+                0
+            }
+            val fiveGDetail = runCatching { FiveGDetailHooks.install(loader, settings) }.getOrElse {
+                ModuleLog.error("stock_tiles: native 5G detail unavailable; keep native behaviour", it)
+                0
+            }
+            fiveG + fiveGDetail + StockTilesHooks.installClassic(loader, settings)
+        }
         installSystemUiFeature(settings, AutoCollapseHooks.FEATURE) { AutoCollapseHooks.install(loader, settings) }
         installSystemUiFeature(settings, "control_center_unlock_old") { unlockOld(loader) }
-        // Both entries use one interceptor and preserve the host's menu dismissal/user ID.
-        val channelFeature = if (settings.isOn("notification_channel_settings")) "notification_channel_settings"
-            else NotificationImportanceHooks.FEATURE
-        installSystemUiFeature(settings, channelFeature) { channelSettings(loader) }
+        // 合并后菜单跳转不再是「哪张卡片开着」，而是通知重要程度卡片里的一个选择项：
+        // 默认跟随原生，只有显式选了「对应通知渠道」才装这个拦截器。这样只开重要程度，
+        // 菜单跳转也不会被顺带改掉（合并前它俩共用这里、只装其中一个）。
+        // 菜单跳转是通知重要程度卡片的配置项，所以它自己也受父开关约束：
+        // 关掉重要程度后不应该还留着一段改菜单目标的 hook。
+        val menuSettings = io.github.YGHFv.HyperExtend.core.NotificationImportanceSettings
+        val menuTarget = settings.string(menuSettings.MENU_TARGET)
+        if (settings.isOn(menuSettings.FEATURE) && menuSettings.channelRedirect(menuTarget)) {
+            val count = try {
+                channelSettings(loader)
+            } catch (failure: Throwable) {
+                ModuleLog.error("notification_importance/menu_target: installation failed", failure)
+                0
+            }
+            if (count == 0) ModuleLog.warn("notification_importance/menu_target: no compatible hooks installed")
+            add("notification_importance.menu_target=$count")
+        }
     }
 
     private fun unlockOld(loader: ClassLoader): Int {
@@ -78,7 +133,7 @@ internal object ControlCenterHooks {
         val rowField = clickType?.let { Reflect.findField(it, "f\$0") }
         val notification = rowField?.type?.let { Reflect.findField(it, "mSbn") }
         var count = 0
-        if (click != null && notification != null && HookRuntime.hook(click, "notification_channel_settings/menuContext") { chain ->
+        if (click != null && notification != null && HookRuntime.hook(click, "notification_importance/menuContext") { chain ->
                 val previous = menuNotification.get()
                 try {
                     val row = rowField.get(chain.thisObject)
@@ -88,7 +143,7 @@ internal object ControlCenterHooks {
                     if (previous == null) menuNotification.remove() else menuNotification.set(previous)
                 }
             }) count++
-        if (HookRuntime.hook(method, "notification_channel_settings/startAppNotificationSettings") { chain ->
+        if (HookRuntime.hook(method, "notification_importance/menuTarget") { chain ->
                 val context = chain.args[0] as? Context
                 val pkg = chain.args[1] as? String
                 val uid = chain.args[3] as? Int

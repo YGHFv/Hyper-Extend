@@ -12,9 +12,19 @@ internal object ClassicQsTargets {
     val quickResources = SystemUiMethod(QUICK, "updateResources\$1", "void")
     val attached = SystemUiMethod(QUICK, "onAttachedToWindow", "void")
     val configuration = SystemUiMethod(PANEL, "onConfigurationChanged", "void", listOf("android.content.res.Configuration"))
-    val methods = listOf(measure, maxTiles, quickResources, configuration, attached)
+    val updateColumns = SystemUiMethod(TILE, "updateColumns", "boolean")
+    val createPage = SystemUiMethod(PAGER, "createTilePage", PAGE)
+    val tileResources = SystemUiMethod(TILE, "updateResources", "boolean")
+    val tileMaxColumns = SystemUiMethod(TILE, "setMaxColumns", "void", listOf("int"))
+    val methods = listOf(measure, maxTiles, quickResources, configuration, attached,
+        updateColumns, createPage, tileResources, tileMaxColumns,
+        SystemUiMethod(TILE, "setMinRows", "boolean", listOf("int")),
+        SystemUiMethod(PAGER, "setMaxColumns", "void", listOf("int")),
+        SystemUiMethod(PAGER, "updateResources", "boolean"))
     val fields = listOf(
         Triple(PAGER, "mPages", "java.util.ArrayList"), Triple(PAGER, "mDistributeTiles", "boolean"),
         Triple(TILE, "mMaxAllowedRows", "int"), Triple(TILE, "mMinRows", "int"),
+        Triple(TILE, "mResourceColumns", "int"), Triple(TILE, "mMaxColumns", "int"),
+        Triple(TILE, "mColumns", "int"), Triple(TILE, "mCellMarginHorizontal", "int"),
     )
 }

@@ -1,0 +1,153 @@
+{
+  "host": {
+    "packageName": "com.android.systemui",
+    "versionCode": 202602260
+  },
+  "verification": "Complete read-only current MT members; no compile, test or device acceptance.",
+  "evidence": [
+    {
+      "locator": "dex_field:Lcom/android/systemui/statusbar/pipeline/wifi/ui/binder/MiuiWifiViewBinder$bind$1$1$4$1;->$wifiActivity:Landroid/widget/ImageView;",
+      "contains": [
+        ".field public final synthetic $wifiActivity:Landroid/widget/ImageView;"
+      ],
+      "sha256": "0680b02c8041a4e4f90d34a6f10f719a81dfb3bacd01a97f075c8e2675ce429e",
+      "raw": ".workbuddy/tmp/mt-systemui/wifi-indicator-current-member-0.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/statusbar/pipeline/wifi/ui/binder/MiuiWifiViewBinder$bind$1$1$4$1;->I$0:I",
+      "contains": [
+        ".field public synthetic I$0:I"
+      ],
+      "sha256": "eef0d767e18ecb08383d99205aa2bfd642a2fea22d65526f6af60442a5579d9f",
+      "raw": ".workbuddy/tmp/mt-systemui/wifi-indicator-current-member-1.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/statusbar/pipeline/wifi/ui/binder/MiuiWifiViewBinder$bind$1$1$4$1;->label:I",
+      "contains": [
+        ".field label:I"
+      ],
+      "sha256": "5c3125a4ec538fc0d04d5691898013e6f366d7e8b332a2d1c368e9c8417b7798",
+      "raw": ".workbuddy/tmp/mt-systemui/wifi-indicator-current-member-2.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/statusbar/pipeline/wifi/ui/binder/MiuiWifiViewBinder$bind$1$1$5$1;->$wifiStandard:Landroid/widget/TextView;",
+      "contains": [
+        ".field public final synthetic $wifiStandard:Landroid/widget/TextView;"
+      ],
+      "sha256": "22767a56b6e5ffc12e4bcbcc405b3fc09c9e702f62a9fcd0847662cceaf6337a",
+      "raw": ".workbuddy/tmp/mt-systemui/wifi-indicator-current-member-3.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/statusbar/pipeline/wifi/ui/binder/MiuiWifiViewBinder$bind$1$1$5$1;->I$0:I",
+      "contains": [
+        ".field public synthetic I$0:I"
+      ],
+      "sha256": "eef0d767e18ecb08383d99205aa2bfd642a2fea22d65526f6af60442a5579d9f",
+      "raw": ".workbuddy/tmp/mt-systemui/wifi-indicator-current-member-4.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/statusbar/pipeline/wifi/ui/binder/MiuiWifiViewBinder$bind$1$1$5$1;->label:I",
+      "contains": [
+        ".field label:I"
+      ],
+      "sha256": "5c3125a4ec538fc0d04d5691898013e6f366d7e8b332a2d1c368e9c8417b7798",
+      "raw": ".workbuddy/tmp/mt-systemui/wifi-indicator-current-member-5.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/pipeline/wifi/ui/binder/MiuiWifiViewBinder$bind$1$1$4$1;->create(Ljava/lang/Object;Lkotlin/coroutines/Continuation;)Lkotlin/coroutines/Continuation;",
+      "contains": [
+        ".method public final create(Ljava/lang/Object;Lkotlin/coroutines/Continuation;)Lkotlin/coroutines/Continuation;"
+      ],
+      "sha256": "fad8e9027e316ede0e319998812e37b865395746d5d8a28f141d2455c297abf2",
+      "raw": ".workbuddy/tmp/mt-systemui/wifi-indicator-current-member-6.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/pipeline/wifi/ui/binder/MiuiWifiViewBinder$bind$1$1$4$1;->invoke(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;",
+      "contains": [
+        ".method public final invoke(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;"
+      ],
+      "sha256": "9bbfcabb5f7e50356ca613c58ec7dd7b1ed1ba6301ac83b3392482b0df10c434",
+      "raw": ".workbuddy/tmp/mt-systemui/wifi-indicator-current-member-7.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/pipeline/wifi/ui/binder/MiuiWifiViewBinder$bind$1$1$4$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;",
+      "contains": [
+        ".method public final invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;"
+      ],
+      "sha256": "554a522c1b89e6c033244a8a2c42dcdcc3a5657979a3ef2b8c547bc578ab0fcc",
+      "raw": ".workbuddy/tmp/mt-systemui/wifi-indicator-current-member-8.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/pipeline/wifi/ui/binder/MiuiWifiViewBinder$bind$1$1$4;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;",
+      "contains": [
+        ".method public final invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;"
+      ],
+      "sha256": "58b9ef053dfa1f398527332929790af2795fa7230d4508d80a12d91f11ad89de",
+      "raw": ".workbuddy/tmp/mt-systemui/wifi-indicator-current-member-9.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/pipeline/wifi/ui/binder/MiuiWifiViewBinder$bind$1$1$5$1;->create(Ljava/lang/Object;Lkotlin/coroutines/Continuation;)Lkotlin/coroutines/Continuation;",
+      "contains": [
+        ".method public final create(Ljava/lang/Object;Lkotlin/coroutines/Continuation;)Lkotlin/coroutines/Continuation;"
+      ],
+      "sha256": "25ed2e140ad12126dfbae1c8cad9f7a01cc68f79c0af13d4c7fd52591d2e4fac",
+      "raw": ".workbuddy/tmp/mt-systemui/wifi-indicator-current-member-10.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/pipeline/wifi/ui/binder/MiuiWifiViewBinder$bind$1$1$5$1;->invoke(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;",
+      "contains": [
+        ".method public final invoke(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;"
+      ],
+      "sha256": "1dd8372dfc125e36e54feff898e24258140068196c226475f9b43515a13df8d0",
+      "raw": ".workbuddy/tmp/mt-systemui/wifi-indicator-current-member-11.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/pipeline/wifi/ui/binder/MiuiWifiViewBinder$bind$1$1$5$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;",
+      "contains": [
+        ".method public final invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;"
+      ],
+      "sha256": "5488cf610346f6fd3f901337b8879c8b8c383ce04daa82d1768b6d7bda8a2695",
+      "raw": ".workbuddy/tmp/mt-systemui/wifi-indicator-current-member-12.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/pipeline/wifi/ui/binder/MiuiWifiViewBinder$bind$1$1$5;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;",
+      "contains": [
+        ".method public final invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;"
+      ],
+      "sha256": "8efb97d4b537c0868ac0e15dd9ab58206410c1d0eed793c580e2a4aaf95be509",
+      "raw": ".workbuddy/tmp/mt-systemui/wifi-indicator-current-member-13.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/pipeline/wifi/ui/binder/MiuiWifiViewBinder;->bind(Landroid/view/ViewGroup;Lcom/android/systemui/statusbar/pipeline/wifi/ui/viewmodel/LocationBasedWifiViewModel;)Lcom/android/systemui/statusbar/pipeline/wifi/ui/binder/MiuiWifiViewBinder$bind$2;",
+      "contains": [
+        ".method public static final bind(Landroid/view/ViewGroup;Lcom/android/systemui/statusbar/pipeline/wifi/ui/viewmodel/LocationBasedWifiViewModel;)Lcom/android/systemui/statusbar/pipeline/wifi/ui/binder/MiuiWifiViewBinder$bind$2;"
+      ],
+      "sha256": "eefd4eac7a88b288acee34af5db8dc620b445fe8d47639d2a719c4fd44972365",
+      "raw": ".workbuddy/tmp/mt-systemui/wifi-indicator-current-member-14.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/pipeline/wifi/ui/view/ModernStatusBarWifiView$Companion$$ExternalSyntheticLambda0;->invoke()Ljava/lang/Object;",
+      "contains": [
+        ".method public final invoke()Ljava/lang/Object;"
+      ],
+      "sha256": "679490c3a3c4b7e8c7dc71c59e9132c06c66176dd04b81b15ae8b542823d9342",
+      "raw": ".workbuddy/tmp/mt-systemui/wifi-indicator-current-member-15.json",
+      "complete": true
+    }
+  ]
+}

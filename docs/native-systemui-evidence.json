@@ -1,0 +1,147 @@
+{
+  "host": {
+    "packageName": "com.android.systemui",
+    "versionName": "17.03.260226.r",
+    "versionCode": 202602260
+  },
+  "verification": "Live read-only MT complete members, 2026-10-11. Source adaptation only; not built, tests not executed, no deployment or runtime acceptance.",
+  "evidence": [
+    {
+      "locator": "dex_method:Lcom/android/systemui/volume/VolumeDialogComponent;-><init>(Landroid/content/Context;Lcom/android/systemui/keyguard/KeyguardViewMediator;Lcom/android/systemui/plugins/ActivityStarter;Lcom/android/systemui/volume/VolumeDialogControllerImpl;Lcom/android/systemui/demomode/DemoModeController;Lcom/android/systemui/plugins/PluginDependencyProvider;Lcom/android/systemui/statusbar/policy/ExtensionControllerImpl;Lcom/android/systemui/tuner/TunerService;Lcom/android/systemui/volume/dialog/VolumeDialogPlugin;)V",
+      "contains": [
+        ".method public constructor <init>(Landroid/content/Context;Lcom/android/systemui/keyguard/KeyguardViewMediator;Lcom/android/systemui/plugins/ActivityStarter;Lcom/android/systemui/volume/VolumeDialogControllerImpl;Lcom/android/systemui/demomode/DemoModeController;Lcom/android/systemui/plugins/PluginDependencyProvider;Lcom/android/systemui/statusbar/policy/ExtensionControllerImpl;Lcom/android/systemui/tuner/TunerService;Lcom/android/systemui/volume/dialog/VolumeDialogPlugin;)V"
+      ],
+      "sha256": "9e07b536a398bf675b0bbcb3bd4bbbd8baa07457b5c7259a3d76000d7aff76c9"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/globalactions/GlobalActionsComponent;->handleShowGlobalActionsMenu()V",
+      "contains": [
+        ".method public final handleShowGlobalActionsMenu()V"
+      ],
+      "sha256": "b15269a03fc9505ec4e507cf90765b202a2b03e412b84c1b7b85e6620c698f4d"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/globalactions/GlobalActionsComponent;->handleShowShutdownUi(Ljava/lang/String;Z)V",
+      "contains": [
+        ".method public final handleShowShutdownUi(Ljava/lang/String;Z)V"
+      ],
+      "sha256": "d22c6f71063a0c6b22942d91ed3e656fc89b3ec75bb280f4935cb7e5302583a2"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/globalactions/GlobalActionsComponent;->start()V",
+      "contains": [
+        ".method public final start()V"
+      ],
+      "sha256": "14a13c4369a4ca12afbf6644b2db7e9366a39bf2924118d40d61ad8a912c39fc"
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/statusbar/policy/ExtensionControllerImpl;->mDefaultContext:Landroid/content/Context;",
+      "contains": [
+        "mDefaultContext:Landroid/content/Context;"
+      ],
+      "sha256": "3c25a18b5bc356f0d431935c05804824a4b4c0d5e3bf003d8c51e92d334593fc"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/policy/ExtensionControllerImpl;->newExtension$1()Lcom/android/systemui/statusbar/policy/ExtensionControllerImpl$ExtensionBuilder;",
+      "contains": [
+        ".method public final newExtension$1()Lcom/android/systemui/statusbar/policy/ExtensionControllerImpl$ExtensionBuilder;"
+      ],
+      "sha256": "0400257ee3808a8a1d2e6a05a1a2b60b14b7ab337b8f9599ea48a985dc0a0e83"
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/statusbar/policy/ExtensionControllerImpl$ExtensionBuilder;->mExtension:Lcom/android/systemui/statusbar/policy/ExtensionControllerImpl$ExtensionImpl;",
+      "contains": [
+        "mExtension:Lcom/android/systemui/statusbar/policy/ExtensionControllerImpl$ExtensionImpl;"
+      ],
+      "sha256": "7552e65099c8961f5990c1c951d37efc0e302534f51cb3540c53fc1d4d75879d"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/policy/ExtensionControllerImpl$ExtensionBuilder;->build()Lcom/android/systemui/statusbar/policy/ExtensionControllerImpl$ExtensionImpl;",
+      "contains": [
+        ".method public final build()Lcom/android/systemui/statusbar/policy/ExtensionControllerImpl$ExtensionImpl;"
+      ],
+      "sha256": "9bccee8cdbb5edbdbda5e03cb592faf33915cbeec83116875ff1b1c27efdba34"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/policy/ExtensionControllerImpl$ExtensionBuilder;->withDefault(Ljava/util/function/Supplier;)V",
+      "contains": [
+        ".method public final withDefault(Ljava/util/function/Supplier;)V"
+      ],
+      "sha256": "618f8dad4f47af8e1573e932d2603b6da14f933e94ae1f8fa52b539242a6d7d9"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/policy/ExtensionControllerImpl$ExtensionBuilder;->withPlugin(Ljava/lang/Class;)V",
+      "contains": [
+        ".method public final withPlugin(Ljava/lang/Class;)V",
+        "->addPluginListener(",
+        "->mProducers:"
+      ],
+      "sha256": "07ee2a78536337fe5733790c764e71558c36ecc198bf45d6b79a632a6ab8cff7"
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/statusbar/policy/ExtensionControllerImpl$ExtensionImpl;->this$0:Lcom/android/systemui/statusbar/policy/ExtensionControllerImpl;",
+      "contains": [
+        "this$0:Lcom/android/systemui/statusbar/policy/ExtensionControllerImpl;"
+      ],
+      "sha256": "4c646cc983cdab616ffcfad2721f1cf65fa0d0e0f5fe38f0c2f72df7c23fec4e"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/policy/ExtensionControllerImpl$ExtensionImpl;->-$$Nest$mnotifyChanged(Lcom/android/systemui/statusbar/policy/ExtensionControllerImpl$ExtensionImpl;)V",
+      "contains": [
+        ".method public static -$$Nest$mnotifyChanged(Lcom/android/systemui/statusbar/policy/ExtensionControllerImpl$ExtensionImpl;)V"
+      ],
+      "sha256": "19b63742bc986a12017b5945f2455f687ea3f2108de4c4e884814a23d8c4ef25"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/policy/ExtensionControllerImpl$ExtensionImpl$Default;->get()Ljava/lang/Object;",
+      "contains": [
+        ".method public final get()Ljava/lang/Object;"
+      ],
+      "sha256": "f43052f3ec1c6d51541b528c156f210486c2281383440e63b96f02953d749431"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/volume/VolumeDialogComponent$$ExternalSyntheticLambda0;->get()Ljava/lang/Object;",
+      "contains": [
+        ".method public final get()Ljava/lang/Object;"
+      ],
+      "sha256": "fd1e1c20250dc543dd720154d197fcfb8b47867bf331faf1b2bc5c67bd2449e0"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/volume/VolumeDialogComponent$$ExternalSyntheticLambda1;->accept(Ljava/lang/Object;)V",
+      "contains": [
+        ".method public final accept(Ljava/lang/Object;)V",
+        "->destroy()V",
+        "->init("
+      ],
+      "sha256": "af3dc939605fb2f98da7765fd21f8f7d53bc95ff7d9f8f839e77acb3db13b7ca"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/globalactions/GlobalActionsComponent$$ExternalSyntheticLambda0;->get()Ljava/lang/Object;",
+      "contains": [
+        ".method public final get()Ljava/lang/Object;"
+      ],
+      "sha256": "e6623c09a599efe1851a1b1b16beaf739086a6b9352f17a69825eeb6c1f1bc85"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/globalactions/GlobalActionsComponent$$ExternalSyntheticLambda1;->accept(Ljava/lang/Object;)V",
+      "contains": [
+        ".method public final accept(Ljava/lang/Object;)V"
+      ],
+      "sha256": "6146f153ffa61a3f6c663ff28462d373f3ba9e837238e9161e779473210288ad"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/volume/dialog/VolumeDialogPlugin;->destroy()V",
+      "contains": [
+        ".method public final destroy()V"
+      ],
+      "sha256": "11c99afdd2d00fdea2841bf2a1892e3fdf1fc9ddc227bf2fe9487f11af365eee"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/volume/dialog/VolumeDialogPlugin;->init(ILcom/android/systemui/plugins/VolumeDialog$Callback;)V",
+      "contains": [
+        ".method public final init(ILcom/android/systemui/plugins/VolumeDialog$Callback;)V"
+      ],
+      "sha256": "80d07e1e304668f8012316cff2784f36cb2b0228e1fd21855728f9ea3f0ac507"
+    }
+  ]
+}

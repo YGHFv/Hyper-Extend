@@ -22,3 +22,11 @@ Lcom/android/systemui/navigationbar/gestural/NavigationHandle;->mPaint:Landroid/
 Lcom/android/systemui/navigationbar/gestural/NavigationHandle;->mLastPillRect:Landroid/graphics/RectF;
 Lcom/android/systemui/navigationbar/gestural/NavigationHandle;->mLastPillRadius:F
 Lcom/android/systemui/navigationbar/gestural/NavigationHandle;->mPillGeometryDirty:Z
+Lcom/android/systemui/navigationbar/gestural/NavigationHandle;->mBottom:F
+Lcom/android/systemui/navigationbar/gestural/NavigationHandle;->mHandleWidth:F
+Lcom/android/systemui/navigationbar/gestural/NavigationHandle;->mAdditionalHeightForAnimation:F
+Lcom/android/systemui/navigationbar/gestural/NavigationHandle;->mAdditionalWidthForAnimation:F
+Lcom/android/systemui/navigationbar/gestural/NavigationHandle;->mPulseAnimationProgress:F
+Lcom/android/systemui/navigationbar/gestural/NavigationHandle;->mPressAnimator:Lcom/android/systemui/navigationbar/gestural/NavigationHandlePressAnimator;
+Lcom/android/systemui/navigationbar/gestural/NavigationHandlePressAnimator;->mWidthScale:F
+Lcom/android/systemui/navigationbar/gestural/NavigationHandlePressAnimator;->mHeightScale:F

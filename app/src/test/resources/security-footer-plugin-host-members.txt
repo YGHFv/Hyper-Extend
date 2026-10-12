@@ -1,0 +1,5 @@
+Lmiui/systemui/controlcenter/panel/main/MainPanelContentDistributor;->distributePanels(Z)V
+Lmiui/systemui/controlcenter/panel/main/security/SecurityFooterController;->available(Z)Z
+Lmiui/systemui/controlcenter/panel/main/security/SecurityFooterController;->handleRefreshState$lambda$1(Lmiui/systemui/controlcenter/panel/main/security/SecurityFooterController;Ljava/lang/CharSequence;Landroid/graphics/drawable/Drawable;Lkotlin/jvm/internal/r;Z)V
+Lmiui/systemui/controlcenter/panel/main/security/SecurityFooterController;->setVisible(Z)V
+Lmiui/systemui/util/ViewController;->getView()Landroid/view/View;

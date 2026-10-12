@@ -1,0 +1,230 @@
+{
+  "host": {
+    "packageName": "miui.systemui.plugin",
+    "versionCode": 183022200
+  },
+  "verification": "Read-only complete host members. Source-only; no build/tests/device acceptance.",
+  "evidence": [
+    {
+      "locator": "dex_method:Lmiui/systemui/controlcenter/qs/QSController;-><init>(Lmiui/systemui/controlcenter/windowview/ControlCenterWindowViewImpl;Landroid/os/Looper;Lcom/android/systemui/plugins/miui/qs/MiuiQSHost;LE0/a;LE0/a;LE0/a;LE0/a;LE0/a;LE0/a;)V",
+      "contains": [
+        ".method public constructor <init>(Lmiui/systemui/controlcenter/windowview/ControlCenterWindowViewImpl;Landroid/os/Looper;Lcom/android/systemui/plugins/miui/qs/MiuiQSHost;LE0/a;LE0/a;LE0/a;LE0/a;LE0/a;LE0/a;)V"
+      ],
+      "sha256": "ba9de0e2f255a7ecfc6cd2323ba30842e00019637baca21e422506719613e09b",
+      "raw": ".workbuddy/tmp/mt-systemui/continuous-card-member-00.json"
+    },
+    {
+      "locator": "dex_method:Lmiui/systemui/controlcenter/qs/QSController;->createTile(Ljava/lang/String;)Lcom/android/systemui/plugins/qs/QSTile;",
+      "contains": [
+        ".method public final createTile(Ljava/lang/String;)Lcom/android/systemui/plugins/qs/QSTile;"
+      ],
+      "sha256": "c4292b28026708a0113336046351e57b6c76add7c2ad8dc39ccfd59b5c13c54a",
+      "raw": ".workbuddy/tmp/mt-systemui/continuous-card-member-01.json"
+    },
+    {
+      "locator": "dex_method:Lmiui/systemui/controlcenter/qs/QSController;->getCardStyleTileSpecs()Ljava/util/List;",
+      "contains": [
+        ".method public final getCardStyleTileSpecs()Ljava/util/List;"
+      ],
+      "sha256": "6225d657b33d2d0a4a0debf289cbb010d48055d01135b9209e80951960e7e3c7",
+      "raw": ".workbuddy/tmp/mt-systemui/continuous-card-member-02.json"
+    },
+    {
+      "locator": "dex_method:Lmiui/systemui/controlcenter/qs/QSController;->getCreateExcludeTileSpecs()Ljava/util/ArrayList;",
+      "contains": [
+        ".method public final getCreateExcludeTileSpecs()Ljava/util/ArrayList;"
+      ],
+      "sha256": "66311eaf3da87f9ec6f8fde4d280d3651f6c7e7deb71fec82afe9b8a0cfbf34f",
+      "raw": ".workbuddy/tmp/mt-systemui/continuous-card-member-03.json"
+    },
+    {
+      "locator": "dex_method:Lmiui/systemui/controlcenter/qs/QSController;->getCreateStartExcludeTileSpecs()Ljava/util/ArrayList;",
+      "contains": [
+        ".method public final getCreateStartExcludeTileSpecs()Ljava/util/ArrayList;"
+      ],
+      "sha256": "d7f11c4633790de174e637d99f6ceeedcaf4e88dcd0ba0a49ffd1131332de67a",
+      "raw": ".workbuddy/tmp/mt-systemui/continuous-card-member-04.json"
+    },
+    {
+      "locator": "dex_method:Lmiui/systemui/controlcenter/qs/QSController;->updateExcludeTileSpecs()V",
+      "contains": [
+        ".method public final updateExcludeTileSpecs()V"
+      ],
+      "sha256": "6efa621453f2a010618ce0113bf7c52c64858ade559fb4be90c6d71336797e6d",
+      "raw": ".workbuddy/tmp/mt-systemui/continuous-card-member-05.json"
+    },
+    {
+      "locator": "dex_method:Lmiui/systemui/controlcenter/qs/QSController$cardStyleTileSpecs$2;->invoke()Ljava/lang/Object;",
+      "contains": [
+        ".method public bridge synthetic invoke()Ljava/lang/Object;"
+      ],
+      "sha256": "b212d6390422cdfe3d7af2d9e7dcf232834807297df3036f14708826d1eb9ff6",
+      "raw": ".workbuddy/tmp/mt-systemui/continuous-card-member-06.json"
+    },
+    {
+      "locator": "dex_method:Lmiui/systemui/controlcenter/qs/QSController$cardStyleTileSpecs$2;->invoke()Ljava/util/List;",
+      "contains": [
+        ".method public final invoke()Ljava/util/List;"
+      ],
+      "sha256": "f0147c1782995928aaa9a28cdc20374ea402a6f50c21cca26853b2dbf7950ee6",
+      "raw": ".workbuddy/tmp/mt-systemui/continuous-card-member-07.json"
+    },
+    {
+      "locator": "dex_method:Lmiui/systemui/controlcenter/panel/secondary/detail/DetailPanelTilesDelegate;->clearTiles()V",
+      "contains": [
+        ".method private final clearTiles()V"
+      ],
+      "sha256": "86018aa774dd2ebd033208073cd5880789769fd78f6dac0b4093d38f4fe820ba",
+      "raw": ".workbuddy/tmp/mt-systemui/continuous-card-member-08.json"
+    },
+    {
+      "locator": "dex_method:Lmiui/systemui/controlcenter/panel/secondary/detail/DetailPanelTilesDelegate;->createTiles()V",
+      "contains": [
+        ".method private final createTiles()V"
+      ],
+      "sha256": "bddbae9a3a5cf7350c839729f53932e62d019cf5f58bea69ce925490f7ae6e1e",
+      "raw": ".workbuddy/tmp/mt-systemui/continuous-card-member-09.json"
+    },
+    {
+      "locator": "dex_method:Lmiui/systemui/controlcenter/panel/secondary/detail/DetailPanelTilesDelegate;->updateView(Lcom/android/systemui/plugins/qs/QSTile;)V",
+      "contains": [
+        ".method private final updateView(Lcom/android/systemui/plugins/qs/QSTile;)V"
+      ],
+      "sha256": "0363f1c054ec530f6e03395fae95bd5a28efca8a3ef0d021b392d7c49a8d1bfe",
+      "raw": ".workbuddy/tmp/mt-systemui/continuous-card-member-10.json"
+    },
+    {
+      "locator": "dex_method:Lmiui/systemui/controlcenter/panel/secondary/detail/DetailPanelTilesDelegate;->onCreate()V",
+      "contains": [
+        ".method public onCreate()V"
+      ],
+      "sha256": "220c176801c9766134b849786ee77a5932404238d6461bdad14dd35f91fd8ace",
+      "raw": ".workbuddy/tmp/mt-systemui/continuous-card-member-11.json"
+    },
+    {
+      "locator": "dex_method:Lmiui/systemui/controlcenter/panel/secondary/detail/DetailPanelTilesDelegate;->onDestroy()V",
+      "contains": [
+        ".method public onDestroy()V"
+      ],
+      "sha256": "9bb6ebfd880201b755df99ac719ac2d1e3b1e401898526b5d2f5f7a5161cdbe8",
+      "raw": ".workbuddy/tmp/mt-systemui/continuous-card-member-12.json"
+    },
+    {
+      "locator": "dex_method:Lmiui/systemui/controlcenter/panel/secondary/detail/DetailPanelTilesDelegate;->prepareShow(Lmiui/systemui/controlcenter/panel/secondary/DetailPanelParams;)V",
+      "contains": [
+        ".method public prepareShow(Lmiui/systemui/controlcenter/panel/secondary/DetailPanelParams;)V"
+      ],
+      "sha256": "6506783c452fa55b88e42a781d07661cec7320a718d0f0520b1b237267448ab5",
+      "raw": ".workbuddy/tmp/mt-systemui/continuous-card-member-13.json"
+    },
+    {
+      "locator": "dex_method:Lmiui/systemui/controlcenter/panel/secondary/detail/DetailPanelTilesDelegate;->prepareShow(Lmiui/systemui/controlcenter/panel/secondary/SecondaryParams;)V",
+      "contains": [
+        ".method public bridge synthetic prepareShow(Lmiui/systemui/controlcenter/panel/secondary/SecondaryParams;)V"
+      ],
+      "sha256": "8c202e38ad84bd6dff88660213645a727a1baa68566121058211ad09e3f2302d",
+      "raw": ".workbuddy/tmp/mt-systemui/continuous-card-member-14.json"
+    },
+    {
+      "locator": "dex_method:Lmiui/systemui/controlcenter/panel/main/qs/QSCardsController;->clearCardTiles()V",
+      "contains": [
+        ".method private final clearCardTiles()V"
+      ],
+      "sha256": "320cf31ecdd433999414c3454095dfbc7a2b8613a569478fa589d3b079af3464",
+      "raw": ".workbuddy/tmp/mt-systemui/continuous-card-member-15.json"
+    },
+    {
+      "locator": "dex_method:Lmiui/systemui/controlcenter/panel/main/qs/QSCardsController;->createCardTiles()V",
+      "contains": [
+        ".method private final createCardTiles()V"
+      ],
+      "sha256": "25aa6925024d36e7dcee0c111c31088652d45f87950055b83e99868c4a7dd8a3",
+      "raw": ".workbuddy/tmp/mt-systemui/continuous-card-member-16.json"
+    },
+    {
+      "locator": "dex_method:Lmiui/systemui/controlcenter/panel/main/qs/QSCardsController;->createVoWifiTiles()V",
+      "contains": [
+        ".method private final createVoWifiTiles()V"
+      ],
+      "sha256": "eafb41e0395759212bc2f0a70cc16690d2c379e76a026440e7bd1904d11a6347",
+      "raw": ".workbuddy/tmp/mt-systemui/continuous-card-member-17.json"
+    },
+    {
+      "locator": "dex_method:Lmiui/systemui/controlcenter/panel/main/qs/QSCardsController;->distributeTiles()V",
+      "contains": [
+        ".method private final distributeTiles()V"
+      ],
+      "sha256": "ad160f333db1608c730984755e062841303601fef14a8d7b4e317911c80e1649",
+      "raw": ".workbuddy/tmp/mt-systemui/continuous-card-member-18.json"
+    },
+    {
+      "locator": "dex_method:Lmiui/systemui/controlcenter/panel/main/qs/QSCardsController;->clearVoWifiTiles()V",
+      "contains": [
+        ".method public final clearVoWifiTiles()V"
+      ],
+      "sha256": "cc513677737278d2e3783fb40d37b8a69866fb0b342f484bf88d4ad1fbd8c07a",
+      "raw": ".workbuddy/tmp/mt-systemui/continuous-card-member-19.json"
+    },
+    {
+      "locator": "dex_method:Lmiui/systemui/controlcenter/panel/main/qs/QSCardsController;->onCreate()V",
+      "contains": [
+        ".method public onCreate()V"
+      ],
+      "sha256": "9a6f86f7e3af034e0de384bdf920babc0317bfdc00bca7ebccd10a6d08b56691",
+      "raw": ".workbuddy/tmp/mt-systemui/continuous-card-member-20.json"
+    },
+    {
+      "locator": "dex_method:Lmiui/systemui/controlcenter/panel/main/qs/QSCardsController;->onDestroy()V",
+      "contains": [
+        ".method public onDestroy()V"
+      ],
+      "sha256": "78f780a5f3ce832b3394e8986b26dabda91c49a79ce13407d85b5729b1583a70",
+      "raw": ".workbuddy/tmp/mt-systemui/continuous-card-member-21.json"
+    },
+    {
+      "locator": "dex_method:Lmiui/systemui/controlcenter/panel/main/qs/QSCardsController;->onStart()V",
+      "contains": [
+        ".method public onStart()V"
+      ],
+      "sha256": "823d96b25693693b7508168f813834d1daf7a83390e2d0d8b9d65faeda89cad0",
+      "raw": ".workbuddy/tmp/mt-systemui/continuous-card-member-22.json"
+    },
+    {
+      "locator": "dex_method:Lmiui/systemui/controlcenter/panel/main/qs/QSCardsController;->onStop()V",
+      "contains": [
+        ".method public onStop()V"
+      ],
+      "sha256": "65ae5ad446ed302db3c2ad5c5f528df5d9ee686ebd2cad9f84d4a290e9beb907",
+      "raw": ".workbuddy/tmp/mt-systemui/continuous-card-member-23.json"
+    },
+    {
+      "locator": "dex_method:Lmiui/systemui/util/ViewController;->getContext()Landroid/content/Context;",
+      "contains": [
+        ".method public final getContext()Landroid/content/Context;"
+      ],
+      "sha256": "499e92dc5f60d8e386ed558a8015efe0723894355707e0fce9bf9289648acfa8",
+      "raw": ".workbuddy/tmp/mt-systemui/continuous-card-member-24.json"
+    },
+    {
+      "locator": "dex_method:LH0/j;->getValue()Ljava/lang/Object;",
+      "contains": [
+        ".method public final getValue()Ljava/lang/Object;"
+      ],
+      "sha256": "f76c54c4a9751896a2a5c3cf20191247d29d8381041fd1fc536a42baf8a8e2c4",
+      "raw": ".workbuddy/tmp/mt-systemui/continuous-card-member-25.json"
+    },
+    {
+      "locator": "dex_field:Lmiui/systemui/controlcenter/qs/QSController$cardStyleTileSpecs$2;->this$0:Lmiui/systemui/controlcenter/qs/QSController;",
+      "contains": [
+        ".field final synthetic this$0:Lmiui/systemui/controlcenter/qs/QSController;"
+      ],
+      "sha256": "81b54feb8aac0abe494bd64d2189768fbdb23b3ffa7eab091d8ca3ac28ebf9ae",
+      "raw": ".workbuddy/tmp/mt-systemui/continuous-card-member-owner.json"
+    }
+  ],
+  "xrefs": [
+    ".workbuddy/tmp/mt-systemui/continuous-card-xref-getter.json",
+    ".workbuddy/tmp/mt-systemui/continuous-card-xref-detail-create.json",
+    ".workbuddy/tmp/mt-systemui/continuous-card-xref-start-exclude.json"
+  ]
+}

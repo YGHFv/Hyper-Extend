@@ -44,11 +44,11 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.saveable.rememberSaveableStateHolder
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -253,6 +253,9 @@ private fun HyperApp(themeMode: Int, onThemeMode: (Int) -> Unit) {
     var searching by rememberSaveable { mutableStateOf(false) }
     // 设置页的二级页面（AppSettingsPage 枚举名）。与作用域页同级的「整页替换」层。
     var openAppPage by rememberSaveable { mutableStateOf("") }
+    // key() only isolates composition identity; this holder also retains pages removed
+    // by the detail-page early returns, including each page's rememberScrollState().
+    val pageStates = rememberSaveableStateHolder()
 
     val tab = MainTab.entries.getOrElse(tabIndex) { MainTab.HOME }
 
@@ -302,14 +305,16 @@ private fun HyperApp(themeMode: Int, onThemeMode: (Int) -> Unit) {
     // 顺序即层级：设置页的二级页面在最前（它没有更深的层），其次是功能详情、作用域页、搜索。
 
     AppSettingsPage.fromId(openAppPage)?.let { page ->
-        AppSettingsPageHost(
-            page = page,
-            ui = ui,
-            onUi = applyUi,
-            onReloadSettings = reloadSettings,
-            onReset = resetSettings,
-            onBack = { openAppPage = "" },
-        )
+        pageStates.SaveableStateProvider("app:${page.id}") {
+            AppSettingsPageHost(
+                page = page,
+                ui = ui,
+                onUi = applyUi,
+                onReloadSettings = reloadSettings,
+                onReset = resetSettings,
+                onBack = { openAppPage = "" },
+            )
+        }
         return
     }
 
@@ -324,14 +329,16 @@ private fun HyperApp(themeMode: Int, onThemeMode: (Int) -> Unit) {
         return
     }
     if (feature != null) {
-        FeatureDetailPage(
-            feature = feature,
-            switches = switches,
-            strings = strings,
-            onSwitch = setSwitch,
-            onString = setString,
-            onBack = { openFeatureId = "" },
-        )
+        pageStates.SaveableStateProvider("feature:${feature.id}") {
+            FeatureDetailPage(
+                feature = feature,
+                switches = switches,
+                strings = strings,
+                onSwitch = setSwitch,
+                onString = setString,
+                onBack = { openFeatureId = "" },
+            )
+        }
         return
     }
 
@@ -340,8 +347,7 @@ private fun HyperApp(themeMode: Int, onThemeMode: (Int) -> Unit) {
         val group = ScopeFeatureGroup.entries.firstOrNull {
             it.name == openGroupId && it.scopeId == scope.id
         }
-        // Separate page state: entering a submenu must not inherit its parent's scroll offset.
-        key(scope.id, group) {
+        pageStates.SaveableStateProvider("scope:${scope.id}:group:${group?.name.orEmpty()}") {
             ScopeDetailPage(
                 scope = scope,
                 switches = switches,
@@ -363,34 +369,37 @@ private fun HyperApp(themeMode: Int, onThemeMode: (Int) -> Unit) {
     }
 
     if (searching) {
-        SearchPage(
-            switches = switches,
-            strings = strings,
-            onSwitch = setSwitch,
-            onOpenFeature = { hit ->
-                searching = false
-                openFeatureId = hit.id
-            },
-            onBack = { searching = false },
-        )
+        pageStates.SaveableStateProvider("search") {
+            SearchPage(
+                switches = switches,
+                strings = strings,
+                onSwitch = setSwitch,
+                onOpenFeature = { hit ->
+                    openFeatureId = hit.id
+                },
+                onBack = { searching = false },
+            )
+        }
         return
     }
 
-    MainTabs(
-        tab = tab,
-        onTab = { tabIndex = it.ordinal },
-        switches = switches,
-        strings = strings,
-        ui = ui,
-        onOpenScope = {
-            openGroupId = ""
-            openScopeId = it.id
-        },
-        onOpenAppPage = { openAppPage = it.id },
-        onReloadSettings = reloadSettings,
-        onReset = resetSettings,
-        onSearch = { searching = true },
-    )
+    pageStates.SaveableStateProvider("tab:${tab.name}") {
+        MainTabs(
+            tab = tab,
+            onTab = { tabIndex = it.ordinal },
+            switches = switches,
+            strings = strings,
+            ui = ui,
+            onOpenScope = {
+                openGroupId = ""
+                openScopeId = it.id
+            },
+            onOpenAppPage = { openAppPage = it.id },
+            onReloadSettings = reloadSettings,
+            onReset = resetSettings,
+            onSearch = { searching = true },
+        )
+    }
 }
 
 /**

@@ -1,0 +1,92 @@
+{
+  "time": "2026-10-12",
+  "title": "第三轮：5G 样式选择 + 手电筒亮度控制修复后的统一编译/测试/安装",
+  "allMigrationComplete": false,
+  "buildPassed": true,
+  "testsPassed": true,
+  "installed": true,
+  "hostRestarted": false,
+  "runtimeAccepted": false,
+  "deviceFeatureActionsExecuted": false,
+  "commands": [
+    {
+      "command": ".\\gradlew.bat --console=plain :app:compileDebugKotlin",
+      "exitCode": 0
+    },
+    {
+      "command": ".\\gradlew.bat --console=plain :app:testDebugUnitTest",
+      "exitCode": 0
+    },
+    {
+      "command": ".\\gradlew.bat --console=plain :app:testDebugUnitTest :app:assembleRelease",
+      "exitCode": 0
+    },
+    {
+      "command": "python -m unittest discover -s tools -p \"test_*.py\"",
+      "exitCode": 0,
+      "tests": 17
+    }
+  ],
+  "gradleTests": {
+    "suites": 137,
+    "tests": 845,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "report": "app/build/test-results/testDebugUnitTest/"
+  },
+  "artifact": {
+    "path": "app/build/outputs/apk/release/app-release.apk",
+    "bytes": 2898394,
+    "sha256": "33d53d7c31bd14e7d92c5beefa19104ad6184d507afa3bd16660a5ae912927dc"
+  },
+  "device": {
+    "serial": "<serial>",
+    "sdk": 37,
+    "fingerprint": "Xiaomi/pandora/pandora:17/CP2A.260605.016/OS4.0.0.38.XBLCNXM:user/release-keys",
+    "package": "io.github.YGHFv.HyperExtend",
+    "versionName": "0.1.3",
+    "versionCode": 4,
+    "installCommand": "adb push -> su -c pm install -r",
+    "installResult": "Success",
+    "installedBaseApkSha256": "33d53d7c31bd14e7d92c5beefa19104ad6184d507afa3bd16660a5ae912927dc",
+    "installedShaMatchesBuild": true,
+    "launchProbe": "am start -W .ui.SettingsActivity -> Status: ok; adb logcat crash buffer has no HyperExtend entry and no FATAL/AndroidRuntime line"
+  },
+  "fixesInThisPass": [
+    {
+      "defect": "5G 开关样式选择未迁移",
+      "referencesProvided": "https://github.com/ReChronoRain/HyperCeiler (西米露 / HyperCeiler)",
+      "upstream": "library/core/.../system_ui_control_center_tiles.xml DropDownPreference prefs_key_system_control_center_5g_new_tile (0..3); FiveGTile.java mode 1/2 = independent tiles with different icons, mode 3 = inject into the native cellular detail page",
+      "local": "FiveGTileSettings.style (control_center_fix_tiles_list.5g_style) surfaced as a row of the 补全磁贴列表 card, with 样式一 / 样式二 / 内置移动网络磁贴; independent tile path = FiveGTileHooks, native-detail path = FiveGDetailHooks; StockTilesHooks keeps the tile out of the candidate list when the native-detail style is selected",
+      "evidence": "docs/five-g-style-evidence.json"
+    },
+    {
+      "defect": "手电筒亮度控制与西米露实现不一致",
+      "upstream": "NewFlashLight.kt hijacks the brightness slider while the torch is on and writes the converted strength into hard-coded sysfs nodes after chmod 777",
+      "whyNotCopiedVerbatim": "None of upstream's sysfs nodes exist on this device (/sys/class/flashlight_core, leds/flashlight, led:torch_0, led:switch_0, spotlight all absent; only yellow:flash-0 / white:flash-1 / amber:flash-2). The host's own FLASH_DEVICES paths are absent too, and MiuiFlashlightControllerImpl reaches the torch through CameraManager.turnOnTorchWithStrengthLevel. Upstream modes 2/3 only describe how to write a node that does not exist here, so no fake tabs were added.",
+      "local": "手电筒亮度控制 card has two tabs: 开启时限制上限 (first-pass cap, preserved) and 亮度条实时控制 (upstream-equivalent: hook MiuiBrightnessController.onChanged, temporarily set mExternalChange, convert the slider value with the host's own BrightnessUtils.convertGammaToLinearFloat, call CameraManager.turnOnTorchWithStrengthLevel)",
+      "extraRepair": "Removed the mandatory deoptimize() of the evidence-only anchors (caller/strategy in tier 1, gammaToLinear/turnOnTorch in tier 2). Those are invoke targets, never hook targets, and forcing deoptimize on them could have failed the whole tier on an unrelated method.",
+      "evidence": "docs/flashlight-live-control-evidence.json"
+    }
+  ],
+  "duplicateCardAudit": {
+    "checkedOn": "2026-10-12",
+    "method": "Parsed every HyperFeature literal in core/*.kt and compared both id and title across the whole catalog",
+    "hyperFeatureLiterals": 88,
+    "duplicateTitles": 0,
+    "duplicateIds": 0,
+    "conclusion": "No duplicate feature cards remain. The previously merged groups (volume/brightness value display, gesture line, notification menu redirect, navigation-bar hiding, sunlight rows) are the only merges and they already collapse into one card each with tab-style options."
+  },
+  "remainingNotMigrated": {
+    "iconBlockListRows": 6,
+    "hdRows": 3,
+    "batteryDetailAtRight": 1,
+    "superLyricDependency": 11,
+    "note": "See docs/systemui-remaining-row-audit-2026-10-12.json and docs/systemui-remaining-row-audit-2026-10-12-third-pass.md. The six block-list icon rows are reachable through the local status_bar_icons adapter but need a device acceptance run; the three HD rows need a self-contained flow binding; battery_detail_at_right needs a real native right slot; the SuperLyric rows are an external dependency this project does not take.",
+    "statusesWereNotPromoted": true
+  },
+  "verification": "Local compile, 845-test Debug unit run, R8 Release assemble, 17 python tool tests, AKP install with a matching base.apk hash, and a launch smoke test. No host restart of com.android.systemui, no LSPosed scope re-enable and no on-device feature action was performed, so this is NOT runtime acceptance.",
+  "runtimeAccepted": false,
+  "nextStep": "Needs a real on-device acceptance pass: re-enable the host scope, restart the SystemUI host, and check the flashlight live slider, the 5G tile styles, and the six block-list icon rows."
+}

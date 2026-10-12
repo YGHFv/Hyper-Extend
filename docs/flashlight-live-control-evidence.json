@@ -1,0 +1,111 @@
+{
+  "date": "2026-10-12",
+  "title": "手电筒亮度控制：上游「亮度条实时控制」在本机的载体重定位取证",
+  "feature": "flashlight_strength_limit",
+  "upstream": {
+    "repository": "https://github.com/ReChronoRain/HyperCeiler (西米露)",
+    "revision": "5e46860",
+    "file": "library/libhook/src/main/java/com/sevtinge/hyperceiler/libhook/rules/systemui/controlcenter/tiles/NewFlashLight.kt",
+    "behavior": "手电筒开着时劫持控制中心亮度条：hook 两条「把滑块值写进屏幕亮度」的 runnable 使其不改屏幕亮度，再用宿主 BrightnessUtils.convertGammaToLinearFloat 把滑块值换算成强度写进手电筒 sysfs 节点。",
+    "writeModes": [
+      "0 关闭（整条功能不生效）",
+      "1 默认写入模式（直接写存在的节点）",
+      "2 写入模式一（先写 0 再写目标值）",
+      "3 写入模式二（写目标值后写 /sys/class/leds/led:switch_0/brightness 触发）"
+    ],
+    "hardcodedNodes": [
+      "/sys/class/flashlight_core/flashlight/torchbrightness",
+      "/sys/class/leds/led:torch_0/brightness",
+      "/sys/class/leds/led:torch_0/max_brightness",
+      "/sys/class/leds/flashlight/brightness",
+      "/sys/class/leds/led:switch_0/brightness"
+    ],
+    "privilege": "上游对上述节点执行 ShellUtils chmod 777 后直接写文件，需要 root。"
+  },
+  "deviceReadOnlyObservations": {
+    "device": "adb <serial> (Xiaomi pandora, SDK 37)",
+    "fingerprint": "Xiaomi/pandora/pandora:17/CP2A.260605.016/OS4.0.0.38.XBLCNXM:user/release-keys",
+    "command": "su -c 'ls -d <path>' / su -c 'ls /sys/class/leds/'",
+    "absent": [
+      "/sys/class/flashlight_core",
+      "/sys/class/leds/flashlight",
+      "/sys/class/leds/led:torch_0",
+      "/sys/class/leds/led:switch_0",
+      "/sys/class/leds/spotlight"
+    ],
+    "present": [
+      "amber:flash-2",
+      "blue",
+      "green",
+      "red",
+      "white:flash-1",
+      "yellow:flash-0"
+    ],
+    "note": "上游写死的节点与宿主自己 FLASH_DEVICES 里的 /sys/class/leds/flashlight/brightness、/sys/class/leds/spotlight/brightness 在本机**全部不存在**。本机闪光灯由 led-controller 驱动，节点名是 yellow/white/amber:flash-N，且未确认单文件写入可直接改变相机手电亮度。",
+    "installOrWriteActionsExecuted": false
+  },
+  "hostCarrier": {
+    "workspaceId": "82gixxhb",
+    "package": "com.android.systemui",
+    "versionCode": 202602260,
+    "evidenceTool": "MT MCP read-only (mt_apk_dex_read_class_outline / mt_apk_read_text / mt_apk_search)",
+    "verifiedMembers": [
+      "dex_class:Lcom/android/systemui/controlcenter/policy/MiuiFlashlightControllerImpl; implements Lcom/android/systemui/statusbar/policy/FlashlightController;",
+      "dex_field:Lcom/android/systemui/controlcenter/policy/MiuiFlashlightControllerImpl;->mCameraManager:Landroid/hardware/camera2/CameraManager;",
+      "dex_field:Lcom/android/systemui/controlcenter/policy/MiuiFlashlightControllerImpl;->mCameraId:Ljava/lang/String;",
+      "dex_field:Lcom/android/systemui/controlcenter/policy/MiuiFlashlightControllerImpl;->mFlashlightEnabled:Z",
+      "dex_field:Lcom/android/systemui/controlcenter/policy/MiuiFlashlightControllerImpl;->mFlashlightMaxStrength:I",
+      "dex_field:Lcom/android/systemui/controlcenter/policy/MiuiFlashlightControllerImpl;->mForceOff:Z",
+      "dex_field:Lcom/android/systemui/controlcenter/policy/MiuiFlashlightControllerImpl;->mBatteryOff:Z",
+      "dex_field:Lcom/android/systemui/controlcenter/policy/MiuiFlashlightControllerImpl;->mTorchAvailable:Z",
+      "dex_method:Lcom/android/systemui/controlcenter/policy/MiuiFlashlightControllerImpl;->setFlashlightInternal(Z)V",
+      "dex_method:Lcom/android/systemui/controlcenter/policy/MiuiFlashlightControllerImpl;->doSuperFlashlightStrategy()V",
+      "dex_method:Lcom/android/systemui/controlcenter/policy/MiuiFlashlightControllerImpl$$ExternalSyntheticLambda3;->run()V",
+      "smali search: turnOnTorchWithStrengthLevel reached from MiuiFlashlightControllerImpl$$ExternalSyntheticLambda3 and com.android.systemui.flashlight.data.repository.FlashlightRepositoryImpl$setEnabled$1 / $setLevel$1",
+      "dex_class:Lcom/android/systemui/controlcenter/policy/MiuiBrightnessController;",
+      "dex_method:Lcom/android/systemui/controlcenter/policy/MiuiBrightnessController;->onChanged(Lcom/android/systemui/plugins/miui/controlcenter/ToggleSliderBase;ZZIZ)V",
+      "dex_field:Lcom/android/systemui/controlcenter/policy/MiuiBrightnessController;->mExternalChange:Z",
+      "dex_field:Lcom/android/systemui/controlcenter/policy/MiuiBrightnessController;->mMinimumBacklight:F",
+      "dex_field:Lcom/android/systemui/controlcenter/policy/MiuiBrightnessController;->mMaximumBacklight:F",
+      "dex_method:Lcom/android/systemui/controlcenter/policy/BrightnessUtils;->convertGammaToLinearFloat(IFF)F"
+    ],
+    "readOnly": true
+  },
+  "decision": {
+    "migratedModes": [
+      {
+        "key": "flashlight_strength_limit.mode=1",
+        "label": "开启时限制上限",
+        "origin": "首版迁移行为，保留",
+        "path": "hook $$ExternalSyntheticLambda3.run 只在 classId==0 且本次是开灯时，把随后一次 Settings.Global.getFloat(mi_flashlight_strength) 的返回值压低；只降不升。"
+      },
+      {
+        "key": "flashlight_strength_limit.mode=2",
+        "label": "亮度条实时控制",
+        "origin": "上游「亮度条劫持」在本机的等价落点",
+        "path": "hook MiuiBrightnessController.onChanged；手电筒开着且是用户拖动时，临时置 mExternalChange=true 使这次拖动不写屏幕亮度/不排队，再用宿主 BrightnessUtils.convertGammaToLinearFloat 换算强度并调用 CameraManager.turnOnTorchWithStrengthLevel。"
+      }
+    ],
+    "rejected": {
+      "upstreamWriteModes2And3": "模式 2/3 描述的是「怎么写同一个节点」，本机根本不存在那个节点，所以不伪造两个等价档。",
+      "sysfsWrites": "本模块不写 /sys 节点、不 chmod、不用 root。",
+      "brightnessSideInvocation": "不 hook 上游那两条写亮度 runnable，改为在它们共同上游 onChanged 一次截断，避免 v1 协程/v2 runnable 只覆盖一条。"
+    },
+    "safetyBounds": [
+      "手电筒必须先开着（mFlashlightEnabled==true）才接管；状态未知按未开处理。",
+      "仅在机主用户、非安全模式、宿主机型指纹与 compatibleVersionCode==202602260 匹配时接管。",
+      "强度换算任何一步非法（量程非法、换算非有限、上限越界）都放行原生分支，不猜强度。",
+      "mExternalChange 的写入用 try/finally 还原，避免拖动把屏幕亮度写路径永久关掉。",
+      "只调宿主公共入口，不修改全局亮度偏好，不撤回已交给系统的网络/相机请求。"
+    ]
+  },
+  "verification": {
+    "mtMcpReadOnly": true,
+    "compiled": false,
+    "installed": false,
+    "hostRestarted": false,
+    "runtimeAccepted": false,
+    "deviceFeatureActionsExecuted": false,
+    "note": "本次仅做 MT MCP 只读取证与设计裁定。真机安装、宿主重启与「拖亮度条是否真的改手电筒」的功能验收均未执行。"
+  }
+}

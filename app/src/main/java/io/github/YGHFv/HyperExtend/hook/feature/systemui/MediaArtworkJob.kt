@@ -28,12 +28,15 @@ internal class MediaArtworkJob {
         task = null
     }
 
-    fun submit(snapshot: IntArray, mode: Int, blur: Int, publish: (IntArray?) -> Unit) {
+    fun submit(snapshot: IntArray, mode: Int, blur: Int,
+        palette: (IntArray) -> MediaArtworkResult?, publish: (MediaArtworkResult?) -> Unit) {
         cancel()
         val token = generation.next()
         task = FutureTask<Unit> {
             if (!generation.accepts(token)) return@FutureTask Unit
             val pixels = runCatching {
+                val colors = palette(snapshot) ?: return@runCatching null
+                if (mode == 0) return@runCatching colors
                 val size = MediaBackgroundPolicy.SIZE
                 val input = if (mode == 1) IntArray(snapshot.size) { index ->
                     // Deterministic mirrored tiles, not a new random composition on each bind.
@@ -43,9 +46,10 @@ internal class MediaArtworkJob {
                     snapshot[sy * size + sx]
                 } else snapshot
                 val radius = when (mode) { 1 -> 16; 2 -> MediaBackgroundPolicy.radius(blur, size); else -> 0 }
-                MediaBackgroundPolicy.blur(input, size, size, radius).also { result ->
-                    for (i in result.indices) result[i] = MediaBackgroundPolicy.darken(result[i])
-                }
+                val result = MediaBackgroundPolicy.blur(input, size, size, radius)
+                // Linear reversal needs the original bright artwork, not a fixed black wash.
+                if (mode != 4) for (i in result.indices) result[i] = MediaBackgroundPolicy.darken(result[i])
+                colors.copy(pixels = result)
             }.getOrNull()
             if (generation.accepts(token)) main.post {
                 if (generation.accepts(token)) { task = null; publish(pixels) }

@@ -24,11 +24,19 @@ class MediaBackgroundSettingsTest {
         assertEquals(0, blur.min); assertEquals(20, blur.max); assertEquals(10, blur.default)
     }
     @Test fun transitionIsAnOptInBooleanOwnedByBackgroundFeature() {
-        val option = featureById(MediaBackgroundSettings.FEATURE)!!.options.single()
+        val option = featureById(MediaBackgroundSettings.FEATURE)!!.options.single { it.id == MediaBackgroundSettings.TRANSITION }
         assertEquals(MediaBackgroundSettings.TRANSITION, option.id)
         assertFalse(option.defaultEnabled)
         assertFalse(defaultEnabledOf(option.id))
         assertFalse(option.id in HyperSettings.STRING_KEYS)
-        assertTrue(option.summary!!.contains("仅背景过渡"))
+        assertTrue(option.summary!!.contains("背景与前景"))
+    }
+    @Test fun reversalAndAmbientAreExplicitlyOptInChildren() {
+        val options = featureById(MediaBackgroundSettings.FEATURE)!!.options
+        assertEquals(4, options.size)
+        assertTrue(options.all { !it.defaultEnabled && !defaultEnabledOf(it.id) })
+        assertTrue(options.any { it.id == MediaBackgroundSettings.INVERSE })
+        assertTrue(options.any { it.id == MediaBackgroundSettings.AMBIENT })
+        assertTrue(options.any { it.id == MediaBackgroundSettings.AMBIENT_OPTIMIZED })
     }
 }

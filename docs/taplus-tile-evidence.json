@@ -1,0 +1,80 @@
+{
+  "host": {
+    "packageName": "com.miui.contentextension",
+    "versionCode": 50015,
+    "versionName": "5.1.5"
+  },
+  "apkSha256": "e7810ef31917cd64c80bdd338d4434e9cb6c49f4c823ca9b8f7be6688f0b9c5b",
+  "verification": "Live read-only MT code capture only; provider itself has not been called. No tests/build/runtime acceptance.",
+  "sharedContracts": [
+    "docs/gms-tile-systemui-evidence.json",
+    "docs/gms-tile-plugin-evidence.json",
+    "docs/gms-tile-framework-evidence.json",
+    "docs/gms-settings-evidence.json"
+  ],
+  "evidence": [
+    {
+      "locator": "axml:AndroidManifest.xml",
+      "sha256": "407a5444a14471a81604c36dbffe0cd79fc63b70f177b4ad45ffa706e898e203",
+      "raw": ".workbuddy/tmp/mt-systemui/pending14-taplus-member-0.json",
+      "pages": 1,
+      "contains": [
+        "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
+      ]
+    },
+    {
+      "locator": "dex_method:Lcom/miui/contentextension/provider/SwitchControlProvider;->call(Ljava/lang/String;Ljava/lang/String;Landroid/os/Bundle;)Landroid/os/Bundle;",
+      "sha256": "26d7c3045ab87f524b0bf7ed1f283f7dcc5f8906914b959162db9a2447da0e6e",
+      "raw": ".workbuddy/tmp/mt-systemui/pending14-taplus-member-1.json",
+      "pages": 1,
+      "contains": [
+        ".method public call(Ljava/lang/String;Ljava/lang/String;Landroid/os/Bundle;)Landroid/os/Bundle;"
+      ]
+    },
+    {
+      "locator": "dex_method:Lcom/miui/contentextension/utils/TaplusSettingUtils;->isTaplusEnable(Landroid/content/Context;)Z",
+      "sha256": "8c14f4f3f18a6b6b34b9d8cb230e00a01205f6b57331431c09ba76943fd7fe71",
+      "raw": ".workbuddy/tmp/mt-systemui/pending14-taplus-member-2.json",
+      "pages": 1,
+      "contains": [
+        ".method public static isTaplusEnable(Landroid/content/Context;)Z"
+      ]
+    },
+    {
+      "locator": "dex_method:Lcom/miui/contentextension/utils/TaplusSettingUtils;->putTaplusEnable(Landroid/content/Context;Z)V",
+      "sha256": "d8444f8aa52f889aaadb81b21b1283673564a3e47398508dbf2631be0d206f3c",
+      "raw": ".workbuddy/tmp/mt-systemui/pending14-taplus-member-3.json",
+      "pages": 1,
+      "contains": [
+        ".method public static putTaplusEnable(Landroid/content/Context;Z)V"
+      ]
+    },
+    {
+      "locator": "dex_method:Lcom/miui/contentextension/utils/TaplusSettingUtils;->setTaplusEnableStatus(Landroid/content/Context;Z)V",
+      "sha256": "38ba21db8560c511c05241fbfe627c49aa6bcc05f344fe6e9f6075f94d1ca5a3",
+      "raw": ".workbuddy/tmp/mt-systemui/pending14-taplus-member-4.json",
+      "pages": 1,
+      "contains": [
+        ".method public static setTaplusEnableStatus(Landroid/content/Context;Z)V"
+      ]
+    },
+    {
+      "locator": "dex_method:Lcom/miui/contentextension/utils/ContentCatcherUtil;->setLongPressEnableStatus(Landroid/content/Context;Z)V",
+      "sha256": "1d69f27205d33169c1765f409d04e3194e602f9681b4235dafd74888655b3271",
+      "raw": ".workbuddy/tmp/mt-systemui/pending14-taplus-member-5.json",
+      "pages": 1,
+      "contains": [
+        ".method public static setLongPressEnableStatus(Landroid/content/Context;Z)V"
+      ]
+    },
+    {
+      "locator": "dex_method:Lcom/miui/contentextension/utils/ContentCatcherUtil;->switchCatcherConfig(Landroid/content/Context;Z)V",
+      "sha256": "364fa7ac1f7c8013b811236a4467bbac7311323cc87b7c0ce8470cf6ab48e1aa",
+      "raw": ".workbuddy/tmp/mt-systemui/pending14-taplus-member-6.json",
+      "pages": 1,
+      "contains": [
+        ".method public static switchCatcherConfig(Landroid/content/Context;Z)V"
+      ]
+    }
+  ]
+}

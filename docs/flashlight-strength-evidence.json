@@ -1,0 +1,152 @@
+{
+  "verification": "Current MT native torch-enable path plus framework getFloat. Only cap the native subsequent read, never exceed native value. No installation or runtime acceptance. Framework wrapper is analysis only.",
+  "evidence": [
+    {
+      "locator": "dex_method:Lcom/android/systemui/controlcenter/policy/MiuiFlashlightControllerImpl$$ExternalSyntheticLambda3;->run()V",
+      "sha256": "9cf1b8b9ff07dde7fd81246ceba31a48a059c16f58bb8739073cec615d92e29d",
+      "raw": ".workbuddy/tmp/mt-systemui/flashlight-strength-0.json",
+      "pages": 1,
+      "artifact": "sysui",
+      "contains": [
+        ".method public final run()V"
+      ]
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/controlcenter/policy/MiuiFlashlightControllerImpl;->setFlashlightInternal(Z)V",
+      "sha256": "33588ff355ff62d6ddfe51cc4f87243eb6e6de454c5f5c3223ddc982b4de7121",
+      "raw": ".workbuddy/tmp/mt-systemui/flashlight-strength-1.json",
+      "pages": 1,
+      "artifact": "sysui",
+      "contains": [
+        ".method public final setFlashlightInternal(Z)V"
+      ]
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/controlcenter/policy/MiuiFlashlightControllerImpl;->doSuperFlashlightStrategy()V",
+      "sha256": "b0562df61384bcdf5a123e97d41c594af1d9af21bf9957887218d0375d39cb5b",
+      "raw": ".workbuddy/tmp/mt-systemui/flashlight-strength-2.json",
+      "pages": 1,
+      "artifact": "sysui",
+      "contains": [
+        ".method public final doSuperFlashlightStrategy()V"
+      ]
+    },
+    {
+      "locator": "dex_method:Landroid/provider/Settings$Global;->getFloat(Landroid/content/ContentResolver;Ljava/lang/String;F)F",
+      "sha256": "a872d07f3a5c6588c3ed78b2c2f0af1268f2de2309e27e4cb79b96c8790b20bf",
+      "raw": ".workbuddy/tmp/mt-systemui/flashlight-strength-3.json",
+      "pages": 1,
+      "artifact": "framework",
+      "contains": [
+        ".method public static whitelist getFloat(Landroid/content/ContentResolver;Ljava/lang/String;F)F"
+      ]
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/controlcenter/policy/MiuiFlashlightControllerImpl$$ExternalSyntheticLambda3;->$r8$classId:I",
+      "sha256": "8a7f08d897e90aa5eb8f02546e8a14cdb1c22870627f66da8a93d1635d43d3d1",
+      "raw": ".workbuddy/tmp/mt-systemui/flashlight-strength-4.json",
+      "pages": 1,
+      "artifact": "sysui",
+      "contains": [
+        ".field public final synthetic $r8$classId:I"
+      ]
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/controlcenter/policy/MiuiFlashlightControllerImpl$$ExternalSyntheticLambda3;->f$0:Lcom/android/systemui/controlcenter/policy/MiuiFlashlightControllerImpl;",
+      "sha256": "c94d78d99e698ab47fff37d74b42b554f1c5f978be5e8effbd812f1d0f412b51",
+      "raw": ".workbuddy/tmp/mt-systemui/flashlight-strength-5.json",
+      "pages": 1,
+      "artifact": "sysui",
+      "contains": [
+        ".field public synthetic f$0:Lcom/android/systemui/controlcenter/policy/MiuiFlashlightControllerImpl;"
+      ]
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/controlcenter/policy/MiuiFlashlightControllerImpl$$ExternalSyntheticLambda3;->f$1:Z",
+      "sha256": "d747528909ea5ff5dd1ad3316fa6070defff3e42b9d25d3ab5f4e0bff8cd7614",
+      "raw": ".workbuddy/tmp/mt-systemui/flashlight-strength-6.json",
+      "pages": 1,
+      "artifact": "sysui",
+      "contains": [
+        ".field public synthetic f$1:Z"
+      ]
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/controlcenter/policy/MiuiFlashlightControllerImpl;->mContext:Landroid/content/Context;",
+      "sha256": "6e70305832f1ce0157b2c6a710349cbad62813ad0591d0e4cecabb3138810a6d",
+      "raw": ".workbuddy/tmp/mt-systemui/flashlight-strength-7.json",
+      "pages": 1,
+      "artifact": "sysui",
+      "contains": [
+        ".field public final mContext:Landroid/content/Context;"
+      ]
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/controlcenter/policy/MiuiFlashlightControllerImpl;->mCurrentUserId:I",
+      "sha256": "4b9321e4b51f286036068d0a6da22181c80bb11511648bee9c8b08e69e3cdd21",
+      "raw": ".workbuddy/tmp/mt-systemui/flashlight-strength-8.json",
+      "pages": 1,
+      "artifact": "sysui",
+      "contains": [
+        ".field public mCurrentUserId:I"
+      ]
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/controlcenter/policy/MiuiFlashlightControllerImpl;->mFlashlightMaxStrength:I",
+      "sha256": "f81c60511cfeeb80ffe349416faca9a8a88f1634f95bb089c13cfe7f0765f4d5",
+      "raw": ".workbuddy/tmp/mt-systemui/flashlight-strength-9.json",
+      "pages": 1,
+      "artifact": "sysui",
+      "contains": [
+        ".field public mFlashlightMaxStrength:I"
+      ]
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/controlcenter/policy/MiuiFlashlightControllerImpl;->mForceOff:Z",
+      "sha256": "584cfe5a66fc134caab445afa169f1024cbc6fdcf3e0e3e37fae88405bb9a34a",
+      "raw": ".workbuddy/tmp/mt-systemui/flashlight-strength-10.json",
+      "pages": 1,
+      "artifact": "sysui",
+      "contains": [
+        ".field public mForceOff:Z"
+      ]
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/controlcenter/policy/MiuiFlashlightControllerImpl;->mBatteryOff:Z",
+      "sha256": "6cb3a7b78ae35f82872895d5f266bb353d4fb8cfc0dc83b6ab5afd624f165414",
+      "raw": ".workbuddy/tmp/mt-systemui/flashlight-strength-11.json",
+      "pages": 1,
+      "artifact": "sysui",
+      "contains": [
+        ".field public mBatteryOff:Z"
+      ]
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/controlcenter/policy/MiuiFlashlightControllerImpl;->mTorchAvailable:Z",
+      "sha256": "5826b26cf50dad708cd49e8058b3cf1e63b2d59cd7e68f9afd43eb5ae4b23123",
+      "raw": ".workbuddy/tmp/mt-systemui/flashlight-strength-12.json",
+      "pages": 1,
+      "artifact": "sysui",
+      "contains": [
+        ".field public mTorchAvailable:Z"
+      ]
+    }
+  ],
+  "artifacts": {
+    "framework": {
+      "mcpPath": "/storage/emulated/0/MT2/mcp/pending14-20261011/framework-dex-evidence.apk",
+      "sourcePath": "/system/framework/framework.jar",
+      "sha256": "f8af87fa975ca7e529aeeeb193a4e77bea650b0e9b611259e600c248ac3b4bc4",
+      "syntheticManifest": true,
+      "neverInstall": true
+    },
+    "sysui": {
+      "mcpPath": "/storage/emulated/0/MT2/mcp/MiuiSystemUI.apk",
+      "sha256": "7da817a4c65299f7362fd530d72c09c0a4785c98cf2732395c721f2740e7662a",
+      "packageName": "com.android.systemui",
+      "versionCode": 202602260
+    }
+  },
+  "deviceFingerprint": "Xiaomi/pandora/pandora:17/CP2A.260605.016/OS4.0.0.38.XBLCNXM:user/release-keys",
+  "deviceSdk": 37
+}

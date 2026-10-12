@@ -1,0 +1,145 @@
+{
+  "host": {
+    "packageName": "com.android.systemui",
+    "versionCode": 202602260
+  },
+  "verification": "Complete current MT members; cached ActivityThread declaration separately referenced, not device acceptance or execution.",
+  "frameworkEvidence": "docs/force-blur-framework-evidence.json",
+  "evidence": [
+    {
+      "locator": "dex_field:Lcom/android/systemui/statusbar/pipeline/wifi/ui/viewmodel/WifiViewModelInject$special$$inlined$map$1$2;->$r8$classId:I",
+      "contains": [
+        ".field public final synthetic $r8$classId:I"
+      ],
+      "sha256": "8a7f08d897e90aa5eb8f02546e8a14cdb1c22870627f66da8a93d1635d43d3d1",
+      "raw": ".workbuddy/tmp/mt-systemui/wifi-standard-current-member-0.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/statusbar/pipeline/wifi/ui/viewmodel/WifiViewModelInject$special$$inlined$map$1$2;->$this_unsafeFlow:Lkotlinx/coroutines/flow/FlowCollector;",
+      "contains": [
+        ".field public synthetic $this_unsafeFlow:Lkotlinx/coroutines/flow/FlowCollector;"
+      ],
+      "sha256": "72b5c6b030adac48accfff8e435cff3ba6ba9e8daae639af6797aef573e1faaf",
+      "raw": ".workbuddy/tmp/mt-systemui/wifi-standard-current-member-1.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/pipeline/wifi/ui/viewmodel/WifiViewModel;-><init>(Lcom/android/systemui/statusbar/pipeline/shared/ConnectivityConstantsImpl;Landroid/content/Context;Lcom/android/systemui/log/table/TableLogBuffer;Lcom/android/systemui/statusbar/pipeline/wifi/domain/interactor/WifiInteractorImpl;Lkotlinx/coroutines/CoroutineScope;Lcom/android/systemui/statusbar/pipeline/shared/data/repository/ConnectivityRepositoryImpl;)V",
+      "contains": [
+        ".method public constructor <init>(Lcom/android/systemui/statusbar/pipeline/shared/ConnectivityConstantsImpl;Landroid/content/Context;Lcom/android/systemui/log/table/TableLogBuffer;Lcom/android/systemui/statusbar/pipeline/wifi/domain/interactor/WifiInteractorImpl;Lkotlinx/coroutines/CoroutineScope;Lcom/android/systemui/statusbar/pipeline/shared/data/repository/ConnectivityRepositoryImpl;)V"
+      ],
+      "sha256": "692e08e8f534728840aa6e8165a3aa8fbdcee87933c0df953a6c131613f9f6d4",
+      "raw": ".workbuddy/tmp/mt-systemui/wifi-standard-current-member-2.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/pipeline/wifi/ui/viewmodel/WifiViewModel;->getActivityInOutRes()Lkotlinx/coroutines/flow/Flow;",
+      "contains": [
+        ".method public final getActivityInOutRes()Lkotlinx/coroutines/flow/Flow;"
+      ],
+      "sha256": "f5728f2b64e2c3c6f4f7835319faf5575fb15e097587e98c212a053ddd5078d3",
+      "raw": ".workbuddy/tmp/mt-systemui/wifi-standard-current-member-3.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/pipeline/wifi/ui/viewmodel/WifiViewModel;->getInoutLeft()Lkotlinx/coroutines/flow/Flow;",
+      "contains": [
+        ".method public final getInoutLeft()Lkotlinx/coroutines/flow/Flow;"
+      ],
+      "sha256": "063ec5b2871ca30e453b69508c1879035f94a2666c9bb232f4bea8801be64b3e",
+      "raw": ".workbuddy/tmp/mt-systemui/wifi-standard-current-member-4.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/pipeline/wifi/ui/viewmodel/WifiViewModel;->getWifiIcon()Lkotlinx/coroutines/flow/StateFlow;",
+      "contains": [
+        ".method public final getWifiIcon()Lkotlinx/coroutines/flow/StateFlow;"
+      ],
+      "sha256": "e89fd5f808d75dbab75b892f881b9749911967c4e6d1d6766f1cc1d39d212b13",
+      "raw": ".workbuddy/tmp/mt-systemui/wifi-standard-current-member-5.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/pipeline/wifi/ui/viewmodel/WifiViewModel;->getWifiStandard()Lkotlinx/coroutines/flow/Flow;",
+      "contains": [
+        ".method public final getWifiStandard()Lkotlinx/coroutines/flow/Flow;"
+      ],
+      "sha256": "7151b248c572603499706e911fd3344286aec964f1f53435332357ec4b723eb6",
+      "raw": ".workbuddy/tmp/mt-systemui/wifi-standard-current-member-6.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/pipeline/wifi/ui/viewmodel/WifiViewModelInject$special$$inlined$map$1$2;-><init>(I)V",
+      "contains": [
+        ".method public synthetic constructor <init>(I)V"
+      ],
+      "sha256": "c3a56fe6939bb864e4aa3ad34741334336db790837b82fcf7fc91ce13e63b7a4",
+      "raw": ".workbuddy/tmp/mt-systemui/wifi-standard-current-member-7.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/pipeline/wifi/ui/viewmodel/WifiViewModelInject$special$$inlined$map$1$2;->emit(Ljava/lang/Object;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;",
+      "contains": [
+        ".method public final emit(Ljava/lang/Object;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;"
+      ],
+      "sha256": "0ecc38dd29f4ab629881be492a243d26caf8eb61a2f698304f3ce0a9c89782b0",
+      "raw": ".workbuddy/tmp/mt-systemui/wifi-standard-current-member-8.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/pipeline/wifi/ui/viewmodel/WifiViewModelInject$special$$inlined$map$1;->collect(Lkotlinx/coroutines/flow/FlowCollector;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;",
+      "contains": [
+        ".method public final collect(Lkotlinx/coroutines/flow/FlowCollector;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;"
+      ],
+      "sha256": "600f388884603d3aaf082d3f34c0233232a2a630859fc4faed11c91860ce7e8a",
+      "raw": ".workbuddy/tmp/mt-systemui/wifi-standard-current-member-9.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/pipeline/wifi/ui/viewmodel/WifiViewModelInject$special$$inlined$map$3$2$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;",
+      "contains": [
+        ".method public final invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;"
+      ],
+      "sha256": "fd0eba85a2ea93626bedab3fc5cd16cfd096a04f45b7106a6b6e55e588eb75e8",
+      "raw": ".workbuddy/tmp/mt-systemui/wifi-standard-current-member-10.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/pipeline/wifi/ui/viewmodel/WifiViewModelInject$wifiStandardFlow$1;-><init>(Lcom/android/systemui/statusbar/pipeline/wifi/ui/viewmodel/WifiViewModelInject;Lkotlin/coroutines/Continuation;)V",
+      "contains": [
+        ".method public constructor <init>(Lcom/android/systemui/statusbar/pipeline/wifi/ui/viewmodel/WifiViewModelInject;Lkotlin/coroutines/Continuation;)V"
+      ],
+      "sha256": "d423d0abf5d8e116ac1884824f07e506c4d2c51fcf17890f1d5e442ac2e75baf",
+      "raw": ".workbuddy/tmp/mt-systemui/wifi-standard-current-member-11.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/pipeline/wifi/ui/viewmodel/WifiViewModelInject$wifiStandardFlow$1;->invoke(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;",
+      "contains": [
+        ".method public final invoke(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;"
+      ],
+      "sha256": "af017c0924b1983ac61f91e261d58f6a6db4c9a742ba22ab88eb8860f6268ff9",
+      "raw": ".workbuddy/tmp/mt-systemui/wifi-standard-current-member-12.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/pipeline/wifi/ui/viewmodel/WifiViewModelInject$wifiStandardFlow$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;",
+      "contains": [
+        ".method public final invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;"
+      ],
+      "sha256": "3f07e72d0b1b2dd7be5cbcde84b4668591e94116a509889d79832c6fda75a012",
+      "raw": ".workbuddy/tmp/mt-systemui/wifi-standard-current-member-13.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lkotlinx/coroutines/flow/FlowCollector;->emit(Ljava/lang/Object;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;",
+      "contains": [
+        ".method public abstract emit(Ljava/lang/Object;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;"
+      ],
+      "sha256": "61683a276544834ec36c28198c9cce673c599db8d02654fd3af12e3680573489",
+      "raw": ".workbuddy/tmp/mt-systemui/wifi-standard-current-member-14.json",
+      "complete": true
+    }
+  ]
+}

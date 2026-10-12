@@ -1,0 +1,16 @@
+Lcom/android/settings/notification/MiuiNotificationBackend;->loadAppRow(Landroid/content/Context;Landroid/content/pm/PackageManager;Landroid/content/pm/PackageInfo;)Lcom/android/settings/notification/MiuiNotificationBackend$AppRow;
+Lcom/android/settings/notification/NotificationSettingsHelper;->setNotificationsEnabledForPackage(Landroid/content/Context;Ljava/lang/String;Z)V
+Lmiui/util/NotificationFilterHelper;->isNotificationForcedFor(Landroid/content/Context;Ljava/lang/String;)Z
+Lmiui/util/NotificationFilterHelper;->enableNotifications(Landroid/content/Context;Ljava/lang/String;IZ)V
+Lmiui/util/NotificationFilterHelper;->enableNotifications(Landroid/content/Context;Ljava/lang/String;Z)V
+Lcom/android/settings/notification/MiuiNotificationBackend$AppRow;->systemApp:Z
+Lcom/android/settings/notification/MiuiNotificationBackend$AppRow;->lockedChannelId:Ljava/lang/String;
+Lcom/android/settings/notification/MiuiNotificationBackend$AppRow;->uid:I
+Lcom/android/settings/notification/BaseNotificationSettings;->loadAppRowData()V
+Lcom/android/settings/notification/AppNotificationSettings$1;->doInBackground([Ljava/lang/Void;)Ljava/lang/Void;
+Lcom/android/settings/notification/AppNotificationSettings$2;->onPreferenceChange(Landroidx/preference/Preference;Ljava/lang/Object;)Z
+Lcom/android/settings/notification/app/AppNotificationSettings$1;->doInBackground([Ljava/lang/Void;)Ljava/lang/Void;
+Lcom/android/settings/notification/app/AppNotificationSettings$2;->onPreferenceChange(Landroidx/preference/Preference;Ljava/lang/Object;)Z
+Lcom/android/server/notification/PreferencesHelper;->updateNotificationChannel(Ljava/lang/String;ILandroid/app/NotificationChannel;ZIZ)V
+Landroid/app/NotificationChannel;->isBlockable()Z
+Lcom/android/server/notification/NotificationManagerService;->updateNotificationChannelInt(Ljava/lang/String;ILandroid/app/NotificationChannel;Z)V

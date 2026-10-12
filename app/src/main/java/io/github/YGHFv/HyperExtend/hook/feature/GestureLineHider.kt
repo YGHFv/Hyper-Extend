@@ -44,9 +44,11 @@ import io.github.YGHFv.HyperExtend.hook.Reflect
 /** 「隐藏手势横条」。作用域：com.android.systemui。 */
 internal object GestureLineHider {
 
-    private const val FEATURE = "gesture_line"
-    private const val OPT_SKIP_DRAW = "gesture_line.skip_draw"
-    private const val OPT_REPORT_HIDDEN = "gesture_line.report_hidden"
+    // 键名是 navigation_handle_custom 的子项（历史上属于独立卡片 gesture_line，
+    // 合并后键名保留，见 core/NavigationHandleSettings）。日志前缀沿用原功能名便于对照旧日志。
+    private const val FEATURE = io.github.YGHFv.HyperExtend.core.NavigationHandleSettings.LEGACY_HIDE_FEATURE
+    private const val OPT_SKIP_DRAW = io.github.YGHFv.HyperExtend.core.NavigationHandleSettings.SKIP_DRAW
+    private const val OPT_REPORT_HIDDEN = io.github.YGHFv.HyperExtend.core.NavigationHandleSettings.REPORT_HIDDEN
 
     /** 横条本体。AOSP / MIUI 都用这个名字，是最稳的一个靶子。 */
     private const val NAVIGATION_HANDLE = "com.android.systemui.navigationbar.gestural.NavigationHandle"

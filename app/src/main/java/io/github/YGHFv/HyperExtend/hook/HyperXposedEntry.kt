@@ -117,6 +117,9 @@ class HyperXposedEntry : XposedModule() {
             return
         }
         PasskeyFix.installSystemServer(loader, settings)
+        runCatching {
+            io.github.YGHFv.HyperExtend.hook.feature.systemui.NotificationManagementHooks.installServer(loader, settings)
+        }.onFailure { ModuleLog.error("notification management server adapter unavailable", it) }
         // 旋转锁定保护同样住在 system_server：它守的是「强制停止」这个动作本身，
         // 而 system_server 正是所有 force-stop 的必经之地。
         RotationLockGuard.installDeferred(loader, settings)

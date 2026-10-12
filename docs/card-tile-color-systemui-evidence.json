@@ -1,0 +1,38 @@
+{
+  "host": {
+    "packageName": "com.android.systemui",
+    "versionName": "17.03.260226.r",
+    "versionCode": 202602260
+  },
+  "verification": "Live read-only MT complete members, 2026-10-11. Not compiled, tests not executed, no deployment or runtime acceptance.",
+  "evidence": [
+    {
+      "locator": "dex_field:Lcom/android/systemui/plugins/qs/QSTile$State;->state:I",
+      "contains": [
+        "state:I"
+      ],
+      "sha256": "a403a68ec91e5844e86c95929546ce6cb40dcc35deb98c72a59130f68e17a654"
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/plugins/qs/QSTile$State;->activeBgColor:I",
+      "contains": [
+        "activeBgColor:I"
+      ],
+      "sha256": "a8d6a32ce7089983f5d33d2b5f7ed99317791866dda30e65834bbad63586eb01"
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/plugins/qs/QSTile$State;->isTransient:Z",
+      "contains": [
+        "isTransient:Z"
+      ],
+      "sha256": "9e0c5deea0d42a8a5ac4b54a4f6724c928bc15283f5dce62ab947f3679c71f0b"
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/plugins/qs/QSTile$State;->disabledByPolicy:Z",
+      "contains": [
+        "disabledByPolicy:Z"
+      ],
+      "sha256": "a8fd83577e185782121469ee51ca5eabda9b0169881e27c52a5a8c106b14db94"
+    }
+  ]
+}

@@ -1,0 +1,287 @@
+{
+  "host": {
+    "packageName": "com.android.systemui",
+    "versionCode": 202602260
+  },
+  "verification": "Complete paginated MT reads and extracted full members. Shared lifecycle/dispatch evidence remains in media-dark/media-background manifests. No build/tests/runtime acceptance.",
+  "evidence": [
+    {
+      "locator": "dex_field:Lcom/android/systemui/monet/ColorScheme;->mAccent1:Lcom/android/systemui/monet/TonalPalette;",
+      "contains": [
+        ".field public final mAccent1:Lcom/android/systemui/monet/TonalPalette;"
+      ],
+      "sha256": "e0853222ee75e4a4cce93b7fe371c5059dacd7beb6ce5f7b9019b657ddcae9a7",
+      "raw": ".workbuddy\\tmp\\mt-systemui\\continuous-palette.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/monet/ColorScheme;->mAccent2:Lcom/android/systemui/monet/TonalPalette;",
+      "contains": [
+        ".field public final mAccent2:Lcom/android/systemui/monet/TonalPalette;"
+      ],
+      "sha256": "4953bdafae1b82236104dfb84c1414d2125225883f6f2baab4badf6d579bb587",
+      "raw": ".workbuddy\\tmp\\mt-systemui\\continuous-palette.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/monet/ColorScheme;->mNeutral1:Lcom/android/systemui/monet/TonalPalette;",
+      "contains": [
+        ".field public final mNeutral1:Lcom/android/systemui/monet/TonalPalette;"
+      ],
+      "sha256": "5db3108917a4926c358d4b909b0f421ef3068ca265ea8051f11fc507dfd49f0e",
+      "raw": ".workbuddy\\tmp\\mt-systemui\\continuous-palette.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/monet/ColorScheme;->mNeutral2:Lcom/android/systemui/monet/TonalPalette;",
+      "contains": [
+        ".field public final mNeutral2:Lcom/android/systemui/monet/TonalPalette;"
+      ],
+      "sha256": "dd828f0895299fdef4721c8a80b86c76298019e0af25ebf180c08cab19f5f4e6",
+      "raw": ".workbuddy\\tmp\\mt-systemui\\continuous-palette.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/monet/ColorScheme;-><init>(Landroid/app/WallpaperColors;ZI)V",
+      "contains": [
+        ".method public constructor <init>(Landroid/app/WallpaperColors;ZI)V"
+      ],
+      "sha256": "67fe1ce0201ed29fc623d55558863f31e32d28930a0eada5d4067baccc12ed67",
+      "raw": ".workbuddy\\tmp\\mt-systemui\\continuous-palette.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/monet/ColorScheme;-><init>(Ljava/util/List;ZID)V",
+      "contains": [
+        ".method public constructor <init>(Ljava/util/List;ZID)V"
+      ],
+      "sha256": "1aeb09dc5cf6e494d37db59f0b9bf7fb07e3282abb65f4c6535b57743b4b9b80",
+      "raw": ".workbuddy\\tmp\\mt-systemui\\continuous-palette.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/monet/TonalPalette;->allShades:Ljava/util/List;",
+      "contains": [
+        ".field public final allShades:Ljava/util/List;"
+      ],
+      "sha256": "efddac9134b6ff950b39ac4990b23f8de23c414bdce355231d502421c2738885",
+      "raw": ".workbuddy\\tmp\\mt-systemui\\continuous-tonal.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/monet/TonalPalette;-><clinit>()V",
+      "contains": [
+        ".method static constructor <clinit>()V"
+      ],
+      "sha256": "9533d0190c95a1eaef860984c6aad73b470fff057e7a6080693a627fa9289a10",
+      "raw": ".workbuddy\\tmp\\mt-systemui\\continuous-tonal.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/statusbar/notification/mediacontrol/MiuiMediaViewHolder;->titleText:Landroid/widget/TextView;",
+      "contains": [
+        ".field public titleText:Landroid/widget/TextView;"
+      ],
+      "sha256": "c57239486ac343ee8fecf66ba246a0558aea674c4835c3826f30134ce61e5102",
+      "raw": ".workbuddy\\tmp\\mt-systemui\\continuous-palette-holder.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/statusbar/notification/mediacontrol/MiuiMediaViewHolder;->artistText:Landroid/widget/TextView;",
+      "contains": [
+        ".field public artistText:Landroid/widget/TextView;"
+      ],
+      "sha256": "51ec8341a446041aa97c24d542a5750f9d3cf3e87156fa9463985c53be5f6b8e",
+      "raw": ".workbuddy\\tmp\\mt-systemui\\continuous-palette-holder.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/statusbar/notification/mediacontrol/MiuiMediaViewHolder;->elapsedTimeView:Landroid/widget/TextView;",
+      "contains": [
+        ".field public elapsedTimeView:Landroid/widget/TextView;"
+      ],
+      "sha256": "0e763063a8d3d958da4f96b4e2128436f050219eeba2eed95d1a7477b94e2858",
+      "raw": ".workbuddy\\tmp\\mt-systemui\\continuous-palette-holder.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/statusbar/notification/mediacontrol/MiuiMediaViewHolder;->totalTimeView:Landroid/widget/TextView;",
+      "contains": [
+        ".field public totalTimeView:Landroid/widget/TextView;"
+      ],
+      "sha256": "c0c8bb8181edb7e469aecc02fc4cef973687441e69ed63b0eb0cd399209ffba0",
+      "raw": ".workbuddy\\tmp\\mt-systemui\\continuous-palette-holder.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/statusbar/notification/mediacontrol/MiuiMediaViewHolder;->seamlessIcon:Landroid/widget/ImageView;",
+      "contains": [
+        ".field public seamlessIcon:Landroid/widget/ImageView;"
+      ],
+      "sha256": "fd378cdfa675a672f82cd9b5b343ee2325d99801132152d1b52e638748fb6833",
+      "raw": ".workbuddy\\tmp\\mt-systemui\\continuous-palette-holder.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/statusbar/notification/mediacontrol/MiuiMediaViewHolder;->seekBar:Lmiuix/miuixbasewidget/widget/HyperProgressSeekBar;",
+      "contains": [
+        ".field public seekBar:Lmiuix/miuixbasewidget/widget/HyperProgressSeekBar;"
+      ],
+      "sha256": "25043d72d80e03f4cfc86d49e4302ae1cace3a5b1cc44010edd884dbca6726b7",
+      "raw": ".workbuddy\\tmp\\mt-systemui\\continuous-palette-holder.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/notification/mediacontrol/MiuiMediaViewHolder;->getActionList()Ljava/util/List;",
+      "contains": [
+        ".method public final getActionList()Ljava/util/List;"
+      ],
+      "sha256": "5dec123d2fa2bacf60e0f28c661ccf2cfe13ad9caaeb94df9a5a2a5680e44723",
+      "raw": ".workbuddy\\tmp\\mt-systemui\\continuous-palette-holder.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_field:Lmiuix/miuixbasewidget/widget/HyperProgressSeekBar;->mDeviceLevel:I",
+      "contains": [
+        ".field public final mDeviceLevel:I"
+      ],
+      "sha256": "a92d0a93c2b4c28662155648aa9b5cc6f7269439a837e0d1d541bf505c8a4931",
+      "raw": ".workbuddy\\tmp\\mt-systemui\\continuous-palette-seek.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_field:Lmiuix/miuixbasewidget/widget/HyperProgressSeekBar;->mForegroundPrimaryColor:I",
+      "contains": [
+        ".field public mForegroundPrimaryColor:I"
+      ],
+      "sha256": "7ad86c83c9f7755aad3f2acc94bd68e21bae87a4b350cbc5ee3499005c58d585",
+      "raw": ".workbuddy\\tmp\\mt-systemui\\continuous-palette-seek.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_field:Lmiuix/miuixbasewidget/widget/HyperProgressSeekBar;->mForegroundPrimaryDisableColor:I",
+      "contains": [
+        ".field public mForegroundPrimaryDisableColor:I"
+      ],
+      "sha256": "b016e2e3970f48fb826ad4d26e33a423b67f6d94120b739b563db6a556a04b80",
+      "raw": ".workbuddy\\tmp\\mt-systemui\\continuous-palette-seek.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_field:Lmiuix/miuixbasewidget/widget/HyperProgressSeekBar;->mBackgroundPrimaryColor:I",
+      "contains": [
+        ".field public mBackgroundPrimaryColor:I"
+      ],
+      "sha256": "30cc8b3709973c0ea86d1a12512b82ba4a29b207d2afa001161b9c65bd4daa67",
+      "raw": ".workbuddy\\tmp\\mt-systemui\\continuous-palette-seek.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_field:Lmiuix/miuixbasewidget/widget/HyperProgressSeekBar;->mBackgroundPrimaryDisableColor:I",
+      "contains": [
+        ".field public mBackgroundPrimaryDisableColor:I"
+      ],
+      "sha256": "7d581ba1c11dfae6c84578b1881fe0d9b3c82eb67bd1f131c6a7509d3d450bf2",
+      "raw": ".workbuddy\\tmp\\mt-systemui\\continuous-palette-seek.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lmiuix/miuixbasewidget/widget/HyperProgressSeekBar;->setForegroundPrimaryColor(I)V",
+      "contains": [
+        ".method public setForegroundPrimaryColor(I)V"
+      ],
+      "sha256": "a211502e4e08f927946c4ff6ac9a30be1616430d315c18f7d25aa64f0d73b782",
+      "raw": ".workbuddy\\tmp\\mt-systemui\\continuous-palette-seek.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lmiuix/miuixbasewidget/widget/HyperProgressSeekBar;->setForegroundPrimaryDisableColor(I)V",
+      "contains": [
+        ".method public setForegroundPrimaryDisableColor(I)V"
+      ],
+      "sha256": "da154f7323accbe3e5036a4777494f73ae229287583ecd85f9539aaf675c3942",
+      "raw": ".workbuddy\\tmp\\mt-systemui\\continuous-palette-seek.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lmiuix/miuixbasewidget/widget/HyperProgressSeekBar;->setBackgroundPrimaryColor(I)V",
+      "contains": [
+        ".method public setBackgroundPrimaryColor(I)V"
+      ],
+      "sha256": "551bc4074925850cf8f7fd34fe3d33cd2771c61e101bc433b3af6eda627ea8c1",
+      "raw": ".workbuddy\\tmp\\mt-systemui\\continuous-palette-seek.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lmiuix/miuixbasewidget/widget/HyperProgressSeekBar;->setBackgroundPrimaryDisableColor(I)V",
+      "contains": [
+        ".method public setBackgroundPrimaryDisableColor(I)V"
+      ],
+      "sha256": "a5e5931907e1daed065a1a9b6e627f7675405b1502ac5448f4490049e7887adc",
+      "raw": ".workbuddy\\tmp\\mt-systemui\\continuous-palette-seek.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/media/controls/shared/model/MediaData;->isPlaying:Ljava/lang/Boolean;",
+      "contains": [
+        ".field public final isPlaying:Ljava/lang/Boolean;"
+      ],
+      "sha256": "7d376df7a112a9f24ba8bdeb8ea0fae7e45b5b6f5a5211f7a1ad7ec090b11ddc",
+      "raw": ".workbuddy\\tmp\\mt-systemui\\continuous-palette-data.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/statusbar/notification/mediacontrol/MiuiMediaViewControllerImpl;->updateForegroundColors()V",
+      "contains": [
+        "->titleText:",
+        "->seamlessIcon:",
+        "->setForegroundPrimaryColor(I)V"
+      ],
+      "sha256": "16b6d66a0d15c4aa4acc9601511f688cab471046cee3a1cc96089cd463648ed1",
+      "raw": ".workbuddy\\tmp\\mt-systemui\\continuous-palette-foreground.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lmiuix/miuixbasewidget/widget/HyperProgressSeekBar;->drawHighEndMode(Landroid/graphics/Canvas;)V",
+      "contains": [
+        ".method public final drawHighEndMode(Landroid/graphics/Canvas;)V"
+      ],
+      "sha256": "7c70c81bf89285165d01093985407e6d8aba3d956064abba20324896bf7dca9f",
+      "raw": ".workbuddy\\tmp\\mt-systemui\\continuous-palette-seek.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lmiuix/miuixbasewidget/widget/HyperProgressSeekBar;->onDraw(Landroid/graphics/Canvas;)V",
+      "contains": [
+        ".method public final declared-synchronized onDraw(Landroid/graphics/Canvas;)V"
+      ],
+      "sha256": "a5b8dfaaa265c186582012378fa75736f9c5920945e121b1a35cb26437308668",
+      "raw": ".workbuddy\\tmp\\mt-systemui\\continuous-palette-seek.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_field:Lmiuix/miuixbasewidget/widget/HyperProgressSeekBar;->mPaint:Landroid/graphics/Paint;",
+      "contains": [
+        ".field public final mPaint:Landroid/graphics/Paint;"
+      ],
+      "sha256": "f2facb1a78c92827dcad9906acdd75d615fb5dcb131fe9738486805fc97f399b",
+      "raw": ".workbuddy\\tmp\\mt-systemui\\continuous-palette-seek.json",
+      "complete": true
+    }
+  ],
+  "shaderFiles": [
+    {
+      "locator": "zip_entry:res/raw/music_player_tracker.frag",
+      "sha256": "3c887e5ba5428431c6f08432f90af99fdc6e2c448d3117d1d5d041ea4ab052b3",
+      "raw": ".workbuddy\\tmp\\mt-systemui\\continuous-music_player_tracker.json",
+      "complete": true
+    },
+    {
+      "locator": "zip_entry:res/raw/music_player_tracker_middle.frag",
+      "sha256": "387e997caf270a2d3d54d96741b17a8a3f885574619208823a111e4b74e916aa",
+      "raw": ".workbuddy\\tmp\\mt-systemui\\continuous-music_player_tracker_middle.json",
+      "complete": true
+    }
+  ],
+  "shaderBoundary": "No shader source/resource replacement or runtime shader compilation; synchronous per-bound-view Paint MODULATE filter tints shader output while keeping alpha and head texture. Existing non-null filters win. Hook/caller/field exact members verified; no rendering acceptance."
+}

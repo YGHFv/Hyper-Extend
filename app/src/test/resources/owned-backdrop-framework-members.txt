@@ -1,0 +1,14 @@
+Landroid/view/CrossWindowBlurListeners;->CROSS_WINDOW_BLUR_SUPPORTED:Z
+Landroid/view/CrossWindowBlurListeners;->getInstance()Landroid/view/CrossWindowBlurListeners;
+Landroid/view/CrossWindowBlurListeners;->isCrossWindowBlurEnabled()Z
+Landroid/view/View;->addMiBackgroundBlendColor(II)V
+Landroid/view/View;->clearMiBackgroundBlendColor()V
+Landroid/view/View;->getViewRootImpl()Landroid/view/ViewRootImpl;
+Landroid/view/View;->setMiBackgroundBlurMode(I)V
+Landroid/view/View;->setMiBackgroundBlurRadius(I)V
+Landroid/view/View;->setMiViewBlurMode(I)V
+Landroid/view/View;->setPassWindowBlurEnabled(Z)Z
+Landroid/view/ViewRootImpl;->createBackgroundBlurDrawable()Lcom/android/internal/graphics/drawable/BackgroundBlurDrawable;
+Lcom/android/internal/graphics/drawable/BackgroundBlurDrawable;->setBlurRadius(I)V
+Lcom/android/internal/graphics/drawable/BackgroundBlurDrawable;->setColor(I)V
+Lcom/android/internal/graphics/drawable/BackgroundBlurDrawable;->setCornerRadius(F)V

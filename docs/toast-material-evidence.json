@@ -1,0 +1,79 @@
+{
+  "host": {
+    "packageName": "com.android.systemui",
+    "versionCode": 202602260
+  },
+  "verification": "Complete read-only MT members and dispatch callers. Source-only, no compilation/tests/device acceptance.",
+  "evidence": [
+    {
+      "locator": "dex_method:Lcom/android/systemui/toast/SystemUIToast;-><init>(Landroid/view/LayoutInflater;Landroid/content/Context;Landroid/content/Context;Ljava/lang/CharSequence;Lcom/android/systemui/plugins/ToastPlugin$Toast;Ljava/lang/String;II)V",
+      "contains": [
+        ".method public constructor <init>(Landroid/view/LayoutInflater;Landroid/content/Context;Landroid/content/Context;Ljava/lang/CharSequence;Lcom/android/systemui/plugins/ToastPlugin$Toast;Ljava/lang/String;II)V"
+      ],
+      "sha256": "cdece68cf35401c70e27494307f9e5d25c57589c2f8dacaada054c19cd880f1c",
+      "raw": ".workbuddy/tmp/mt-systemui/continuous-toast.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/toast/SystemUIToast;->mToastView:Landroid/view/View;",
+      "contains": [
+        ".field public final mToastView:Landroid/view/View;"
+      ],
+      "sha256": "dbc3f530151d262fa8c8d7a1cc01e058a35614fbf1e0287adadf1b02356195f6",
+      "raw": ".workbuddy/tmp/mt-systemui/continuous-toast.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/toast/ToastFactory;->createToast(Landroid/content/Context;Landroid/content/Context;Ljava/lang/CharSequence;Ljava/lang/String;II)Lcom/android/systemui/toast/SystemUIToast;",
+      "contains": [
+        ".method public final createToast(Landroid/content/Context;Landroid/content/Context;Ljava/lang/CharSequence;Ljava/lang/String;II)Lcom/android/systemui/toast/SystemUIToast;"
+      ],
+      "sha256": "088107551369c01ead663e3b5a71cf75fdb4d81796401ed0c4c64a75ba103400",
+      "raw": ".workbuddy/tmp/mt-systemui/continuation-toast-caller-0.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/toast/ToastInjector;->useBlurRes(Landroid/view/View;)Z",
+      "contains": [
+        ".method public static useBlurRes(Landroid/view/View;)Z"
+      ],
+      "sha256": "e58ea5d5be4504d925a8dcaf3be818e31579f880fb2cf55359e19021c2e4a1cb",
+      "raw": ".workbuddy/tmp/mt-systemui/continuous-toast-injector.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/brightness/ui/compose/BrightnessSliderKt$$ExternalSyntheticLambda6;->invoke()Ljava/lang/Object;",
+      "contains": [
+        ".method public final invoke()Ljava/lang/Object;"
+      ],
+      "sha256": "29276b93780c04b54832b5c1479b075a26f0d1856b1ee3a0f73833fb0049b01b",
+      "raw": ".workbuddy/tmp/mt-systemui/continuation-toast-dispatch-0.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/qs/tiles/dialog/InternetDetailsContentController;->makeOverlayToast(I)V",
+      "contains": [
+        ".method public final makeOverlayToast(I)V"
+      ],
+      "sha256": "1df01f7c65b74c330298440f2f069af7ef10f4e4ac4c14fecb46db532899f9cc",
+      "raw": ".workbuddy/tmp/mt-systemui/continuation-toast-dispatch-1.json",
+      "complete": true
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/toast/ToastUI$$ExternalSyntheticLambda0;->run()V",
+      "contains": [
+        ".method public final run()V"
+      ],
+      "sha256": "e82b518f9a8f72e1785a056fbbeccfecc55b490700fe6d1ba1872d7c5b27dc9d",
+      "raw": ".workbuddy/tmp/mt-systemui/continuation-toast-dispatch-2.json",
+      "complete": true
+    }
+  ],
+  "frameworkEvidenceManifest": "docs/owned-backdrop-framework-evidence.json",
+  "resources": [
+    "continuation-toast-resource.json",
+    "continuation-toast-layout-map.json",
+    "continuation-toast-layout.json"
+  ],
+  "viewEvidence": "continuation-toast-view.json"
+}

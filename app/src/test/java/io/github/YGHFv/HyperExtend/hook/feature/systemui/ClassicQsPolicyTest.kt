@@ -5,6 +5,18 @@ import org.junit.Assert.*
 import org.junit.Test
 
 class ClassicQsPolicyTest {
+    @Test fun columnsRespectTouchWidthAndNativeMaximum() {
+        assertEquals(6, ClassicQsPolicy.columns(8, 4, 100, 600, 24, 0, 2f))
+        assertEquals(3, ClassicQsPolicy.columns(8, 4, 3, 600, 24, 0, 2f))
+        assertEquals(5, ClassicQsPolicy.columns(8, 4, 100, 600, 24, 8, 2f))
+    }
+    @Test fun disabledColumnsReturnNativeAndMalformedGeometryIsRejected() {
+        assertEquals(4, ClassicQsPolicy.columns(null, 4, 100, 600, 24, 0, 2f))
+        assertNull(ClassicQsPolicy.columns(4, 4, 100, 0, 0, 0, 2f))
+        assertNull(ClassicQsPolicy.columns(4, 4, 100, 600, 0, -1, 2f))
+        assertNull(ClassicQsPolicy.columns(4, 4, 100, 600, 0, 0, Float.NaN))
+        assertNull(ClassicQsPolicy.columns(4, 4, 100, 80, 0, 0, 2f))
+    }
     @Test fun requestedMaximumDoesNotOverrideNativeMinimum() {
         assertEquals(2, ClassicQsPolicy.rowLimit(1, 3, 2))
         assertEquals(5, ClassicQsPolicy.rowLimit(5, 3, 1))

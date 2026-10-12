@@ -1,0 +1,115 @@
+{
+  "started": "2026-10-11T00:27:06.011028+08:00",
+  "deviceSerial": "<serial>",
+  "deviceSdk": "37",
+  "packageName": "io.github.YGHFv.HyperExtend",
+  "sha256": "a4b9381e97dacf75c66ab89ebf7f6b2b8e3f9c8e281f5dcf272ef6b26c6c3a1d",
+  "apkBytes": 2731034,
+  "versionName": "0.1.3",
+  "versionCode": 4,
+  "previousApkBackup": "build/pre-five-g-context-fix-2026-10-11.apk",
+  "previousApkSha256": "a94fb33e60a946f27cb9226ace288ecb631ab09999274c5bad3ffe98512a4fb5",
+  "pidsBefore": {
+    "system_server": "3641",
+    "com.android.systemui": "8042",
+    "com.android.settings": "",
+    "com.miui.misound": "23782"
+  },
+  "hostRestartRequested": false,
+  "hotReloadRequested": false,
+  "switchesOrScopesChanged": false,
+  "networkOrSimChanged": false,
+  "runtimeAcceptance": false,
+  "result": "Performing Streamed Install\nSuccess",
+  "pidsAfter": {
+    "system_server": "3641",
+    "com.android.systemui": "8042",
+    "com.android.settings": "",
+    "com.miui.misound": "23782"
+  },
+  "installedSha256": "a4b9381e97dacf75c66ab89ebf7f6b2b8e3f9c8e281f5dcf272ef6b26c6c3a1d",
+  "hashesMatch": true,
+  "packageVersionAndInstallTimes": [
+    "versionCode=4 minSdk=26 targetSdk=35",
+    "versionName=0.1.3",
+    "lastUpdateTime=2026-10-11 00:27:03",
+    "firstInstallTime=2026-10-01 23:59:10"
+  ],
+  "monitorSamples": [
+    {
+      "time": "2026-10-11T00:27:17.911006+08:00",
+      "pids": {
+        "system_server": "3641",
+        "com.android.systemui": "8042",
+        "com.android.settings": "",
+        "com.miui.misound": "23782"
+      }
+    },
+    {
+      "time": "2026-10-11T00:27:28.148101+08:00",
+      "pids": {
+        "system_server": "3641",
+        "com.android.systemui": "29473",
+        "com.android.settings": "29648",
+        "com.miui.misound": "23782"
+      }
+    },
+    {
+      "time": "2026-10-11T00:27:38.411658+08:00",
+      "pids": {
+        "system_server": "3641",
+        "com.android.systemui": "29473",
+        "com.android.settings": "29648",
+        "com.miui.misound": "23782"
+      }
+    },
+    {
+      "time": "2026-10-11T00:27:48.649068+08:00",
+      "pids": {
+        "system_server": "3641",
+        "com.android.systemui": "29473",
+        "com.android.settings": "29648",
+        "com.miui.misound": "23782"
+      }
+    },
+    {
+      "time": "2026-10-11T00:27:58.901592+08:00",
+      "pids": {
+        "system_server": "3641",
+        "com.android.systemui": "29473",
+        "com.android.settings": "29648",
+        "com.miui.misound": "23782"
+      }
+    },
+    {
+      "time": "2026-10-11T00:28:09.148582+08:00",
+      "pids": {
+        "system_server": "3641",
+        "com.android.systemui": "29473",
+        "com.android.settings": "29648",
+        "com.miui.misound": "23782"
+      }
+    }
+  ],
+  "finished": "2026-10-11T00:28:09.399167+08:00",
+  "sampledHostPidsUnchanged": false,
+  "crashLog": "build/five-g-context-postinstall-crash.log",
+  "newCrashBufferMarkers": [],
+  "exitInfo": "build/five-g-context-postinstall-exits.log",
+  "hostLog": "build/five-g-context-postinstall-host.log",
+  "observedFiveGStages": [
+    "2026-10-11 00:27:21 I control_center_fix_tiles_list: plugin 5G readiness=true; factoryReady=true",
+    "2026-10-11 00:27:25 I control_center_fix_tiles_list: plugin editor candidates reached; fiveGFactoryReady=true; fiveGIncluded=true (device acceptance pending)",
+    "2026-10-11 00:27:25 I stock_tiles/5g: factory reached",
+    "2026-10-11 00:27:25 I stock_tiles/5g: tile created"
+  ],
+  "hostLogSha256": "30a28e45c136b60ade234692b9e90ab8e1e5ff4aef9e8c5a77e5dabef6fd83e2",
+  "observationNote": "SystemUI changed 8042 -> 29473 -> 32240. Exit-info records SIGNALED/status 9 at 00:27:19 and 00:28:06, senders unknown; assistant issued no restart/kill/hot reload. Sampled pidof lagged the second transition; latest host file confirms PID 32240 and 5G tile created again at 00:28:09. No new crash-buffer FATAL markers. Editor visuals/network toggle not exercised by assistant.",
+  "finalObservation": {
+    "time": "2026-10-11T00:29:22.635955+08:00",
+    "systemUiPid": "32240",
+    "hostLog": "build/five-g-context-final-host.log",
+    "fiveGTileCreatedAgain": "2026-10-11 00:28:09",
+    "note": "New session also logs lockscreen_charging_info enabled; assistant did not change preferences. Do not infer all device preferences were unchanged from assistant actions."
+  }
+}

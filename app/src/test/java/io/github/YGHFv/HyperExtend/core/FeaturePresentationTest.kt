@@ -15,7 +15,8 @@ class FeaturePresentationTest {
             setOf(
                 "screenshot_clipboard", "milink_clipboard_guard", "mishare_receive_guard",
                 "rotation_suggestion", "rotation_lock_fix", "status_bar_double_tap", "status_bar_screenshot_hide",
-            ) + (SYSTEM_UI_FEATURES + APP_VOLUME_FEATURE).filterNot { it.hasDetailPage }.map { it.id },
+            ) + (STATUS_BAR_FEATURES + SYSTEM_UI_FEATURES + APP_VOLUME_FEATURE)
+                .filterNot { it.hasDetailPage }.map { it.id },
             FEATURES.filterNot { it.hasDetailPage }.map { it.id }.toSet(),
         )
     }
@@ -54,7 +55,8 @@ class FeaturePresentationTest {
         val icons = panels.entries.single { it.key.panel == FeaturePanel.ICONS }.value
         assertTrue(icons.any { it.hasDetailPage })
         assertTrue(icons.any { !it.hasDetailPage })
-        assertEquals(listOf("native_notify_icon", "status_bar_icons", "status_bar_screenshot_hide"), icons.map { it.id })
+        assertEquals(listOf("native_notify_icon", "status_bar_signal_order", "status_bar_icons",
+            "status_bar_screenshot_hide"), icons.map { it.id })
         assertEquals(features.map { it.id }.sorted(), panels.values.flatten().map { it.id }.sorted())
     }
 

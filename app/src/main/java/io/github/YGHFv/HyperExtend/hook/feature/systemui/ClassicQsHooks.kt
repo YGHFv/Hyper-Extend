@@ -34,6 +34,7 @@ internal object ClassicQsHooks {
         val ready = AtomicBoolean(false)
         val previousLimits = WeakHashMap<View, Int>()
         val active = ThreadLocal<View?>()
+        val measuring = ThreadLocal<Pair<View, Int>?>()
         var supportedHost: Boolean? = null
 
         fun supported(view: View): Boolean {
@@ -48,6 +49,25 @@ internal object ClassicQsHooks {
             val row = ClassicQsSettings.row(view.resources.configuration.orientation, quick) ?: return null
             return ClassicQsSettings.value(settings.string(row.key), row)
         }
+        fun updatePage(page: View, width: Int): Boolean {
+            val resource = fields.getValue("mResourceColumns")
+            val native = resource.getInt(page)
+            val slider = ClassicQsSettings.columns(page.resources.configuration.orientation)
+            val count = if (settings.isOn(feature) && slider != null)
+                ClassicQsSettings.value(settings.string(slider.key), slider) else null
+            val maximum = fields.getValue("mMaxColumns").getInt(page)
+            val effective = ClassicQsPolicy.columns(count, native, maximum,
+                width, page.paddingLeft + page.paddingRight, fields.getValue("mCellMarginHorizontal").getInt(page),
+                page.resources.displayMetrics.density) ?: minOf(native, maximum).takeIf { it > 0 } ?: return false
+            val old = fields.getValue("mColumns").getInt(page)
+            try {
+                resource.setInt(page, effective)
+                methods.getValue(targets.updateColumns).invoke(page)
+            } finally {
+                if (resource.getInt(page) == effective) resource.setInt(page, native)
+            }
+            return old != fields.getValue("mColumns").getInt(page)
+        }
 
         val rows = HookRuntime.hook(methods.getValue(targets.measure), "$feature/rows") { chain ->
             val pager = chain.thisObject as? View ?: return@hook chain.proceed()
@@ -59,8 +79,15 @@ internal object ClassicQsHooks {
             val nativeMin = fields.getValue("mMinRows").getInt(page)
             val effective = ClassicQsPolicy.rowLimit(requested(pager, false), nativeMax, nativeMin) ?: return@hook chain.proceed()
             val previous = active.get()
+            val oldMeasuring = measuring.get()
             active.set(pager)
+            // Set every page before the pager computes capacity, not after child layout.
+            val width = View.MeasureSpec.getSize(chain.args[0] as Int) - pager.paddingLeft - pager.paddingRight
+            measuring.set(pager to width)
             try {
+                if (pages.filterIsInstance<View>().filter { it.javaClass == pageType }
+                        .map { updatePage(it, width) }.any { it })
+                    fields.getValue("mDistributeTiles").setBoolean(pager, true)
                 if (ClassicQsPolicy.redistribute(previousLimits[pager], effective, nativeMax))
                     fields.getValue("mDistributeTiles").setBoolean(pager, true)
                 // The pager reads the first page's cap before distributing all records. Do not
@@ -71,8 +98,18 @@ internal object ClassicQsHooks {
                 result
             } finally {
                 try { if (maxField.getInt(page) == effective) maxField.setInt(page, nativeMax) }
-                finally { if (previous == null) active.remove() else active.set(previous) }
+                finally {
+                    if (previous == null) active.remove() else active.set(previous)
+                    if (oldMeasuring == null) measuring.remove() else measuring.set(oldMeasuring)
+                }
             }
+        }
+        val newPage = HookRuntime.hookAfter(methods.getValue(targets.createPage), "$feature/newPageColumns") { chain, result ->
+            val scope = measuring.get()
+            val page = result as? View
+            if (ready.get() && scope != null && scope.first === chain.thisObject && page != null && page.javaClass == pageType)
+                updatePage(page, scope.second)
+            result
         }
         val quick = HookRuntime.hook(methods.getValue(targets.maxTiles), "$feature/quickCount") { chain ->
             val panel = chain.thisObject as? View ?: return@hook chain.proceed()
@@ -90,7 +127,7 @@ internal object ClassicQsHooks {
                 methods.getValue(targets.quickResources).invoke(panel)
             result
         }
-        ready.set(rows && quick && attach)
-        return if (ready.get()) 3 else 0
+        ready.set(rows && quick && attach && newPage)
+        return if (ready.get()) 4 else 0
     }
 }

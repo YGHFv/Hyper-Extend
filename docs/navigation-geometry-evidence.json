@@ -1,0 +1,109 @@
+{
+  "host": {
+    "packageName": "com.android.systemui",
+    "versionCode": 202602260
+  },
+  "verification": "Complete current MT host signatures and bodies; source-only, not compiled/tested.",
+  "evidence": [
+    {
+      "locator": "dex_method:Lcom/android/systemui/navigationbar/views/NavigationBar;->getBarLayoutParamsForRotation(I)Landroid/view/WindowManager$LayoutParams;",
+      "contains": [
+        ".method public final getBarLayoutParamsForRotation(I)Landroid/view/WindowManager$LayoutParams;"
+      ],
+      "sha256": "09f8e68bf2a337b90ae416faf111e7f542f55e6da1517c84749e0e4200324f27",
+      "raw": ".workbuddy/tmp/mt-systemui/continuous-nav-member-00.json"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/navigationbar/views/NavigationBar;->onInit()V",
+      "contains": [
+        ".method public final onInit()V"
+      ],
+      "sha256": "b6038f790d4713b89b2d986471d5dec5a11c1a0b08527d4921bbe309d3a2d0dd",
+      "raw": ".workbuddy/tmp/mt-systemui/continuous-nav-member-01.json"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/navigationbar/views/NavigationBar;->updateViewLayout(I)V",
+      "contains": [
+        ".method public final updateViewLayout(I)V"
+      ],
+      "sha256": "54b57325fa08b03c8ef90a79950e962f14a9d8c3c7ff3a8489de76674c4bc146",
+      "raw": ".workbuddy/tmp/mt-systemui/continuous-nav-member-02.json"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/navigationbar/views/NavigationBarView;->getNavBarHeight()I",
+      "contains": [
+        ".method public getNavBarHeight()I"
+      ],
+      "sha256": "ad95386c76d72a85ddb63c50e3b63ea15b163ef241ad4da16efeabc9382d04a1",
+      "raw": ".workbuddy/tmp/mt-systemui/continuous-nav-member-03.json"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/navigationbar/views/NavigationBarView;->onMeasure(II)V",
+      "contains": [
+        ".method public final onMeasure(II)V"
+      ],
+      "sha256": "0ab35c262168841935695bfaed755a495072284f043b3ed50ec6581b9e71b659",
+      "raw": ".workbuddy/tmp/mt-systemui/continuous-nav-member-04.json"
+    },
+    {
+      "locator": "dex_method:Lcom/android/systemui/navigationbar/views/NavigationBar$9;->getSampledRegion(Landroid/view/View;)Landroid/graphics/Rect;",
+      "contains": [
+        ".method public final getSampledRegion(Landroid/view/View;)Landroid/graphics/Rect;"
+      ],
+      "sha256": "9a4b8a3f71c4bbe5a2d3bbb7c73bbbd605ba0156666bc6d8b3a447236a51f21d",
+      "raw": ".workbuddy/tmp/mt-systemui/continuous-nav-member-05.json"
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/navigationbar/views/NavigationBar;->mContext:Landroid/content/Context;",
+      "contains": [
+        ".field public final mContext:Landroid/content/Context;"
+      ],
+      "sha256": "3321f4cf884287c431cd5da51d4650e00e196c083f03e59999c51797fc47b74f",
+      "raw": ".workbuddy/tmp/mt-systemui/continuous-nav-member-06.json"
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/navigationbar/views/NavigationBar;->mNavBarMode:I",
+      "contains": [
+        ".field public mNavBarMode:I"
+      ],
+      "sha256": "ab494bf3c042aa6f5e621efbd13412284289ca81203f9f86344511d611cc8175",
+      "raw": ".workbuddy/tmp/mt-systemui/continuous-nav-member-07.json"
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/navigationbar/views/NavigationBar;->mEdgeBackGestureHandler:Lcom/android/systemui/navigationbar/gestural/EdgeBackGestureHandler;",
+      "contains": [
+        ".field public final mEdgeBackGestureHandler:Lcom/android/systemui/navigationbar/gestural/EdgeBackGestureHandler;"
+      ],
+      "sha256": "3717436323f71f1459eefb6c75404f4356a73713db936dce50041c2421328db0",
+      "raw": ".workbuddy/tmp/mt-systemui/continuous-nav-member-08.json"
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/navigationbar/views/NavigationBarView;->mNavBarMode:I",
+      "contains": [
+        ".field public mNavBarMode:I"
+      ],
+      "sha256": "ab494bf3c042aa6f5e621efbd13412284289ca81203f9f86344511d611cc8175",
+      "raw": ".workbuddy/tmp/mt-systemui/continuous-nav-member-09.json"
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/navigationbar/views/NavigationBarView;->mEdgeBackGestureHandler:Lcom/android/systemui/navigationbar/gestural/EdgeBackGestureHandler;",
+      "contains": [
+        ".field public mEdgeBackGestureHandler:Lcom/android/systemui/navigationbar/gestural/EdgeBackGestureHandler;"
+      ],
+      "sha256": "b86b6b15c95c31d0e79b979d4245ccba2360334b5be2a99ec416f2a5ea876a2d",
+      "raw": ".workbuddy/tmp/mt-systemui/continuous-nav-member-10.json"
+    },
+    {
+      "locator": "dex_field:Lcom/android/systemui/navigationbar/gestural/EdgeBackGestureHandler;->mIsButtonForcedVisible:Z",
+      "contains": [
+        ".field public mIsButtonForcedVisible:Z"
+      ],
+      "sha256": "7affca9c524f698327cacdccfdac975c0d26ce12518f882f53bc7fac05b6248b",
+      "raw": ".workbuddy/tmp/mt-systemui/continuous-nav-member-11.json"
+    }
+  ],
+  "frameworkEvidence": [
+    "docs/navigation-geometry-framework-evidence.json",
+    "docs/continuous-framework-api-evidence.json"
+  ]
+}

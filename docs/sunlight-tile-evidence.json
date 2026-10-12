@@ -1,0 +1,110 @@
+{
+  "verification": "Current MT native Settings read/write and MIUI display controller. Exact SDK37 fingerprint gate. Does not implement raw high/custom brightness or force sensor/brightness activation. Shared tile interface/editor evidence: gms-tile-*-evidence.json. Analysis wrappers must never be installed.",
+  "evidence": [
+    {
+      "locator": "dex_method:Lcom/android/settings/MiuiDisplaySettings;->isSunlightModeEnabled()Z",
+      "sha256": "2f4151fa2527cbc526765791f92461908716485fc3a1d9b1489c04964a2bcb4f",
+      "raw": ".workbuddy/tmp/mt-systemui/sunlight-tile-0.json",
+      "pages": 1,
+      "artifact": "settings",
+      "contains": [
+        ".method private isSunlightModeEnabled()Z"
+      ]
+    },
+    {
+      "locator": "dex_method:Lcom/android/settings/MiuiDisplaySettings;->updateSunlightMode(Z)V",
+      "sha256": "a3ae680c0da87a3bef13ae84f4c5d9285f4ac546f31b5f59a5af4f4fb2406269",
+      "raw": ".workbuddy/tmp/mt-systemui/sunlight-tile-1.json",
+      "pages": 1,
+      "artifact": "settings",
+      "contains": [
+        ".method private updateSunlightMode(Z)V"
+      ]
+    },
+    {
+      "locator": "dex_method:Lcom/android/settings/MiuiDisplaySettings;->onCreate(Landroid/os/Bundle;)V",
+      "sha256": "a0478b30db5de824d38028206f51ff699f364fe4f6fa2760c9e2bf547c87cb6e",
+      "raw": ".workbuddy/tmp/mt-systemui/sunlight-tile-2.json",
+      "pages": 1,
+      "artifact": "settings",
+      "contains": [
+        ".method public onCreate(Landroid/os/Bundle;)V"
+      ]
+    },
+    {
+      "locator": "dex_method:Lmiui/util/FeatureParser;->getBoolean(Ljava/lang/String;Z)Z",
+      "sha256": "18bd9b10021d51e295ee6e8056dd643d61c06657c5662d396fcfbf7bb33cadaa",
+      "raw": ".workbuddy/tmp/mt-systemui/sunlight-tile-3.json",
+      "pages": 1,
+      "artifact": "miui-framework",
+      "contains": [
+        ".method public static whitelist getBoolean(Ljava/lang/String;Z)Z"
+      ]
+    },
+    {
+      "locator": "dex_method:Lcom/android/server/display/SunlightController;->registerSettingsObserver()V",
+      "sha256": "3565e8cf9110fe4b2c1bb60a647f576648a5d8fae2336c4c95a76b1aa6dcda5e",
+      "raw": ".workbuddy/tmp/mt-systemui/sunlight-tile-4.json",
+      "pages": 1,
+      "artifact": "miui-services",
+      "contains": [
+        ".method private registerSettingsObserver()V"
+      ]
+    },
+    {
+      "locator": "dex_method:Lcom/android/server/display/SunlightController;->updateSunlightModeSettings()V",
+      "sha256": "933ca303fab728e44d97ba0ba21400ca1d0d3df27f4545be0a9f64ec8347c835",
+      "raw": ".workbuddy/tmp/mt-systemui/sunlight-tile-5.json",
+      "pages": 1,
+      "artifact": "miui-services",
+      "contains": [
+        ".method private updateSunlightModeSettings()V"
+      ]
+    },
+    {
+      "locator": "dex_method:Lcom/android/server/display/SunlightController;->updateLowPowerState()V",
+      "sha256": "ed812c7ef2e4c8072f0b5ea38271898f6506c72160a831c2293836602d064188",
+      "raw": ".workbuddy/tmp/mt-systemui/sunlight-tile-6.json",
+      "pages": 1,
+      "artifact": "miui-services",
+      "contains": [
+        ".method private updateLowPowerState()V"
+      ]
+    },
+    {
+      "locator": "dex_method:Lcom/android/server/display/SunlightController;->updateSunlightModeCondition()Z",
+      "sha256": "6f4b7c5340b0b267d7c76990779add767326dbfe5bb545257ae2b34bf4d5d7da",
+      "raw": ".workbuddy/tmp/mt-systemui/sunlight-tile-7.json",
+      "pages": 1,
+      "artifact": "miui-services",
+      "contains": [
+        ".method private updateSunlightModeCondition()Z"
+      ]
+    }
+  ],
+  "artifacts": {
+    "miui-framework": {
+      "mcpPath": "/storage/emulated/0/MT2/mcp/pending14-20261011/miui-framework-dex-evidence.apk",
+      "sourcePath": "/system_ext/framework/miui-framework.jar",
+      "sha256": "23dc896b8441d4874e2b813c8de322be3619a86d1d2db2230e51d1757be0c974",
+      "syntheticManifest": true,
+      "neverInstall": true
+    },
+    "miui-services": {
+      "mcpPath": "/storage/emulated/0/MT2/mcp/pending14-20261011/miui-services-dex-evidence.apk",
+      "sourcePath": "/system_ext/framework/miui-services.jar",
+      "sha256": "1bcab306c43c53f43976356612fe7023619d7866bc4a4af2b8ab9f5f8d4c76aa",
+      "syntheticManifest": true,
+      "neverInstall": true
+    },
+    "settings": {
+      "mcpPath": "/storage/emulated/0/MT2/mcp/pending14-20261011/Settings.apk",
+      "sourcePath": "/system_ext/priv-app/Settings/Settings.apk",
+      "sha256": "4774deb4c6fb1a9c00b25d7bf35087b3c7bb7c7860a790b72a8742dad5abd342",
+      "packageName": "com.android.settings",
+      "versionCode": 37
+    }
+  },
+  "deviceFingerprint": "Xiaomi/pandora/pandora:17/CP2A.260605.016/OS4.0.0.38.XBLCNXM:user/release-keys",
+  "deviceSdk": 37
+}

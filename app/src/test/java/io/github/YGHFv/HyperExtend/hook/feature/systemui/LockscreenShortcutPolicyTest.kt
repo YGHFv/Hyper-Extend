@@ -2,6 +2,7 @@
 package io.github.YGHFv.HyperExtend.hook.feature.systemui
 
 import io.github.YGHFv.HyperExtend.core.ScopeFeatureGroup
+import io.github.YGHFv.HyperExtend.core.LockscreenShortcutSettings
 import io.github.YGHFv.HyperExtend.core.featureById
 import io.github.YGHFv.HyperExtend.core.hasDetailPage
 import io.github.YGHFv.HyperExtend.core.entryGroup
@@ -56,14 +57,20 @@ class LockscreenShortcutPolicyTest {
         assertEquals(4, state.restore(8))
     }
     @Test fun entriesAreSeparateOptInSystemUiSwitchesWithHonestBoundaries() {
+        // features 现在只有两项：左侧按钮（合并后含处理方式）与右侧按钮（仍是纯开关）。
+        assertEquals(listOf(LockscreenShortcutSettings.FEATURE, LockscreenShortcutPolicy.RIGHT),
+            LockscreenShortcutPolicy.features)
         for (id in LockscreenShortcutPolicy.features) {
             val feature = featureById(id)!!
             assertFalse(feature.defaultEnabled)
-            assertFalse(feature.hasDetailPage)
+            assertEquals(id == LockscreenShortcutSettings.FEATURE, feature.hasDetailPage)
             assertEquals(listOf("systemui"), feature.scopes)
             assertEquals(ScopeFeatureGroup.LOCK_SCREEN, feature.entryGroup)
         }
-        assertTrue(featureById(LockscreenShortcutPolicy.LEFT)!!.requirement!!.contains("不包含手电筒替换"))
+        // 合并前两张卡片（隐藏 / 手电筒）不再各自存在，只剩带处理方式的左侧按钮卡片。
+        assertNull(featureById(LockscreenShortcutSettings.LEGACY_FLASHLIGHT_CARD))
+        assertNull(featureById("lockscreen_left_flashlight"))
+        assertTrue(featureById(LockscreenShortcutPolicy.LEFT)!!.requirement!!.contains("按住至少 0.4 秒"))
         assertTrue(featureById(LockscreenShortcutPolicy.RIGHT)!!.requirement!!.contains("包括用户更换后的应用"))
     }
 }

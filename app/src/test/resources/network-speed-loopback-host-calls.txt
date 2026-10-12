@@ -1,0 +1,2 @@
+Landroid/net/TrafficStats;->getRxBytes(Ljava/lang/String;)J
+Landroid/net/TrafficStats;->getTxBytes(Ljava/lang/String;)J

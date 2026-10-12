@@ -1,0 +1,413 @@
+{
+  "host": {
+    "packageName": "com.android.systemui",
+    "versionCode": 202602260
+  },
+  "auditedOn": "2026-10-12",
+  "scope": "Every upstream system_ui key that the current inventory generator still could not map after the 14-row migration: 27 needs_audit_existing_partial rows plus the one remaining pending row (move_log_to_miui).",
+  "verification": "Read-only MT MCP enumeration plus source review only. No build, test, lint, installation or device action was performed for this audit.",
+  "totals": {
+    "rows": 28,
+    "byStatus": {
+      "audited_no_current_carrier": 3,
+      "audited_carrier_found_not_migrated": 10,
+      "audited_test_action_only": 2,
+      "audited_not_a_feature": 2,
+      "audited_external_dependency": 11
+    }
+  },
+  "runtimeAccepted": false,
+  "installed": false,
+  "hostRestarted": false,
+  "deviceFeatureActionsExecuted": false,
+  "method": "MT MCP read-only workspace inspection (class outlines, smali text, dex-string searches, resource reads) against MiuiSystemUI.apk 202602260 and the framework DEX evidence workspace, cross-checked with the HyperCeiler reference tree. Determinations never promote a row to implemented: audited_* statuses record either a verified current-host carrier that has no local adapter yet, or a row that has no carrier / is not a feature. Second pass added mt_apk_dex_xref incoming-reference reads, mt_apk_resource_read value reads and exact-case dex_strings searches, which corrected an earlier false-negative for the literal \"volume\" and settled the block-list membership semantics; see docs/systemui-remaining-row-audit-2026-10-12.md. Third pass re-read the local status_bar_icons adapter and clarified that the six block-list icon rows are reachable through it (container ignoredSlots AND host block-list producer paths), while the three HD rows are not covered by that adapter and still need a self-contained flow binding; see docs/systemui-remaining-row-audit-2026-10-12-third-pass.md. No status was promoted and no device action was performed.",
+  "statusMeaning": {
+    "audited_carrier_found_not_migrated": "The current host has a real, MT-verified carrier for this behaviour; no local adapter exists yet and none was added by this audit.",
+    "audited_no_current_carrier": "The upstream hook target has no producer/consumer on the current host; nothing to migrate and no placeholder switch.",
+    "audited_external_dependency": "The upstream behaviour depends on the third-party SuperLyric module, which this project does not depend on.",
+    "audited_not_a_feature": "Hidden or test-only row that never described a reachable feature.",
+    "audited_test_action_only": "Debug action row with no persisted state."
+  },
+  "rows": [
+    {
+      "key": "prefs_key_system_ui_move_log_to_miui",
+      "reviewArea": "control_center_and_other",
+      "title": "将 statusbar_gestures.dat 移动到 MIUI 目录",
+      "status": "audited_no_current_carrier",
+      "hostCarrier": [
+        "Overwhelming negatives in both workspaces: MT overview search for statusbar_gestures / GestureRecorder / mGestureRec / move_log returns 0 hits in MiuiSystemUI.apk (82gixxhb) and in the framework DEX evidence (o51fr44c).",
+        "Upstream hook body: library/libhook/.../SystemUI/SystemUIV.java:287 initHook(new FuckStatusbarGestures(), ...)."
+      ],
+      "determination": "No current host consumer for the old gesture-log file, so there is nothing to redirect.",
+      "boundary": "Upstream only moved the file location. Nothing on the current host reads or writes a statusbar_gestures log, so no local switch and no file redirection were added. The upstream class name was searched exhaustively before closing this row.",
+      "verificationPass": "second-pass-read-only"
+    },
+    {
+      "key": "prefs_key_system_ui_statusbar_battery_detail_at_right",
+      "reviewArea": "status_bar_battery_detail",
+      "title": "右侧显示",
+      "status": "audited_carrier_found_not_migrated",
+      "hostCarrier": [
+        "dex_class:Lcom/android/systemui/statusbar/views/MiuiStatusBatteryContainer; (mBattery/mStatusIcon/mHomePrivacyContainer/mBatteryChanged)",
+        "dex_class:Lcom/android/systemui/statusbar/views/MiuiStatusIconContainer; (ignoredSlots, onLayout skips non StatusIconDisplayable views)"
+      ],
+      "determination": "The left-side adapter is implemented; the right independent slot has no host container.",
+      "boundary": "The battery-detail card only owns a TextView beside the existing left clock parent. On 202602260 MiuiStatusBatteryContainer and MiuiBatteryMeterView measure/lay out explicit named fields and MiuiStatusIconContainer only places StatusIconDisplayable holders, so a plain right-side child is laid out nowhere. Recorded as an open requirement with no placeholder switch.",
+      "verificationPass": "second-pass-read-only"
+    },
+    {
+      "key": "prefs_key_system_ui_status_bar_strong_toast_test_short_text",
+      "reviewArea": "dynamic_island",
+      "title": "短文本输出",
+      "status": "audited_test_action_only",
+      "hostCarrier": [
+        "dex_class:Lcom/android/systemui/devicenotification/listener/DeviceNotificationListenerImpl; (strong_toast_action is the live delivery route)",
+        "Upstream FocusNotificationSettings.java:44 binds the row to a click listener only."
+      ],
+      "determination": "Debug action rows, not saved preferences.",
+      "boundary": "Both test rows store no state; the upstream handler only calls MiuiStringToast.showStringToast(...) to emit one strong-toast command. The current host consumes that command in DeviceNotificationListenerImpl strong_toast_action. Exposing them as switches would create state-less empty toggles, so they stay test actions.",
+      "verificationPass": "second-pass-read-only"
+    },
+    {
+      "key": "prefs_key_system_ui_status_bar_strong_toast_test_long_text",
+      "reviewArea": "dynamic_island",
+      "title": "长文本输出",
+      "status": "audited_test_action_only",
+      "hostCarrier": [
+        "Same route as the short-text row: upstream click handler only, current host delivery via DeviceNotificationListenerImpl strong_toast_action."
+      ],
+      "determination": "Debug action row, not a saved preference.",
+      "boundary": "See the short-text row. No state is persisted and no host switch corresponds to it.",
+      "verificationPass": "second-pass-read-only"
+    },
+    {
+      "key": "prefs_key_system_ui_status_bar_icon_wifi",
+      "reviewArea": "status_bar",
+      "title": "WIFI 图标",
+      "status": "audited_carrier_found_not_migrated",
+      "hostCarrier": [
+        "dex_method:Lcom/android/systemui/statusbar/phone/ui/IconManager;->addHolder(ILjava/lang/String;Z...)Lcom/android/systemui/statusbar/StatusIconDisplayable; reads mBlockList and forces the holder visible when the slot is a member.",
+        "dex_method:Lcom/android/systemui/statusbar/phone/ui/StatusBarIconControllerImpl;->refreshIconGroup(Lcom/android/systemui/statusbar/phone/ui/IconManager;)V recomputes setBlocked for every child from mBlockList.",
+        "dex_method:Lcom/android/systemui/statusbar/pipeline/wifi/ui/view/ModernStatusBarWifiView;->constructAndBind(...) is invoked only from IconManager.addHolder and DemoStatusIcons.addModernWifiView (dex xref, 2 callers).",
+        "dex_strings exact search finds the \"wifi\" and \"demo_wifi\" literals; MiuiStatusBarSignalPolicy publishes demo_wifi (const-string p5, \"demo_wifi\").",
+        "Third pass (read-only, same MT workspace 82gixxhb): the local status_bar_icons adapter was read end to end and it is a real consumer of this producer, on BOTH paths - it installs before-hooks on the producer side (HomeStatusBarIconBlockListBinder$bind$1$1$1.emit, ControlCenterFakeStatusIcons/ControlCenterStatusBarIcon onAttachedToWindow/onFinishInflate, KeyguardStatusBarViewController.onViewAttached, MiuiQSHeaderView.onAttachedToWindow, MiuiPhoneStatusBarView.updateCutoutLocation) and on the container side (MiuiStatusIconContainer.setIgnoredSlots/addIgnoredSlots). The current-pass boundary is therefore not \"no adapter\"; it is \"adapter reachable, runtime result unverified\". No status change and no device action were performed."
+      ],
+      "determination": "A local adapter consumes this producer on 202602260, on both the container ignoredSlots path and the host's own block-list producer path. The row is not \"carrier found but no adapter\"; the remaining gap is runtime agreement of the two visibility paths and modes 11/12, which is device acceptance only.",
+      "boundary": "Re-audit settled the membership question that the first pass left open. MiuiIconManagerUtils clinit builds RIGHT_BLOCK_LIST (mute, micphone, headset, mikey, privacy_mode, gps, missed_call, ime, cast, bluetooth_handsfree_battery, ethernet, nfc, tty, stealth, second_space, handle, handle_battery) and CONTROL_CENTER_BLOCK_LIST (car, tv, pc, pad, phone, sound_box_group, stereo, sound_box_screen, sound_box, wireless_headset, glasses, camera, dist_compute). Membership means HIDE, not \"place in the right cluster\": IconManager.addHolder(ILjava/lang/String;Z...) does mBlockList.contains(slot) and forces the visible flag true before creating the view, and StatusBarIconControllerImpl.refreshIconGroup scans every StatusIconDisplayable and calls setBlocked(forced || mBlockList.contains(slot) || userHidden || systemHidden || vibrateSetting). MiuiStatusIconContainer.onLayout/onMeasure skip any icon where isIconBlocked() is true, which is exactly the effect the module own ignoredSlots path relies on. The list is a plain mutable ArrayList read per icon add, and setBlockList is called by the live StatusBarIconBlockListBinder emit and by ControlCenterFakeStatusIcons/ControlCenterStatusBarIcon/KeyguardStatusBarViewController/MiuiQSHeaderView/MiuiPhoneStatusBarView, all present on 202602260. The wifi/demo_wifi glyphs are ModernStatusBarWifiView instances created by IconManager.addHolder, so the producer is the live block list, and both slot literals are present in the APK. The first pass concluded only that the list carried no wifi entry; the corrected reading is that the list is a mutable per-icon visibility input that can carry it. Still no adapter written for this row. OPEN QUESTION for the next pass (not a status change): the local status_bar_icons card already serialises these same literals. The generic adapter IconBlockListHooks installs before-hooks on MiuiStatusIconContainer.setIgnoredSlots/addIgnoredSlots and drives MiuiStatusIconContainer.ignoredSlots, and the host simultaneously drives IconManager.mBlockList - on 202602260 HomeStatusBarIconBlockListBinder.bind -> HomeStatusBarIconBlockListBinder$bind$1$1$1.emit -> IconManager.setBlockList -> refreshIconGroup -> StatusIconDisplayable.setBlocked, and MiuiStatusIconContainer.onLayout skips the same icons through both ignoredSlots and isIconBlocked(). The slot literals in the local card do match this build for volume/mute (\"volume\" literal) and no_sim, so a mode-2 entry can plausibly take effect; but the local adapter was written for the ignoredSlots mechanism only. Whether the two visibility paths still agree after the local hook runs, and whether mode 11/12 render as intended for the modern wifi/mobile binders, is NOT established by this read-only pass and is not device-accepted. Recorded as an open item so nobody reads audited_carrier_found_not_migrated as proof the rows are dead.",
+      "verificationPass": "second-pass-read-only"
+    },
+    {
+      "key": "prefs_key_system_ui_status_bar_icon_hotspot",
+      "reviewArea": "status_bar",
+      "title": "WIFI 热点",
+      "status": "audited_carrier_found_not_migrated",
+      "hostCarrier": [
+        "dex_method:Lcom/android/systemui/statusbar/phone/PhoneStatusBarPolicy;-><init>(...)V assigns mSlotHotspot from Resources.getString(0x1040b70) and dex_strings contains the literal \"hotspot\".",
+        "dex_method:Lcom/android/systemui/statusbar/phone/PhoneStatusBarPolicy$3;->onHotspotChanged(IZ)V toggles StatusBarIconControllerImpl.setIconVisibility(mSlotHotspot, visible); that method is invoked from PhoneStatusBarPolicy.<init>, onHotspotChanged and CentralSurfacesImpl.start (dex xref).",
+        "dex_method:Lcom/android/systemui/statusbar/phone/ui/IconManager;->addHolder(...) is the same live block-list consumer used by every other status-bar slot.",
+        "Third pass (read-only, same MT workspace 82gixxhb): the local status_bar_icons adapter was read end to end and it is a real consumer of this producer, on BOTH paths - it installs before-hooks on the producer side (HomeStatusBarIconBlockListBinder$bind$1$1$1.emit, ControlCenterFakeStatusIcons/ControlCenterStatusBarIcon onAttachedToWindow/onFinishInflate, KeyguardStatusBarViewController.onViewAttached, MiuiQSHeaderView.onAttachedToWindow, MiuiPhoneStatusBarView.updateCutoutLocation) and on the container side (MiuiStatusIconContainer.setIgnoredSlots/addIgnoredSlots). The current-pass boundary is therefore not \"no adapter\"; it is \"adapter reachable, runtime result unverified\". No status change and no device action were performed."
+      ],
+      "determination": "A local adapter consumes this producer on 202602260, on both the container ignoredSlots path and the host's own block-list producer path. The row is not \"carrier found but no adapter\"; the remaining gap is runtime agreement of the two visibility paths and modes 11/12, which is device acceptance only.",
+      "boundary": "Re-audit settled the membership question that the first pass left open. MiuiIconManagerUtils clinit builds RIGHT_BLOCK_LIST (mute, micphone, headset, mikey, privacy_mode, gps, missed_call, ime, cast, bluetooth_handsfree_battery, ethernet, nfc, tty, stealth, second_space, handle, handle_battery) and CONTROL_CENTER_BLOCK_LIST (car, tv, pc, pad, phone, sound_box_group, stereo, sound_box_screen, sound_box, wireless_headset, glasses, camera, dist_compute). Membership means HIDE, not \"place in the right cluster\": IconManager.addHolder(ILjava/lang/String;Z...) does mBlockList.contains(slot) and forces the visible flag true before creating the view, and StatusBarIconControllerImpl.refreshIconGroup scans every StatusIconDisplayable and calls setBlocked(forced || mBlockList.contains(slot) || userHidden || systemHidden || vibrateSetting). MiuiStatusIconContainer.onLayout/onMeasure skip any icon where isIconBlocked() is true, which is exactly the effect the module own ignoredSlots path relies on. The list is a plain mutable ArrayList read per icon add, and setBlockList is called by the live StatusBarIconBlockListBinder emit and by ControlCenterFakeStatusIcons/ControlCenterStatusBarIcon/KeyguardStatusBarViewController/MiuiQSHeaderView/MiuiPhoneStatusBarView, all present on 202602260. The earlier note that the only status-bar-side mention is the demo dispatcher is inaccurate: PhoneStatusBarPolicy publishes the \"hotspot\" slot and PhoneStatusBarPolicy$3.onHotspotChanged drives its visibility. The slot literal \"hotspot\" is a dex string on this build. Carrier recorded; no adapter was written. OPEN QUESTION for the next pass (not a status change): the local status_bar_icons card already serialises these same literals. The generic adapter IconBlockListHooks installs before-hooks on MiuiStatusIconContainer.setIgnoredSlots/addIgnoredSlots and drives MiuiStatusIconContainer.ignoredSlots, and the host simultaneously drives IconManager.mBlockList - on 202602260 HomeStatusBarIconBlockListBinder.bind -> HomeStatusBarIconBlockListBinder$bind$1$1$1.emit -> IconManager.setBlockList -> refreshIconGroup -> StatusIconDisplayable.setBlocked, and MiuiStatusIconContainer.onLayout skips the same icons through both ignoredSlots and isIconBlocked(). The slot literals in the local card do match this build for volume/mute (\"volume\" literal) and no_sim, so a mode-2 entry can plausibly take effect; but the local adapter was written for the ignoredSlots mechanism only. Whether the two visibility paths still agree after the local hook runs, and whether mode 11/12 render as intended for the modern wifi/mobile binders, is NOT established by this read-only pass and is not device-accepted. Recorded as an open item so nobody reads audited_carrier_found_not_migrated as proof the rows are dead.",
+      "verificationPass": "second-pass-read-only"
+    },
+    {
+      "key": "prefs_key_system_ui_status_bar_icon_airplane",
+      "reviewArea": "status_bar",
+      "title": "飞行模式",
+      "status": "audited_carrier_found_not_migrated",
+      "hostCarrier": [
+        "dex_method:Lcom/android/systemui/statusbar/phone/MiuiStatusBarSignalPolicy;->updateAirplaneModeIcon(Z)V; its dex xref callers are StatusBarSignalPolicy$$ExternalSyntheticLambda1.accept and MiuiMobileIconsInteractorImpl$satellite$2.invokeSuspend (2 callers, no MiuiPhoneStatusBarPolicy caller).",
+        "dex_field:Lcom/android/systemui/statusbar/phone/MiuiStatusBarSignalPolicy;->mSlotAirplane:Ljava/lang/String; / mAirplaneShow:Z / mAirplaneState:Lcom/android/systemui/statusbar/phone/MiuiAirplaneState;",
+        "MiuiStatusBarSignalPolicy.<init> assigns mSlotAirplane from Context.getString(0x1040b62) and updateAirplaneModeIcon calls StatusBarIconControllerImpl.setIconVisibility(mSlotAirplane, show) with res 0x7f081abc and content description 0x7f14003d.",
+        "dex_strings contains the literal \"airplane\".",
+        "Third pass (read-only, same MT workspace 82gixxhb): the local status_bar_icons adapter was read end to end and it is a real consumer of this producer, on BOTH paths - it installs before-hooks on the producer side (HomeStatusBarIconBlockListBinder$bind$1$1$1.emit, ControlCenterFakeStatusIcons/ControlCenterStatusBarIcon onAttachedToWindow/onFinishInflate, KeyguardStatusBarViewController.onViewAttached, MiuiQSHeaderView.onAttachedToWindow, MiuiPhoneStatusBarView.updateCutoutLocation) and on the container side (MiuiStatusIconContainer.setIgnoredSlots/addIgnoredSlots). The current-pass boundary is therefore not \"no adapter\"; it is \"adapter reachable, runtime result unverified\". No status change and no device action were performed."
+      ],
+      "determination": "A local adapter consumes this producer on 202602260, on both the container ignoredSlots path and the host's own block-list producer path. The row is not \"carrier found but no adapter\"; the remaining gap is runtime agreement of the two visibility paths and modes 11/12, which is device acceptance only.",
+      "boundary": "Re-audit settled the membership question that the first pass left open. MiuiIconManagerUtils clinit builds RIGHT_BLOCK_LIST (mute, micphone, headset, mikey, privacy_mode, gps, missed_call, ime, cast, bluetooth_handsfree_battery, ethernet, nfc, tty, stealth, second_space, handle, handle_battery) and CONTROL_CENTER_BLOCK_LIST (car, tv, pc, pad, phone, sound_box_group, stereo, sound_box_screen, sound_box, wireless_headset, glasses, camera, dist_compute). Membership means HIDE, not \"place in the right cluster\": IconManager.addHolder(ILjava/lang/String;Z...) does mBlockList.contains(slot) and forces the visible flag true before creating the view, and StatusBarIconControllerImpl.refreshIconGroup scans every StatusIconDisplayable and calls setBlocked(forced || mBlockList.contains(slot) || userHidden || systemHidden || vibrateSetting). MiuiStatusIconContainer.onLayout/onMeasure skip any icon where isIconBlocked() is true, which is exactly the effect the module own ignoredSlots path relies on. The list is a plain mutable ArrayList read per icon add, and setBlockList is called by the live StatusBarIconBlockListBinder emit and by ControlCenterFakeStatusIcons/ControlCenterStatusBarIcon/KeyguardStatusBarViewController/MiuiQSHeaderView/MiuiPhoneStatusBarView, all present on 202602260. The first pass attributed the producer to MiuiPhoneStatusBarPolicy.updateAirplaneModeIcon; the dex xref shows that symbol does not exist and the real owner is MiuiStatusBarSignalPolicy.updateAirplaneModeIcon(Z), reached from the signal-status lambda and the mobile-icons satellite flow. The default lists carry no airplane entry, so the upstream list path stays inert. Carrier corrected and recorded; no adapter was written. OPEN QUESTION for the next pass (not a status change): the local status_bar_icons card already serialises these same literals. The generic adapter IconBlockListHooks installs before-hooks on MiuiStatusIconContainer.setIgnoredSlots/addIgnoredSlots and drives MiuiStatusIconContainer.ignoredSlots, and the host simultaneously drives IconManager.mBlockList - on 202602260 HomeStatusBarIconBlockListBinder.bind -> HomeStatusBarIconBlockListBinder$bind$1$1$1.emit -> IconManager.setBlockList -> refreshIconGroup -> StatusIconDisplayable.setBlocked, and MiuiStatusIconContainer.onLayout skips the same icons through both ignoredSlots and isIconBlocked(). The slot literals in the local card do match this build for volume/mute (\"volume\" literal) and no_sim, so a mode-2 entry can plausibly take effect; but the local adapter was written for the ignoredSlots mechanism only. Whether the two visibility paths still agree after the local hook runs, and whether mode 11/12 render as intended for the modern wifi/mobile binders, is NOT established by this read-only pass and is not device-accepted. Recorded as an open item so nobody reads audited_carrier_found_not_migrated as proof the rows are dead.",
+      "verificationPass": "second-pass-read-only"
+    },
+    {
+      "key": "prefs_key_system_ui_status_bar_icon_data_saver",
+      "reviewArea": "status_bar",
+      "title": "流量节省",
+      "status": "audited_carrier_found_not_migrated",
+      "hostCarrier": [
+        "dex_method:Lcom/android/systemui/statusbar/phone/PhoneStatusBarPolicy;->onDataSaverChanged(Z)V; its dex xref callers are PhoneStatusBarPolicy.<init> (listener registration) and nothing else, so it is a terminal visibility setter.",
+        "Smali body: getstatic mSlotDataSaver, getfield mIconController, and a single invoke-virtual setIconVisibility(slot, arg).",
+        "Upstream DataSaverIcon.java hooks exactly this method and rewrites args[0]; dex_strings contains the \"data_saver\" literal (1 exact hit).",
+        "Third pass (read-only, same MT workspace 82gixxhb): the local status_bar_icons adapter was read end to end and it is a real consumer of this producer, on BOTH paths - it installs before-hooks on the producer side (HomeStatusBarIconBlockListBinder$bind$1$1$1.emit, ControlCenterFakeStatusIcons/ControlCenterStatusBarIcon onAttachedToWindow/onFinishInflate, KeyguardStatusBarViewController.onViewAttached, MiuiQSHeaderView.onAttachedToWindow, MiuiPhoneStatusBarView.updateCutoutLocation) and on the container side (MiuiStatusIconContainer.setIgnoredSlots/addIgnoredSlots). The current-pass boundary is therefore not \"no adapter\"; it is \"adapter reachable, runtime result unverified\". No status change and no device action were performed."
+      ],
+      "determination": "A local adapter consumes this producer on 202602260, on both the container ignoredSlots path and the host's own block-list producer path. The row is not \"carrier found but no adapter\"; the remaining gap is runtime agreement of the two visibility paths and modes 11/12, which is device acceptance only.",
+      "boundary": "Upstream forced the onDataSaverChanged argument to true for option 1 and false for option 2. PhoneStatusBarPolicy.onDataSaverChanged(boolean) is still present on 202602260 and is a single-instruction setIconVisibility(slot, arg), so a before-hook that rewrites the argument is the smallest safe adapter and leaves the DataSaverController listener registration untouched. Carrier re-verified on second pass; the local card still has no adapter, so the row stays unimplemented. OPEN QUESTION for the next pass (not a status change): the local status_bar_icons card already serialises these same literals. The generic adapter IconBlockListHooks installs before-hooks on MiuiStatusIconContainer.setIgnoredSlots/addIgnoredSlots and drives MiuiStatusIconContainer.ignoredSlots, and the host simultaneously drives IconManager.mBlockList - on 202602260 HomeStatusBarIconBlockListBinder.bind -> HomeStatusBarIconBlockListBinder$bind$1$1$1.emit -> IconManager.setBlockList -> refreshIconGroup -> StatusIconDisplayable.setBlocked, and MiuiStatusIconContainer.onLayout skips the same icons through both ignoredSlots and isIconBlocked(). The slot literals in the local card do match this build for volume/mute (\"volume\" literal) and no_sim, so a mode-2 entry can plausibly take effect; but the local adapter was written for the ignoredSlots mechanism only. Whether the two visibility paths still agree after the local hook runs, and whether mode 11/12 render as intended for the modern wifi/mobile binders, is NOT established by this read-only pass and is not device-accepted. Recorded as an open item so nobody reads audited_carrier_found_not_migrated as proof the rows are dead.",
+      "verificationPass": "second-pass-read-only"
+    },
+    {
+      "key": "prefs_key_system_ui_status_bar_icon_volume",
+      "reviewArea": "status_bar",
+      "title": "静音",
+      "status": "audited_carrier_found_not_migrated",
+      "hostCarrier": [
+        "dex_method:Lcom/android/systemui/statusbar/phone/PhoneStatusBarPolicy;-><init>(...)V assigns mSlotMute from the literal const-string \"volume\" (smali line: const-string/jumbo p1, \"volume\" / iput-object p1, ...->mSlotMute:Ljava/lang/String;).",
+        "dex_method:Lcom/android/systemui/statusbar/phone/MiuiPhoneStatusBarPolicy;->updateVolumeZen()V calls StatusBarIconControllerImpl.setIcon(text, mSlotMute, res) and setIconVisibility(mSlotMute, visible).",
+        "MT dex_strings exact search for \"volume\" returns 17 hits; PhoneStatusBarPolicy is one of the owning classes. The earlier \"0 hits\" note in this manifest was an overview-search artifact, not an absence.",
+        "dex_field:Lcom/android/systemui/statusbar/phone/MiuiIconManagerUtils;->RIGHT_BLOCK_LIST:Ljava/util/ArrayList; contains the *other* spelling \"mute\" (clinit), so the shared list and the published slot use different names.",
+        "Third pass (read-only, same MT workspace 82gixxhb): the local status_bar_icons adapter was read end to end and it is a real consumer of this producer, on BOTH paths - it installs before-hooks on the producer side (HomeStatusBarIconBlockListBinder$bind$1$1$1.emit, ControlCenterFakeStatusIcons/ControlCenterStatusBarIcon onAttachedToWindow/onFinishInflate, KeyguardStatusBarViewController.onViewAttached, MiuiQSHeaderView.onAttachedToWindow, MiuiPhoneStatusBarView.updateCutoutLocation) and on the container side (MiuiStatusIconContainer.setIgnoredSlots/addIgnoredSlots). The current-pass boundary is therefore not \"no adapter\"; it is \"adapter reachable, runtime result unverified\". No status change and no device action were performed."
+      ],
+      "determination": "A local adapter consumes this producer on 202602260, on both the container ignoredSlots path and the host's own block-list producer path. The row is not \"carrier found but no adapter\"; the remaining gap is runtime agreement of the two visibility paths and modes 11/12, which is device acceptance only.",
+      "boundary": "Corrected on re-audit (see the corrections section of the markdown). The earlier statement \"no \\\"volume\\\" literal exists in this APK\" was wrong: the ringer-mute slot string is still the literal \"volume\", assigned to PhoneStatusBarPolicy.mSlotMute from const-string in <init> and consumed by MiuiPhoneStatusBarPolicy.updateVolumeZen(). What is absent from the shared lists is the \"volume\" spelling - RIGHT_BLOCK_LIST/CONTROL_CENTER_BLOCK_LIST carry \"mute\" instead. So the row is not inert because the slot name vanished; it is unmigrated because the local card drives MiuiStatusIconContainer.ignoredSlots and never adds either spelling. Both literal spellings, the publisher and the consumer are now recorded. No adapter was written. OPEN QUESTION for the next pass (not a status change): the local status_bar_icons card already serialises these same literals. The generic adapter IconBlockListHooks installs before-hooks on MiuiStatusIconContainer.setIgnoredSlots/addIgnoredSlots and drives MiuiStatusIconContainer.ignoredSlots, and the host simultaneously drives IconManager.mBlockList - on 202602260 HomeStatusBarIconBlockListBinder.bind -> HomeStatusBarIconBlockListBinder$bind$1$1$1.emit -> IconManager.setBlockList -> refreshIconGroup -> StatusIconDisplayable.setBlocked, and MiuiStatusIconContainer.onLayout skips the same icons through both ignoredSlots and isIconBlocked(). The slot literals in the local card do match this build for volume/mute (\"volume\" literal) and no_sim, so a mode-2 entry can plausibly take effect; but the local adapter was written for the ignoredSlots mechanism only. Whether the two visibility paths still agree after the local hook runs, and whether mode 11/12 render as intended for the modern wifi/mobile binders, is NOT established by this read-only pass and is not device-accepted. Recorded as an open item so nobody reads audited_carrier_found_not_migrated as proof the rows are dead.",
+      "verificationPass": "second-pass-read-only"
+    },
+    {
+      "key": "prefs_key_system_ui_status_bar_hide_icon_speakerphone",
+      "reviewArea": "status_bar",
+      "title": "隐藏免提图标",
+      "status": "audited_no_current_carrier",
+      "hostCarrier": [
+        "MT dex-string search \"speakerphone\": only DemoStatusIcons and DemoModeFragment.",
+        "Upstream hooks StatusBarIconControllerImpl.setIcon(String, StatusBarIcon) and forces StatusBarIcon.visible=false for the \"speakerphone\" slot."
+      ],
+      "determination": "No published or consumed speakerphone slot exists on 202602260.",
+      "boundary": "The only occurrences of the slot name are in the demo-mode dispatcher, which is not the in-call status-bar path. There is no producer to suppress, so no hook was written.",
+      "verificationPass": "second-pass-read-only"
+    },
+    {
+      "key": "prefs_key_system_ui_status_bar_hide_icon_call_record",
+      "reviewArea": "status_bar",
+      "title": "隐藏录音图标",
+      "status": "audited_no_current_carrier",
+      "hostCarrier": [
+        "MT dex-string/search for \"call_record\" and \"record\": 0 and 0 hits in MiuiSystemUI.apk (82gixxhb).",
+        "Upstream hooks the same setIcon path with slot name \"call_record\"."
+      ],
+      "determination": "The slot name does not exist on this host at all.",
+      "boundary": "Upstream's slot name has no current producer or consumer: neither the block lists nor any dex string in the current APK contains it. Nothing can be hidden, so no hook was written.",
+      "verificationPass": "second-pass-read-only"
+    },
+    {
+      "key": "prefs_key_system_ui_status_bar_icon_mobile_network_signal_no_card",
+      "reviewArea": "status_bar",
+      "title": "无 SIM 卡图标",
+      "status": "audited_carrier_found_not_migrated",
+      "hostCarrier": [
+        "dex_method:Lcom/android/systemui/statusbar/phone/MiuiStatusBarSignalPolicy;-><init>(...)V assigns mSlotNoSim from Context.getString(0x7f141032); resource:0x7f141032 = \"no_sim\" and resource:0x7f14079c = \"No SIM\".",
+        "dex_method:Lcom/android/systemui/statusbar/phone/MiuiStatusBarSignalPolicy;->updateNoSimIcon(Ljava/lang/String;)V uses mLastShowNoSim and StatusBarIconControllerImpl.setIconVisibility(mSlotNoSim, ...).",
+        "dex_method:Lcom/android/systemui/statusbar/views/MiuiStatusIconContainer;->onLayout(ZIIII)V reads ignoredSlots, calls StatusIconDisplayable.getSlot() and List.contains; setIgnoredSlots is called by MiuiQSHeaderView.onAttachedToWindow and MiuiPhoneStatusBarView.updateCutoutLocation, and addIgnoredSlots by ControlCenterStatusBarIcon.onAttachedToWindow.",
+        "Third pass (read-only, same MT workspace 82gixxhb): the local status_bar_icons adapter was read end to end and it is a real consumer of this producer, on BOTH paths - it installs before-hooks on the producer side (HomeStatusBarIconBlockListBinder$bind$1$1$1.emit, ControlCenterFakeStatusIcons/ControlCenterStatusBarIcon onAttachedToWindow/onFinishInflate, KeyguardStatusBarViewController.onViewAttached, MiuiQSHeaderView.onAttachedToWindow, MiuiPhoneStatusBarView.updateCutoutLocation) and on the container side (MiuiStatusIconContainer.setIgnoredSlots/addIgnoredSlots). The current-pass boundary is therefore not \"no adapter\"; it is \"adapter reachable, runtime result unverified\". No status change and no device action were performed."
+      ],
+      "determination": "A local adapter consumes this producer on 202602260, on both the container ignoredSlots path and the host's own block-list producer path. The row is not \"carrier found but no adapter\"; the remaining gap is runtime agreement of the two visibility paths and modes 11/12, which is device acceptance only.",
+      "boundary": "The first pass said it was \"not statically decidable\" whether the container's ignoredSlots filter reaches this publisher. It is decidable: MiuiStatusIconContainer.onLayout resolves each child through StatusIconDisplayable.getSlot() and skips it when ignoredSlots.contains(slot), and the container's ignoredSlots is populated by MiuiQSHeaderView, MiuiPhoneStatusBarView and ControlCenterStatusBarIcon, every one of which passes MiuiIconManagerUtils.RIGHT_BLOCK_LIST or a per-view list. The slot string itself is \"no_sim\" (resource 0x7f141032) and mSlotNoSim is a single-assignment final field. Carrier recorded; no adapter was written. OPEN QUESTION for the next pass (not a status change): the local status_bar_icons card already serialises these same literals. The generic adapter IconBlockListHooks installs before-hooks on MiuiStatusIconContainer.setIgnoredSlots/addIgnoredSlots and drives MiuiStatusIconContainer.ignoredSlots, and the host simultaneously drives IconManager.mBlockList - on 202602260 HomeStatusBarIconBlockListBinder.bind -> HomeStatusBarIconBlockListBinder$bind$1$1$1.emit -> IconManager.setBlockList -> refreshIconGroup -> StatusIconDisplayable.setBlocked, and MiuiStatusIconContainer.onLayout skips the same icons through both ignoredSlots and isIconBlocked(). The slot literals in the local card do match this build for volume/mute (\"volume\" literal) and no_sim, so a mode-2 entry can plausibly take effect; but the local adapter was written for the ignoredSlots mechanism only. Whether the two visibility paths still agree after the local hook runs, and whether mode 11/12 render as intended for the modern wifi/mobile binders, is NOT established by this read-only pass and is not device-accepted. Recorded as an open item so nobody reads audited_carrier_found_not_migrated as proof the rows are dead.",
+      "verificationPass": "second-pass-read-only"
+    },
+    {
+      "key": "prefs_key_system_ui_status_bar_icon_new_hd",
+      "reviewArea": "status_bar",
+      "title": "新 HD 图标",
+      "status": "audited_carrier_found_not_migrated",
+      "hostCarrier": [
+        "dex_field:Lcom/android/systemui/statusbar/pipeline/mobile/ui/viewmodel/MiuiCellularIconVM;->volteVisibleGlobal:Lkotlinx/coroutines/flow/ReadonlyStateFlow;",
+        "dex_field:...;->hideVolte / visibleR2Hd1 / speechHd (ReadonlyStateFlow)",
+        "dex_field:Lcom/android/systemui/statusbar/policy/HDController;->hideVolteMap:Landroid/util/SparseBooleanArray;",
+        "Third pass: unlike the six block-list rows this row has NO consumer in the local adapter. The host moved HD/VoLTE visibility into MiuiCellularIconVM per-SIM ReadonlyStateFlows (volteVisibleGlobal, hideVolte, visibleR2Hd1, speechHd) plus HDController.hideVolteMap. A faithful reproduction must bind those exact flow identities and was not written. Still unmigrated; no placeholder switch."
+      ],
+      "determination": "Host HD/VoLTE state moved into per-SIM flows and HDController.",
+      "boundary": "Upstream used the shared-list slot \"hd\" plus MobilePublicHookV's field writes (smallHdVisible / volteVisibleCn / volteVisibleGlobal). Neither the \"hd\" list entry nor those field names exist on 202602260; the state now lives in MiuiCellularIconVM per-SIM ReadonlyStateFlows (volteVisibleGlobal, hideVolte, visibleR2Hd1, speechHd) and in HDController.hideVolteMap. A current-host adapter needs those exact flow identities and was not written.",
+      "verificationPass": "second-pass-read-only"
+    },
+    {
+      "key": "prefs_key_system_ui_status_bar_icon_small_hd",
+      "reviewArea": "status_bar",
+      "title": "小 HD 图标",
+      "status": "audited_carrier_found_not_migrated",
+      "hostCarrier": [
+        "MT field search: no smallHdVisible member exists; MiuiCellularIconVM.visibleR2Hd1 is the closest current R2 HD flow.",
+        "Upstream MobilePublicHookV.kt:172 updateIconState(thisObject, \"smallHdVisible\", ...)",
+        "Third pass: unlike the six block-list rows this row has NO consumer in the local adapter. The host moved HD/VoLTE visibility into MiuiCellularIconVM per-SIM ReadonlyStateFlows (volteVisibleGlobal, hideVolte, visibleR2Hd1, speechHd) plus HDController.hideVolteMap. A faithful reproduction must bind those exact flow identities and was not written. Still unmigrated; no placeholder switch."
+      ],
+      "determination": "Upstream field name is gone; the flow carrier is not migrated.",
+      "boundary": "See the new-HD row. The upstream target field smallHdVisible is absent from the current APK; the surviving R2 HD signal is MiuiCellularIconVM.visibleR2Hd1. No local adapter was written.",
+      "verificationPass": "second-pass-read-only"
+    },
+    {
+      "key": "prefs_key_system_ui_status_bar_icon_big_hd",
+      "reviewArea": "status_bar",
+      "title": "大 HD 图标",
+      "status": "audited_carrier_found_not_migrated",
+      "hostCarrier": [
+        "dex_field:.../MiuiCellularIconVM;->volteVisibleGlobal:...ReadonlyStateFlow; and MiuiMobileIconVMImpl/MiuiSatelliteIconVM equivalents",
+        "Upstream MobilePublicHookV.kt:173-174 writes volteVisibleCn and volteVisibleGlobal.",
+        "Third pass: unlike the six block-list rows this row has NO consumer in the local adapter. The host moved HD/VoLTE visibility into MiuiCellularIconVM per-SIM ReadonlyStateFlows (volteVisibleGlobal, hideVolte, visibleR2Hd1, speechHd) plus HDController.hideVolteMap. A faithful reproduction must bind those exact flow identities and was not written. Still unmigrated; no placeholder switch."
+      ],
+      "determination": "voiteVisibleGlobal survives, volteVisibleCn does not.",
+      "boundary": "Upstream wrote both volteVisibleCn and volteVisibleGlobal; only volteVisibleGlobal (and its MiuiMobileIconVMImpl/MiuiSatelliteIconVM counterparts) remains on this host, so a faithful reproduction would cover the global variant only. No adapter was written.",
+      "verificationPass": "second-pass-read-only"
+    },
+    {
+      "key": "prefs_key_system_ui_status_bar_big_mobile_network_type",
+      "reviewArea": "status_bar",
+      "title": "大网络类型图标",
+      "status": "audited_not_a_feature",
+      "hostCarrier": [
+        "Upstream XML marks this row android:isPreferenceVisible=\"false\" and no source file references the key (0 hits in the reference enumeration)."
+      ],
+      "determination": "Dead row: hidden in upstream and never read.",
+      "boundary": "The row is hidden in the upstream XML and no hook, bridge or UI code reads the key, so it never described a reachable feature. No local switch was created.",
+      "verificationPass": "second-pass-read-only"
+    },
+    {
+      "key": "prefs_key_system_ui_statusbar_music_tip",
+      "reviewArea": "status_bar",
+      "title": "使用前注意事项（SuperLyric 依赖）",
+      "status": "audited_not_a_feature",
+      "hostCarrier": [
+        "Upstream XML sets android:enabled=\"false\" and android:layout=\"@layout/headtip_tip\"; the row only renders static instruction text."
+      ],
+      "determination": "Instruction banner, not a preference.",
+      "boundary": "The row is a disabled text banner that tells the user to install the third-party SuperLyric module. It stores nothing and is not a feature, so it is not migrated.",
+      "verificationPass": "second-pass-read-only"
+    },
+    {
+      "key": "prefs_key_system_ui_statusbar_music_switch",
+      "reviewArea": "status_bar",
+      "title": "歌词：启用",
+      "status": "audited_external_dependency",
+      "hostCarrier": [
+        "Upstream FocusNotifLyric.kt consumes com.hchen.superlyricapi.SuperLyricData; MT searches for \"superlyric\"/\"SuperLyric\" return 0 hits in MiuiSystemUI.apk (82gixxhb).",
+        "Host-side carrier that does survive: dex_class:Lcom/android/systemui/statusbar/widget/FocusedTextView; (setMarqueeRepeatLimit + TextView base)."
+      ],
+      "determination": "The lyric pipeline is driven by a third-party module this project does not depend on.",
+      "boundary": "The upstream lyric feature is not a SystemUI-only hook: it is fed by the separate SuperLyric module through the SuperLyric API (lyric text, scroll delay, marquee speed). This project has no such dependency and no superlyric class exists in the current host images, so the pipeline cannot be reproduced here. The host FocusedTextView exists, but a self-contained replacement would have to invent its own lyric source; that is out of scope for this migration. No empty switch is exposed.",
+      "verificationPass": "second-pass-read-only"
+    },
+    {
+      "key": "prefs_key_system_ui_statusbar_music_show_app",
+      "reviewArea": "status_bar",
+      "title": "歌词：通知注册在 App 上",
+      "status": "audited_external_dependency",
+      "hostCarrier": [
+        "Upstream VariousThirdApps.java:104 initialises MusicHooks only when this key is on; both this and the parent key are read by MusicHooks.kt."
+      ],
+      "determination": "Same SuperLyric dependency as the parent switch.",
+      "boundary": "See the music-switch row. Upstream used this key to decide whether the lyric notification is posted by the module instead of the host app, which only exists as part of the SuperLyric integration. Not migrated.",
+      "verificationPass": "second-pass-read-only"
+    },
+    {
+      "key": "prefs_key_system_ui_statusbar_music_show_notific",
+      "reviewArea": "status_bar",
+      "title": "歌词：显示通知歌词",
+      "status": "audited_external_dependency",
+      "hostCarrier": [
+        "Upstream FocusNotifLyric.kt:68 reads the key to skip the bundled notification; no current host counterpart."
+      ],
+      "determination": "Same SuperLyric dependency.",
+      "boundary": "See the music-switch row. The toggle only gates the module-owned lyric notification, which depends on the SuperLyric API. Not migrated.",
+      "verificationPass": "second-pass-read-only"
+    },
+    {
+      "key": "prefs_key_system_ui_statusbar_music_hide_aod",
+      "reviewArea": "status_bar",
+      "title": "歌词：不在息屏下显示焦点通知",
+      "status": "audited_external_dependency",
+      "hostCarrier": [
+        "Upstream MusicBaseHook.kt:84 reads the key inside the SuperLyric callback path."
+      ],
+      "determination": "Same SuperLyric dependency.",
+      "boundary": "See the music-switch row. Not migrated.",
+      "verificationPass": "second-pass-read-only"
+    },
+    {
+      "key": "prefs_key_system_ui_statusbar_music_show_aod_mode",
+      "reviewArea": "status_bar",
+      "title": "歌词：使用自定义焦点息屏布局",
+      "status": "audited_external_dependency",
+      "hostCarrier": [
+        "Upstream MusicBaseHook.kt:87 reads the key inside the SuperLyric callback path."
+      ],
+      "determination": "Same SuperLyric dependency.",
+      "boundary": "See the music-switch row. Not migrated.",
+      "verificationPass": "second-pass-read-only"
+    },
+    {
+      "key": "prefs_key_system_ui_statusbar_music_size_n",
+      "reviewArea": "status_bar",
+      "title": "歌词：字体大小",
+      "status": "audited_external_dependency",
+      "hostCarrier": [
+        "Upstream MusicBaseHook.kt:81 reads the slider as the lyric text size."
+      ],
+      "determination": "Same SuperLyric dependency.",
+      "boundary": "See the music-switch row. The slider only sizes module-drawn lyric text. Not migrated.",
+      "verificationPass": "second-pass-read-only"
+    },
+    {
+      "key": "prefs_key_system_ui_statusbar_music_hide_clock",
+      "reviewArea": "status_bar",
+      "title": "歌词：隐藏状态栏时钟",
+      "status": "audited_external_dependency",
+      "hostCarrier": [
+        "Upstream SystemUIB/V.java initialises HideFakeStatusBar for this key; MT search for \"HideFakeStatusBar\"/\"hideFakeStatusBar\" returns 0 hits in MiuiSystemUI.apk.",
+        "Host carrier that survives: dex_class:Lcom/android/systemui/statusbar/widget/FocusedTextView; and the collapsed status-bar fragment is not MiuiCollapsedStatusBarFragment (0 hits)."
+      ],
+      "determination": "Upstream hook class does not exist on this host; the feature is SuperLyric-scoped.",
+      "boundary": "Upstream hid the host clock while the module showed the lyric focus notification. The class it hooked (HideFakeStatusBar) and its fragment (MiuiCollapsedStatusBarFragment) do not exist on 202602260, and the behaviour only matters together with the SuperLyric notification. Not migrated.",
+      "verificationPass": "second-pass-read-only"
+    },
+    {
+      "key": "prefs_key_system_ui_statusbar_music_click_clock",
+      "reviewArea": "status_bar",
+      "title": "歌词：点按显示时钟",
+      "status": "audited_external_dependency",
+      "hostCarrier": [
+        "Upstream MusicBaseHook.kt:93 reads the key."
+      ],
+      "determination": "Same SuperLyric dependency.",
+      "boundary": "See the music-switch row. Not migrated.",
+      "verificationPass": "second-pass-read-only"
+    },
+    {
+      "key": "prefs_key_system_ui_statusbar_music_speed",
+      "reviewArea": "status_bar",
+      "title": "歌词：滚动速率",
+      "status": "audited_external_dependency",
+      "hostCarrier": [
+        "Upstream FocusNotifLyric.kt:65 scales this value into mPixelsPerMs of the host Marquee."
+      ],
+      "determination": "Same SuperLyric dependency.",
+      "boundary": "See the music-switch row. The value only tunes the module-driven lyric marquee. Not migrated.",
+      "verificationPass": "second-pass-read-only"
+    },
+    {
+      "key": "prefs_key_system_ui_statusbar_music_scroll_delay",
+      "reviewArea": "status_bar",
+      "title": "歌词：滚动延迟",
+      "status": "audited_external_dependency",
+      "hostCarrier": [
+        "Upstream FocusNotifLyric.kt:62 multiplies this value by 100 ms for the lyric start delay."
+      ],
+      "determination": "Same SuperLyric dependency.",
+      "boundary": "See the music-switch row. Not migrated.",
+      "verificationPass": "second-pass-read-only"
+    },
+    {
+      "key": "prefs_key_system_ui_statusbar_music_width",
+      "reviewArea": "status_bar",
+      "title": "歌词：末尾垫宽",
+      "status": "audited_external_dependency",
+      "hostCarrier": [
+        "Upstream FocusNotifLyric.kt:59 subtracts this value from the marquee width."
+      ],
+      "determination": "Same SuperLyric dependency.",
+      "boundary": "See the music-switch row. Not migrated.",
+      "verificationPass": "second-pass-read-only"
+    }
+  ],
+  "correctionsAppliedOnSecondPass": [
+    "prefs_key_system_ui_status_bar_icon_volume: the previous claim that no \"volume\" literal exists in the APK was false; PhoneStatusBarPolicy.mSlotMute is assigned the literal \"volume\".",
+    "prefs_key_system_ui_status_bar_icon_airplane: the producer was attributed to a non-existent MiuiPhoneStatusBarPolicy.updateAirplaneModeIcon; the owner is MiuiStatusBarSignalPolicy.updateAirplaneModeIcon(Z).",
+    "prefs_key_system_ui_status_bar_icon_hotspot: the \"only demo-mode mention\" note was inaccurate; PhoneStatusBarPolicy publishes the status-bar hotspot slot.",
+    "Shared-list semantics (membership = hide) and the ignoredSlots consumer chain are now recorded as verified facts instead of open questions."
+  ],
+  "openItemsForNextPass": [
+    "The generic IconBlockListHooks adapter drives MiuiStatusIconContainer.ignoredSlots while the host independently drives IconManager.mBlockList; confirm on device that both paths agree and that modes 11/12 behave for the modern wifi/mobile binders before treating these six icon rows as reachable."
+  ]
+}

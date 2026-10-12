@@ -1,9 +1,20 @@
 /* Copyright (C) 2026 YGHFv; SPDX-License-Identifier: AGPL-3.0-or-later */
 package io.github.YGHFv.HyperExtend.hook.feature.systemui
 
+import io.github.YGHFv.HyperExtend.core.PercentageSettings
+
+/**
+ * 「原位数值」分支的靶子与算术。
+ *
+ * 两个开关现在是 [PercentageSettings] 名下的子项（`slider_percentage.brightness` /
+ * `slider_percentage.volume`），不再是两张独立卡片 —— 它们和浮层是同一个功能在同一位点
+ * 的两种显示方式，拆成两张卡片只会让用户以为自己开了两件事。
+ * 这里保留独立的对象只是为了让靶子/换算有唯一的归属，[features] 不再是「功能目录里的 id」，
+ * 而是 `PercentageSettings` 的子项键。
+ */
 internal object SliderValuePolicy {
-    const val BRIGHTNESS = "control_center_brightness_value"
-    const val VOLUME = "control_center_volume_value"
+    const val BRIGHTNESS = PercentageSettings.BRIGHTNESS
+    const val VOLUME = PercentageSettings.VOLUME
     val features = listOf(BRIGHTNESS, VOLUME)
 
     fun supported(systemUi: Long?, plugin: Long?) = systemUi == 202602260L && plugin == 183022200L

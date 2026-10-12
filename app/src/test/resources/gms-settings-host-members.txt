@@ -1,0 +1,8 @@
+Lcom/android/systemui/plugins/ActivityStarter;->startActivity(Landroid/content/Intent;ZLcom/android/systemui/animation/ActivityTransitionAnimator$Controller;ZLandroid/os/UserHandle;)V
+Lcom/android/systemui/plugins/FalsingManager;->isFalseLongTap(I)Z
+Lcom/android/systemui/qs/tileimpl/MiuiQSFactory;->activityStarter:Ldagger/Lazy;
+Lcom/android/systemui/statusbar/phone/ActivityStarterImpl;->getActivityStarterInternal()Lcom/android/systemui/statusbar/phone/ActivityStarterInternal;
+Lcom/android/systemui/statusbar/phone/ActivityStarterImpl;->startActivity(Landroid/content/Intent;ZLcom/android/systemui/animation/ActivityTransitionAnimator$Controller;ZLandroid/os/UserHandle;)V
+Lcom/android/systemui/statusbar/phone/ActivityStarterInternal;->startActivity(Landroid/content/Intent;ZLcom/android/systemui/animation/ActivityTransitionAnimator$Controller;ZLandroid/os/UserHandle;)V
+Lcom/android/systemui/statusbar/phone/ActivityStarterInternalImpl;->startActivity(Landroid/content/Intent;ZLcom/android/systemui/animation/ActivityTransitionAnimator$Controller;ZLandroid/os/UserHandle;)V
+Lcom/android/systemui/statusbar/phone/LegacyActivityStarterInternalImpl;->startActivity(Landroid/content/Intent;ZLcom/android/systemui/animation/ActivityTransitionAnimator$Controller;ZLandroid/os/UserHandle;)V

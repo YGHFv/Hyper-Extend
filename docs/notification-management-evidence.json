@@ -1,0 +1,197 @@
+{
+  "verification": "Complete read-only current MT member captures; no runtime acceptance. See remaining9-root-artifacts.json and pending14-migration-2026-10-11.md for root artifact provenance. Wrappers are analysis-only and must never be installed.",
+  "deviceSdk": 37,
+  "evidence": [
+    {
+      "locator": "dex_method:Lcom/android/settings/notification/MiuiNotificationBackend;->loadAppRow(Landroid/content/Context;Landroid/content/pm/PackageManager;Landroid/content/pm/PackageInfo;)Lcom/android/settings/notification/MiuiNotificationBackend$AppRow;",
+      "sha256": "d75317b00351c96dfd1d7cc320dc569ce5137b45fb85fa2db08e1bb09d24777d",
+      "raw": ".workbuddy/tmp/mt-systemui/notification-manage-0.json",
+      "pages": 1,
+      "artifact": "settings",
+      "contains": [
+        ".method public loadAppRow(Landroid/content/Context;Landroid/content/pm/PackageManager;Landroid/content/pm/PackageInfo;)Lcom/android/settings/notification/MiuiNotificationBackend$AppRow;"
+      ]
+    },
+    {
+      "locator": "dex_method:Lcom/android/settings/notification/NotificationSettingsHelper;->setNotificationsEnabledForPackage(Landroid/content/Context;Ljava/lang/String;Z)V",
+      "sha256": "4a710b57ea0b88d6d5b1ea611db2c09fdd2096a5977cf28749811e64df8fab70",
+      "raw": ".workbuddy/tmp/mt-systemui/notification-manage-1.json",
+      "pages": 1,
+      "artifact": "settings",
+      "contains": [
+        ".method public static setNotificationsEnabledForPackage(Landroid/content/Context;Ljava/lang/String;Z)V"
+      ]
+    },
+    {
+      "locator": "dex_method:Lmiui/util/NotificationFilterHelper;->isNotificationForcedFor(Landroid/content/Context;Ljava/lang/String;)Z",
+      "sha256": "af1ec85a6c79516598db52c8aa8040deb5d318f224c14af3acbc6a85c1f89fb0",
+      "raw": ".workbuddy/tmp/mt-systemui/notification-manage-2.json",
+      "pages": 1,
+      "artifact": "miui-framework",
+      "contains": [
+        ".method public static blacklist isNotificationForcedFor(Landroid/content/Context;Ljava/lang/String;)Z"
+      ]
+    },
+    {
+      "locator": "dex_method:Lmiui/util/NotificationFilterHelper;->enableNotifications(Landroid/content/Context;Ljava/lang/String;IZ)V",
+      "sha256": "0a553a46c14b85444e8aaf52aa6684f7f7d6095c3395d112d7f5615878dd4e14",
+      "raw": ".workbuddy/tmp/mt-systemui/notification-manage-3.json",
+      "pages": 1,
+      "artifact": "miui-framework",
+      "contains": [
+        ".method public static blacklist enableNotifications(Landroid/content/Context;Ljava/lang/String;IZ)V"
+      ]
+    },
+    {
+      "locator": "dex_method:Lmiui/util/NotificationFilterHelper;->enableNotifications(Landroid/content/Context;Ljava/lang/String;Z)V",
+      "sha256": "390ab862f28c67e7d328ed18158aabc62e9df1ee8f2a09587d603e4198dc5ef4",
+      "raw": ".workbuddy/tmp/mt-systemui/notification-manage-4.json",
+      "pages": 1,
+      "artifact": "miui-framework",
+      "contains": [
+        ".method public static blacklist enableNotifications(Landroid/content/Context;Ljava/lang/String;Z)V"
+      ]
+    },
+    {
+      "locator": "dex_field:Lcom/android/settings/notification/MiuiNotificationBackend$AppRow;->systemApp:Z",
+      "sha256": "1e444445a7ea05fc4a9dfc774e1b83e0911c31f3a64887da6219228cdca2ffcd",
+      "raw": ".workbuddy/tmp/mt-systemui/notification-manage-5.json",
+      "pages": 1,
+      "artifact": "settings",
+      "contains": [
+        ".field public systemApp:Z"
+      ]
+    },
+    {
+      "locator": "dex_field:Lcom/android/settings/notification/MiuiNotificationBackend$AppRow;->lockedChannelId:Ljava/lang/String;",
+      "sha256": "f0bbe5a39f696be515c34788f0e4f32d14db9d52aa218de595430c76914bb086",
+      "raw": ".workbuddy/tmp/mt-systemui/notification-manage-6.json",
+      "pages": 1,
+      "artifact": "settings",
+      "contains": [
+        ".field public lockedChannelId:Ljava/lang/String;"
+      ]
+    },
+    {
+      "locator": "dex_field:Lcom/android/settings/notification/MiuiNotificationBackend$AppRow;->uid:I",
+      "sha256": "3485bc568c70a338800eace459ee919844e349e322f0a21fdc1746d48dad601d",
+      "raw": ".workbuddy/tmp/mt-systemui/notification-manage-7.json",
+      "pages": 1,
+      "artifact": "settings",
+      "contains": [
+        ".field public uid:I"
+      ]
+    },
+    {
+      "locator": "dex_method:Lcom/android/settings/notification/BaseNotificationSettings;->loadAppRowData()V",
+      "sha256": "3fbe23ca06dca81c134d1855e2b37b43d677c247b1b5ed270ea6ac43fa34bb91",
+      "raw": ".workbuddy/tmp/mt-systemui/notification-manage-8.json",
+      "pages": 1,
+      "artifact": "settings",
+      "contains": [
+        ".method protected loadAppRowData()V"
+      ]
+    },
+    {
+      "locator": "dex_method:Lcom/android/settings/notification/AppNotificationSettings$1;->doInBackground([Ljava/lang/Void;)Ljava/lang/Void;",
+      "sha256": "8dd7a28f998b2c0f2dfab35f26c61af2bf070b06c0110f6ba68f970e7c331e0b",
+      "raw": ".workbuddy/tmp/mt-systemui/notification-manage-9.json",
+      "pages": 1,
+      "artifact": "settings",
+      "contains": [
+        ".method protected varargs doInBackground([Ljava/lang/Void;)Ljava/lang/Void;"
+      ]
+    },
+    {
+      "locator": "dex_method:Lcom/android/settings/notification/AppNotificationSettings$2;->onPreferenceChange(Landroidx/preference/Preference;Ljava/lang/Object;)Z",
+      "sha256": "a0fb381c079c719899fbbe7706f5fb98e5c628ee72ab4ceb68417b10d8a6ce81",
+      "raw": ".workbuddy/tmp/mt-systemui/notification-manage-10.json",
+      "pages": 1,
+      "artifact": "settings",
+      "contains": [
+        ".method public onPreferenceChange(Landroidx/preference/Preference;Ljava/lang/Object;)Z"
+      ]
+    },
+    {
+      "locator": "dex_method:Lcom/android/settings/notification/app/AppNotificationSettings$1;->doInBackground([Ljava/lang/Void;)Ljava/lang/Void;",
+      "sha256": "fae436101af79b4199907a8e1cd75015d06a7d2ac201bb8bdaeae2f43543fae7",
+      "raw": ".workbuddy/tmp/mt-systemui/notification-manage-11.json",
+      "pages": 1,
+      "artifact": "settings",
+      "contains": [
+        ".method protected varargs doInBackground([Ljava/lang/Void;)Ljava/lang/Void;"
+      ]
+    },
+    {
+      "locator": "dex_method:Lcom/android/settings/notification/app/AppNotificationSettings$2;->onPreferenceChange(Landroidx/preference/Preference;Ljava/lang/Object;)Z",
+      "sha256": "c5bbcc742df1a34cec78ad4eb85aa680966c0bfc610bc2d8c8c2977fc9f4137e",
+      "raw": ".workbuddy/tmp/mt-systemui/notification-manage-12.json",
+      "pages": 1,
+      "artifact": "settings",
+      "contains": [
+        ".method public onPreferenceChange(Landroidx/preference/Preference;Ljava/lang/Object;)Z"
+      ]
+    },
+    {
+      "locator": "dex_method:Lcom/android/server/notification/PreferencesHelper;->updateNotificationChannel(Ljava/lang/String;ILandroid/app/NotificationChannel;ZIZ)V",
+      "sha256": "ae67aba1c3b602cae5ba2e9f7c1c144743365886d5b232e36021f4a83ff130d1",
+      "raw": ".workbuddy/tmp/mt-systemui/notification-manage-13.json",
+      "pages": 1,
+      "artifact": "services",
+      "contains": [
+        ".method public updateNotificationChannel(Ljava/lang/String;ILandroid/app/NotificationChannel;ZIZ)V"
+      ]
+    },
+    {
+      "locator": "dex_method:Landroid/app/NotificationChannel;->isBlockable()Z",
+      "sha256": "9024156c2302b8cb1b8d607a1ce8cb7980e710cc67d046f7ca5d4ddb60a5577b",
+      "raw": ".workbuddy/tmp/mt-systemui/notification-manage-14.json",
+      "pages": 1,
+      "artifact": "framework",
+      "contains": [
+        ".method public whitelist isBlockable()Z"
+      ]
+    },
+    {
+      "locator": "dex_method:Lcom/android/server/notification/NotificationManagerService;->updateNotificationChannelInt(Ljava/lang/String;ILandroid/app/NotificationChannel;Z)V",
+      "sha256": "796c9e68fa332be63d787f7aac2dba82f01624c3905dc888f5b72698fdf2966b",
+      "raw": ".workbuddy/tmp/mt-systemui/notification-manage-15.json",
+      "pages": 1,
+      "artifact": "services",
+      "contains": [
+        ".method updateNotificationChannelInt(Ljava/lang/String;ILandroid/app/NotificationChannel;Z)V"
+      ]
+    }
+  ],
+  "artifacts": {
+    "framework": {
+      "mcpPath": "/storage/emulated/0/MT2/mcp/pending14-20261011/framework-dex-evidence.apk",
+      "sourcePath": "/system/framework/framework.jar",
+      "sha256": "f8af87fa975ca7e529aeeeb193a4e77bea650b0e9b611259e600c248ac3b4bc4",
+      "syntheticManifest": true,
+      "neverInstall": true
+    },
+    "miui-framework": {
+      "mcpPath": "/storage/emulated/0/MT2/mcp/pending14-20261011/miui-framework-dex-evidence.apk",
+      "sourcePath": "/system_ext/framework/miui-framework.jar",
+      "sha256": "23dc896b8441d4874e2b813c8de322be3619a86d1d2db2230e51d1757be0c974",
+      "syntheticManifest": true,
+      "neverInstall": true
+    },
+    "services": {
+      "mcpPath": "/storage/emulated/0/MT2/mcp/pending14-20261011/services-dex-evidence.apk",
+      "sourcePath": "/system/framework/services.jar",
+      "sha256": "444f275431ba1bc7382f4b786f412e995c4a3cf70c60332ab74b8bb8d772379c",
+      "syntheticManifest": true,
+      "neverInstall": true
+    },
+    "settings": {
+      "mcpPath": "/storage/emulated/0/MT2/mcp/pending14-20261011/Settings.apk",
+      "sourcePath": "/system_ext/priv-app/Settings/Settings.apk",
+      "sha256": "4774deb4c6fb1a9c00b25d7bf35087b3c7bb7c7860a790b72a8742dad5abd342",
+      "packageName": "com.android.settings",
+      "versionCode": 37
+    }
+  },
+  "deviceFingerprint": "Xiaomi/pandora/pandora:17/CP2A.260605.016/OS4.0.0.38.XBLCNXM:user/release-keys"
+}

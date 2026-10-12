@@ -48,6 +48,10 @@ class HyperExtendApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
+        // 结构迁移要赶在任何读取/投影之前：合并过的卡片（见 core/MergedCardMigration）留下的
+        // 老键如果不搬，老用户的开关会在升级后静默消失（新卡片读不到、老键又被过滤掉）。
+        runCatching { HyperSettings.migrateIfNeeded(this) }
+            .onFailure { io.github.YGHFv.HyperExtend.core.ModuleLog.error("settings migration failed", it) }
         io.github.YGHFv.HyperExtend.core.SafeModeSettings.refresh(this)
         registerXposedService()
         // 卡面图片的读权限补授一次。见 NfcCardImage.ensureGranted 的注释：
