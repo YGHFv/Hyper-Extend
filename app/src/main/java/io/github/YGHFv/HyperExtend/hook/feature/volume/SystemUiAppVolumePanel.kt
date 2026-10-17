@@ -1,8 +1,6 @@
 /* Copyright (C) 2026 YGHFv; SPDX-License-Identifier: AGPL-3.0-or-later */
 package io.github.YGHFv.HyperExtend.hook.feature.volume
 
-import io.github.YGHFv.HyperExtend.core.compatibleVersionCode
-
 import android.content.Context
 import android.graphics.BitmapFactory
 import android.graphics.drawable.BitmapDrawable
@@ -38,7 +36,6 @@ internal class SystemUiAppVolumePanel private constructor(private val api: Api) 
 
     fun open(dialog: ViewGroup, controller: Any, data: AppVolumeBridge.Snapshot, ended: () -> Unit, failed: () -> Unit): Boolean {
         if (!ready || active(dialog) || !dialog.isAttachedToWindow ||
-            dialog.context.packageManager.getPackageInfo(PLUGIN, 0).compatibleVersionCode != 183022200L ||
             api.expanded.invoke(dialog) == true || api.animating.invoke(dialog) == true) return false
         val session = Session(dialog, controller, data, ended, failed)
         sessions[dialog] = WeakReference(session)
@@ -447,6 +444,7 @@ internal class SystemUiAppVolumePanel private constructor(private val api: Api) 
             deoptimized = HookRuntime.deoptimize(method, "app_volume/nativeMotion") && deoptimized
         }
         ready = hookCount == 5 && deoptimized
+        ModuleLog.info("app_volume structural validation: systemui_hooks=$hookCount/5 deoptimized=$deoptimized ready=$ready")
         return this
     }
 

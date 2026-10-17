@@ -7,8 +7,6 @@
  */
 package io.github.YGHFv.HyperExtend.hook.feature.volume
 
-import io.github.YGHFv.HyperExtend.core.compatibleVersionCode
-
 import android.content.Context
 import android.content.res.Configuration
 import android.graphics.Color
@@ -33,7 +31,7 @@ import java.util.WeakHashMap
 import java.util.function.Consumer
 import androidx.annotation.RequiresApi
 
-/** Only MiSound 260903; every obfuscated target is recorded in the evidence manifest. */
+/** 仅在卡片结构 hook 完整时启用替换，结构变化时保留原生界面。 */
 @RequiresApi(33)
 internal object MiSoundCardHooks {
     private val cards = WeakHashMap<ViewGroup, WeakReference<Card>>()
@@ -66,15 +64,7 @@ internal object MiSoundCardHooks {
         require(View::class.java.isAssignableFrom(ball.type) && ViewGroup::class.java.isAssignableFrom(page.type))
         require(Handler::class.java.isAssignableFrom(handler.type) && ViewGroup::class.java.isAssignableFrom(item.type))
         var enabled = false
-        var audited: Boolean? = null
-        fun supported(host: Any): Boolean {
-            if (!enabled) return false
-            return audited ?: ((context.get(host) as Context).packageManager
-                .getPackageInfo(AppVolumeSettings.PACKAGE, 0).compatibleVersionCode == 260903L).also {
-                audited = it
-                if (!it) ModuleLog.warn("app_volume card: unaudited MiSound; native UI retained")
-            }
-        }
+        fun supported(): Boolean = enabled
         fun card(host: Any): Card? {
             val root = page.get(host) as? ViewGroup ?: return null
             return cards[root]?.get() ?: Card.create(host, root)?.also { cards[root] = WeakReference(it) }
@@ -82,7 +72,7 @@ internal object MiSoundCardHooks {
         var count = 0
         if (HookRuntime.hook(add, "app_volume/card/window") { chain ->
                 val host = chain.thisObject!!
-                if (!supported(host)) return@hook chain.proceed()
+                if (!supported()) return@hook chain.proceed()
                 // Suppress only this controller's ball; retain its click listener/state machine.
                 if (chain.args[0] === ball.get(host) && card(host) != null) return@hook null
                 if (chain.args[0] === page.get(host)) {
@@ -101,7 +91,7 @@ internal object MiSoundCardHooks {
         for (name in listOf("n", "m", "y")) {
             if (HookRuntime.hookAfter(controller.getDeclaredMethod(name), "app_volume/card/$name") { chain, result ->
                     val host = chain.thisObject!!
-                    if (supported(host)) card(host)?.let {
+                    if (supported()) card(host)?.let {
                         it.layout()
                         if (name == "y" && it.root.isAttachedToWindow && status.getInt(host) == 5000) it.show()
                     }
@@ -110,7 +100,7 @@ internal object MiSoundCardHooks {
         }
         if (HookRuntime.hook(controller.getDeclaredMethod("g"), "app_volume/card/dismiss") { chain ->
                 val host = chain.thisObject!!
-                if (!supported(host) || status.getInt(host) != 5000) return@hook chain.proceed()
+                if (!supported() || status.getInt(host) != 5000) return@hook chain.proceed()
                 val current = card(host) ?: return@hook chain.proceed()
                 if (!current.root.isAttachedToWindow) return@hook chain.proceed()
                 status.setInt(host, 301)
@@ -124,14 +114,14 @@ internal object MiSoundCardHooks {
             }) count++
         if (HookRuntime.hookAfter(ctor, "app_volume/card/pages") { chain, result ->
                 val host = adapterController.get(chain.thisObject)!!
-                if (supported(host)) {
+                if (supported()) {
                     val views = (pages.get(chain.thisObject) as List<*>).filterIsInstance<ViewGroup>()
                     card(host)?.setPages(views)
                 }
                 result
             }) count++
         if (HookRuntime.hookAfter(create, "app_volume/card/create") { chain, result ->
-                if (supported(adapterController.get(chain.thisObject)!!)) {
+                if (supported()) {
                     (item.get(result) as ViewGroup).apply {
                         setOnClickListener(null)
                         isClickable = false
@@ -142,7 +132,7 @@ internal object MiSoundCardHooks {
             }) count++
         if (HookRuntime.hook(bind, "app_volume/card/bind") { chain ->
                 val host = adapterController.get(chain.thisObject)!!
-                if (!supported(host)) return@hook chain.proceed()
+                if (!supported()) return@hook chain.proceed()
                 val target = item.get(chain.args[0]) as ViewGroup
                 val bound = (pages.get(chain.thisObject) as List<*>).getOrNull(chain.args[1] as Int) as? View
                 if (bound != null) {
@@ -156,7 +146,7 @@ internal object MiSoundCardHooks {
             }) count++
         if (HookRuntime.hookAfter(selected, "app_volume/card/pageSelected") { chain, result ->
                 val host = callbackController.get(chain.thisObject)!!
-                if (supported(host)) card(host)?.layout()
+                if (supported()) card(host)?.layout()
                 result
             }) count++
         // Partial hook installation must not leave the old entry hidden without a usable panel.

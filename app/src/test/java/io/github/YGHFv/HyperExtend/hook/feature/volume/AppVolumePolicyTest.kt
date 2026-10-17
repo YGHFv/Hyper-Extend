@@ -40,14 +40,15 @@ class AppVolumePolicyTest {
         assertEquals(150, margin)
         assertEquals(200, AppVolumePolicy.margin(margin, 50, 0))
     }
-    @Test fun featureIsOptInCrossScopeAndReportsLimitedDeviceAcceptance() {
+    @Test fun featureIsOptInCrossScopeAndUsesStructuralAcceptance() {
         val feature = featureById(AppVolumeSettings.FEATURE)!!
         assertFalse(feature.defaultEnabled)
         assertEquals(listOf("systemui", "misound"), feature.scopes)
         assertEquals("systemui", feature.entryScope!!.id)
         assertEquals("com.miui.misound", scopeById("misound")!!.process)
-        assertTrue(feature.requirement!!.contains("当前适配设备已确认使用正常"))
-        assertTrue(feature.requirement.contains("仍需完整回归"))
+        assertTrue(feature.requirement!!.contains("运行时按类、字段、方法签名、参数类型、Hook 数量及反优化结果做结构验证"))
+        assertTrue(feature.requirement.contains("不因宿主版本号变化直接拒绝"))
+        assertTrue(feature.requirement.contains("结构不匹配时保留原生行为"))
         assertTrue(feature.requirement.contains("不含降噪"))
         assertTrue(feature.requirement.contains("直接使用官方展开/关闭动画"))
         assertTrue(feature.requirement.contains("隐藏原生悬浮球"))

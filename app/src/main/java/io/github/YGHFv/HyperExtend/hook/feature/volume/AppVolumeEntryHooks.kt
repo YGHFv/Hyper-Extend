@@ -7,8 +7,6 @@
  */
 package io.github.YGHFv.HyperExtend.hook.feature.volume
 
-import io.github.YGHFv.HyperExtend.core.compatibleVersionCode
-
 import android.app.Activity
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -47,7 +45,7 @@ import java.lang.ref.WeakReference
 import java.lang.reflect.Method
 import java.util.WeakHashMap
 
-/** Exact plugin 183022200 targets are recorded in systemui-plugin-host-evidence.json. */
+/** 入口目标只在 SystemUI 结构 hook 完整时开放，结构变化则保留原生入口。 */
 internal object AppVolumeEntryHooks {
     private const val PLUGIN = "miui.systemui.plugin"
     private const val PREFIX = "com.android.systemui.miui.volume."
@@ -140,7 +138,6 @@ internal object AppVolumeEntryHooks {
     private fun entry(dialog: ViewGroup, panel: SystemUiAppVolumePanel, flip: Method, wideFold: Boolean,
         position: AppVolumeButtonPosition): Entry? {
         if (!panel.available()) return null
-        if (dialog.context.packageManager.getPackageInfo(PLUGIN, 0).compatibleVersionCode != 183022200L) return null
         states[dialog]?.get()?.let { return it }
         if (dialog.findViewWithTag<View>(TAG) != null) return null
         if (conflicts.any { dialog.findViewWithTag<View>(it) != null }) return null
@@ -469,8 +466,15 @@ internal object AppVolumeEntryHooks {
             if (!wanted || row.visibility != View.VISIBLE || !row.isAttachedToWindow || MediaPlayback.locked(dialog.context)) return
             val token = lifecycle.beginRequest() ?: return
             runCatching {
-                dialog.context.startForegroundService(Intent().setClassName(AppVolumeSettings.PACKAGE, AppVolumeSettings.SERVICE)
-                    .putExtra("streamType", 3).putExtra("flags", 0).putExtra(AppVolumeBridge.DATA_ONLY, true))
+                // Capture the plugin's current geometry before the native panel is changed. MiSound
+                // receives only primitives through the Intent and uses them for the card morph.
+                val launch = Intent().setClassName(AppVolumeSettings.PACKAGE, AppVolumeSettings.SERVICE)
+                    .putExtra("streamType", 3).putExtra("flags", 0).putExtra(AppVolumeBridge.DATA_ONLY, true)
+                NativeVolumePanelStyle.capture(dialog)?.let {
+                    NativeVolumePanelStyle.put(launch, it)
+                    ModuleLog.info("app_volume native style snapshot captured")
+                } ?: ModuleLog.warn("app_volume native style snapshot unavailable; MiSound fallback retained")
+                dialog.context.startForegroundService(launch)
                 click.isEnabled = false
                 // Ordered broadcasts may never return while the destination is frozen.
                 main.postDelayed({ if (lifecycle.accepts(token)) failOpen("timeout") }, 2000)

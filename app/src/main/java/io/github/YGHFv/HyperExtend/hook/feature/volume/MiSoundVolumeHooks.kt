@@ -4,8 +4,6 @@
  */
 package io.github.YGHFv.HyperExtend.hook.feature.volume
 
-import io.github.YGHFv.HyperExtend.core.compatibleVersionCode
-
 import android.app.Activity
 import android.app.Service
 import android.content.BroadcastReceiver
@@ -39,20 +37,15 @@ internal object MiSoundVolumeHooks {
         val ball = controller.getDeclaredField("m").apply { isAccessible = true }
         val dataOnly = ThreadLocal<Boolean>()
         var ready = false
-        var audited: Boolean? = null
         var lastQueryFailure: String? = null
 
-        fun supported(context: Context): Boolean = audited ?: runCatching {
-            context.packageManager.getPackageInfo(AppVolumeSettings.PACKAGE, 0).compatibleVersionCode == 260903L &&
-                context.packageManager.getPackageInfo("miui.systemui.plugin", 0).compatibleVersionCode == 183022200L
-        }.getOrDefault(false).also { audited = it }
+        // 版本号只用于诊断；真正的门禁是下面五个 hook 和反优化是否完整。
+        fun supported(): Boolean = ready
 
         fun register(host: Service) {
-            // Obfuscated controller members are only audited for this target build.
-            if (!supported(host)) {
-                ModuleLog.warn("app_volume MiSound version not audited; native panel retained")
-                return
-            }
+            if (!supported()) return
+            val versions = AppVolumeHostCompatibility.versions(host)
+            ModuleLog.info("app_volume host versions: misound=${versions.misound} plugin=${versions.plugin}; structural validation is authoritative")
             service = WeakReference(host)
             if (receiver != null) return
             val listener = object : BroadcastReceiver() {
@@ -90,8 +83,14 @@ internal object MiSoundVolumeHooks {
         val start = type.getDeclaredMethod("onStartCommand", Intent::class.java, Int::class.javaPrimitiveType, Int::class.javaPrimitiveType)
         if (HookRuntime.hook(start, "app_volume/misound/serviceStart") { chain ->
                 val host = chain.thisObject as Service
-                val requested = ready && (chain.args[0] as? Intent)?.getBooleanExtra(AppVolumeBridge.DATA_ONLY, false) == true &&
-                    supported(host)
+                val intent = chain.args[0] as? Intent
+                val target = controllerField.get(host)
+                if (target != null && intent?.getBooleanExtra(AppVolumeBridge.DATA_ONLY, false) == true) {
+                    MiSoundCardHooks.prepareOpen(Reflect.readField(target, "o") as? View,
+                        NativeVolumePanelStyle.read(intent))
+                }
+                val requested = ready && intent?.getBooleanExtra(AppVolumeBridge.DATA_ONLY, false) == true &&
+                    supported()
                 val previous = dataOnly.get()
                 dataOnly.set(requested)
                 try {
@@ -120,13 +119,20 @@ internal object MiSoundVolumeHooks {
         val addWindow = controller.getDeclaredMethod("C", View::class.java, WindowManager.LayoutParams::class.java)
         if (HookRuntime.hook(addWindow, "app_volume/misound/hideBall") { chain ->
                 val target = chain.thisObject!!
-                if (AppVolumeBridgePolicy.hideNativeBall(ready, supported(controllerContext.get(target) as Context),
+                if (AppVolumeBridgePolicy.hideNativeBall(ready, supported(),
                         chain.args[0] === ball.get(target))) null else chain.proceed()
             }) count++
         // The private window helper can be inlined into z(); service calls can inline B()/t().
         val deoptimized = HookRuntime.deoptimize(controller.getDeclaredMethod("z"), "app_volume/misound/ballCaller") and
             HookRuntime.deoptimize(start, "app_volume/misound/startCaller")
+        // 卡片样式是独立于数据桥的第二组 hook；之前只安装了这里的 5 个服务 hook，
+        // MiSoundCardHooks 虽然存在但从未接入，因此原生卡片必然始终保留。
+        val cardCount = runCatching { MiSoundCardHooks.install(loader, controller) }
+            .onFailure { ModuleLog.error("app_volume card hooks unavailable; native card retained", it) }
+            .getOrDefault(0)
+        ModuleLog.info("app_volume/card_hooks=$cardCount")
         ready = count == 5 && deoptimized
-        return count
+        ModuleLog.info("app_volume structural validation: data_hooks=$count/5 deoptimized=$deoptimized ready=$ready")
+        return count + cardCount
     }
 }

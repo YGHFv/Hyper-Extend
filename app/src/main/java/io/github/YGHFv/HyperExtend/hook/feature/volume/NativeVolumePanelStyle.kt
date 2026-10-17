@@ -8,6 +8,7 @@ import android.util.DisplayMetrics
 import android.view.ViewGroup
 import android.view.View
 import android.content.res.Configuration
+import io.github.YGHFv.HyperExtend.core.ModuleLog
 import io.github.YGHFv.HyperExtend.hook.Reflect
 
 /** Only primitives cross the permission-protected launch bridge; never load plugin code in MiSound. */
@@ -80,6 +81,8 @@ internal object NativeVolumePanelStyle {
             dialog.display.rotation, dialog.display.displayId, top, right, value("getBgWithContentPadding", true),
             value("getBgRadius"), width, height, gap, location[0], location[1], source.width, source.height, springs)
             .takeIf { it.valid() }
+    }.onFailure {
+        ModuleLog.warn("app_volume native style snapshot failed: ${it.javaClass.simpleName}: ${it.message.orEmpty()}")
     }.getOrNull()
 
     fun put(intent: Intent, style: AppVolumePanelStyle): Intent = intent.putExtra(EXTRA, Bundle().apply {

@@ -14,7 +14,7 @@ import java.io.ByteArrayOutputStream
 import java.lang.reflect.Method
 import java.util.UUID
 
-/** MiSound 260903's exact per-player setter plus its own persistence path; never setStreamVolume. */
+/** 通过运行期反射验证的 MiSound 播放器 setter 与持久化路径；绝不调用 setStreamVolume。 */
 internal class MiSoundAppVolumeBackend(loader: ClassLoader, private val controller: Class<*>) {
     private val column = Class.forName(controller.name + "\$h", false, loader)
     private val ctor = column.getDeclaredConstructor(controller, AudioPlaybackConfiguration::class.java).apply { isAccessible = true }
