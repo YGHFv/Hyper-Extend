@@ -95,8 +95,8 @@ internal object FlashlightStrengthPolicy {
      * 「手电筒开着」是安全底线：手电筒没开时接管亮度条，用户会既没灯也调不了屏幕亮度；
      * 状态未知（还没拿到控制器）一律按「没开」处理，不接管。
      */
-    fun hijack(enabled: Boolean, live: Boolean, torchOn: Boolean, owner: Boolean, blocked: Boolean,
-        hostVersionOk: Boolean): Boolean = enabled && live && torchOn && owner && !blocked && hostVersionOk
+    fun hijack(enabled: Boolean, live: Boolean, torchOn: Boolean, owner: Boolean, blocked: Boolean): Boolean =
+        enabled && live && torchOn && owner && !blocked
 
     /**
      * 由亮度条拖动值算出手电筒强度（1..100 的整数）。

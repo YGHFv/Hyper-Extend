@@ -32,14 +32,13 @@ class FlashlightStrengthTest {
     }
     @Test fun liveHijackRequiresTorchAlreadyOnAndOwner() {
         val p = FlashlightStrengthPolicy
-        assertTrue(p.hijack(true, true, true, true, false, true))
+        assertTrue(p.hijack(true, true, true, true, false))
         // 手电筒没开时接管亮度条 = 用户既没灯也调不了亮度，必须放行原生。
-        assertFalse(p.hijack(true, true, false, true, false, true))
-        assertFalse(p.hijack(true, false, true, true, false, true))
-        assertFalse(p.hijack(false, true, true, true, false, true))
-        assertFalse(p.hijack(true, true, true, false, false, true))
-        assertFalse(p.hijack(true, true, true, true, true, true))
-        assertFalse(p.hijack(true, true, true, true, false, false))
+        assertFalse(p.hijack(true, true, false, true, false))
+        assertFalse(p.hijack(true, false, true, true, false))
+        assertFalse(p.hijack(false, true, true, true, false))
+        assertFalse(p.hijack(true, true, true, false, false))
+        assertFalse(p.hijack(true, true, true, true, true))
     }
     @Test fun sliderValueMapsToStrengthThroughHostCurveAndCeiling() {
         val p = FlashlightStrengthPolicy

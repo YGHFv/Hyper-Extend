@@ -10,8 +10,8 @@ internal object NavigationGeometryPolicy {
         1, 3 -> true
         else -> null
     }
-    fun eligible(version: Long, display: Int?, mode: Int, forcedButtons: Boolean, main: Boolean) =
-        version == 202602260L && display == 0 && mode == 2 && !forcedButtons && main
+    fun eligible(display: Int?, mode: Int, forcedButtons: Boolean, main: Boolean) =
+        display == 0 && mode == 2 && !forcedButtons && main
 
     fun resolve(bar: Int, frame: Int, density: Float, nativeBar: Int, nativeFrame: Int): Geometry? {
         if (!density.isFinite() || density <= 0 || nativeBar <= 0 || nativeFrame < nativeBar) return null

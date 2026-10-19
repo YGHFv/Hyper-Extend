@@ -5,8 +5,6 @@
  */
 package io.github.YGHFv.HyperExtend.hook.feature.systemui
 
-import io.github.YGHFv.HyperExtend.core.compatibleVersionCode
-
 import android.annotation.TargetApi
 import android.animation.ValueAnimator
 import android.content.Context
@@ -79,7 +77,6 @@ internal class MediaDarkHooks private constructor(loader: ClassLoader, private v
         "setMiViewMaterialTypeCompat", "void", listOf("int", "android.view.View"), isStatic = true))
     private val states = WeakHashMap<View, WeakReference<Binding>>()
     private val nested = ThreadLocal<Boolean>()
-    private var hostVersion: Long? = null
     @Volatile private var ready = false
 
     private data class Effect(val method: Method, val receiver: Any, val context: Context)
@@ -420,8 +417,7 @@ internal class MediaDarkHooks private constructor(loader: ClassLoader, private v
 
     private fun supported(source: Context): Boolean {
         if (!ready || nested.get() == true || Looper.myLooper() != Looper.getMainLooper()) return false
-        val version = hostVersion ?: source.packageManager.getPackageInfo("com.android.systemui", 0).compatibleVersionCode.also { hostVersion = it }
-        return MediaDarkPolicy.enabled(version, true, false, SafeModeRuntime.blocked)
+        return MediaDarkPolicy.enabled(true, false, SafeModeRuntime.blocked)
     }
 
     private fun active(source: Context): Boolean = supported(source) && tiny.invoke(null, source) == false

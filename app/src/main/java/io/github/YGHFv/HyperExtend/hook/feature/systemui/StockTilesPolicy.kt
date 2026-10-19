@@ -5,8 +5,8 @@ internal object StockTilesPolicy {
     const val FEATURE = "control_center_fix_tiles_list"
     val candidates = listOf("reduce_brightness", "inversion", "saver", "dark", "onehanded", "color_correction")
 
-    fun supported(systemUiVersion: Long?, pluginVersion: Long? = null, plugin: Boolean = false): Boolean =
-        systemUiVersion == 202602260L && (!plugin || pluginVersion == 183022200L)
+    /** 调用方只有在完整目标结构解析成功后才调用；这里不再重复做版本门禁。 */
+    fun supported(): Boolean = true
 
     fun append(native: String?, includeFiveG: Boolean = false): String? {
         if (native.isNullOrBlank() || native.length > 16384) return native

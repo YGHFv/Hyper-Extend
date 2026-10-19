@@ -5,8 +5,6 @@
  */
 package io.github.YGHFv.HyperExtend.hook.feature.systemui
 
-import io.github.YGHFv.HyperExtend.core.compatibleVersionCode
-
 import android.content.Context
 import android.content.res.Configuration
 import android.graphics.drawable.Drawable
@@ -40,8 +38,7 @@ internal object DimTileIconHooks {
                 val tile = chain.thisObject ?: return@hookAfter result
                 val state = chain.args[0] ?: return@hookAfter result
                 val context = fields.getValue("mContext").get(tile) as? Context ?: return@hookAfter result
-                val version = runCatching { context.packageManager.getPackageInfo("com.android.systemui", 0).compatibleVersionCode }.getOrNull()
-                if (!DimTileIconPolicy.eligible(true, version, fields.getValue("mTileSpec").get(tile) as? String,
+                if (!DimTileIconPolicy.eligible(true, fields.getValue("mTileSpec").get(tile) as? String,
                         booleanState.isInstance(state), fields.getValue("state").getInt(state),
                         fields.getValue("icon").get(state) != null, fields.getValue("iconSupplier").get(state) != null))
                     return@hookAfter result

@@ -13,7 +13,6 @@ import android.os.SystemClock
 import android.view.View
 import android.view.ViewTreeObserver
 import io.github.YGHFv.HyperExtend.core.TileMaterialSettings
-import io.github.YGHFv.HyperExtend.core.compatibleVersionCode
 import io.github.YGHFv.HyperExtend.core.hostDisplayIdOrNull
 import io.github.YGHFv.HyperExtend.hook.HookRuntime
 import io.github.YGHFv.HyperExtend.hook.HookSettings
@@ -38,7 +37,6 @@ internal class TileMaterialHooks private constructor(loader: ClassLoader, privat
     private val bindings = WeakHashMap<View, WeakReference<Binding>>()
     private val resources = WeakHashMap<Resources, ResourceColors>()
     private var restoring = false
-    private var versions: Pair<Long, Long>? = null
     @Volatile private var ready = false
 
     private data class Render(val view: View, var written: Boolean = false)
@@ -60,10 +58,6 @@ internal class TileMaterialHooks private constructor(loader: ClassLoader, privat
     private fun state(owner: View): Any? = field(owner.javaClass.name, "state").get(owner)
     private fun eligible(view: View, owner: View): Boolean = runCatching {
         if (!ready || !main() || restoring) return@runCatching false
-        val host = versions ?: view.context.packageManager.let {
-            (it.getPackageInfo("com.android.systemui", 0).compatibleVersionCode to
-                it.getPackageInfo(SystemUiPluginHooks.PACKAGE, 0).compatibleVersionCode).also { pair -> versions = pair }
-        }
         val state = state(owner) ?: return@runCatching false
         val companion = field(BASE, "Companion").get(null)
         val normal = if (owner.javaClass.name == CARD) true else {
@@ -73,7 +67,7 @@ internal class TileMaterialHooks private constructor(loader: ClassLoader, privat
             plainItem && !field(ICON, "card").getBoolean(owner) && !field(ICON, "isDetailTile").getBoolean(owner)
         }
         TileMaterialPolicy.eligible(settings.isOn(TileMaterialSettings.FEATURE), SafeModeRuntime.blocked,
-            host.first, host.second, view.display?.displayId ?: view.context.hostDisplayIdOrNull(),
+            view.display?.displayId ?: view.context.hostDisplayIdOrNull(),
             classic(), material(view), invoke(t.theme, field(THEME, "INSTANCE").get(null)) == true, normal,
             field(STATE, "state").getInt(state), field(STATE, "activeBgColor").getInt(state),
             field(STATE, "disabledByPolicy").getBoolean(state) || invoke(t.restricted, companion, state) != false ||

@@ -14,6 +14,7 @@ package io.github.YGHFv.HyperExtend.hook
 
 import io.github.YGHFv.HyperExtend.core.ModuleLog
 import java.io.File
+import io.github.YGHFv.HyperExtend.core.PlannedRestarts
 
 /** Persistent, independent startup fuses for system_server and SystemUI. */
 internal object BootLoopGuard {
@@ -25,7 +26,9 @@ internal object BootLoopGuard {
     @Synchronized
     fun shouldSkipSystemServerHooks(settings: HookSettings, countRestart: Boolean): Boolean {
         val previous = serverStore.read()
-        val next = BootFusePolicy.next(previous, System.currentTimeMillis(), settings.safeModeReset("system_server"), countRestart)
+        val planned = if (countRestart) consumePlanned(settings, "system_server",
+            File("/data/system/hyperextend_planned_restart")) ?: return true else false
+        val next = BootFusePolicy.next(previous, System.currentTimeMillis(), settings.safeModeReset("system_server"), countRestart && !planned)
         if (next == null) {
             ModuleLog.error("framework hook fuse: unreadable state or unsafe clock; hooks skipped")
             engageProperty()
@@ -89,7 +92,9 @@ internal object BootLoopGuard {
         }
         val store = BootFuseStore(File(dataDir, "files/hyperextend_systemui_bootguard"))
         val previous = store.read()
-        val next = BootFusePolicy.next(previous, System.currentTimeMillis(), settings.safeModeReset("systemui"), true)
+        val planned = consumePlanned(settings, "systemui",
+            File(dataDir, "files/hyperextend_planned_restart")) ?: return true
+        val next = BootFusePolicy.next(previous, System.currentTimeMillis(), settings.safeModeReset("systemui"), !planned)
         if (next == null || !store.write(next)) {
             ModuleLog.error("SystemUI fuse: unsafe clock or state IO failed; hooks skipped")
             SafeModeRuntime.trip("系统界面启动保护：系统时间或安全记录读写异常，已暂停模块功能")
@@ -110,6 +115,14 @@ internal object BootLoopGuard {
         when (value?.trim()) { "", "0" -> false; "1" -> true; else -> null }
     } catch (t: Throwable) {
         ModuleLog.error("framework hook fuse: cannot read $DISABLED_PROPERTY", t)
+        null
+    }
+
+    private fun consumePlanned(settings: HookSettings, scope: String, file: File): Boolean? = runCatching {
+        PlannedRestartStore(file).consume(settings.prefs?.all?.get(PlannedRestarts.key(scope)),
+            System.currentTimeMillis())
+    }.getOrElse {
+        SafeModeRuntime.trip("主动重启请求无法安全消费，已暂停模块功能")
         null
     }
 

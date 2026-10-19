@@ -17,7 +17,6 @@ import android.os.UserHandle
 import android.provider.Settings
 import android.telephony.SubscriptionManager
 import android.telephony.TelephonyManager
-import io.github.YGHFv.HyperExtend.core.compatibleVersionCode
 import io.github.YGHFv.HyperExtend.core.ModuleLog
 import io.github.YGHFv.HyperExtend.hook.HookRuntime
 import io.github.YGHFv.HyperExtend.hook.HookSettings
@@ -82,8 +81,8 @@ internal object FiveGTileHooks {
                 // UserTracker uses createContextAsUser(..., 0): its resource-only LoadedApk
                 // can have no Application even after the process Application is initialized.
                 if (!api.applicationReady()) return@runCatching reject("application_not_ready")
-                if (context.packageManager.getPackageInfo("com.android.systemui", 0).compatibleVersionCode != 202602260L)
-                    return@runCatching reject("host_version")
+                if (context.packageName != "com.android.systemui")
+                    return@runCatching reject("host_package")
                 if (context.getSystemService(UserManager::class.java)?.isSystemUser != true) return@runCatching reject("not_owner")
                 val binder = api.binder() ?: return@runCatching reject("telephony_unavailable")
                 if (api.capable.invoke(binder) != true) return@runCatching reject("not_5g_capable")

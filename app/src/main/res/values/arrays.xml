@@ -33,5 +33,7 @@
         <item>com.miui.screenshot</item>
         <item>com.milink.service</item>
         <item>com.miui.mishare.connectivity</item>
+        <!-- 原生桌面入口；必须与原型包的 META-INF/xposed/scope.list 同步。 -->
+        <item>com.miui.home</item>
     </string-array>
 </resources>

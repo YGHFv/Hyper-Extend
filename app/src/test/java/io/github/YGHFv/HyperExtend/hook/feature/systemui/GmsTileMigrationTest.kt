@@ -8,8 +8,8 @@ import org.junit.Assert.*
 import org.junit.Test
 
 class GmsTileMigrationTest {
-    private val core = GmsTilePolicy.App(GmsTilePolicy.CORE, 10010, 123, 0, true)
-    private val store = GmsTilePolicy.App("com.android.vending", 10011, 456, 0, true)
+    private val core = GmsTilePolicy.App(GmsTilePolicy.CORE, 10010, 0, true)
+    private val store = GmsTilePolicy.App("com.android.vending", 10011, 0, true)
     private class Backend(values: List<GmsTilePolicy.App>) : GmsPackageTransaction.Backend {
         private val defaults = values.associate { it.name to (it.state != 0 || it.enabled) }
         val values = values.associateBy { it.name }.toMutableMap()
@@ -54,9 +54,12 @@ class GmsTileMigrationTest {
         assertEquals(core, backend.values[core.name]); assertEquals(store, backend.values[store.name])
     }
     @Test fun snapshotChangeAndExternalTakeoverNeverTriggerBlindRetryOrRollback() {
-        val changed = Backend(listOf(core.copy(version = 999), store))
+        val changed = Backend(listOf(core.copy(uid = 10099), store))
         assertFalse(GmsPackageTransaction.apply(listOf(core, store), changed).complete)
         assertTrue(changed.writes.isEmpty())
+        val stateChanged = Backend(listOf(core.copy(state = 1, enabled = false), store))
+        assertFalse(GmsPackageTransaction.apply(listOf(core, store), stateChanged).complete)
+        assertTrue(stateChanged.writes.isEmpty())
         val backend = Backend(listOf(core, store))
         backend.intercept = { name, state -> if (name == core.name && state == 3) {
             backend.values[store.name] = store.copy(state = 2, enabled = false)

@@ -4,10 +4,8 @@ package io.github.YGHFv.HyperExtend.hook.feature.systemui
 
 import android.content.ContentResolver
 import android.content.Context
-import android.os.Build
 import android.os.UserManager
 import io.github.YGHFv.HyperExtend.core.FlashlightStrengthSettings
-import io.github.YGHFv.HyperExtend.core.compatibleVersionCode
 import io.github.YGHFv.HyperExtend.hook.HookRuntime
 import io.github.YGHFv.HyperExtend.hook.HookSettings
 import io.github.YGHFv.HyperExtend.hook.SafeModeRuntime
@@ -50,7 +48,6 @@ import java.util.concurrent.atomic.AtomicBoolean
  */
 internal object FlashlightStrengthHooks {
     fun install(loader: ClassLoader, settings: HookSettings): Int {
-        if (Build.VERSION.SDK_INT != 37 || Build.FINGERPRINT != NotificationManagementTargets.FINGERPRINT) return 0
         val t = FlashlightStrengthTargets
         val methods = t.methods.associateWith { NotificationHooks.resolve(loader, it) ?: return 0 }
         val fields = t.fields.associate { (owner, name, type) -> name to StatusIconHost.field(loader, owner, name, type) }
@@ -82,8 +79,7 @@ internal object FlashlightStrengthHooks {
                     fields.getValue("mCurrentUserId").getInt(controller), fields.getValue("mForceOff").getBoolean(controller),
                     fields.getValue("mBatteryOff").getBoolean(controller), fields.getValue("mTorchAvailable").getBoolean(controller))
                 val context = fields.getValue("mContext").get(controller) as Context
-                if (eligible && context.packageManager.getPackageInfo("com.android.systemui", 0).compatibleVersionCode == 202602260L)
-                    context.contentResolver else null
+                if (eligible) context.contentResolver else null
             }.getOrNull() else null
             // Native strategy runs first and may force 50%. Only reduce its subsequent read, never raise it.
             scope.within(resolver) { chain.proceed() }
@@ -145,11 +141,8 @@ internal object FlashlightStrengthHooks {
                         val user = context.getSystemService(UserManager::class.java)
                         user?.isSystemUser == true && !user.isManagedProfile
                     }.getOrDefault(false)
-                    val versionOk = runCatching {
-                        context.packageManager.getPackageInfo("com.android.systemui", 0).compatibleVersionCode == 202602260L
-                    }.getOrDefault(false)
                     if (!FlashlightStrengthPolicy.hijack(enabled(), live(), on, owner,
-                            SafeModeRuntime.blocked, versionOk)) return@runCatching null
+                            SafeModeRuntime.blocked)) return@runCatching null
                     val limit = settings.number(FlashlightStrengthSettings.PERCENT, 100, 1, 100)
                     val strength = FlashlightStrengthPolicy.strength(value, minField.getFloat(target), maxField.getFloat(target),
                         limit) { input, lo, hi -> gammaToLinear.invoke(null, input, lo, hi) as Float }

@@ -7,8 +7,6 @@ package io.github.YGHFv.HyperExtend.hook.feature.systemui
 
 import io.github.YGHFv.HyperExtend.core.hostDisplayIdOrNull
 
-import io.github.YGHFv.HyperExtend.core.compatibleVersionCode
-
 import android.os.Looper
 import android.view.View
 import io.github.YGHFv.HyperExtend.hook.HookRuntime
@@ -52,14 +50,10 @@ internal object VolumeFooterHooks {
         if (!resolved.values.map { HookRuntime.deoptimize(it, "$FEATURE/caller") }.all { it }) return 0
         val ready = AtomicBoolean(false)
         val owned = WeakHashMap<View, Int>()
-        var versions: Boolean? = null
         fun eligible(view: View): Boolean = runCatching {
             if (!ready.get() || SafeModeRuntime.blocked || !settings.isOn(FEATURE) ||
                 !ordinary.getBoolean(view) || (view.display?.displayId ?: view.context.hostDisplayIdOrNull()) != 0) return@runCatching false
-            versions ?: view.context.packageManager.let { pm ->
-                (pm.getPackageInfo("com.android.systemui", 0).compatibleVersionCode == 202602260L &&
-                    pm.getPackageInfo(SystemUiPluginHooks.PACKAGE, 0).compatibleVersionCode == 183022200L).also { versions = it }
-            }
+            true
         }.getOrDefault(false)
         val installed = listOf(update, expand).map { spec ->
             HookRuntime.hook(resolved.getValue(spec), "$FEATURE/${spec.name}") { chain ->

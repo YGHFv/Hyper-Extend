@@ -514,6 +514,47 @@ val FEATURES: List<HyperFeature> = listOf(
         extra = FeatureExtra.PASSKEY_DEFAULT_APP,
     ),
     HyperFeature(
+        id = "launcher_native_shortcuts_enabled",
+        title = "桌面快捷菜单扩展",
+        summary = "扩展桌面快捷菜单，支持分享 APK 与小窗",
+        scopes = listOf("launcher"),
+        origin = "本模块原创 · ARM64 原生调用点安全接入",
+        license = "AGPL-3.0",
+        defaultEnabled = false,
+        requirement = "仅原型构建支持；需要桌面与系统框架同时启用模块。首次接入按现场 Hook 点参数建立安全状态，不按宿主版本号拒绝。",
+        config = listOf(
+            HyperSlider(
+                key = "launcher_native_shortcut_count_limit",
+                title = "快捷菜单数量上限",
+                summary = "设置桌面快捷菜单最多显示的应用数量",
+                min = 5,
+                max = 20,
+                default = 20,
+                unit = " 个",
+                decimalPlaces = 0,
+            ),
+        ),
+        options = listOf(
+            HyperOption(
+                id = "home_other_shortcut_remove_restrictions",
+                title = "解除数量限制",
+                summary = "保留桌面原有菜单逻辑，仅调整本次菜单的数量上限",
+            ),
+            HyperOption(
+                id = "home_other_allow_share_apk",
+                title = "分享 APK",
+                summary = "在应用快捷菜单中显示分享 APK",
+                defaultEnabled = false,
+            ),
+            HyperOption(
+                id = "home_other_freeform_shortcut_menu",
+                title = "小窗模式",
+                summary = "在应用快捷菜单中增加小窗入口",
+                defaultEnabled = false,
+            ),
+        ),
+    ),
+    HyperFeature(
         id = "rotation_lock_fix",
         title = "旋转锁定保护",
         summary = "强行停止应用后仍保留方向锁定",
@@ -562,6 +603,13 @@ fun defaultEnabledOf(id: String): Boolean {
     }
     return false
 }
+
+/** 从功能目录取得数值配置的出厂值，避免配置通道各自复制一份默认值。 */
+fun defaultSliderValueOf(id: String): Int? = FEATURES.asSequence()
+    .flatMap { it.config.asSequence() }
+    .filterIsInstance<HyperSlider>()
+    .firstOrNull { it.key == id }
+    ?.default
 
 /**
  * 搜索：标题、说明、来源、作用域名、子项标题都参与匹配。

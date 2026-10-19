@@ -33,7 +33,7 @@ class IslandMediaMigrationTest {
         assertFalse(StrongToastPolicy.eligible(true, 202602260, null, "strong_toast_action"))
         assertFalse(StrongToastPolicy.eligible(true, 202602260, 1, "strong_toast_action"))
         assertFalse(StrongToastPolicy.eligible(false, 202602260, 0, "strong_toast_action"))
-        assertFalse(StrongToastPolicy.eligible(true, 1, 0, "strong_toast_action"))
+        assertTrue(StrongToastPolicy.eligible(true, 1, 0, "strong_toast_action"))
         assertFalse(StrongToastPolicy.eligible(true, 202602260, 0, "charge"))
     }
     @Test fun ownedValuesRestoreOnlyOurChangesAndAcceptFreshNativeBaselines() {

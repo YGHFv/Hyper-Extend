@@ -19,14 +19,13 @@ class NotificationBlendTest {
 
     @Test fun advancedAndExcludedScenesNeverBypassMainGates() {
         fun allowed(scene: NotificationBlendScene, advanced: Boolean = false) =
-            NotificationBlendPolicy.eligible(scene, true, advanced, 202602260, 0, true)
+            NotificationBlendPolicy.eligible(scene, true, advanced, 0, true)
         assertTrue(allowed(NotificationBlendScene.SHADE))
         assertFalse(allowed(NotificationBlendScene.KEYGUARD))
         assertTrue(allowed(NotificationBlendScene.KEYGUARD, true))
         assertFalse(allowed(NotificationBlendScene.EXCLUDED, true))
-        assertFalse(NotificationBlendPolicy.eligible(NotificationBlendScene.SHADE, true, true, 202602261, 0, true))
-        assertFalse(NotificationBlendPolicy.eligible(NotificationBlendScene.SHADE, true, true, 202602260, 1, true))
-        assertFalse(NotificationBlendPolicy.eligible(NotificationBlendScene.SHADE, false, true, 202602260, 0, true))
+        assertFalse(NotificationBlendPolicy.eligible(NotificationBlendScene.SHADE, true, true, 1, true))
+        assertFalse(NotificationBlendPolicy.eligible(NotificationBlendScene.SHADE, false, true, 0, true))
         val feature = featureById(NotificationBlendSettings.FEATURE)!!
         assertFalse(feature.defaultEnabled)
         assertFalse(feature.options.single().defaultEnabled)

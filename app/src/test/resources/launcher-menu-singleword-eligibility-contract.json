@@ -1,0 +1,191 @@
+{
+  "schemaVersion": 1,
+  "policy": "menu-singleword-eligibility-offline-v1",
+  "status": "仅离线静态审核，不是安装许可",
+  "architecture": {
+    "document": "ARM DDI 0487 L.a",
+    "section": "B2.2.5",
+    "page": 230,
+    "documentSha256": "20d6ab39200e3d0c84cfc5948c6d3983a7a1867c11c9babe1ee4c2ee311d5368",
+    "eligibleSet": [
+      "B",
+      "B.cond",
+      "BL",
+      "BRK",
+      "CBNZ",
+      "CBZ",
+      "HVC",
+      "ISB",
+      "NOP",
+      "SMC",
+      "SVC",
+      "TBNZ",
+      "TBZ",
+      "TRCIT"
+    ],
+    "note": "旧、新机器字都属于该集合时，架构保证并发替换语义等价于取到旧或新指令之一；本判定只覆盖单个 32 位机器字，不覆盖多字覆盖、缓存同步或调用语义。",
+    "scope": "仅说明「被并发替换的那一个 32 位机器字」是否安全，不构成整体安装许可。",
+    "undecodedMembers": [
+      "TRCIT"
+    ]
+  },
+  "image": {
+    "sha256": "b947b8db576539a57a2b2a5ba7e32749e06508fa88d2fae31316cbd14374387b",
+    "buildId": "4f1bdaeda6b1f98dde7d3ebc23163cd1",
+    "size": 29387672
+  },
+  "targets": [
+    {
+      "name": "ShortcutMenuGetXController._getMaxCountInCurrentOrientation",
+      "address": "0x11474f4",
+      "size": 300,
+      "sha256": "c3308e2128c9456fa10f6ee4a4cc859cf3e771ad749263168aba582b4731f0ce",
+      "entryWord": "0xa9bf79fd",
+      "entryKind": "非例外集合（STP）",
+      "entryEligible": false,
+      "callers": 1,
+      "pointerRefs": 0
+    },
+    {
+      "name": "ValidShareAppShortcutMenu.shareApk",
+      "address": "0x17fda70",
+      "size": 188,
+      "sha256": "a6e69442573201ce3bdc5079701944eb0b3ea0e7f48deb861f5ecc7144ebd1a1",
+      "entryWord": "0xa9bf79fd",
+      "entryKind": "非例外集合（STP）",
+      "entryEligible": false,
+      "callers": 2,
+      "pointerRefs": 0
+    },
+    {
+      "name": "ValidSmallWindowShortcutMenu._startSmallWindowActivity",
+      "address": "0x1b2f850",
+      "size": 392,
+      "sha256": "fe46e3f51b51db28fddbb30bb9042bf5e4d70760fd78dd30fe693d3f2636ea60",
+      "entryWord": "0xa9bf79fd",
+      "entryKind": "非例外集合（STP）",
+      "entryEligible": false,
+      "callers": 1,
+      "pointerRefs": 0
+    },
+    {
+      "name": "ValidMultipleSmallWindowShortcutMenu._startMultipleSmallWindow",
+      "address": "0x1b2f4fc",
+      "size": 316,
+      "sha256": "af81caeb71059d482585d8eb7308840926c0656e598529ddea5ae78f8f042c7f",
+      "entryWord": "0xa9bf79fd",
+      "entryKind": "非例外集合（STP）",
+      "entryEligible": false,
+      "callers": 2,
+      "pointerRefs": 0
+    }
+  ],
+  "sites": [
+    {
+      "feature": "数量点",
+      "address": "0x1147018",
+      "word": "0x94000137",
+      "kind": "BL",
+      "target": "0x11474f4",
+      "targetName": "ShortcutMenuGetXController._getMaxCountInCurrentOrientation",
+      "owner": "ShortcutMenuGetXController._sortAndFilterShortcuts",
+      "ownerOffset": "0x14",
+      "wordKind": "BL",
+      "eligible": true,
+      "incoming": 0,
+      "returnAddress": "0x114701c",
+      "continuationWord": "0xaa0003e2"
+    },
+    {
+      "feature": "分享 APK",
+      "address": "0x17fd75c",
+      "word": "0x940000c5",
+      "kind": "BL",
+      "target": "0x17fda70",
+      "targetName": "ValidShareAppShortcutMenu.shareApk",
+      "owner": null,
+      "ownerOffset": null,
+      "wordKind": "BL",
+      "eligible": true,
+      "incoming": 0,
+      "returnAddress": "0x17fd760",
+      "continuationWord": "0x1400000d"
+    },
+    {
+      "feature": "分享 APK",
+      "address": "0x17fda5c",
+      "word": "0x94000005",
+      "kind": "BL",
+      "target": "0x17fda70",
+      "targetName": "ValidShareAppShortcutMenu.shareApk",
+      "owner": null,
+      "ownerOffset": null,
+      "wordKind": "BL",
+      "eligible": true,
+      "incoming": 0,
+      "returnAddress": "0x17fda60",
+      "continuationWord": "0xaa1603e0"
+    },
+    {
+      "feature": "小窗",
+      "address": "0x1b2f770",
+      "word": "0x94000038",
+      "kind": "BL",
+      "target": "0x1b2f850",
+      "targetName": "ValidSmallWindowShortcutMenu._startSmallWindowActivity",
+      "owner": "ValidSmallWindowShortcutMenu.onItemClick",
+      "ownerOffset": "0x138",
+      "wordKind": "BL",
+      "eligible": true,
+      "incoming": 0,
+      "returnAddress": "0x1b2f774",
+      "continuationWord": "0xaa0003e1"
+    },
+    {
+      "feature": "新任务",
+      "address": "0x1b2f2f0",
+      "word": "0x94000083",
+      "kind": "BL",
+      "target": "0x1b2f4fc",
+      "targetName": "ValidMultipleSmallWindowShortcutMenu._startMultipleSmallWindow",
+      "owner": "ValidMultipleSmallWindowShortcutMenu.onItemClick",
+      "ownerOffset": "0x1c0",
+      "wordKind": "BL",
+      "eligible": true,
+      "incoming": 0,
+      "returnAddress": "0x1b2f2f4",
+      "continuationWord": "0xaa0003e1"
+    },
+    {
+      "feature": "新任务",
+      "address": "0x1b2f424",
+      "word": "0x94000036",
+      "kind": "BL",
+      "target": "0x1b2f4fc",
+      "targetName": "ValidMultipleSmallWindowShortcutMenu._startMultipleSmallWindow",
+      "owner": "ValidMultipleSmallWindowShortcutMenu.onItemClick",
+      "ownerOffset": "0x2f4",
+      "wordKind": "BL",
+      "eligible": true,
+      "incoming": 0,
+      "returnAddress": "0x1b2f428",
+      "continuationWord": "0xaa0003e1"
+    }
+  ],
+  "installPermitted": false,
+  "verificationBoundary": "静态只读：固定宿主摘要、目标入口机器字、直接调用边与指针引用；不证明安装窗口无并发执行，不证明新目标代码已同步，不接入安装路径。",
+  "修正说明": "本合同更正早期交接中「9 条挂载调用边全部不在 B2.2.5 集合内」的表述：调用边本身是 BL，属于例外集合；不在集合内的是被调目标函数的序言 STP。",
+  "controlFlowRequirements": [
+    "替换只改调用点那一个对齐的 32 位 BL 机器字；不覆盖多条指令，也不改被调函数入口。",
+    "旧机器字（BL 原目标）与新机器字（BL 蹦床）都属于 B2.2.5 例外集合。",
+    "原 BL 在进入被调函数时把 x30 设为 returnAddress（调用点+4）；蹦床必须让返回时 x30 同样等于该地址，控制流回到同一接续指令。",
+    "蹦床必须复现原被调函数的可观察语义（入参、返回值、副作用与 Dart 栈/GC 约定），本轮未实现、未审核。",
+    "新蹦床代码必须先完成指令/数据缓存同步，并保持到进程结束；发布只写一个 32 位字。",
+    "所有涉及页面分配、权限、写入独占与宿主映射生命周期的验收仍未完成。"
+  ],
+  "notClosedGates": [
+    "门槛1：本路线不依赖多字覆盖，但蹦床发布次序仍须独立验收。",
+    "门槛3：安全通道实机验收未做。",
+    "门槛5：单字写入合规不等于整条发布链已验收；缓存同步/映射生命周期仍缺证据。"
+  ]
+}

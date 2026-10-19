@@ -15,7 +15,6 @@ import android.os.SystemClock
 import android.os.UserManager
 import android.os.UserHandle
 import io.github.YGHFv.HyperExtend.core.ModuleLog
-import io.github.YGHFv.HyperExtend.core.compatibleVersionCode
 import io.github.YGHFv.HyperExtend.hook.HookRuntime
 import io.github.YGHFv.HyperExtend.hook.SafeModeRuntime
 import io.github.YGHFv.HyperExtend.hook.feature.statusbar.StatusIconHost
@@ -91,9 +90,7 @@ internal class NativeToggleTileHooks(private val backend: NativeToggleBackend) {
     @SuppressLint("NewApi")
     private fun supported(context: Context): Boolean {
         val user = context.getSystemService(UserManager::class.java) ?: return false
-        val pm = context.packageManager
         return user.isSystemUser && !user.isManagedProfile &&
-            pm.getPackageInfo("com.android.systemui", 0).compatibleVersionCode == 202602260L &&
             backend.supported(context)
     }
     private inner class Tile(val api: Api, val host: Any, context: Context, val falsing: Any, val starterLazy: Any?) {

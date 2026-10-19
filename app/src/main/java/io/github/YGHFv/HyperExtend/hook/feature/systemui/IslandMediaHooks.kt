@@ -16,7 +16,6 @@ import android.widget.ImageView
 import android.widget.TextView
 import io.github.YGHFv.HyperExtend.core.IslandMediaSettings as Settings
 import io.github.YGHFv.HyperExtend.core.ModuleLog
-import io.github.YGHFv.HyperExtend.core.compatibleVersionCode
 import io.github.YGHFv.HyperExtend.hook.HookRuntime
 import io.github.YGHFv.HyperExtend.hook.SafeModeRuntime
 import io.github.YGHFv.HyperExtend.hook.feature.statusbar.StatusIconHost
@@ -36,8 +35,7 @@ internal class IslandMediaHooks private constructor(loader: ClassLoader) {
     private fun holder(owner: Any, name: String) = field(t.BINDER, name).get(owner)
     private fun view(holder: Any, name: String) = field(t.HOLDER, name).get(holder) as? View
     private fun enabled(feature: String) = ready && !SafeModeRuntime.blocked && HookRuntime.settings().isOn(feature)
-    private fun current(context: Context): Boolean =
-        context.packageManager.getPackageInfo("com.android.systemui", 0).compatibleVersionCode == 202602260L
+    private fun current(context: Context): Boolean = context.packageName == "com.android.systemui"
     private fun main() = Looper.myLooper() == Looper.getMainLooper()
 
     private data class ImageState(val type: ImageView.ScaleType, val values: List<Float>) {

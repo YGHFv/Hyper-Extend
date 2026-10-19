@@ -3,8 +3,6 @@ package io.github.YGHFv.HyperExtend.hook.feature.systemui
 
 import io.github.YGHFv.HyperExtend.core.hostDisplayIdOrNull
 
-import io.github.YGHFv.HyperExtend.core.compatibleVersionCode
-
 import android.content.Context
 import android.os.Looper
 import android.view.View
@@ -45,14 +43,11 @@ internal object VolumeThemeHooks {
         if (!resolved.values.map { HookRuntime.deoptimize(it, "$FEATURE/caller") }.all { it }) return 0
         val ready = AtomicBoolean(false)
         val scope = VolumeThemeScope()
-        var versions: Boolean? = null
         fun eligible(host: Context?): Boolean = runCatching {
             if (host == null || !ready.get() || !settings.isOn(FEATURE) ||
                 Looper.myLooper() != Looper.getMainLooper() || host.hostDisplayIdOrNull() != 0) return@runCatching false
-            versions ?: host.packageManager.let { pm ->
-                (pm.getPackageInfo("com.android.systemui", 0).compatibleVersionCode == 202602260L &&
-                    pm.getPackageInfo(SystemUiPluginHooks.PACKAGE, 0).compatibleVersionCode == 183022200L).also { versions = it }
-            }
+            // 主题、铃声和音量滑块的类/方法/字段已在 install 阶段精确解析，不再按宿主版本放行。
+            true
         }.getOrDefault(false)
         val query = HookRuntime.hookAfter(resolved.getValue(theme), "$FEATURE/query") { _, original ->
             result(original as Boolean, scope.active, settings.isOn(FEATURE), ready.get())

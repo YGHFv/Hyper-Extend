@@ -12,7 +12,6 @@ import android.view.View
 import android.widget.TextView
 import io.github.YGHFv.HyperExtend.core.CardTileColorSettings
 import io.github.YGHFv.HyperExtend.core.SystemUiCustomSettings
-import io.github.YGHFv.HyperExtend.core.compatibleVersionCode
 import io.github.YGHFv.HyperExtend.core.hostDisplayIdOrNull
 import io.github.YGHFv.HyperExtend.hook.HookRuntime
 import io.github.YGHFv.HyperExtend.hook.HookSettings
@@ -45,16 +44,11 @@ internal object CardTileColorHooks {
         val texts = WeakHashMap<TextView, Color>()
         val backgrounds = WeakHashMap<GradientDrawable, Color>()
         val ownedBackgrounds = WeakHashMap<GradientDrawable, ColorStateList>()
-        var versions: Pair<Long, Long>? = null
         fun mainThread() = Looper.myLooper() == Looper.getMainLooper()
         fun allowed(view: View, state: Any?): Boolean = runCatching {
             if (!ready.get() || !mainThread() || SafeModeRuntime.blocked || !settings.isOn(id) || state == null)
                 return@runCatching false
-            val host = versions ?: view.context.packageManager.let { pm ->
-                (pm.getPackageInfo("com.android.systemui", 0).compatibleVersionCode to
-                    pm.getPackageInfo(SystemUiPluginHooks.PACKAGE, 0).compatibleVersionCode).also { versions = it }
-            }
-            StockTilesPolicy.supported(host.first, host.second, true) &&
+            StockTilesPolicy.supported() &&
                 (view.display?.displayId ?: view.context.hostDisplayIdOrNull()) == 0 &&
                 methods.getValue(TileCornerTargets.theme).invoke(theme.get(null)) == true &&
                 methods.getValue(t.blend).invoke(view) == false &&

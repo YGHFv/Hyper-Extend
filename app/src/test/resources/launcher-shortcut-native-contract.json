@@ -1,0 +1,129 @@
+{
+  "schemaVersion": 1,
+  "startup": {
+    "image": {
+      "locator": "zip_entry:lib/arm64-v8a/libapp_launcher.so",
+      "size": 16213368,
+      "sha256": "4dc9fa82371dda8a0a8b9eff48301469d2f84752b52b71635b84e5fc0c47fa6e"
+    },
+    "functions": [
+      {
+        "name": "app_entry_point",
+        "address": "0x9b544c",
+        "size": 960,
+        "sha256": "5f76f77cab31ffdfc2d9cc6cf0ea01e5bc1f3cb29bab3e4e7926710c9f71a6a5"
+      }
+    ]
+  },
+  "continuation": {
+    "policy": "post-getter-raw-limit-v1",
+    "owner": "ShortcutMenuGetXController._sortAndFilterShortcuts",
+    "getter": "ShortcutMenuGetXController._getMaxCountInCurrentOrientation",
+    "callAddress": "0x1147018",
+    "address": "0x114701c",
+    "coverageBytes": 24,
+    "resumeAddress": "0x1147034",
+    "coverageSource": "dobby-normal-trampoline-ldr-br-literal",
+    "coverageEvidence": "同一后端在本设备桌面进程内 hook 的 libc 函数代码页开头为 91 00 00 58 = ldr x17,#16 ; br x17 ; nop ; nop ; <8 字节字面量>，字面量落在偏移 16，覆盖 24 字节"
+  },
+  "referenceCommit": "5e4686069dd7ab1f3697e256d5fc7d68fb73e317",
+  "host": {
+    "packageName": "com.miui.home",
+    "versionCode": 801027726
+  },
+  "manifest": {
+    "locator": "zip_entry:AndroidManifest.xml",
+    "size": 52284,
+    "sha256": "9350ba3cef8e8c9e2192ecfbdf7616ca701ca0dfdd15df1862883edbefbc4a58",
+    "hasCode": false,
+    "requiredRuntime": "hyperos.rustruntime.v5",
+    "entryLibrary": "libapp_launcher.so"
+  },
+  "image": {
+    "locator": "zip_entry:lib/arm64-v8a/libapp.so",
+    "sha256": "b947b8db576539a57a2b2a5ba7e32749e06508fa88d2fae31316cbd14374387b",
+    "buildId": "4f1bdaeda6b1f98dde7d3ebc23163cd1",
+    "size": 29387672
+  },
+  "functions": [
+    {
+      "name": "ShortcutMenuGetXController._getAppShortcutMenuItemList",
+      "address": "0x1a29ff8",
+      "size": 3708,
+      "sha256": "7391c8b7df0ab9eb2467e712abe64f6d9ca192856e0e71c960433f08065c600a"
+    },
+    {
+      "name": "ShortcutMenuGetXController._sortAndFilterShortcuts",
+      "address": "0x1147004",
+      "size": 1264,
+      "sha256": "10823b8d6099b4677c03e97ffdf0ccc9f2294da4b8539c61eed4390d338afcbb"
+    },
+    {
+      "name": "ShortcutMenuGetXController._getMaxCountInCurrentOrientation",
+      "address": "0x11474f4",
+      "size": 300,
+      "sha256": "c3308e2128c9456fa10f6ee4a4cc859cf3e771ad749263168aba582b4731f0ce"
+    }
+  ],
+  "calls": [
+    {
+      "address": "0x1a2a400",
+      "target": "0x1147004",
+      "owner": "ShortcutMenuGetXController._getAppShortcutMenuItemList"
+    },
+    {
+      "address": "0x1147018",
+      "target": "0x11474f4",
+      "owner": "ShortcutMenuGetXController._sortAndFilterShortcuts"
+    },
+    {
+      "address": "0x1147098",
+      "target": "0xe1d4f4",
+      "owner": "ShortcutMenuGetXController._sortAndFilterShortcuts"
+    }
+  ],
+  "windows": [
+    {
+      "name": "调用后接续窗口首 24 字节",
+      "address": "0x114701c",
+      "bytes": "e20300aaa1835ff8a2031ff820f05ff8007c4cd3e10100f9"
+    },
+    {
+      "name": "原上限函数序言",
+      "address": "0x11474f4",
+      "bytes": "fd79bfa9fd030faaef2100d1403f40f9"
+    },
+    {
+      "name": "首分支返回普通整数4",
+      "address": "0x1147548",
+      "bytes": "800080d2ef031daafd79c1a8c0035fd6"
+    },
+    {
+      "name": "次分支返回普通整数4",
+      "address": "0x11475a0",
+      "bytes": "800080d2ef031daafd79c1a8c0035fd6"
+    },
+    {
+      "name": "方向分支普通整数解码",
+      "address": "0x11475fc",
+      "bytes": "1f007cf2e1079f9a210400d121f87f9221200091207c4193ef031daafd79c1a8c0035fd6"
+    },
+    {
+      "name": "原列表长度比较",
+      "address": "0x1147048",
+      "bytes": "017c4193a3035ff83f0003ebac000054"
+    }
+  ],
+  "countAbi": {
+    "resultRegister": "x0",
+    "encoding": "raw-int64",
+    "originalValues": [
+      3,
+      4
+    ],
+    "dartStackRegister": "x15",
+    "candidateAddress": "0x114701c",
+    "candidateStatus": "候选字节序列与后端 24 字节覆盖足迹已核；内部挂载入口、并发安装与实机功能仍待验证"
+  },
+  "verificationBoundary": "静态合同不证明原生入口可达、后端并发安全或实机功能可用"
+}

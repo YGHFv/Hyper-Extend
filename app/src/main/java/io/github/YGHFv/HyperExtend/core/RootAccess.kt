@@ -220,9 +220,13 @@ object RootAccess {
      *
      * @return 命令以 0 退出时返回 stdout（可能为空串）；未拿到 root / 超时 / 非 0 退出返回 null
      */
-    fun exec(command: String, timeoutSeconds: Long = TIMEOUT_SECONDS): String? {
+    fun exec(command: String, timeoutSeconds: Long = TIMEOUT_SECONDS,
+        globalMountNamespace: Boolean = false): String? {
         val process = try {
-            ProcessBuilder(suCommand(), "-c", command).start()
+            // root 并不会自动退出 Android 的应用目录隔离；跨应用只读状态需显式全局挂载。
+            val arguments = listOf(suCommand()) +
+                (if (globalMountNamespace) listOf("-M") else emptyList()) + listOf("-c", command)
+            ProcessBuilder(arguments).start()
         } catch (t: Throwable) {
             ModuleLog.warn("exec: cannot start su (${t.javaClass.simpleName})")
             return null

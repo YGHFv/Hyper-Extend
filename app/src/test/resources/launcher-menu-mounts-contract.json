@@ -1,0 +1,249 @@
+{
+  "schemaVersion": 1,
+  "status": "仅离线审核，不是安装许可",
+  "image": {
+    "sha256": "b947b8db576539a57a2b2a5ba7e32749e06508fa88d2fae31316cbd14374387b",
+    "buildId": "4f1bdaeda6b1f98dde7d3ebc23163cd1",
+    "size": 29387672
+  },
+  "functions": [
+    {
+      "name": "ValidShareAppShortcutMenu.isValid",
+      "address": "0x1acbed0",
+      "size": 552,
+      "sha256": "b9fe010ba56bf51e38c1ff001b8c9ab64fa0e7918dd71215e3d39ddb6d162acf"
+    },
+    {
+      "name": "ValidShareAppShortcutMenu.onItemClick",
+      "address": "0x17fd5a8",
+      "size": 336,
+      "sha256": "5731023e870a21694b89df4e32b198f394e0fd856230464d9a105233901fc49e"
+    },
+    {
+      "name": "ValidShareAppShortcutMenu.shareApk",
+      "address": "0x17fda70",
+      "size": 188,
+      "sha256": "a6e69442573201ce3bdc5079701944eb0b3ea0e7f48deb861f5ecc7144ebd1a1"
+    },
+    {
+      "name": "ValidShareAppShortcutMenu.showDisclaimerDialog",
+      "address": "0x17fd7a4",
+      "size": 604,
+      "sha256": "e7c50fe16cee61782663668a3b607be98b7cbdcd13765dc335d52214223ca8fd"
+    },
+    {
+      "name": "ValidSmallWindowShortcutMenu.isValid",
+      "address": "0x1acb114",
+      "size": 1220,
+      "sha256": "667b4321ab8004f6804de7282c815242479f56b64e822e0a2246270d337e72af"
+    },
+    {
+      "name": "ValidSmallWindowShortcutMenu.onItemClick",
+      "address": "0x1b2f638",
+      "size": 536,
+      "sha256": "48b28d54268000451b5342fee24c7b5b64db99f900390365db5806350510141d"
+    },
+    {
+      "name": "ValidSmallWindowShortcutMenu._startSmallWindowActivity",
+      "address": "0x1b2f850",
+      "size": 392,
+      "sha256": "fe46e3f51b51db28fddbb30bb9042bf5e4d70760fd78dd30fe693d3f2636ea60"
+    },
+    {
+      "name": "ValidSmallWindowShortcutMenu._checkRunningStateCondition",
+      "address": "0x1acb5d8",
+      "size": 496,
+      "sha256": "eb8a6ccf2970a265c8ac8e856ab0e3dfbb9b2051737e19d2777285a424bcfcb8"
+    },
+    {
+      "name": "ValidSmallWindowShortcutMenu._isInSuggestionList",
+      "address": "0x1acb7c8",
+      "size": 196,
+      "sha256": "63ab88c6e58609d42f2fe6274acb91b78943068895e87c596ac98c159d5cbf5f"
+    },
+    {
+      "name": "ValidSmallWindowShortcutMenu._passBasicChecks",
+      "address": "0x157eed4",
+      "size": 148,
+      "sha256": "5355cc819a5f98100a6e32cff300cb4fa6bf74f8bf2034b9d4178f7047873ded"
+    },
+    {
+      "name": "ValidMultipleSmallWindowShortcutMenu.isValid",
+      "address": "0x1aca424",
+      "size": 1560,
+      "sha256": "83f3070d21282ba2b1f126e967d655469cbab449d544370a87e481c4818ba839"
+    },
+    {
+      "name": "ValidMultipleSmallWindowShortcutMenu.onItemClick",
+      "address": "0x1b2f130",
+      "size": 972,
+      "sha256": "7537f4c18f7e4d5f79dfa40c36eb0f06f505f7612582d3a376f0bfcd6127a04a"
+    },
+    {
+      "name": "ValidMultipleSmallWindowShortcutMenu._startMultipleSmallWindow",
+      "address": "0x1b2f4fc",
+      "size": 316,
+      "sha256": "af81caeb71059d482585d8eb7308840926c0656e598529ddea5ae78f8f042c7f"
+    },
+    {
+      "name": "ValidMultipleSmallWindowShortcutMenu._isAppRunning",
+      "address": "0x1acaa3c",
+      "size": 1556,
+      "sha256": "c728ddde1d0e004d89c9664f09535115b4acd97037f38046cd78a3734c029787"
+    },
+    {
+      "name": "ValidMultipleSmallWindowShortcutMenu._isInSuggestionList",
+      "address": "0x1acb050",
+      "size": 196,
+      "sha256": "2e5251be2c78d864d2b4621b6a8e18cbc77aeef9063c7dde88d5ee09eb6548fa"
+    },
+    {
+      "name": "ShareAppShortcutMenuItem.getShortcutMenuType",
+      "address": "0x182d180",
+      "size": 12,
+      "sha256": "6b500783cfa620886d2683370842a709843f573babcc63b3ec80ecc483ce1469"
+    },
+    {
+      "name": "SmallWindowShortcutMenuItem.getShortcutMenuType",
+      "address": "0x182d15c",
+      "size": 12,
+      "sha256": "409af9970c2998c800cad4539f45924151358ca786dea929468e00cfdce48429"
+    },
+    {
+      "name": "MultipleSmallWindowShortcutMenuItem.getShortcutMenuType",
+      "address": "0x182d150",
+      "size": 12,
+      "sha256": "b574ee16e0e8dadbd0ced1a8c05fced6a66fe229887b7834be698ac23007b630"
+    }
+  ],
+  "calls": [
+    {
+      "owner": "ValidSmallWindowShortcutMenu.isValid",
+      "address": "0x1acb4c8",
+      "target": "0x1acb7c8",
+      "targetName": "ValidSmallWindowShortcutMenu._isInSuggestionList"
+    },
+    {
+      "owner": "ValidSmallWindowShortcutMenu.isValid",
+      "address": "0x1acb534",
+      "target": "0x157eed4",
+      "targetName": "ValidSmallWindowShortcutMenu._passBasicChecks"
+    },
+    {
+      "owner": "ValidSmallWindowShortcutMenu.isValid",
+      "address": "0x1acb5d0",
+      "target": "0x1acb5d8",
+      "targetName": "ValidSmallWindowShortcutMenu._checkRunningStateCondition"
+    },
+    {
+      "owner": "ValidSmallWindowShortcutMenu.onItemClick",
+      "address": "0x1b2f770",
+      "target": "0x1b2f850",
+      "targetName": "ValidSmallWindowShortcutMenu._startSmallWindowActivity"
+    },
+    {
+      "owner": "ValidMultipleSmallWindowShortcutMenu.isValid",
+      "address": "0x1aca840",
+      "target": "0x1acb050",
+      "targetName": "ValidMultipleSmallWindowShortcutMenu._isInSuggestionList"
+    },
+    {
+      "owner": "ValidMultipleSmallWindowShortcutMenu.isValid",
+      "address": "0x1aca9a4",
+      "target": "0x1acaa3c",
+      "targetName": "ValidMultipleSmallWindowShortcutMenu._isAppRunning"
+    },
+    {
+      "owner": "ValidMultipleSmallWindowShortcutMenu.onItemClick",
+      "address": "0x1b2f2f0",
+      "target": "0x1b2f4fc",
+      "targetName": "ValidMultipleSmallWindowShortcutMenu._startMultipleSmallWindow"
+    },
+    {
+      "owner": "ValidMultipleSmallWindowShortcutMenu.onItemClick",
+      "address": "0x1b2f394",
+      "target": "0x1acaa3c",
+      "targetName": "ValidMultipleSmallWindowShortcutMenu._isAppRunning"
+    },
+    {
+      "owner": "ValidMultipleSmallWindowShortcutMenu.onItemClick",
+      "address": "0x1b2f424",
+      "target": "0x1b2f4fc",
+      "targetName": "ValidMultipleSmallWindowShortcutMenu._startMultipleSmallWindow"
+    }
+  ],
+  "windows": [
+    {
+      "name": "分享APK getShortcutMenuType",
+      "address": "0x182d180",
+      "bytes": "60274291001847f9c0035fd6"
+    },
+    {
+      "name": "小窗 getShortcutMenuType",
+      "address": "0x182d15c",
+      "bytes": "60274291002447f9c0035fd6"
+    },
+    {
+      "name": "多变体小窗 getShortcutMenuType",
+      "address": "0x182d150",
+      "bytes": "60274291001c47f9c0035fd6"
+    },
+    {
+      "name": "分享APK isValid 序言",
+      "address": "0x1acbed0",
+      "bytes": "fd79bfa9fd030faaef0104d1b6831ff8"
+    },
+    {
+      "name": "小窗 isValid 序言",
+      "address": "0x1acb114",
+      "bytes": "fd79bfa9fd030faaef0101d1b6831ff8"
+    },
+    {
+      "name": "多变体小窗 isValid 序言",
+      "address": "0x1aca424",
+      "bytes": "fd79bfa9fd030faaef0101d1b6831ff8"
+    },
+    {
+      "name": "分享APK onItemClick 序言",
+      "address": "0x17fd5a8",
+      "bytes": "fd79bfa9fd030faaefe100d1a1831ff8"
+    },
+    {
+      "name": "小窗 onItemClick 序言",
+      "address": "0x1b2f638",
+      "bytes": "fd79bfa9fd030faaef4102d1b6831ff8"
+    },
+    {
+      "name": "多变体小窗 onItemClick 序言",
+      "address": "0x1b2f130",
+      "bytes": "fd79bfa9fd030faaefa103d1b6831ff8"
+    }
+  ],
+  "installPermitted": false,
+  "verificationBoundary": "静态合同只固定挂载点字节与直接调用边；不证明原生入口可达、并发安装安全或实机功能可用",
+  "taskMapping": {
+    "说明": "宿主 MultipleSmallWindowShortcutMenuItem 路径就是「多开」（上游 New task）；与「小窗」只差 FLAG_ACTIVITY_MULTIPLE_TASK，由两条 setFlags 立即数证明。",
+    "upstreamSource": {
+      "file": "library/libhook/src/main/java/com/sevtinge/hyperceiler/libhook/rules/home/other/FreeformShortcutMenu.java",
+      "newTaskBranch": "createFreeformIntent(component, isMultiTask=true) 追加 FLAG_ACTIVITY_MULTIPLE_TASK",
+      "smallWindowBranch": "createFreeformIntent(component, isMultiTask=false) 不追加该标志",
+      "newTaskString": "R.string.new_task，中文资源为「多开」"
+    },
+    "flagDiff": "0x08000000",
+    "flagDiffName": "Intent.FLAG_ACTIVITY_MULTIPLE_TASK",
+    "windows": [
+      {
+        "name": "小窗 setFlags 立即数",
+        "address": "0x1b2f990",
+        "bytes": "0004a2d220f000f8",
+        "expectedImmediate": "0x10200000"
+      },
+      {
+        "name": "多开 setFlags 立即数",
+        "address": "0x1b2f5f8",
+        "bytes": "0004a3d220f000f8",
+        "expectedImmediate": "0x18200000"
+      }
+    ]
+  }
+}

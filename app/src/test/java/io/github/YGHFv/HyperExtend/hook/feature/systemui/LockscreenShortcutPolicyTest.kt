@@ -10,10 +10,8 @@ import org.junit.Assert.*
 import org.junit.Test
 
 class LockscreenShortcutPolicyTest {
-    @Test fun exactSystemUiAndPluginPairRequired() {
-        assertTrue(LockscreenShortcutPolicy.supported(202602260L, 22446301L))
-        for ((sysui, plugin) in listOf(null to 22446301L, 202602260L to null, 202602261L to 22446301L, 202602260L to 22446302L))
-            assertFalse(LockscreenShortcutPolicy.supported(sysui, plugin))
+    @Test fun structuralTargetsDecideSupport() {
+        assertTrue(LockscreenShortcutPolicy.supported())
     }
     @Test fun sidesAreIndependentAndUnknownSideKeepsNative() {
         for (left in listOf(false, true)) for (right in listOf(false, true)) {

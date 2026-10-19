@@ -5,12 +5,11 @@ import org.junit.Assert.*
 import org.junit.Test
 
 class MediaDarkPolicyTest {
-    @Test fun onlyAuditedMainScreenAndMainThreadAreEligible() {
-        assertTrue(MediaDarkPolicy.enabled(202602260, true, false, false))
-        assertFalse(MediaDarkPolicy.enabled(202602261, true, false, false))
-        assertFalse(MediaDarkPolicy.enabled(202602260, false, false, false))
-        assertFalse(MediaDarkPolicy.enabled(202602260, true, true, false))
-        assertFalse(MediaDarkPolicy.enabled(202602260, true, false, true))
+    @Test fun mainThreadAndSafetyGates() {
+        assertTrue(MediaDarkPolicy.enabled(true, false, false))
+        assertFalse(MediaDarkPolicy.enabled(false, false, false))
+        assertFalse(MediaDarkPolicy.enabled(true, true, false))
+        assertFalse(MediaDarkPolicy.enabled(true, false, true))
     }
 
     @Test fun darkModeOnlyChangesNightBitsAndIsIdempotent() {

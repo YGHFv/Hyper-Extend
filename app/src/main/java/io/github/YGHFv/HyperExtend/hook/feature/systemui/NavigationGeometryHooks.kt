@@ -8,7 +8,6 @@ import android.content.res.Resources
 import android.os.Looper
 import android.view.View
 import io.github.YGHFv.HyperExtend.core.NavigationGeometrySettings as Config
-import io.github.YGHFv.HyperExtend.core.compatibleVersionCode
 import io.github.YGHFv.HyperExtend.core.hostDisplayIdOrNull
 import io.github.YGHFv.HyperExtend.hook.HookRuntime
 import io.github.YGHFv.HyperExtend.hook.HookSettings
@@ -37,7 +36,6 @@ internal object NavigationGeometryHooks {
         val values = Config.config.associate { it.key to settings.number(it.key, 0, it.min, it.max) }
         val scope = ThreadLocal<NavigationGeometryPolicy.Geometry>()
         val ready = AtomicBoolean(false)
-        var version: Long? = null
         fun checked(resources: Resources, id: Int): Boolean =
             resources.getResourcePackageName(id) == "android" &&
                 resources.getResourceTypeName(id) == "dimen" &&
@@ -60,10 +58,8 @@ internal object NavigationGeometryHooks {
                     val context = if (target == t.params) fields.getValue(t.BAR to "mContext").get(owner) as? Context
                         else (owner as? View)?.context
                     context ?: return@runCatching null
-                    val host = version ?: context.packageManager.getPackageInfo("com.android.systemui", 0)
-                        .compatibleVersionCode.also { version = it }
                     val edge = fields.getValue(target.owner to "mEdgeBackGestureHandler").get(owner) ?: return@runCatching null
-                    if (!NavigationGeometryPolicy.eligible(host, context.hostDisplayIdOrNull(),
+                    if (!NavigationGeometryPolicy.eligible(context.hostDisplayIdOrNull(),
                             fields.getValue(target.owner to "mNavBarMode").getInt(owner),
                             fields.getValue(t.EDGE to "mIsButtonForcedVisible").getBoolean(edge), true)) return@runCatching null
                     val rotation = if (target == t.params) (chain.args[0] as? Int)?.takeIf { it in 0..3 }

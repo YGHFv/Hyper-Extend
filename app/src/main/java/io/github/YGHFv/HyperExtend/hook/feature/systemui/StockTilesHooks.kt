@@ -5,8 +5,6 @@
  */
 package io.github.YGHFv.HyperExtend.hook.feature.systemui
 
-import io.github.YGHFv.HyperExtend.core.compatibleVersionCode
-
 import android.content.Context
 import android.os.Looper
 import io.github.YGHFv.HyperExtend.core.ModuleLog
@@ -23,12 +21,6 @@ internal object StockTilesHooks {
             require(factory.getDeclaredField(name).type.name == "javax.inject.Provider")
         }
     }
-
-    private fun supported(context: Context, plugin: Boolean): Boolean = runCatching {
-        val pm = context.packageManager
-        StockTilesPolicy.supported(pm.getPackageInfo("com.android.systemui", 0).compatibleVersionCode,
-            if (plugin) pm.getPackageInfo(SystemUiPluginHooks.PACKAGE, 0).compatibleVersionCode else null, plugin)
-    }.getOrDefault(false)
 
     fun installClassic(loader: ClassLoader, settings: HookSettings): Int {
         checkFactory(loader)
@@ -64,7 +56,7 @@ internal object StockTilesHooks {
                     runCatching {
                         val helper = fields.getValue("tileQueryHelper").get(chain.thisObject) ?: return@runCatching null
                         val context = fields.getValue("mContext").get(helper) as? Context ?: return@runCatching null
-                        if (!supported(context, false) || context.resources.getResourceName(targets.STOCK_RESOURCE) !=
+                        if (context.resources.getResourceName(targets.STOCK_RESOURCE) !=
                             "com.android.systemui:string/miui_quick_settings_tiles_stock") return@runCatching null
                         StockTilesScope.Frame(context, targets.STOCK_RESOURCE)
                     }.getOrNull()
@@ -104,7 +96,7 @@ internal object StockTilesHooks {
         val add = HookRuntime.hook(methods.getValue(targets.pluginAdd), "$FEATURE/pluginEditor") { chain ->
             scope.withFrame(null) {
                 val context = contextField.get(chain.thisObject) as? Context
-                val frame = if (ready.get() && settings.isOn(FEATURE) && context != null && supported(context, true))
+                val frame = if (ready.get() && settings.isOn(FEATURE) && context != null)
                     StockTilesScope.Frame(chain.thisObject!!, 0) else null
                 scope.withFrame(frame) { chain.proceed() }
             }

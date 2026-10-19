@@ -5,9 +5,9 @@ internal object DimTileIconPolicy {
     const val FEATURE = "control_center_dim_tile_icon"
     const val ASSET = "ic_qs_extra_dim_hyperceiler"
 
-    fun eligible(enabled: Boolean, version: Long?, spec: String?, booleanState: Boolean,
+    fun eligible(enabled: Boolean, spec: String?, booleanState: Boolean,
                  state: Int, hasIcon: Boolean, hasSupplier: Boolean): Boolean =
-        enabled && version == 202602260L && spec == "reduce_brightness" && booleanState &&
+        enabled && spec == "reduce_brightness" && booleanState &&
             state in 0..2 && hasIcon && !hasSupplier
 }
 

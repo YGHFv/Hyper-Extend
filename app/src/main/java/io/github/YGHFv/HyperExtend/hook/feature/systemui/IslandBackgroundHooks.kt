@@ -20,7 +20,6 @@ import android.widget.ImageView
 import android.widget.TextView
 import io.github.YGHFv.HyperExtend.core.IslandMediaSettings as Settings
 import io.github.YGHFv.HyperExtend.core.ModuleLog
-import io.github.YGHFv.HyperExtend.core.compatibleVersionCode
 import io.github.YGHFv.HyperExtend.hook.HookRuntime
 import io.github.YGHFv.HyperExtend.hook.SafeModeRuntime
 import io.github.YGHFv.HyperExtend.hook.feature.statusbar.StatusIconHost
@@ -89,7 +88,6 @@ internal class IslandBackgroundHooks private constructor(loader: ClassLoader) {
             val root = rootRef.get() ?: return false
             return IslandBackgroundPolicy.eligible(ready && !SafeModeRuntime.blocked &&
                 HookRuntime.settings().isOn(Settings.BACKGROUND),
-                root.context.packageManager.getPackageInfo("com.android.systemui", 0).compatibleVersionCode,
                 root.display?.displayId, root.isAttachedToWindow,
                 root.isShown && root.windowVisibility == View.VISIBLE,
                 root.context.getSystemService(PowerManager::class.java)?.isInteractive == true,

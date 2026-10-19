@@ -43,13 +43,7 @@ class StockTilesPolicyTest {
         for (value in listOf(null, "", "  ", "a".repeat(16385))) assertEquals(value, StockTilesPolicy.append(value))
     }
 
-    @Test fun versionGatesRequireAuditedHosts() {
-        assertTrue(StockTilesPolicy.supported(202602260))
-        assertFalse(StockTilesPolicy.supported(null))
-        assertFalse(StockTilesPolicy.supported(202602261))
-        assertTrue(StockTilesPolicy.supported(202602260, 183022200, plugin = true))
-        assertFalse(StockTilesPolicy.supported(202602260, null, plugin = true))
-        assertFalse(StockTilesPolicy.supported(202602260, 183022201, plugin = true))
-        assertFalse(StockTilesPolicy.supported(202602261, 183022200, plugin = true))
+    @Test fun policyHasNoHostVersionGateAfterTargetsAreResolved() {
+        assertTrue(StockTilesPolicy.supported())
     }
 }

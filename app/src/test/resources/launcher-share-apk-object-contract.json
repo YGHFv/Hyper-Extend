@@ -1,0 +1,247 @@
+{
+  "schemaVersion": 1,
+  "policy": "share-apk-object-boundaries-offline-v1",
+  "installPermitted": false,
+  "notClosedGates": [
+    1,
+    3,
+    5
+  ],
+  "image": {
+    "sha256": "b947b8db576539a57a2b2a5ba7e32749e06508fa88d2fae31316cbd14374387b",
+    "buildId": "4f1bdaeda6b1f98dde7d3ebc23163cd1",
+    "size": 29387672
+  },
+  "functions": {
+    "bundleWrapper": {
+      "address": "0x9a2c58",
+      "size": 108,
+      "symbol": null,
+      "sha256": "935c1f44169545fa89d727a433f6ad31e9dc690505fdc266fa83d6e72a4acbea",
+      "bytes": "fd79bfa9fd030faa403f40f900e051f9702340f91f00106b61000054626b41f9becd469401b040b821801c8b3f00166b00010054203041b800801c8be10300aa0b000094ef031daafd79c1a8c0035fd680113c94e10300aa601b43f920b000b8e00301aafdcd4694000020d4"
+    },
+    "bundleNew": {
+      "address": "0x9a2cc4",
+      "size": 216,
+      "symbol": "RustLibApiImpl.hyperApiBundleBundleNew",
+      "sha256": "530096383ecc090a2cfe7139309aa9b6513508b4e8c3303a80dc6bba87123ccf",
+      "bytes": "fd79bfa9fd030faaef0101d1e20301aaa1831ff8210080d22fd14694e30300aaa0835ff8a3831ef860f000b804b040b884801c8be20300aaa4031ff861274091210c44f915d2469461274091211044f9a0031ef88d1a3c94e30300aaa0035ef8a3831df860b000b8e10316aa020080d24814fb97a2835ef861274091211444f906d2469461274091211844f9a0831ef87b1a3c94e10300aaa0835ef8203001b8a0835df820b000b8a0835ff820f000b870274091101a44f9be035ff8fec100a9e10100f9647f41f91b173c94ef031daafd79c1a8c0035fd6"
+    },
+    "intentAllocate": {
+      "address": "0x18c00d8",
+      "size": 12,
+      "symbol": null,
+      "sha256": "382ea87f2c610e48edca3817f74041d325f7443547433702c25e6a087a9220d7",
+      "bytes": "826390d2e21aa0f20c5c0a14"
+    },
+    "allocateObject": {
+      "address": "0x1b57110",
+      "size": 76,
+      "symbol": null,
+      "sha256": "a2f67febaca056f19959f70927f030945fcc5516541033607931c327d21a58bc",
+      "bytes": "442c48d384ec7cd3401746a90300048bbf0003eb69010054433300f9020000f904200091d07e4092108210aa904081a89f0003ebc3ffff5400040091c0035fd6e10316aa431b41f960001fd6"
+    },
+    "intentEquals": {
+      "address": "0x1798210",
+      "size": 468,
+      "symbol": "Intent.==",
+      "sha256": "5856c38090a0cd7eebeb1d827c9de18509811813ae164ffeca2f68426e7a2987",
+      "bytes": "fd79bfa9fd030faaef4100d1a00b40f91f00166ba1000054c0c20091ef031daafd79c1a8c0035fd6a10f40f93f00006b61000054c082009164000014820780d26000003602f05ff8427c4cd35fe035f1a10b0054701b419110ba41f97e1b4191debb41f9fe4100a9dc460e94c00a2037a20f40f9a10b40f9407040b800801c8b237040b863801c8b04f05ff8847c4cd3e30100a9e00304aafe0300aabe7a7ef8c0033fd600092037a20f40f9a10b40f940b040b800801c8b23b040b863801c8b1f00036b0108005440f040f823f040f81f0003eb81070054407041b800801c8b237041b863801c8b04f05ff8847c4cd3e30100a9e00304aafe0300aabe7a7ef8c0033fd600062037a20f40f9a10b40f940b041b800801c8b23b041b863801c8b1f00036b0105005440f041b800801c8b23f041b863801c8b04f05ff8847c4cd3e30100a9e00304aafe0300aabe7a7ef8c0033fd680032037a20f40f9a10b40f9403042b800801c8b233042b863801c8b04f05ff8847c4cd3e30100a9e00304aafe0300aabe7a7ef8c0033fd6c0012037a10f40f9a00b40f9227042b842801c8b017042b821801c8b40f05ff8007c4cd3e10900a9fe0300aabe7a7ef8c0033fd602000014c0c20091ef031daafd79c1a8c0035fd6"
+    },
+    "intentEncode": {
+      "address": "0x8cbf64",
+      "size": 240,
+      "symbol": "RustLibApiImpl.sse_encode_intent",
+      "sha256": "08497b250a12d243117ff4faebc3f59c8584955550c821462437aef3059cec57",
+      "bytes": "fd79bfa9fd030faaef6100d1e50301aae40302aae00303aaa1831ff8a2031ff8a3831ef8827040b842801c8be10305aae30300aaa1ffff97a0035ff802b040b842801c8ba1835ff8a3835ef8e0000094a0035ff802f040f8a3835ef8617040b821801c8ba38afe97a0035ff8027041b842801c8ba1835ff8a3835ef87e000094a0035ff802b041b842801c8ba1835ff8a3835ef849000094a0035ff802f041b842801c8ba1835ff8a3835ef811000094a0035ff8023042b842801c8ba1835ff8a3835ef87dffff97a0035ff8027042b842801c8ba1835ff8a3835ef877ffff97e00316aaef031daafd79c1a8c0035fd6"
+    },
+    "intentDecode": {
+      "address": "0x8ccaf0",
+      "size": 232,
+      "symbol": "RustLibApiImpl.sse_decode_intent",
+      "sha256": "fd5c96e3c93f8db979b19e9aa32864baf125ce47b476ebf4a27579419611e8c1",
+      "bytes": "fd79bfa9fd030faaef0101d1e30301aae00302aaa1831ff8a2031ff8c7ffff97a1835ff8a2035ff8a0831ef872010094a2035ff8a0031ef8417040b821801c8b0a83fe97a1835ff8a2035ff8a0831df812010094a1835ff8a2035ff8a0031df84a000094a1835ff8a2035ff8a0831cf81e000094a1835ff8a2035ff8a0031cf8aeffff97a1835ff8a2035ff8a0831ff8aaffff97a0031ff854cd3f94a1835ef8017000b8a1035ef801b000b8a1835df801f000f8a1035df8017001b8a1835cf801b001b8a1035cf801f001b8a1835ff8013002b8a1035ff8017002b8ef031daafd79c1a8c0035fd6"
+    },
+    "intentDcoDecode": {
+      "address": "0x9650e0",
+      "size": 836,
+      "symbol": "RustLibApiImpl.dco_decode_intent",
+      "sha256": "0db70d9596a9f76e951ed3b9429ce95e05d638a3874f87dc7797bc7c660241b1",
+      "bytes": "fd79bfa9fd030faaef6101d1e00302aae40301aae30302aaa1831ff8a2031ff8e20316aae10316aa840780d26000003604f05ff8847c4cd3846801d19f0800f1a900005468c344f963a74091636840f9dbde4794a1035ff820f05ff8007c4cd3e10100f991638fd23100a0f21e00118bbe7a7ef8c0033fd61f40007141110054a1035ff820f05ff8007c4cd3ff0500a91e0434d1be7a7ef8c0033fd6a1835ff8e20300aa27020094e20300aaa1035ff8a2831ef820f05ff8007c4cd3500080d2f00500a91e0434d1be7a7ef8c0033fd6a1835ff8e20300aae9010094e20300aaa1035ff8a2031ef820f05ff8007c4cd3900080d2f00500a91e0434d1be7a7ef8c0033fd6e30300aae20316aae10316aaa3831df84001003604f05ff8847c4cd384f000d19f0400f1a900005468e340f963a74091637040f985da4794a1035ff820f05ff8007c4cd3d00080d2f00500a91e0434d1be7a7ef8c0033fd6a1835ff8e20300aa73010094e20300aaa1035ff8a2031df820f05ff8007c4cd3100180d2f00500a91e0434d1be7a7ef8c0033fd6a1835ff8e20300aaf4000094e20300aaa1035ff8a2831cf820f05ff8007c4cd3500180d2f00500a91e0434d1be7a7ef8c0033fd6a1835ff8e20300aa5e000094e20300aaa1035ff8a2031cf820f05ff8007c4cd3900180d2f00500a91e0434d1be7a7ef8c0033fd6a1835ff8e20300aad0010094e10300aaa0035ff8a1831bf802f05ff8427c4cd3d00180d2f00100a9e00302aa1e0434d1be7a7ef8c0033fd6a1835ff8e20300aac2010094a0831ff86e6b3d94e10300aaa0835ef8207000b8a0035ef820b000b8a0835df8027c419340000036027040f822f000f8a0035df8207001b8a0835cf820b001b8a0035cf820f001b8a0835bf8203002b8a0835ff8207002b8e00301aaef031daafd79c1a8c0035fd6a0035ff8e10316aa820080d2a6cb4794e10300aaa1831ff870a74091107a40f930f000b8a0035ff802f05ff8427c4cd3e00100f9e00302aa91638fd23100a0f21e00118bbe7a7ef8c0033fd6a1835ff8394c0091200300b9e000003630f05f3811f05f38300a508a1f825cea4000005438c44794b0835ff8f00100f9e30dfc97a0831ff8dd0e3d94e10300aaa0835ff8207000b8e00301aa25c44794000020d4"
+    }
+  },
+  "intentClassId": "0xd78",
+  "allocationTag": "0xd7831c",
+  "allocationSize": 48,
+  "fields": [
+    {
+      "index": 0,
+      "offset": "0x7",
+      "memoryWidth": 4,
+      "kind": "optionalString",
+      "semanticName": null,
+      "encode": {
+        "call": "0x8cbf98",
+        "target": "0x8cbe1c",
+        "symbol": "RustLibApiImpl.sse_encode_opt_String",
+        "load": "0x8cbf88"
+      },
+      "decode": {
+        "call": "0x8ccb0c",
+        "target": "0x8cca28",
+        "symbol": "RustLibApiImpl.sse_decode_opt_String",
+        "store": "0x8ccb90"
+      }
+    },
+    {
+      "index": 1,
+      "offset": "0xb",
+      "memoryWidth": 4,
+      "kind": "optionalUri",
+      "semanticName": null,
+      "encode": {
+        "call": "0x8cbfb0",
+        "target": "0x8cc330",
+        "symbol": "RustLibApiImpl.sse_encode_opt_box_autoadd_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerUri",
+        "load": "0x8cbfa0"
+      },
+      "decode": {
+        "call": "0x8ccb1c",
+        "target": "0x8cd0e4",
+        "symbol": "RustLibApiImpl.sse_decode_opt_box_autoadd_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerUri",
+        "store": "0x8ccb98"
+      }
+    },
+    {
+      "index": 2,
+      "offset": "0xf",
+      "memoryWidth": 8,
+      "kind": "int32Wire",
+      "semanticName": null,
+      "encode": {
+        "call": "0x8cbfc8",
+        "target": "0x86ea54",
+        "symbol": "WriteBuffer.putInt32",
+        "load": "0x8cbfb8"
+      },
+      "decode": {
+        "call": "0x8ccb30",
+        "target": "0x86d758",
+        "symbol": "ReadBuffer.getInt32",
+        "store": "0x8ccba0"
+      }
+    },
+    {
+      "index": 3,
+      "offset": "0x17",
+      "memoryWidth": 4,
+      "kind": "optionalStringList",
+      "semanticName": null,
+      "encode": {
+        "call": "0x8cbfe0",
+        "target": "0x8cc1d8",
+        "symbol": "RustLibApiImpl.sse_encode_opt_list_String",
+        "load": "0x8cbfd0"
+      },
+      "decode": {
+        "call": "0x8ccb40",
+        "target": "0x8ccf88",
+        "symbol": "RustLibApiImpl.sse_decode_opt_list_String",
+        "store": "0x8ccba8"
+      }
+    },
+    {
+      "index": 4,
+      "offset": "0x1b",
+      "memoryWidth": 4,
+      "kind": "optionalBundle",
+      "semanticName": null,
+      "encode": {
+        "call": "0x8cbff8",
+        "target": "0x8cc11c",
+        "symbol": "RustLibApiImpl.sse_encode_opt_box_autoadd_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerBundle",
+        "load": "0x8cbfe8"
+      },
+      "decode": {
+        "call": "0x8ccb50",
+        "target": "0x8ccc78",
+        "symbol": "RustLibApiImpl.sse_decode_opt_box_autoadd_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerBundle",
+        "store": "0x8ccbb0"
+      }
+    },
+    {
+      "index": 5,
+      "offset": "0x1f",
+      "memoryWidth": 4,
+      "kind": "optionalComponentName",
+      "semanticName": null,
+      "encode": {
+        "call": "0x8cc010",
+        "target": "0x8cc054",
+        "symbol": "RustLibApiImpl.sse_encode_opt_box_autoadd_component_name",
+        "load": "0x8cc000"
+      },
+      "decode": {
+        "call": "0x8ccb60",
+        "target": "0x8ccbd8",
+        "symbol": "RustLibApiImpl.sse_decode_opt_box_autoadd_component_name",
+        "store": "0x8ccbb8"
+      }
+    },
+    {
+      "index": 6,
+      "offset": "0x23",
+      "memoryWidth": 4,
+      "kind": "optionalString",
+      "semanticName": null,
+      "encode": {
+        "call": "0x8cc028",
+        "target": "0x8cbe1c",
+        "symbol": "RustLibApiImpl.sse_encode_opt_String",
+        "load": "0x8cc018"
+      },
+      "decode": {
+        "call": "0x8ccb70",
+        "target": "0x8cca28",
+        "symbol": "RustLibApiImpl.sse_decode_opt_String",
+        "store": "0x8ccbc0"
+      }
+    },
+    {
+      "index": 7,
+      "offset": "0x27",
+      "memoryWidth": 4,
+      "kind": "optionalString",
+      "semanticName": null,
+      "encode": {
+        "call": "0x8cc040",
+        "target": "0x8cbe1c",
+        "symbol": "RustLibApiImpl.sse_encode_opt_String",
+        "load": "0x8cc030"
+      },
+      "decode": {
+        "call": "0x8ccb80",
+        "target": "0x8cca28",
+        "symbol": "RustLibApiImpl.sse_decode_opt_String",
+        "store": "0x8ccbc8"
+      }
+    }
+  ],
+  "poolContentsResolved": false,
+  "poolSlots": {
+    "firstKey": "0xb9458",
+    "secondKey": "0xb9460",
+    "firstField": "0xb9468",
+    "lastField": "0xb9470"
+  },
+  "matrix": {
+    "apiStates": [
+      "ready",
+      "lazy"
+    ],
+    "cases": 144,
+    "comparisons": 72,
+    "rejections": 8
+  },
+  "verificationBoundary": "执行真实 Bundle 包装器与 Intent 分配快路径；线程、堆、迟初始化及 Rust 接口仍为替身。字段只有偏移、宽度及编解码类型证据；本替身模型自身的四个池槽内容和语义字段名仍未解码，故 poolContentsResolved 保持 false。四个池槽的静态内容另由独立的 launcher_share_apk_snapshot_audit.py 顺序解码（见 launcher-share-apk-snapshot-pool-contract.json），两套证据相互独立、不合并，也不据此给本替身模型补语义字段名。不证明实机 GC、异常展开、文件准备或分享可用。"
+}

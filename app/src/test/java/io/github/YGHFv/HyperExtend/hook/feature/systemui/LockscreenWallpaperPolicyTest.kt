@@ -5,21 +5,19 @@ import org.junit.Assert.*
 import org.junit.Test
 
 class LockscreenWallpaperPolicyTest {
-    private fun eligible(version: Long? = 202602260L, mainThread: Boolean = true, enabled: Boolean = true,
+    private fun eligible(mainThread: Boolean = true, enabled: Boolean = true,
                          needAnimation: Boolean = true, systemAnimations: Boolean = true, attached: Boolean = true,
                          displayId: Int? = 0, defaultTheme: Boolean = true, showing: Boolean = true,
                          fullAod: Boolean = false, depth: Boolean = false, video: Boolean = false,
                          flip: Boolean = false, occluded: Boolean = false, fromGone: Boolean = false,
                          bouncer: Boolean = false, dismissing: Boolean = false, superSave: Boolean = false) =
-        LockscreenWallpaperPolicy.eligible(version, mainThread, enabled, needAnimation, systemAnimations,
+        LockscreenWallpaperPolicy.eligible(mainThread, enabled, needAnimation, systemAnimations,
             attached, displayId, defaultTheme, showing, fullAod, depth, video, flip, occluded,
             fromGone, bouncer, dismissing, superSave)
 
     @Test fun ordinaryMainDisplayKeyguardIsEligible() { assertTrue(eligible()) }
 
-    @Test fun versionThreadAndFeatureAreMandatory() {
-        assertFalse(eligible(version = null))
-        assertFalse(eligible(version = 202602261L))
+    @Test fun threadAndFeatureAreMandatory() {
         assertFalse(eligible(mainThread = false))
         assertFalse(eligible(enabled = false))
     }

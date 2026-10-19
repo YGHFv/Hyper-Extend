@@ -5,10 +5,7 @@
  */
 package io.github.YGHFv.HyperExtend.hook.feature.systemui
 
-import io.github.YGHFv.HyperExtend.core.compatibleVersionCode
-
 import android.annotation.TargetApi
-import android.content.Context
 import android.os.Looper
 import android.view.MotionEvent
 import android.view.View
@@ -54,13 +51,6 @@ internal class LockscreenShortcutHooks private constructor(loader: ClassLoader, 
     private var ordinaryLockscreen: () -> Boolean = { false }
     private var talkbackEnabled: () -> Boolean = { false }
     @Volatile private var ready = false
-    @Volatile private var supported: Boolean? = null
-
-    private fun supported(context: Context): Boolean = supported ?: runCatching {
-        val pm = context.packageManager
-        LockscreenShortcutPolicy.supported(pm.getPackageInfo("com.android.systemui", 0).compatibleVersionCode,
-            pm.getPackageInfo(LockscreenShortcutPolicy.PACKAGE, 0).compatibleVersionCode)
-    }.getOrDefault(false).also { supported = it }
 
     private inner class Binding(owner: Any, val image: ImageView, val layout: View, val isLeft: Boolean) :
         View.OnAttachStateChangeListener, ViewTreeObserver.OnPreDrawListener {
@@ -198,12 +188,13 @@ internal class LockscreenShortcutHooks private constructor(loader: ClassLoader, 
             val owner = chain.thisObject!!
             val layout = chain.args[2] as? View ?: return@hook result
             val side = when (image) { left.get(owner) -> true; right.get(owner) -> false; else -> null }
-            if (supported(image.context) && LockscreenShortcutPolicy.hide(side, hideLeft, hideRight) &&
+            if (LockscreenShortcutPolicy.supported() && LockscreenShortcutPolicy.hide(side, hideLeft, hideRight) &&
                 (if (side == true) leftLayout else rightLayout).get(owner) === layout && image.parent === layout) {
                 val binding = Binding(owner, image, layout, side!!)
                 bindings[image] = WeakReference(binding)
                 try { binding.start() } catch (failure: Throwable) { binding.dispose(); throw failure }
-            } else if (flashReady && side == true && supported(image.context) && leftLayout.get(owner) === layout && image.parent === layout) {
+            } else if (flashReady && side == true && LockscreenShortcutPolicy.supported() &&
+                leftLayout.get(owner) === layout && image.parent === layout) {
                 val controller = flashlight?.controller()
                 if (controller != null) {
                     val weakOwner = WeakReference(owner)
@@ -222,7 +213,8 @@ internal class LockscreenShortcutHooks private constructor(loader: ClassLoader, 
                 bindings[chain.args[0] as? View]?.get()?.owns() == true) false else chain.proceed()
         }
         installed += HookRuntime.hook(methods.getValue(LockscreenShortcutTargets.click), "lockscreen_shortcuts/click/$suffix") { chain ->
-            if (ready && supported == true && LockscreenShortcutPolicy.hide(chain.args[0] as? Boolean, hideLeft, hideRight)) null
+            if (ready && LockscreenShortcutPolicy.supported() &&
+                LockscreenShortcutPolicy.hide(chain.args[0] as? Boolean, hideLeft, hideRight)) null
             else {
                 val binding = if (ready && flashReady && chain.args[0] == true && Looper.myLooper() == Looper.getMainLooper())
                     flashBindings[left.get(chain.thisObject) as? View]?.get() else null
@@ -233,7 +225,7 @@ internal class LockscreenShortcutHooks private constructor(loader: ClassLoader, 
             }
         }
         installed += HookRuntime.hook(methods.getValue(LockscreenShortcutTargets.launch), "lockscreen_shortcuts/launch/$suffix") { chain ->
-            if (ready && supported == true && LockscreenShortcutPolicy.blockLaunch(
+            if (ready && LockscreenShortcutPolicy.supported() && LockscreenShortcutPolicy.blockLaunch(
                     methods.getValue(LockscreenShortcutTargets.selectedLeft).invoke(chain.thisObject) == true,
                     methods.getValue(LockscreenShortcutTargets.selectedRight).invoke(chain.thisObject) == true, hideLeft, hideRight)) false
             else chain.proceed()

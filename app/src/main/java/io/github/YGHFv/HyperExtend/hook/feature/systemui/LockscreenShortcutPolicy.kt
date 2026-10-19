@@ -13,7 +13,8 @@ internal object LockscreenShortcutPolicy {
     const val PACKAGE = "com.miui.aod"
     val features = listOf(LEFT, RIGHT)
 
-    fun supported(systemUi: Long?, plugin: Long?): Boolean = systemUi == 202602260L && plugin == 22446301L
+    /** 安装器已完成宿主与插件目标的结构解析；这里不再重复读取包版本。 */
+    fun supported(): Boolean = true
     fun hide(left: Boolean?, hideLeft: Boolean, hideRight: Boolean): Boolean = when (left) {
         true -> hideLeft
         false -> hideRight

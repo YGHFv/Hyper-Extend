@@ -7,8 +7,6 @@ package io.github.YGHFv.HyperExtend.hook.feature.systemui
 
 import io.github.YGHFv.HyperExtend.core.hostDisplayIdOrNull
 
-import io.github.YGHFv.HyperExtend.core.compatibleVersionCode
-
 import android.content.Context
 import android.os.Looper
 import io.github.YGHFv.HyperExtend.hook.HookRuntime
@@ -54,13 +52,10 @@ internal object AutoCollapseHooks {
         if (!resolved.filterKeys { it != status }.values.map { HookRuntime.deoptimize(it, "$FEATURE/caller") }.all { it }) return 0
         val collapse = resolved.getValue(SystemUiTargets.collapsePanels)
         val active = ThreadLocal<Any?>()
-        var version: Long? = null
         fun host(tile: Any): Any? = runCatching {
             if (!settings.isOn(FEATURE) || Looper.myLooper() != Looper.getMainLooper()) return@runCatching null
             val context = fields.getValue("mContext").get(tile) as Context
-            val currentVersion = version ?: context.packageManager.getPackageInfo("com.android.systemui", 0)
-                .compatibleVersionCode.also { version = it }
-            if (currentVersion != 202602260L || context.hostDisplayIdOrNull() != 0) return@runCatching null
+            if (context.hostDisplayIdOrNull() != 0) return@runCatching null
             val state = fields.getValue("mState").get(tile) ?: return@runCatching null
             if (!eligible(fields.getValue("state").getInt(state), fields.getValue("disabledByPolicy").getBoolean(state),
                     fields.getValue("isTransient").getBoolean(state), fields.getValue("mTileSpec").get(tile) as? String,

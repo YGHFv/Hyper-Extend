@@ -5,8 +5,6 @@
  */
 package io.github.YGHFv.HyperExtend.hook.feature.systemui
 
-import io.github.YGHFv.HyperExtend.core.compatibleVersionCode
-
 import android.app.KeyguardManager
 import android.annotation.TargetApi
 import android.content.Context
@@ -63,7 +61,6 @@ internal class LockscreenChargingHooks private constructor(loader: ClassLoader, 
     private val main = Handler(Looper.getMainLooper())
     private val worker = ThreadPoolExecutor(1, 1, 15, TimeUnit.SECONDS, ArrayBlockingQueue(2)).apply { allowCoreThreadTimeOut(true) }
     private var ready = false
-    private var hostVersion: Long? = null
 
     private inner class Binding(owner: Any, val anchor: TextView, val container: LinearLayout) :
         View.OnAttachStateChangeListener, ViewTreeObserver.OnPreDrawListener {
@@ -95,8 +92,8 @@ internal class LockscreenChargingHooks private constructor(loader: ClassLoader, 
             val value = owner.get() ?: return false
             val rotation = rotate.get(value) ?: return false
             val message = currentMessage.get(rotation) as? CharSequence
-            return owns() && LockscreenChargingPolicy.eligible(hostVersion ?: -1,
-                anchor.isAttachedToWindow, anchor.isShown && anchor.windowVisibility == View.VISIBLE && anchor.alpha > 0f,
+            return owns() && LockscreenChargingPolicy.eligible(anchor.isAttachedToWindow,
+                anchor.isShown && anchor.windowVisibility == View.VISIBLE && anchor.alpha > 0f,
                 visible.getBoolean(value), dozing.getBoolean(value), SafeModeRuntime.blocked,
                 tiny.invoke(null, anchor.context) != false, plugged.getBoolean(value), defender.getBoolean(value),
                 reverse.getInt(lazyGet.invoke(injector.get(value))), reposition.getBoolean(null), currentType.getInt(rotation),
@@ -216,8 +213,7 @@ internal class LockscreenChargingHooks private constructor(loader: ClassLoader, 
             val result = chain.proceed()
             val anchor = text.get(owner) as? TextView ?: return@hook result
             val container = area.get(owner) as? LinearLayout ?: return@hook result
-            val version = hostVersion ?: anchor.context.packageManager.getPackageInfo("com.android.systemui", 0).compatibleVersionCode.also { hostVersion = it }
-            if (version == 202602260L && anchor.parent === container && container.orientation == LinearLayout.VERTICAL) {
+            if (anchor.parent === container && container.orientation == LinearLayout.VERTICAL) {
                 val binding = Binding(owner, anchor, container)
                 bindings[owner] = WeakReference(binding)
                 try { binding.start() } catch (failure: Throwable) { binding.dispose(); throw failure }

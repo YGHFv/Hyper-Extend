@@ -4,11 +4,11 @@ package io.github.YGHFv.HyperExtend.hook.feature.systemui
 internal object VolumeLongPressPolicy {
     const val FEATURE = "volume_long_press_expand"
     const val DELAY = 300L
-    fun eligible(enabled: Boolean, systemUi: Long?, plugin: Long?, mainDisplay: Boolean,
+    fun eligible(enabled: Boolean, mainDisplay: Boolean,
                  attached: Boolean, shown: Boolean, expanded: Boolean, animating: Boolean,
                  controlCenter: Boolean, touchExploration: Boolean, appPanel: Boolean,
                  activeSlider: Boolean, expandButtonTouch: Boolean): Boolean =
-        enabled && systemUi == 202602260L && plugin == 183022200L && mainDisplay && attached && shown &&
+        enabled && mainDisplay && attached && shown &&
             !expanded && !animating && !controlCenter && !touchExploration && !appPanel &&
             activeSlider && !expandButtonTouch
 }

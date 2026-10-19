@@ -5,8 +5,6 @@
  */
 package io.github.YGHFv.HyperExtend.hook.feature.systemui
 
-import io.github.YGHFv.HyperExtend.core.compatibleVersionCode
-
 import android.content.res.Configuration
 import android.os.Handler
 import android.os.Looper
@@ -123,11 +121,8 @@ internal object VolumeLongPressHooks {
             val click = fields.getValue("expandListener").get(dialog) as? View.OnClickListener ?: return@runCatching null
             val button = fields.getValue("mExpandButton").get(dialog) as? View ?: return@runCatching null
             val context = seek.context
-            val pm = context.packageManager
             val accessibility = context.getSystemService(AccessibilityManager::class.java) ?: return@runCatching null
             val supported = VolumeLongPressPolicy.eligible(true,
-                pm.getPackageInfo("com.android.systemui", 0).compatibleVersionCode,
-                pm.getPackageInfo(SystemUiPluginHooks.PACKAGE, 0).compatibleVersionCode,
                 seek.display?.displayId == 0 && dialog.display?.displayId == 0,
                 seek.isAttachedToWindow && dialog.isAttachedToWindow,
                 seek.isShown && seek.isEnabled && dialog.isShown && dialog.windowVisibility == View.VISIBLE &&

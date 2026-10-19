@@ -25,7 +25,6 @@ import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import io.github.YGHFv.HyperExtend.core.compatibleVersionCode
 import io.github.YGHFv.HyperExtend.hook.HookRuntime
 import io.github.YGHFv.HyperExtend.hook.HookSettings
 import io.github.YGHFv.HyperExtend.hook.SafeModeRuntime
@@ -83,15 +82,9 @@ internal object StatusBarNetworkSpeed {
             }
         }
         @Volatile var ready = false
-        @Volatile private var version: Long? = null
         val ownedUnits = WeakHashMap<TextView, Int>()
-        fun enabled(context: Context, ui: Boolean = true) = runCatching {
-            if (!ready || SafeModeRuntime.blocked || !settings.isOn(FEATURE) ||
-                ui && Looper.myLooper() != Looper.getMainLooper()) return@runCatching false
-            val current = version ?: context.packageManager.getPackageInfo("com.android.systemui", 0)
-                .compatibleVersionCode.also { version = it }
-            current == 202602260L
-        }.getOrDefault(false)
+        fun enabled(ui: Boolean = true) = ready && !SafeModeRuntime.blocked &&
+            settings.isOn(FEATURE) && (!ui || Looper.myLooper() == Looper.getMainLooper())
         fun method(owner: String, name: String, returns: String = "void", vararg parameters: String) =
             methods.getValue(SystemUiMethod(owner, name, returns, parameters.toList()))
         fun field(owner: String, name: String) = fields.getValue(owner to name)
@@ -119,7 +112,7 @@ internal object StatusBarNetworkSpeed {
         val ok = HookRuntime.hook(updateText, "$FEATURE/NetworkSpeedController#updateText") { chain ->
             val owner = chain.thisObject ?: return@hook chain.proceed()
             val context = access.field(CONTROLLER, "mContext").get(owner) as? Context ?: return@hook chain.proceed()
-            if (!access.enabled(context) || access.field(CONTROLLER, "mIsStatusBarHidden").getBoolean(owner)) {
+            if (!access.enabled() || access.field(CONTROLLER, "mIsStatusBarHidden").getBoolean(owner)) {
                 synchronized(samplers) { samplers.remove(owner) }
                 return@hook chain.proceed()
             }
@@ -153,7 +146,7 @@ internal object StatusBarNetworkSpeed {
                 else access.method(SPEED_VIEW, name)
             val ok = HookRuntime.hookAfter(method, "$FEATURE/NetworkSpeedView#$name") { chain, original ->
                 val view = chain.thisObject as? View ?: return@hookAfter original
-                if (access.enabled(view.context)) restyle(view, config, access)
+                if (access.enabled()) restyle(view, config, access)
                 original
             }
             if (ok) installed++
@@ -239,7 +232,7 @@ internal object StatusBarNetworkSpeed {
         val method = access.method(SPEED_VIEW, "setNetworkSpeed", "void", "java.lang.String", "java.lang.String")
         val ok = HookRuntime.hook(method, "$FEATURE/NetworkSpeedView#setNetworkSpeed") { chain ->
             val view = chain.thisObject as? View ?: return@hook chain.proceed()
-            val enabled = access.enabled(view.context)
+            val enabled = access.enabled()
             val args = chain.args.toMutableList()
             val unit = args.getOrNull(1) as? String
             if (enabled && settings.isOn(OPT_SEC_UNIT) && unit != null) {
@@ -278,7 +271,7 @@ internal object StatusBarNetworkSpeed {
                 val message = chain.args[0] as? Message
                 val host = owner.get(handler) ?: return@hookAfter result
                 val context = access.field(CONTROLLER, "mContext").get(host) as? Context ?: return@hookAfter result
-                if (access.enabled(context, false) && Looper.myLooper() == handler.looper && NetworkSpeedSchedule.shouldReschedule(
+                if (access.enabled(false) && Looper.myLooper() == handler.looper && NetworkSpeedSchedule.shouldReschedule(
                         message?.what ?: -1, bg.get(host) === handler, hidden.getBoolean(host),
                         handler.hasMessages(NetworkSpeedSchedule.SAMPLE))) {
                     handler.removeMessages(NetworkSpeedSchedule.SAMPLE)

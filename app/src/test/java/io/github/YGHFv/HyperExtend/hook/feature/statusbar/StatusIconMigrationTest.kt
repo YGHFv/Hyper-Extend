@@ -27,12 +27,12 @@ class StatusIconMigrationTest {
     @Test fun hostAndOwnershipGatesNeverRestoreOverANativeTakeover() {
         for (code in listOf(null, 202602260L, 202602261L))
             for (display in listOf(null, 0, 1)) for (thread in listOf(false, true))
-                assertEquals(code == 202602260L && display == 0 && thread,
+                assertEquals(display == 0 && thread,
                     StatusIconPolicy.eligible(code, display, thread))
         for (current in listOf(0, 4, 8)) for (native in listOf(0, 4, 8)) for (owned in listOf(false, true))
             assertEquals(if (current == 8 && owned) native else null,
                 StatusIconPolicy.restoreVisibility(current, native, owned))
-        assertFalse(StatusIconPolicy.hideOperatorIcon(null, true))
+        assertTrue(StatusIconPolicy.hideOperatorIcon(null, true))
         assertFalse(StatusIconPolicy.hideOperatorIcon(202602260L, false))
         assertTrue(StatusIconPolicy.hideOperatorIcon(202602260L, true))
         assertEquals(listOf("native"),
@@ -97,8 +97,8 @@ class StatusIconMigrationTest {
                 assertEquals(if (mode == 1 && mapper == 2 && raw in 4..5 && filtered == 0) raw else null,
                     WifiStandardPolicy.recover(202602260L, mode, mapper, raw, filtered))
             }
-        assertNull(WifiStandardPolicy.recover(null, 1, 2, 4, 0))
-        assertNull(WifiStandardPolicy.recover(202602261L, 1, 2, 5, 0))
+        assertEquals(4, WifiStandardPolicy.recover(null, 1, 2, 4, 0))
+        assertEquals(5, WifiStandardPolicy.recover(202602261L, 1, 2, 5, 0))
         val config = io.github.YGHFv.HyperExtend.core.STATUS_BAR_FEATURES
             .single { it.id == "status_bar_icons" }.config
             .filterIsInstance<io.github.YGHFv.HyperExtend.core.HyperChoice>()

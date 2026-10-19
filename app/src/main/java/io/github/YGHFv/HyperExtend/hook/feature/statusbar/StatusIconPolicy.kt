@@ -2,10 +2,14 @@
 package io.github.YGHFv.HyperExtend.hook.feature.statusbar
 
 internal object StatusIconPolicy {
-    fun eligible(version: Long?, display: Int?, mainThread: Boolean) =
-        version == 202602260L && display == 0 && mainThread
+    @Deprecated("版本号不参与运行期门禁")
+    fun eligible(version: Long?, display: Int?, mainThread: Boolean) = eligible(display, mainThread)
+    fun eligible(display: Int?, mainThread: Boolean) =
+        display == 0 && mainThread
 
-    fun hideOperatorIcon(version: Long?, enabled: Boolean) = version == 202602260L && enabled
+    fun hideOperatorIcon(enabled: Boolean) = enabled
+    @Deprecated("版本号不参与运行期门禁")
+    fun hideOperatorIcon(version: Long?, enabled: Boolean) = hideOperatorIcon(enabled)
 
     // QS_FAKE deliberately mirrors HOME during the native shade transition.
     fun controlCenter(location: String?): Boolean? = when (location) {

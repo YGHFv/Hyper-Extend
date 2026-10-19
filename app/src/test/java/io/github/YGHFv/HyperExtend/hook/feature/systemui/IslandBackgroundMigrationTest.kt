@@ -21,11 +21,11 @@ class IslandBackgroundMigrationTest {
         assertFalse(IslandBackgroundOptions(mode = 9, ambient = 2).custom)
     }
     @Test fun safetyAndUncertainDisplaysKeepNative() {
-        fun eligible(enabled: Boolean = true, version: Long = 202602260, display: Int? = 0,
+        fun eligible(enabled: Boolean = true, display: Int? = 0,
             attached: Boolean = true, shown: Boolean = true, awake: Boolean = true, unlocked: Boolean = true) =
-            IslandBackgroundPolicy.eligible(enabled, version, display, attached, shown, awake, unlocked)
+            IslandBackgroundPolicy.eligible(enabled, display, attached, shown, awake, unlocked)
         assertTrue(eligible())
-        assertFalse(eligible(enabled = false)); assertFalse(eligible(version = 1))
+        assertFalse(eligible(enabled = false))
         assertFalse(eligible(display = null)); assertFalse(eligible(display = 1))
         assertFalse(eligible(attached = false)); assertFalse(eligible(shown = false))
         assertFalse(eligible(awake = false)); assertFalse(eligible(unlocked = false))

@@ -6,14 +6,12 @@ import org.junit.Assert.*
 import org.junit.Test
 
 class NativeSystemUiPolicyTest {
-    @Test fun exactHostAndDisplayAreRequired() {
-        assertTrue(NativeSystemUiPolicy.eligible(true, 202602260, 0, true))
-        assertFalse(NativeSystemUiPolicy.eligible(false, 202602260, 0, true))
-        assertFalse(NativeSystemUiPolicy.eligible(true, null, 0, true))
-        assertFalse(NativeSystemUiPolicy.eligible(true, 202602261, 0, true))
-        assertFalse(NativeSystemUiPolicy.eligible(true, 202602260, null, true))
-        assertFalse(NativeSystemUiPolicy.eligible(true, 202602260, 1, true))
-        assertFalse(NativeSystemUiPolicy.eligible(true, 202602260, 0, false))
+    @Test fun displayThreadAndFeatureAreRequired() {
+        assertTrue(NativeSystemUiPolicy.eligible(true, 0, true))
+        assertFalse(NativeSystemUiPolicy.eligible(false, 0, true))
+        assertFalse(NativeSystemUiPolicy.eligible(true, null, true))
+        assertFalse(NativeSystemUiPolicy.eligible(true, 1, true))
+        assertFalse(NativeSystemUiPolicy.eligible(true, 0, false))
     }
 
     @Test fun scopesAreNestedAndRestoreOnThrow() {

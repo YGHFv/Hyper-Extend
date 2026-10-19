@@ -13,7 +13,6 @@ import android.widget.SeekBar
 import android.widget.TextView
 import io.github.YGHFv.HyperExtend.core.IslandMediaSettings
 import io.github.YGHFv.HyperExtend.core.MediaProgressSettings
-import io.github.YGHFv.HyperExtend.core.compatibleVersionCode
 import io.github.YGHFv.HyperExtend.hook.HookRuntime
 import io.github.YGHFv.HyperExtend.hook.feature.statusbar.StatusIconHost
 import java.lang.ref.WeakReference
@@ -91,7 +90,7 @@ internal object IslandProgressHooks {
             val value = binding.holder.get() ?: return@hook chain.proceed()
             if ((field(binder, "holder").get(owner) !== value && field(binder, "dummyHolder").get(owner) !== value) ||
                 field(holder, "seekBar").get(value) !== bar ||
-                bar.context.packageManager.getPackageInfo("com.android.systemui", 0).compatibleVersionCode != 202602260L ||
+                bar.context.packageName != "com.android.systemui" ||
                 bar.context.getSystemService(PowerManager::class.java)?.isInteractive != true ||
                 bar.context.getSystemService(KeyguardManager::class.java)?.isKeyguardLocked != false ||
                 field(barName, "mIsDragging").getBoolean(bar) || bar.isPressed) return@hook chain.proceed()

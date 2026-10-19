@@ -4,7 +4,6 @@ package io.github.YGHFv.HyperExtend.hook.feature.statusbar
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
-import io.github.YGHFv.HyperExtend.core.compatibleVersionCode
 import io.github.YGHFv.HyperExtend.hook.HookRuntime
 import io.github.YGHFv.HyperExtend.hook.feature.systemui.NotificationHooks
 import java.util.concurrent.atomic.AtomicBoolean
@@ -27,7 +26,6 @@ internal object StrongToastHooks {
             val bundle = chain.args[2] as? Bundle ?: return@hook chain.proceed()
             val ctx = context.get(owner) as? Context ?: return@hook chain.proceed()
             if (!ready.get() || !StrongToastPolicy.eligible(HookRuntime.settings().isOn(FEATURE),
-                    ctx.packageManager.getPackageInfo("com.android.systemui", 0).compatibleVersionCode,
                     ctx.display?.displayId, chain.args[1] as? String)) return@hook chain.proceed()
             // Keep native JSON validation/logging. No globally cancelled pre-draw, window,
             // command broadcast, or interference with internal charge animation/cleanup.

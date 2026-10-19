@@ -18,6 +18,10 @@ internal object SafeModeKeys {
     }
 }
 
+internal object SafeModeProjection {
+    fun launcherEnabled(configured: Boolean, disabled: Boolean): Boolean = configured && !disabled
+}
+
 internal object SafeModeReportPolicy {
     fun accepts(resetToken: Long, incident: SafeModeIncident): Boolean = incident.resetToken == resetToken
     fun duplicate(existing: SafeModeIncident?, incident: SafeModeIncident): Boolean =

@@ -1,0 +1,336 @@
+{
+  "schemaVersion": 1,
+  "scope": "留存二进制样本的模块 Hook API 回填与补丁例程审计；不证明当前设备映像一致或完整运行时的执行互斥。",
+  "images": {
+    "framework": {
+      "size": 1588072,
+      "sha256": "7295f748a21b02fadbc640d6f9679af19c932e68e87f5bb1ce1c9f73ce6cc8bf",
+      "buildId": "4bb85072ddafabcc9cd1cc1e449831846804c931",
+      "functions": [
+        {
+          "name": "patch",
+          "address": "0xa5324",
+          "size": 264,
+          "sha256": "fdd78f71923549ce5716f3d167bab539a3405cd8055b1618e9d1e828942a2dba"
+        },
+        {
+          "name": "copy_adapter",
+          "address": "0xa542c",
+          "size": 28,
+          "sha256": "aeeaca6ac53a7a7286a3e5938ee02bf07091cdb3415803815d9133aebd38b24a"
+        },
+        {
+          "name": "cache",
+          "address": "0xa5448",
+          "size": 288,
+          "sha256": "693e63f665694c29b0b688156d807b4594ba937ad8a2ff06f2f8912b37370ec3"
+        },
+        {
+          "name": "cache_adapter",
+          "address": "0xa5568",
+          "size": 12,
+          "sha256": "513bb172488e477a5ff5e7c069f93d5387e8f96642bb66fcfc3c150c50b68b2b"
+        },
+        {
+          "name": "save_registers",
+          "address": "0x139d64",
+          "size": 20,
+          "sha256": "8098b9a48c77aa585520869a6602f50ceacc4533c433768a3b88427c055e1537"
+        },
+        {
+          "name": "patch_caller_window",
+          "address": "0x9dd20",
+          "size": 80,
+          "sha256": "e818877db60c597e4995670d2aad23fb67a34069c52db533cb84cd591829d2c9"
+        },
+        {
+          "name": "api_global_init",
+          "address": "0x66790",
+          "size": 24,
+          "sha256": "fc7503a0a0e31e1a20a2e704eaca5ffe15ce2404c74c69aaa40b8d3ea2c5fa51"
+        },
+        {
+          "name": "api_constructor",
+          "address": "0x8c818",
+          "size": 144,
+          "sha256": "973beea4157f23e95c7d5bf0f1eb0b3089254a12ce479235fb9b1d8e16198db7"
+        },
+        {
+          "name": "api_accessors",
+          "address": "0x87a00",
+          "size": 60,
+          "sha256": "c25aa7b190389833479dfe9728b13288227bdaabaa6a5573e5371d57835b34c1"
+        },
+        {
+          "name": "api_return_adapter",
+          "address": "0x89348",
+          "size": 16,
+          "sha256": "ee0cea0c4c685be6e180c5a05675a148b7e146c9190d75aa192ab8e77e57c09b"
+        },
+        {
+          "name": "native_init_resolution_window",
+          "address": "0x8d450",
+          "size": 84,
+          "sha256": "9a7eedd4f4d8ae85b999d396f5f327faf65b469ab4d5a032ec60f8f79a39a543"
+        },
+        {
+          "name": "native_init_invocation_window",
+          "address": "0x8d688",
+          "size": 56,
+          "sha256": "40e8d4de31734cac5142f045770681a0605d6c6d6487df08b736d5ba43473792"
+        },
+        {
+          "name": "symbol_decode",
+          "address": "0x8804c",
+          "size": 304,
+          "sha256": "68e6cd0db7728a2c08442a6272d66b9852066553d526c8d645692f4c1a682651"
+        },
+        {
+          "name": "native_hook_wrapper",
+          "address": "0x8d764",
+          "size": 40,
+          "sha256": "077496de0da3037ceae4268ca6e3a51ea3a6f5a92dd6c9166929816f39acc232"
+        },
+        {
+          "name": "original_publication_wrapper",
+          "address": "0x89358",
+          "size": 52,
+          "sha256": "e341e386416ba9e7b5d240e323e09e85386984c59110e07531b250b9e9ef352f"
+        },
+        {
+          "name": "local_backup_wrapper",
+          "address": "0x7d298",
+          "size": 64,
+          "sha256": "19ac24713d2cb9a1c82a07f6945ce05254c5aea0b71df94e485788deeb34ae4d"
+        },
+        {
+          "name": "dobby_hook_control_flow",
+          "address": "0x9d498",
+          "size": 716,
+          "sha256": "262a45058a78c4cad79acac9cc2f9c214eab403257f6d5e121692837393bc186"
+        },
+        {
+          "name": "routing_constructor",
+          "address": "0x9d764",
+          "size": 56,
+          "sha256": "8f2b1d96a02be7fa0626567d5154d1bb87b553772c6b4fd6795be66c62b5991a"
+        },
+        {
+          "name": "routing_base_constructor",
+          "address": "0x9d79c",
+          "size": 36,
+          "sha256": "7a8978a88225c054bef497379df9722c8007a843f8e13d472cc83d0a759ed5b7"
+        },
+        {
+          "name": "routing_commit",
+          "address": "0x9dd20",
+          "size": 340,
+          "sha256": "83d3832c05a34934dcfd3fe79806dbd97e3e178fb35a019d443b4599c6788d78"
+        },
+        {
+          "name": "commit_dispatch",
+          "address": "0x9de74",
+          "size": 12,
+          "sha256": "c0ebccb6870fade5b3269c38b94c427b370e0fd9c7ceed8e2993e29fc2c7e47e"
+        },
+        {
+          "name": "buffer_accessors",
+          "address": "0x9e0a4",
+          "size": 32,
+          "sha256": "0940d17357ca052ccfe6bab5c2bb72fbfa0f5cb0e6d2675557d9832e2c316919"
+        },
+        {
+          "name": "buffer_size",
+          "address": "0x9e168",
+          "size": 20,
+          "sha256": "395f48d7773a04432e01b3ffa8eddc4566f1c04fb6cf6b8995c70c522026bd79"
+        },
+        {
+          "name": "restore_hook_registers",
+          "address": "0x13a2b0",
+          "size": 16,
+          "sha256": "79a04d8da58277343b3a738906c4bf12edc5503db6f14ae26b186b8af90b7ca9"
+        }
+      ]
+    },
+    "libc": {
+      "size": 1332472,
+      "sha256": "b963b539545b64aa8fbcaed3228d04bcb6466bfd47055aa16e4ccdcadfdc461e",
+      "buildId": "48c4b18304acf519b26457ccbc3d435f",
+      "functions": [
+        {
+          "name": "checked_copy",
+          "address": "0xbd680",
+          "size": 24,
+          "sha256": "5a63fa2116dd2d5bf344f8b5410874666924048500ba38ccccd877a09d0c65b9"
+        },
+        {
+          "name": "copy_resolver",
+          "address": "0xea468",
+          "size": 100,
+          "sha256": "124616c9ef7ec063fe1215a1f1fa2414ca6d7f74f72adf43df7f6db7ce158a52"
+        },
+        {
+          "name": "simd_small",
+          "address": "0x6f300",
+          "size": 60,
+          "sha256": "804f51292666dcd6f52a10c0bf24dc1cb14f3dbb0ed7489593183a5769385b69"
+        },
+        {
+          "name": "scalar_small",
+          "address": "0x6f4c0",
+          "size": 56,
+          "sha256": "575597b4b03dddf022559687b492bec859af9728696f793600fbb592febf12ff"
+        },
+        {
+          "name": "nt_small",
+          "address": "0xa60c0",
+          "size": 56,
+          "sha256": "575597b4b03dddf022559687b492bec859af9728696f793600fbb592febf12ff"
+        }
+      ]
+    }
+  },
+  "pointerSlots": {
+    "0x16ee68": "0xa5324",
+    "0x170220": "sysconf",
+    "0x170228": "mprotect",
+    "0x170230": "0xa542c",
+    "0x170238": "0xa5568",
+    "0x170240": "__memcpy_chk",
+    "0x170248": "0xa5448",
+    "0x1499a8": "0xa3b14",
+    "0x1499b0": "0x557e0",
+    "0x1499b8": "0x9dd20",
+    "0x164918": "0x9d498",
+    "0x168c80": "0x55e88",
+    "0x168c88": "0x87a00",
+    "0x168c90": "0x87a0c",
+    "0x168ca0": "0x87a18",
+    "0x168d10": "0x8804c",
+    "0x169130": "0x89348",
+    "0x169138": "0x89358",
+    "0x169140": "0x7d298",
+    "0x169168": "0x893ac",
+    "0x169170": "0x6a01c",
+    "0x16ed80": "0xa4df4",
+    "0x16ed88": "0xa5010",
+    "0x16ed90": "0xa4524",
+    "0x16ed98": "0xa4598",
+    "0x16eda0": "0x13cd64",
+    "0x16eda8": "0xa4c38",
+    "0x16edb0": "0x9d764",
+    "0x16edb8": "0x9de74",
+    "0x16edc0": "0xa4688",
+    "0x16edc8": "0x9d79c",
+    "0x16ee00": "0x9e0b4",
+    "0x16ee60": "0x9e0a4",
+    "0x16eeb0": "0x55e88",
+    "0x16eeb8": "0x9e168",
+    "0x168c98": "mprotect",
+    "0x1691e0": "dlsym"
+  },
+  "branchTables": {
+    "0x149d08": [
+      "0xa53a8",
+      "0xa5394"
+    ],
+    "0x149d18": [
+      "0xa53fc",
+      "0xa53e8"
+    ],
+    "0x149d28": [
+      "0xa5468",
+      "0xa5484"
+    ],
+    "0x149d38": [
+      "0xa54f4",
+      "0xa54a8"
+    ],
+    "0x149d48": [
+      "0xa54f4",
+      "0xa54d4"
+    ],
+    "0x149d58": [
+      "0xa5560",
+      "0xa5518"
+    ],
+    "0x149d68": [
+      "0xa555c",
+      "0xa5544"
+    ],
+    "0x145158": [
+      "0x7d2c4",
+      "0x7d2cc"
+    ],
+    "0x146b90": [
+      "0x8d4a4",
+      "0x8d698"
+    ],
+    "0x147140": [
+      "0x88064",
+      "0x880b8"
+    ],
+    "0x147150": [
+      "0x88094",
+      "0x880b8"
+    ],
+    "0x147160": [
+      "0x88094",
+      "0x880b0"
+    ],
+    "0x147170": [
+      "0x88110",
+      "0x880dc"
+    ],
+    "0x147180": [
+      "0x8815c",
+      "0x88128"
+    ],
+    "0x147190": [
+      "0x8816c",
+      "0x880b0"
+    ],
+    "0x148e60": [
+      "0x9d4c4",
+      "0x9d56c"
+    ],
+    "0x148e70": [
+      "0x9d754",
+      "0x9d5bc"
+    ],
+    "0x148e80": [
+      "0x9d5f0",
+      "0x9d6ac"
+    ],
+    "0x148e90": [
+      "0x9d67c",
+      "0x9d674"
+    ],
+    "0x148f68": [
+      "0x9dd88",
+      "0x9dda0"
+    ],
+    "0x148f78": [
+      "0x9de58",
+      "0x9de68"
+    ],
+    "0x148f88": [
+      "0x9de74",
+      "0x9de68"
+    ]
+  },
+  "installPermitted": false,
+  "publication": {
+    "apiGlobal": "0x194a10",
+    "hookFunction": "0x8d764",
+    "internalBackupStore": "0x9d678",
+    "moduleOriginalStore": "0x89380",
+    "moduleOriginalBeforePatch": false,
+    "pendingGates": [
+      1,
+      3,
+      5
+    ]
+  }
+}

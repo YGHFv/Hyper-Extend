@@ -16,6 +16,7 @@ import android.os.Bundle
 import io.github.YGHFv.HyperExtend.core.ModuleLog
 import io.github.YGHFv.HyperExtend.hook.feature.PasskeyFix
 import io.github.YGHFv.HyperExtend.hook.feature.RotationLockGuard
+import io.github.YGHFv.HyperExtend.hook.feature.launcher.LauncherSnapshotEndpoint
 import io.github.libxposed.api.XposedInterface
 import io.github.libxposed.api.XposedModule
 import io.github.libxposed.api.XposedModuleInterface.HotReloadingParam
@@ -46,6 +47,27 @@ class HyperXposedEntry : XposedModule() {
 
     override fun onModuleLoaded(param: ModuleLoadedParam) {
         systemServerProcess = param.isSystemServer
+        if (!param.isSystemServer) {
+            // 文件日志必须先接上：原生库加载失败和路径回退结果都写在这里，
+            // 否则用户只能看到一个“功能没生效”的桌面进程。
+            runCatching {
+                val actualProcess = currentProcessName().ifBlank { param.processName }
+                ModuleLog.attachFileSink("/data/user/0/${actualProcess}/files/hyperextend.log")
+            }.onFailure { ModuleLog.error("attach file sink failed", it) }
+        }
+        // native_init.list 只是登记目标库名；这里主动加载，才能触发 LSPosed 的
+        // do_dlopen -> native_init 链路。加载失败只记录，不影响既有 Java 功能。
+        runCatching {
+            // 某些 HyperOS Runtime 回调把 processName 留空或传成包名；桌面是无 ART
+            // 的 Rust 进程，必须以现场 /proc/self/cmdline 再核对一次，不能因此漏掉
+            // 主动 dlopen。Loader 自己仍会拒绝 system_server 和非桌面身份。
+            // Runtime 给出的 processName 在 hyos_spawner 特化链上可能仍是父进程名；
+            // 以当前进程 cmdline 为主，避免把桌面子进程误判成非目标而跳过 dlopen。
+            val targetProcess = currentProcessName().ifBlank { param.processName }
+            LauncherNativeLoader.loadIfTarget(targetProcess, param.isSystemServer) { event ->
+                ModuleLog.info(event)
+            }
+        }.onFailure { ModuleLog.error("launcher native loader failed", it) }
         HookRuntime.attach(this)
         runCatching {
             ModuleLog.entry(
@@ -53,15 +75,6 @@ class HyperXposedEntry : XposedModule() {
                     capabilitySummary(),
             )
         }.onFailure { ModuleLog.error("onModuleLoaded failed", it) }
-        if (!param.isSystemServer) {
-            // 文件日志在**最早的时刻**接上，不依赖任何后续回调：普通宿主进程名 == 包名，
-            // 所以 /data/user/0/<进程名>/files/ 就是它自己的私有目录。这个文件的存在本身就是
-            // 「注入发生过」的直接证据；它不在，说明连 onModuleLoaded 都没跑 —— 而不是
-            // 「跑了但后面某步失败」（那种情况文件里会有失败记录）。
-            runCatching {
-                ModuleLog.attachFileSink("/data/user/0/${param.processName}/files/hyperextend.log")
-            }.onFailure { ModuleLog.error("attach file sink failed", it) }
-        }
     }
 
     override fun onSystemServerStarting(param: SystemServerStartingParam) {
@@ -120,6 +133,11 @@ class HyperXposedEntry : XposedModule() {
         runCatching {
             io.github.YGHFv.HyperExtend.hook.feature.systemui.NotificationManagementHooks.installServer(loader, settings)
         }.onFailure { ModuleLog.error("notification management server adapter unavailable", it) }
+        // 桌面（无 ART 原生进程）唯一的配置来源：它向 system_server 发同步 Binder 事务，
+        // 这个端点按我们的自定义事务码应答一份设置快照。装在 onTransact 上、只应答不短接，
+        // 且**不是**安装许可 —— 是否挂 hook 由桌面侧的 install_permitted 决定。
+        runCatching { LauncherSnapshotEndpoint.install(loader, settings) }
+            .onFailure { ModuleLog.error("launcher snapshot endpoint unavailable", it) }
         // 旋转锁定保护同样住在 system_server：它守的是「强制停止」这个动作本身，
         // 而 system_server 正是所有 force-stop 的必经之地。
         RotationLockGuard.installDeferred(loader, settings)

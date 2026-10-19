@@ -14,12 +14,11 @@ class ForceBlurTest {
         assertFalse(entry.hasDetailPage)
     }
     @Test fun everyRealCapabilityAndDisableGateIsRequired() {
-        fun supported(enabled: Boolean = true, blocked: Boolean = false, version: Long? = 202602260,
+        fun supported(enabled: Boolean = true, blocked: Boolean = false,
             hardware: Boolean = true, disabled: Boolean = false, cross: Boolean = true) =
-            ForceBlurPolicy.supported(enabled, blocked, version, hardware, disabled, cross)
+            ForceBlurPolicy.supported(enabled, blocked, hardware, disabled, cross)
         assertTrue(supported())
         assertFalse(supported(enabled = false)); assertFalse(supported(blocked = true))
-        assertFalse(supported(version = null)); assertFalse(supported(version = 202602261))
         assertFalse(supported(hardware = false)); assertFalse(supported(disabled = true))
         assertFalse(supported(cross = false))
     }

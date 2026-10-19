@@ -13,6 +13,8 @@
 package io.github.YGHFv.HyperExtend.ui
 
 import android.graphics.Color as AndroidColor
+import android.content.Intent
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.view.WindowInsetsController
@@ -47,6 +49,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.saveable.rememberSaveableStateHolder
 import androidx.compose.runtime.setValue
@@ -63,6 +66,7 @@ import androidx.compose.ui.unit.sp
 import io.github.YGHFv.HyperExtend.config.HyperSettings
 import io.github.YGHFv.HyperExtend.core.FEATURES
 import io.github.YGHFv.HyperExtend.core.HyperScope
+import io.github.YGHFv.HyperExtend.core.LauncherShareBridge
 import io.github.YGHFv.HyperExtend.core.NfcCardImage
 import io.github.YGHFv.HyperExtend.core.ScopeFeatureGroup
 import io.github.YGHFv.HyperExtend.core.enabledCountInScope
@@ -73,6 +77,9 @@ import io.github.YGHFv.HyperExtend.core.featureById
 import io.github.YGHFv.HyperExtend.core.featuresOfScope
 import io.github.YGHFv.HyperExtend.core.hasDetailPage
 import io.github.YGHFv.HyperExtend.core.scopeById
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.basic.IconButton
 import top.yukonga.miuix.kmp.basic.MiuixScrollBehavior
@@ -122,6 +129,7 @@ class SettingsActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        consumeLauncherShare(intent)
         // 边到边：miuix 的顶栏/底栏/滚动行为就是按「内容铺到屏幕边缘、各组自己垫 inset」设计的，
         // 不开的话顶栏下面会多出一条与系统栏等高的空带。
         enableEdgeToEdge(
@@ -152,6 +160,28 @@ class SettingsActivity : ComponentActivity() {
                 HyperApp(themeMode = themeMode, onThemeMode = { themeMode = it })
             }
         }
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        consumeLauncherShare(intent)
+    }
+
+    private fun consumeLauncherShare(intent: Intent?) {
+        val uri = intent?.getParcelableExtra<Uri>(LauncherShareBridge.EXTRA_SHARE_URI)
+            ?: return
+        if (intent.action != LauncherShareBridge.LAUNCH_ACTION) return
+        intent.removeExtra(LauncherShareBridge.EXTRA_SHARE_URI)
+        io.github.YGHFv.HyperExtend.core.ModuleLog.info("launcher share activity: uri received")
+        runCatching { LauncherShareBridge.launchFromPending(this, uri) }
+            .onSuccess { io.github.YGHFv.HyperExtend.core.ModuleLog.info(
+                "launcher share activity: chooser started",
+            ) }
+            .onFailure { io.github.YGHFv.HyperExtend.core.ModuleLog.error(
+                "launcher share launch failed", it,
+            ) }
+        finish()
     }
 
     /** 系统栏图标的明暗跟随主题。不跟着改的话浅色主题下状态栏图标是白的，等于看不见。 */

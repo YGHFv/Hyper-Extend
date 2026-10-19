@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 1,
+  "policy": "gate5-commit-faults-offline-v1",
+  "status": "仅离线故障对照，不是安装许可；门槛 5 仍未关闭",
+  "source": "app/src/test/cpp/launcher_singleword_commit_faults.cpp",
+  "toolchain": {
+    "note": "下面的 instructions 与关键字是对固定工具链 NDK r29（clang 21.0.0，Target aarch64-linux-android29，-O3）的实测值。换编译器或换优化档必须重新实测并更新本文件，不得沿用旧值。",
+    "clang": "Android (13989888, based on r563880c) clang version 21.0.0",
+    "flags": "--target=aarch64-linux-android29 -O3 -std=c++17 -c -Wall -Wextra -Werror -fno-exceptions -fno-rtti -fvisibility=hidden -mno-outline-atomics"
+  },
+  "functions": {
+    "faults_two_word_store": {
+      "label": "分两条普通存储写两个字（多字覆盖）",
+      "subject": "commit",
+      "keyword": "恰好两条",
+      "instructions": 3
+    },
+    "faults_pair_store": {
+      "label": "一条 STP 写两个字（多字覆盖）",
+      "subject": "commit",
+      "keyword": "不是单条 32 位存储",
+      "instructions": 2
+    },
+    "faults_wide_store": {
+      "label": "64 位存储覆盖两个字（多字覆盖）",
+      "subject": "commit",
+      "keyword": "恰好两条",
+      "instructions": 3
+    },
+    "faults_memcpy_store": {
+      "label": "退化成 memcpy 的长度可变复制",
+      "subject": "commit",
+      "keyword": "恰好两条",
+      "instructions": 3
+    },
+    "faults_sync_missing_ic": {
+      "label": "同步序列缺少 ic ivau",
+      "subject": "sync",
+      "keyword": "缺少 ic ivau",
+      "instructions": 4
+    },
+    "faults_commit_first": {
+      "label": "先提交、后同步（破坏预取推测保护）",
+      "subject": "order",
+      "keyword": "先缓存同步",
+      "instructions": 6
+    }
+  },
+  "counts": {
+    "faults": 6
+  },
+  "installPermitted": false,
+  "notClosedGates": [
+    "门槛3：安全通道实机验收未做，本工具不涉及。",
+    "门槛5：本工具只证明判定会拒绝这些错误实现，不关闭门槛 5，也不构成安装许可。"
+  ],
+  "verificationBoundary": "真实工具链编译 + 反汇编 + 同一套判定函数；不写内存、不链接 SO、不接触设备。"
+}

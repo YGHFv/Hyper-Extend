@@ -6,7 +6,6 @@ import android.content.Context
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import android.net.Uri
-import io.github.YGHFv.HyperExtend.core.compatibleVersionCode
 
 internal object TaplusTileHooks {
     private val adapter = NativeToggleTileHooks(object : NativeToggleBackend {
@@ -18,9 +17,8 @@ internal object TaplusTileHooks {
         private val uri = Uri.parse("content://${TaplusTilePolicy.AUTHORITY}")
         override fun supported(context: Context): Boolean {
             val pm = context.packageManager
-            val app = pm.getPackageInfo(TaplusTilePolicy.PACKAGE, 0)
             val provider = pm.resolveContentProvider(TaplusTilePolicy.AUTHORITY, 0) ?: return false
-            return app.compatibleVersionCode == TaplusTilePolicy.VERSION && provider.enabled && provider.exported &&
+            return provider.enabled && provider.exported &&
                 provider.packageName == TaplusTilePolicy.PACKAGE && provider.name == TaplusTilePolicy.PROVIDER &&
                 provider.applicationInfo.enabled && provider.applicationInfo.flags and ApplicationInfo.FLAG_SYSTEM != 0 &&
                 provider.readPermission == TaplusTilePolicy.PERMISSION && provider.writePermission == TaplusTilePolicy.PERMISSION &&

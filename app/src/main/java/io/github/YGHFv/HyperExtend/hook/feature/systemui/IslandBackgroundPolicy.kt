@@ -10,9 +10,9 @@ internal data class IslandBackgroundOptions(
 }
 
 internal object IslandBackgroundPolicy {
-    fun eligible(enabled: Boolean, version: Long, display: Int?, attached: Boolean,
+    fun eligible(enabled: Boolean, display: Int?, attached: Boolean,
         shown: Boolean, awake: Boolean, unlocked: Boolean) =
-        enabled && version == 202602260L && display == 0 && attached && shown && awake && unlocked
+        enabled && display == 0 && attached && shown && awake && unlocked
 }
 
 /** Pause time is excluded; two holders use the same clock, including after handoff. */

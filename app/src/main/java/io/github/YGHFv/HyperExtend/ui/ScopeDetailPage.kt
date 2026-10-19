@@ -252,6 +252,12 @@ private suspend fun applyChanges(context: Context, scope: HyperScope): RestartUi
     }
 
     val fallback = withContext(Dispatchers.IO) { ProcessRestarter.restart(scope) }
+    if (scope.process == "com.miui.home") {
+        withContext(Dispatchers.IO) {
+            Thread.sleep(500)
+            io.github.YGHFv.HyperExtend.core.SafeModeSettings.refreshNative(context, force = true)
+        }
+    }
     return when (fallback) {
         is RestartResult.Done -> RestartUi.Done(fallback.message)
         is RestartResult.Failed -> RestartUi.Failed(fallback.message)

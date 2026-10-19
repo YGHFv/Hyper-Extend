@@ -4,7 +4,6 @@ package io.github.YGHFv.HyperExtend.hook.feature.systemui
 
 import android.os.Looper
 import android.view.View
-import io.github.YGHFv.HyperExtend.core.compatibleVersionCode
 import io.github.YGHFv.HyperExtend.hook.HookRuntime
 import io.github.YGHFv.HyperExtend.hook.HookSettings
 
@@ -18,16 +17,13 @@ internal object SecurityFooterHooks {
     val view = SystemUiMethod("miui.systemui.util.ViewController", "getView", "android.view.View")
 
     fun suppress(native: Boolean, enabled: Boolean, main: Boolean, display: Int?,
-                 systemUi: Long?, plugin: Long? = null, isPlugin: Boolean = false): Boolean =
-        native && enabled && main && display == 0 && systemUi == 202602260L &&
-            (!isPlugin || plugin == 183022200L)
+                 isPlugin: Boolean = false): Boolean =
+        native && enabled && main && display == 0 && (!isPlugin)
 
     private fun eligible(view: View, settings: HookSettings, plugin: Boolean): Boolean = runCatching {
         if (!settings.isOn(FEATURE) || Looper.myLooper() != Looper.getMainLooper() || view.display?.displayId != 0)
             return@runCatching false
-        val pm = view.context.packageManager
-        suppress(true, true, true, 0, pm.getPackageInfo("com.android.systemui", 0).compatibleVersionCode,
-            if (plugin) pm.getPackageInfo(SystemUiPluginHooks.PACKAGE, 0).compatibleVersionCode else null, plugin)
+        suppress(true, true, true, 0, plugin)
     }.getOrDefault(false)
 
     fun installClassic(loader: ClassLoader, settings: HookSettings): Int {

@@ -9,10 +9,10 @@ internal data class ChargingSample(val currentMicroamps: Int?, val voltageMilliv
 
 internal object LockscreenChargingPolicy {
     const val BATTERY_TYPE = 3
-    fun eligible(version: Long, attached: Boolean, shown: Boolean, visible: Boolean, dozing: Boolean,
+    fun eligible(attached: Boolean, shown: Boolean, visible: Boolean, dozing: Boolean,
         blocked: Boolean, tiny: Boolean, plugged: Boolean, defender: Boolean, reverse: Int,
         reposition: Boolean, indicationType: Int, messageMatches: Boolean): Boolean =
-        version == 202602260L && attached && shown && visible && !dozing && !blocked && !tiny &&
+        attached && shown && visible && !dozing && !blocked && !tiny &&
             plugged && !defender && reverse == 0 && !reposition && indicationType == BATTERY_TYPE && messageMatches
 
     fun details(sample: ChargingSample?, now: Long, interval: Long, milliamps: Boolean,

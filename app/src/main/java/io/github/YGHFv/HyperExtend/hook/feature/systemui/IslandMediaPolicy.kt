@@ -5,6 +5,9 @@ package io.github.YGHFv.HyperExtend.hook.feature.systemui
 import kotlin.math.roundToInt
 
 internal object IslandMediaPolicy {
+    @Deprecated("版本号不参与运行期门禁")
+    fun eligible(enabled: Boolean, version: Int, display: Int?, action: String?) =
+        enabled && display == 0 && action == "strong_toast_action"
     fun textSize(raw: Int, density: Float): Float? =
         (raw / 10f * density).takeIf { raw in 50..360 && density.isFinite() && density > 0f && it.isFinite() }
 

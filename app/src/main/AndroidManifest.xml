@@ -100,6 +100,21 @@
             android:exported="true" />
 
         <!--
+          桌面原生分享桥。控制入口只接受 system_server / 本模块，文件入口
+          只读「launcher_share」下的单个文件，具体约束见对应类注释。
+        -->
+        <provider
+            android:name=".core.LauncherShareProvider"
+            android:authorities="io.github.YGHFv.HyperExtend.launcher.share"
+            android:exported="true"
+            android:grantUriPermissions="false" />
+        <provider
+            android:name=".core.LauncherShareFileProvider"
+            android:authorities="io.github.YGHFv.HyperExtend.launcher.files"
+            android:exported="false"
+            android:grantUriPermissions="true" />
+
+        <!--
           模块主界面。也是让模块脱离 stopped 状态的入口。
           没有 launcher intent-filter：模块入口由 LSPosed Manager 的「打开」按钮调起
           （见下面的 MODULE_SETTINGS category），桌面上再多一个图标没有意义。

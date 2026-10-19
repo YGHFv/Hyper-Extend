@@ -17,8 +17,8 @@ internal object SliderValuePolicy {
     const val VOLUME = PercentageSettings.VOLUME
     val features = listOf(BRIGHTNESS, VOLUME)
 
-    fun supported(systemUi: Long?, plugin: Long?) = systemUi == 202602260L && plugin == 183022200L
-
+    /** 两个调用方已解析完整目标；版本号不能替代结构校验。 */
+    fun supported() = true
     // This is the slider's normalized range, not linear screen luminance or perceived loudness.
     fun brightness(value: Int, min: Int, max: Int): String? {
         if (min < 0 || max <= min || value !in min..max) return null

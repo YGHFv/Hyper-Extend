@@ -20,6 +20,6 @@ internal object ShadeHeaderBlurTargets {
 }
 
 internal object ShadeHeaderBlurPolicy {
-    fun useGradient(native: Boolean, enabled: Boolean, version: Long?, display: Int?, supported: Boolean) =
-        native || (enabled && version == 202602260L && display == 0 && supported)
+    fun useGradient(native: Boolean, enabled: Boolean, display: Int?, supported: Boolean) =
+        native || (enabled && display == 0 && supported)
 }

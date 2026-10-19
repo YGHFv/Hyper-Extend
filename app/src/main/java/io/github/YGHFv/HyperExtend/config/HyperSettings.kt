@@ -256,8 +256,11 @@ object HyperSettings {
             return false
         }
         return runCatching {
-            localPrefs(context).edit().putString(key, value).apply()
-            syncToFramework(context)
+            val local = localPrefs(context)
+            if (key == "launcher_native_shortcut_count_limit") {
+                check(local.edit().putString(key, value).commit()) { "桌面数量上限未保存" }
+            } else local.edit().putString(key, value).apply()
+            syncToFramework(context, synchronous = key == "launcher_native_shortcut_count_limit")
             true
         }.getOrElse {
             ModuleLog.error("write string $key failed", it)
@@ -281,14 +284,22 @@ object HyperSettings {
         }
         return runCatching {
             val local = localPrefs(context)
-            local.edit().putBoolean(id, enabled).apply()
-            syncToFramework(context)
+            if (isLauncherSetting(id)) {
+                check(local.edit().putBoolean(id, enabled).commit()) { "桌面快捷菜单设置未保存" }
+            } else local.edit().putBoolean(id, enabled).apply()
+            // 桌面原生端点在进程启动时只读取一次快照；异步 apply 可能让它继续
+            // 看到旧的数量/分享位，表现为“设置已保存但本次启动不生效”。
+            syncToFramework(context, synchronous = isLauncherSetting(id))
             true
         }.getOrElse {
             ModuleLog.error("write switch $id failed", it)
             false
         }
     }
+
+    private fun isLauncherSetting(id: String): Boolean =
+        id == "launcher_native_shortcuts_enabled" ||
+            id.startsWith("home_other_")
 
     /** 全部恢复默认：只清登记过的键，别的一概不碰。 */
     fun resetToDefaults(context: Context): Boolean = runCatching {
@@ -319,13 +330,13 @@ object HyperSettings {
      * 做成两次等于把这点开销翻倍，而这个函数跑的正是用户点完开关、盯着屏幕等反馈的那一刻。
      */
     @Synchronized
-    fun syncToFramework(context: Context) {
+    fun syncToFramework(context: Context, synchronous: Boolean = false): Boolean {
         val prefs = FrameworkBridge.remotePreferences(GROUP)
         if (prefs == null) {
             ModuleLog.warn("framework service unavailable — switches saved locally only")
-            return
+            return false
         }
-        runCatching {
+        return runCatching {
             val switches = read(context)
             val strings = readStrings(context)
             val editor = prefs.edit()
@@ -341,12 +352,19 @@ object HyperSettings {
                 editor.putBoolean(SafeModeKeys.disabled(scope.id), safety.getBoolean(SafeModeKeys.disabled(scope.id), false))
                 editor.putLong(SafeModeKeys.reset(scope.id), safety.getLong(SafeModeKeys.reset(scope.id), 0))
             }
-            editor.apply()
+            // 兼容已加载的旧桌面端点：只在远端投影中遮蔽主开关，不覆盖用户原配置。
+            editor.putBoolean("launcher_native_shortcuts_enabled",
+                io.github.YGHFv.HyperExtend.core.SafeModeProjection.launcherEnabled(
+                    switches["launcher_native_shortcuts_enabled"] == true,
+                    safety.getBoolean(SafeModeKeys.disabled("launcher"), false)))
+            if (synchronous) check(editor.commit()) { "设置同步未确认" } else editor.apply()
             ModuleLog.info(
                 "settings projected to framework (${switches.size} switches, ${strings.size} strings)",
             )
-        }.onFailure {
+            true
+        }.getOrElse {
             ModuleLog.error("project switches to framework failed (local copy is intact)", it)
+            false
         }
     }
 

@@ -9,7 +9,6 @@ import android.os.SystemClock
 import android.view.View
 import android.view.ViewTreeObserver
 import android.widget.TextView
-import io.github.YGHFv.HyperExtend.core.compatibleVersionCode
 import io.github.YGHFv.HyperExtend.hook.HookRuntime
 import io.github.YGHFv.HyperExtend.hook.HookSettings
 import io.github.YGHFv.HyperExtend.hook.SafeModeRuntime
@@ -22,7 +21,6 @@ internal class ToastMaterialHooks private constructor(loader: ClassLoader, priva
     private val backdrop = OwnedBackdrop(loader)
     private val nativeBlur = requireNotNull(NotificationHooks.resolve(loader, t.nativeBlur))
     private val bindings = WeakHashMap<View, WeakReference<Binding>>()
-    private var supported: Boolean? = null
     @Volatile private var ready = false
 
     private inner class Binding(view: View, text: TextView) :
@@ -114,10 +112,8 @@ internal class ToastMaterialHooks private constructor(loader: ClassLoader, priva
             if (!ready || !settings.isOn(t.FEATURE) || chain.args[4] != null ||
                 Looper.myLooper() != Looper.getMainLooper()) return@hookAfter original
             val view = viewField.get(chain.thisObject) as? View ?: return@hookAfter original
-            val valid = supported ?: runCatching {
-                view.context.packageManager.getPackageInfo("com.android.systemui", 0).compatibleVersionCode == 202602260L
-            }.getOrDefault(false).also { supported = it }
-            if (!valid || view.javaClass.name != t.VIEW ||
+            // Toast 的构造器、视图字段、资源名和调用点已在安装阶段按宿主结构解析。
+            if (view.javaClass.name != t.VIEW ||
                 view.resources.getResourceName(t.TEXT_ID) != "com.android.systemui:id/text") return@hookAfter original
             val text = view.findViewById<TextView>(t.TEXT_ID) ?: return@hookAfter original
             bindings[view]?.get()?.stop()

@@ -3,7 +3,6 @@ package io.github.YGHFv.HyperExtend.hook.feature.systemui
 
 import android.content.Context
 import android.os.Looper
-import io.github.YGHFv.HyperExtend.core.compatibleVersionCode
 import io.github.YGHFv.HyperExtend.hook.HookRuntime
 import io.github.YGHFv.HyperExtend.hook.SafeModeRuntime
 import io.github.YGHFv.HyperExtend.hook.feature.statusbar.StatusIconHost
@@ -11,9 +10,9 @@ import io.github.YGHFv.HyperExtend.hook.feature.statusbar.StatusIconHost
 /** Editor candidates only. Never writes the user's saved tile list. */
 internal class NativeToggleTileEditorHooks(private val feature: String, private val spec: String, private val tileReady: () -> Boolean) {
     private fun enabled() = tileReady() && !SafeModeRuntime.blocked && HookRuntime.settings().isOn(feature)
-    private fun supported(context: Context, plugin: Boolean) =
-        context.packageManager.getPackageInfo("com.android.systemui", 0).compatibleVersionCode == 202602260L &&
-            (!plugin || context.packageManager.getPackageInfo(SystemUiPluginHooks.PACKAGE, 0).compatibleVersionCode == 183022200L)
+    private fun supported(context: Context?) =
+        // 编辑器目标已按方法签名、字段类型和资源名完成结构校验。
+        context != null
     fun installClassic(loader: ClassLoader): Int {
         if (!tileReady()) return 0
         val t = StockTilesTargets
@@ -30,7 +29,7 @@ internal class NativeToggleTileEditorHooks(private val feature: String, private 
             val frame = if (ready && enabled() && Looper.myLooper() == Looper.getMainLooper()) runCatching {
                 val query = fields.getValue("tileQueryHelper").get(chain.thisObject)
                 val context = fields.getValue("mContext").get(query) as Context
-                if (!supported(context, false) || context.resources.getResourceName(t.STOCK_RESOURCE) !=
+                if (!supported(context) || context.resources.getResourceName(t.STOCK_RESOURCE) !=
                     "com.android.systemui:string/miui_quick_settings_tiles_stock") null
                 else StockTilesScope.Frame(context, t.STOCK_RESOURCE)
             }.getOrNull() else null
@@ -54,7 +53,7 @@ internal class NativeToggleTileEditorHooks(private val feature: String, private 
         }
         val add = HookRuntime.hook(methods.getValue(t.pluginAdd), "native_toggle/$spec/plugin-editor") { chain ->
             val frame = if (ready && enabled() && runCatching {
-                supported(context.get(chain.thisObject) as Context, true)
+                supported(context.get(chain.thisObject) as? Context)
             }.getOrDefault(false)) chain.thisObject?.let { StockTilesScope.Frame(it, 0) } else null
             scope.withFrame(frame) { chain.proceed() }
         }

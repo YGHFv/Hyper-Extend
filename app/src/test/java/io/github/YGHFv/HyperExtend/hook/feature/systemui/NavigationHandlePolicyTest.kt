@@ -5,11 +5,9 @@ import org.junit.Assert.*
 import org.junit.Test
 
 class NavigationHandlePolicyTest {
-    @Test fun exactVersionAndMainThreadAreRequired() {
-        assertTrue(NavigationHandlePolicy.supported(202602260L, true))
-        assertFalse(NavigationHandlePolicy.supported(null, true))
-        assertFalse(NavigationHandlePolicy.supported(202602261L, true))
-        assertFalse(NavigationHandlePolicy.supported(202602260L, false))
+    @Test fun mainThreadIsRequired() {
+        assertTrue(NavigationHandlePolicy.supported(true))
+        assertFalse(NavigationHandlePolicy.supported(false))
     }
 
     @Test fun dimensionsFollowCurrentDensityNotFontScale() {

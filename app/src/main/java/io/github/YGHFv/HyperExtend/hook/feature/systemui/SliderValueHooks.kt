@@ -5,8 +5,6 @@
  */
 package io.github.YGHFv.HyperExtend.hook.feature.systemui
 
-import io.github.YGHFv.HyperExtend.core.compatibleVersionCode
-
 import android.os.Looper
 import android.text.Spanned
 import android.view.View
@@ -112,9 +110,7 @@ internal object SliderValueHooks {
             val context = text.context
             val accessibility = context.getSystemService(AccessibilityManager::class.java) ?: return
             val supported = supportedHost ?: run {
-                val pm = context.packageManager
-                SliderValuePolicy.supported(pm.getPackageInfo("com.android.systemui", 0).compatibleVersionCode,
-                    pm.getPackageInfo(SystemUiPluginHooks.PACKAGE, 0).compatibleVersionCode).also { supportedHost = it }
+                SliderValuePolicy.supported().also { supportedHost = it }
             }
             if (!supported ||
                 !text.isAttachedToWindow || text.display?.displayId != 0 || !slider.isShown || !slider.isEnabled || slider.display?.displayId != 0 ||

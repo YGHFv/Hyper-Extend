@@ -1,0 +1,84 @@
+{
+  "schemaVersion": 1,
+  "policy": "share-apk-snapshot-pool-offline-v1",
+  "installPermitted": false,
+  "notClosedGates": [
+    1,
+    3,
+    5
+  ],
+  "image": {
+    "sha256": "b947b8db576539a57a2b2a5ba7e32749e06508fa88d2fae31316cbd14374387b",
+    "buildId": "4f1bdaeda6b1f98dde7d3ebc23163cd1",
+    "size": 29387672
+  },
+  "symbols": {
+    "vm": {
+      "name": "_kDartVmSnapshotData",
+      "stValue": "0x340",
+      "stSize": 18256
+    },
+    "isolate": {
+      "name": "_kDartIsolateSnapshotData",
+      "stValue": "0x4ac0",
+      "stSize": 8681712
+    }
+  },
+  "snapshot": {
+    "magic": "0xdcdcf5f5",
+    "length": 6457283,
+    "kind": 3,
+    "version": "5d85d85296400e9b3992193deed317c9",
+    "features": "product no-code_comments dwarf_stack_traces_mode dedup_instructions no-tsan no-msan no-shared_data arm64 android compressed-pointers",
+    "numBaseObjects": 1181,
+    "numObjects": 277591,
+    "numClusters": 1465,
+    "instructionsTableLen": 12607,
+    "instructionTableDataOffset": 64
+  },
+  "objectPool": {
+    "length": 123596,
+    "entryCounts": {
+      "obj": 121933,
+      "imm": 797,
+      "skip": 683,
+      "native": 183
+    },
+    "slots": [
+      {
+        "name": "firstKey",
+        "offset": "0xb9458",
+        "index": 94857,
+        "refId": 8340,
+        "value": "android.intent.extra.PACKAGE_NAME"
+      },
+      {
+        "name": "secondKey",
+        "offset": "0xb9460",
+        "index": 94858,
+        "refId": 88650,
+        "value": "com.miui.mishare.extra.MISHARE_APK_PACKAGE_NAME"
+      },
+      {
+        "name": "firstField",
+        "offset": "0xb9468",
+        "index": 94859,
+        "refId": 101022,
+        "value": "android.intent.action.SEND"
+      },
+      {
+        "name": "lastField",
+        "offset": "0xb9470",
+        "index": 94860,
+        "refId": 105341,
+        "value": "application/vnd.android.package-archive"
+      }
+    ]
+  },
+  "canonicalStrings": {
+    "allocCount": 117870,
+    "fillCount": 117870,
+    "consistentCount": "117870/117870"
+  },
+  "verificationBoundary": "仅形成宿主静态快照字节的只读自洽证据；官方 tag 3.10.1 格式兼容未证，不覆盖实机运行期、线程时序、真实 Intent 组装、chooser、文件授权或分享可用。"
+}

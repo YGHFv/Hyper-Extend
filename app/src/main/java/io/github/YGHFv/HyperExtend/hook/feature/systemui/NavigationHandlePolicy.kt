@@ -9,8 +9,7 @@ internal object NavigationHandlePolicy {
      * 由安装阶段决定装外观还是装隐藏（见 [NavigationHandleHooks.install]），
      * 不需要在每个回调里再做一次优先级判断。
      */
-    fun supported(version: Long?, mainThread: Boolean): Boolean =
-        version == 202602260L && mainThread
+    fun supported(mainThread: Boolean): Boolean = mainThread
 
     /** 半径 0 表示「不覆盖」：0 以前被用来隐藏绘制，那条路径已并入隐藏方式，不再重复实现。 */
     fun radiusPixels(dp: Float, density: Float): Float? =

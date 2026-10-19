@@ -9,7 +9,6 @@ import android.os.Looper
 import android.view.View
 import android.view.ViewTreeObserver
 import io.github.YGHFv.HyperExtend.core.ForceBlurSettings
-import io.github.YGHFv.HyperExtend.core.compatibleVersionCode
 import io.github.YGHFv.HyperExtend.hook.HookRuntime
 import io.github.YGHFv.HyperExtend.hook.HookSettings
 import io.github.YGHFv.HyperExtend.hook.SafeModeRuntime
@@ -32,7 +31,6 @@ internal class ForceBlurHooks private constructor(loader: ClassLoader, private v
         .getDeclaredConstructor(*t.constructor.map { Class.forName(it, false, loader) }.toTypedArray())
     private val scope = TileMaterialScope<Apply>()
     private val bindings = WeakHashMap<Any, WeakReference<Binding>>()
-    private var version: Long? = null
     @Volatile private var ready = false
     private data class Apply(val owner: Any, val allowed: Boolean, val cleanup: Boolean, var relaxed: Boolean = false)
     private fun invoke(target: SystemUiMethod, owner: Any? = null, vararg args: Any?) =
@@ -41,14 +39,12 @@ internal class ForceBlurHooks private constructor(loader: ClassLoader, private v
     private fun host(): Boolean = runCatching {
         val context = invoke(t.application) as? Context ?: return@runCatching false
         if (context.packageName != "com.android.systemui") return@runCatching false
-        val current = version ?: context.packageManager.getPackageInfo("com.android.systemui", 0)
-            .compatibleVersionCode.also { version = it }
-        current == 202602260L
+        true
     }.getOrDefault(false)
     private fun supported(owner: Any): Boolean = runCatching {
         if (!host()) return@runCatching false
         val listeners = fields.getValue("crossWindowBlurListeners").get(owner) ?: return@runCatching false
-        ForceBlurPolicy.supported(settings.isOn(ForceBlurSettings.FEATURE), SafeModeRuntime.blocked, version,
+        ForceBlurPolicy.supported(settings.isOn(ForceBlurSettings.FEATURE), SafeModeRuntime.blocked,
             fields.getValue("CROSS_WINDOW_BLUR_SUPPORTED").getBoolean(null),
             invoke(t.property, null, "persist.sysui.disableBlur", false) != false,
             invoke(t.cross, listeners) == true)

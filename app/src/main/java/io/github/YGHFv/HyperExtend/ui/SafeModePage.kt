@@ -30,6 +30,7 @@ import io.github.YGHFv.HyperExtend.core.RestartKind
 import io.github.YGHFv.HyperExtend.core.SafeModeSettings
 import io.github.YGHFv.HyperExtend.core.SafeModeStatus
 import io.github.YGHFv.HyperExtend.core.scopeById
+import io.github.YGHFv.HyperExtend.BuildConfig
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -45,15 +46,21 @@ internal fun SafeModePage() {
     var recoveryId by rememberSaveable { mutableStateOf("") }
     var saving by remember { mutableStateOf(false) }
     var message by rememberSaveable { mutableStateOf<String?>(null) }
+    LaunchedEffect(Unit) {
+        withContext(Dispatchers.IO) { SafeModeSettings.refreshNative(context) }
+    }
 
     fun save(scope: HyperScope, disabled: Boolean) {
         saving = true
         coroutineScope.launch {
             val ok = withContext(Dispatchers.IO) { SafeModeSettings.setDisabled(context, scope, disabled) }
             saving = false
-            message = if (ok) {
+            message = if (ok && scope.process == "com.miui.home" && BuildConfig.LAUNCHER_NATIVE_PROTOTYPE) {
+                if (disabled) "桌面安全模式已开启并重启，原功能配置保留。"
+                else "已读回确认桌面原生保护恢复，并已重启桌面。原功能配置保留。"
+            } else if (ok) {
                 "${scope.title}：${if (disabled) "已开启安全模式，原配置保留" else "已关闭安全模式，原配置保留"}。${scope.restartHint()}"
-            } else "保存失败，开关保持原状态，请查看日志。"
+            } else "操作未完成，未确认保护已解除。请查看桌面行的实际状态说明。"
         }
     }
 
@@ -67,9 +74,9 @@ internal fun SafeModePage() {
                 SwitchPreference(
                     modifier = Modifier.weight(1f),
                     title = status.scope.title,
-                    summary = status.scope.iconPackage,
+                    summary = status.detail ?: status.scope.iconPackage,
                     checked = status.disabled,
-                    enabled = !saving,
+                    enabled = !saving && !status.loading,
                     onCheckedChange = { disabled ->
                         if (disabled) save(status.scope, true) else recoveryId = status.scope.id
                     },
@@ -77,7 +84,7 @@ internal fun SafeModePage() {
             }
         }
     }
-    HintText("开启后仅停用对应宿主的模块功能，不清空原配置。手动更改后需重启对应宿主；系统框架需重启设备。自动防砖保护始终保留。")
+    HintText("开启后仅停用对应宿主的模块功能，不清空原配置。桌面会自动重启并核对保护状态；其他宿主需重启生效，系统框架需重启设备。自动防砖保护始终保留。")
     if (!connected) HintText("框架未连接：更改暂存本地，待框架连接并同步后，再重启宿主生效。")
     message?.let { HintText(it) }
 
@@ -86,16 +93,30 @@ internal fun SafeModePage() {
         show = recovery != null,
         title = "关闭安全模式？",
         summary = recovery?.let {
-            "将恢复「${it.title}」原有的功能配置。请先关闭可疑功能，再确认恢复。${it.restartHint()}如果问题再次出现，自动保护仍会停用模块功能。"
+            val action = if (it.process == "com.miui.home" && BuildConfig.LAUNCHER_NATIVE_PROTOTYPE)
+                "确认后会通过原生恢复事务重启桌面，并读回实际保护状态。" else it.restartHint()
+            "将恢复「${it.title}」原有的功能配置。请先关闭可疑功能，再确认恢复。${action}如果问题再次出现，自动保护仍会停用模块功能。"
         },
         onDismissRequest = { recoveryId = "" },
     ) {
-        CardActionRow("确认恢复") {
-            recovery?.let { save(it, false) }
-            recoveryId = ""
-        }
-        CardActionRow("取消") { recoveryId = "" }
+        SafetyDialogButtons(
+            cancelText = "取消", confirmText = "确认恢复",
+            onCancel = { recoveryId = "" },
+            onConfirm = {
+                recovery?.let { save(it, false) }
+                recoveryId = ""
+            },
+        )
     }
+}
+
+/** 与项目其它对话框一致：使用卡片动作行，不另造一套按钮排版。 */
+@Composable
+private fun SafetyDialogButtons(cancelText: String, confirmText: String,
+    onCancel: () -> Unit, onConfirm: () -> Unit) {
+    CardActionRow(confirmText, onClick = onConfirm)
+    CardDivider()
+    CardActionRow(cancelText, onClick = onCancel)
 }
 
 /** Only acknowledge a displayed batch on user action, never on backgrounding or rotation. */
@@ -106,6 +127,9 @@ internal fun SafeModeIncidentDialog(onOpenSafeMode: () -> Unit) {
     val lifecycle by LocalLifecycleOwner.current.lifecycle.currentStateFlow.collectAsState()
     val resumed = lifecycle.isAtLeast(Lifecycle.State.RESUMED)
     var displayed by remember { mutableStateOf<List<SafeModeStatus>>(emptyList()) }
+    LaunchedEffect(resumed) {
+        if (resumed) withContext(Dispatchers.IO) { SafeModeSettings.refreshNative(context) }
+    }
 
     LaunchedEffect(resumed, statuses) {
         if (resumed) displayed = statuses.filter { it.incident != null && !it.acknowledged }
@@ -125,10 +149,12 @@ internal fun SafeModeIncidentDialog(onOpenSafeMode: () -> Unit) {
             displayed.forEach { status ->
                 HintText("${status.scope.title}（${status.scope.iconPackage}）\n${status.incident?.reason.orEmpty()}")
             }
-            HintText("请先关闭可疑功能，再到「设置 → 安全模式」关闭对应开关并确认恢复，最后重启对应宿主；系统框架需重启设备。重启前，已修改的界面或已注册的监听可能仍有残留。")
+            HintText("请先关闭可疑功能，再到「设置 → 安全模式」关闭对应开关并确认恢复。桌面会自动重启并核对原生状态；其他宿主需要重启，系统框架需重启设备。")
         }
-        CardActionRow("前往安全模式") { acknowledge(); onOpenSafeMode() }
-        CardActionRow("知道了") { acknowledge() }
+        SafetyDialogButtons(
+            cancelText = "知道了", confirmText = "前往安全模式",
+            onCancel = { acknowledge() }, onConfirm = { acknowledge(); onOpenSafeMode() },
+        )
     }
 }
 

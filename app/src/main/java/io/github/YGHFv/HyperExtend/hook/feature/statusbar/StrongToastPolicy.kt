@@ -2,8 +2,11 @@
 package io.github.YGHFv.HyperExtend.hook.feature.statusbar
 
 internal object StrongToastPolicy {
-    fun eligible(enabled: Boolean, version: Long?, display: Int?, action: String?) =
-        enabled && version == 202602260L && display == 0 && action == "strong_toast_action"
+    @Deprecated("版本号不参与运行期门禁")
+    fun eligible(enabled: Boolean, version: Long, display: Int?, action: String?) =
+        eligible(enabled, display, action)
+    fun eligible(enabled: Boolean, display: Int?, action: String?) =
+        enabled && display == 0 && action == "strong_toast_action"
 }
 
 /** Only the parsed delivery from this synchronous command may be suppressed. */

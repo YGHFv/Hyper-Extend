@@ -14,7 +14,6 @@ import android.view.View
 import android.view.ViewGroup
 import io.github.YGHFv.HyperExtend.core.FiveGTileSettings
 import io.github.YGHFv.HyperExtend.core.ModuleLog
-import io.github.YGHFv.HyperExtend.core.compatibleVersionCode
 import io.github.YGHFv.HyperExtend.hook.HookRuntime
 import io.github.YGHFv.HyperExtend.hook.HookSettings
 import io.github.YGHFv.HyperExtend.hook.Reflect
@@ -426,8 +425,6 @@ internal object FiveGDetailHooks {
          */
         private fun detailContext(): Context? = runCatching {
             (currentApplication?.invoke(null) as? Context)?.takeIf { it.packageName == "com.android.systemui" }
-        }.getOrNull()?.takeIf {
-            runCatching { it.packageManager.getPackageInfo("com.android.systemui", 0).compatibleVersionCode }.getOrNull() == 202602260L
-        }
+        }.getOrNull()
     }
 }

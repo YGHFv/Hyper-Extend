@@ -6,8 +6,6 @@
  */
 package io.github.YGHFv.HyperExtend.hook.feature.statusbar
 
-import io.github.YGHFv.HyperExtend.core.compatibleVersionCode
-
 import android.content.BroadcastReceiver
 import android.Manifest
 import android.annotation.SuppressLint
@@ -409,9 +407,6 @@ internal class DualRowSignalHooks private constructor(
             return if (HookRuntime.hook(bind, "$FEATURE/MiuiMobileIconBinder#bind") { chain ->
                 val root = chain.args[0] as? ViewGroup
                 val vm = chain.args[2]
-                if (root != null && root.context.packageManager.getPackageInfo("com.android.systemui", 0).compatibleVersionCode != 202602260L) {
-                    return@hook chain.proceed()
-                }
                 val binding = if (root == null || vm == null) null else controller.prepare(root, vm)
                 if (binding == null) chain.proceed() else {
                     val args = chain.args.toMutableList().apply { set(2, binding.facade) }

@@ -5,10 +5,8 @@ package io.github.YGHFv.HyperExtend.hook.feature.systemui
 import android.annotation.SuppressLint
 import android.app.NotificationChannel
 import android.content.Context
-import android.os.Build
 import android.os.UserManager
 import io.github.YGHFv.HyperExtend.core.NotificationManagementSettings
-import io.github.YGHFv.HyperExtend.core.compatibleVersionCode
 import io.github.YGHFv.HyperExtend.hook.HookRuntime
 import io.github.YGHFv.HyperExtend.hook.HookSettings
 import io.github.YGHFv.HyperExtend.hook.SafeModeRuntime
@@ -16,19 +14,17 @@ import io.github.YGHFv.HyperExtend.hook.feature.statusbar.StatusIconHost
 import java.util.concurrent.atomic.AtomicBoolean
 
 internal object NotificationManagementHooks {
-    private fun hostMatches() = Build.VERSION.SDK_INT == 37 && Build.FINGERPRINT == NotificationManagementTargets.FINGERPRINT
     private fun enabled(settings: HookSettings) = !SafeModeRuntime.blocked && settings.isOn(NotificationManagementSettings.FEATURE)
 
     @SuppressLint("NewApi")
     private fun settingsHost(context: Context): Boolean = runCatching {
         val user = context.getSystemService(UserManager::class.java) ?: return@runCatching false
-        user.isSystemUser && !user.isManagedProfile && context.packageName == "com.android.settings" &&
-            context.packageManager.getPackageInfo("com.android.settings", 0).compatibleVersionCode == 37L
+        user.isSystemUser && !user.isManagedProfile && context.packageName == "com.android.settings"
     }.getOrDefault(false)
 
     fun installSettings(loader: ClassLoader, settings: HookSettings): List<String> = buildList {
         installSystemUiFeature(settings, NotificationManagementSettings.FEATURE) {
-            if (!hostMatches()) 0 else settingsAdapter(loader, settings)
+            settingsAdapter(loader, settings)
         }
     }
 
@@ -66,7 +62,7 @@ internal object NotificationManagementHooks {
     }
 
     fun installServer(loader: ClassLoader, settings: HookSettings): Int {
-        if (!enabled(settings) || !hostMatches()) return 0
+        if (!enabled(settings)) return 0
         val t = NotificationManagementTargets
         val methods = t.serverMethods.associateWith { NotificationHooks.resolve(loader, it) ?: return 0 }
         if (!methods.values.all { HookRuntime.deoptimize(it, "manage_notifications/server-caller") }) return 0

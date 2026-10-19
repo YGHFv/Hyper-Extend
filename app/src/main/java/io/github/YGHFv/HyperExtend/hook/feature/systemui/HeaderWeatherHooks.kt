@@ -15,7 +15,6 @@ import android.view.ViewTreeObserver
 import android.widget.TextView
 import io.github.YGHFv.HyperExtend.core.HeaderWeatherSettings
 import io.github.YGHFv.HyperExtend.core.ModuleLog
-import io.github.YGHFv.HyperExtend.core.compatibleVersionCode
 import io.github.YGHFv.HyperExtend.core.hostDisplayIdOrNull
 import io.github.YGHFv.HyperExtend.hook.HookRuntime
 import io.github.YGHFv.HyperExtend.hook.HookSettings
@@ -32,7 +31,6 @@ internal object HeaderWeatherHooks {
         val description: String?, val city: String?, val updated: Long)
 
     fun install(loader: ClassLoader, settings: HookSettings): Int {
-        if (Build.VERSION.SDK_INT < 33) return 0
         val api = Api(loader)
         val ready = AtomicBoolean(false)
         val bindings = WeakHashMap<ViewGroup, WeakReference<Binding>>()
@@ -51,9 +49,8 @@ internal object HeaderWeatherHooks {
             HookRuntime.hookAfter(api.methods.getValue(target), "${HeaderWeatherSettings.FEATURE}/${target.name}") { chain, original ->
                 val root = chain.thisObject as? ViewGroup
                 if (ready.get() && root != null && Looper.myLooper() == Looper.getMainLooper()) runCatching {
-                    val version = root.context.packageManager.getPackageInfo("com.android.systemui", 0).compatibleVersionCode
-                    if (version == 202602260L && root.context.hostDisplayIdOrNull() == 0 && bindings[root]?.get() == null) {
-                        val binding = Binding(root, api, settings, version)
+                    if (root.context.hostDisplayIdOrNull() == 0 && bindings[root]?.get() == null) {
+                        val binding = Binding(root, api, settings)
                         bindings[root] = WeakReference(binding)
                         root.addOnAttachStateChangeListener(binding)
                         if (root.isAttachedToWindow) binding.onViewAttachedToWindow(root)
@@ -92,7 +89,7 @@ internal object HeaderWeatherHooks {
             methods.getValue(t.time).invoke(bean) as Long)
     }
 
-    private class Binding(val root: ViewGroup, val api: Api, val settings: HookSettings, val version: Long) :
+    private class Binding(val root: ViewGroup, val api: Api, val settings: HookSettings) :
         View.OnAttachStateChangeListener, ViewTreeObserver.OnPreDrawListener {
         private var observer: ViewTreeObserver? = null
         private var label: TextView? = null
@@ -100,7 +97,7 @@ internal object HeaderWeatherHooks {
         private val refresh = HeaderWeatherRefresh<Weather>()
         private var failed = false
         private fun allowed() = !failed && !SafeModeRuntime.blocked && HeaderWeatherPolicy.eligible(
-            settings.isOn(HeaderWeatherSettings.FEATURE), version,
+            settings.isOn(HeaderWeatherSettings.FEATURE),
             root.display?.displayId ?: root.context.hostDisplayIdOrNull(), refresh.user,
             api.tracker.get() != null)
 

@@ -6,7 +6,6 @@ import android.content.res.Configuration
 import android.os.Looper
 import android.view.View
 import io.github.YGHFv.HyperExtend.core.NotificationBlendSettings
-import io.github.YGHFv.HyperExtend.core.compatibleVersionCode
 import io.github.YGHFv.HyperExtend.core.hostDisplayIdOrNull
 import io.github.YGHFv.HyperExtend.hook.HookRuntime
 import io.github.YGHFv.HyperExtend.hook.HookSettings
@@ -22,7 +21,6 @@ internal object NotificationBlendHooks {
         if (!methods.values.all { HookRuntime.deoptimize(it, "$id/caller") }) return 0
         val ready = AtomicBoolean(false)
         val scope = NotificationBlendScope<Scope>()
-        var version: Long? = null
         fun main() = Looper.myLooper() == Looper.getMainLooper()
         val blend = HookRuntime.hook(methods.getValue(t.blend), "$id/colors") { chain ->
             val active = scope.current
@@ -53,10 +51,8 @@ internal object NotificationBlendHooks {
                 val context = chain.args[1] as? Context ?: return@hook chain.proceed()
                 val view = chain.args[0] as? View ?: return@hook chain.proceed()
                 val allowed = runCatching {
-                    val host = version ?: context.packageManager.getPackageInfo("com.android.systemui", 0)
-                        .compatibleVersionCode.also { version = it }
                     NotificationBlendPolicy.eligible(scene, settings.isOn(id),
-                        settings.isOn(NotificationBlendSettings.KEYGUARD), host,
+                        settings.isOn(NotificationBlendSettings.KEYGUARD),
                         view.display?.displayId ?: context.hostDisplayIdOrNull(), true)
                 }.getOrDefault(false)
                 scope.within(Scope(context, view, scene, allowed)) { chain.proceed() }

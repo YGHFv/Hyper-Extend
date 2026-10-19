@@ -5,8 +5,6 @@
  */
 package io.github.YGHFv.HyperExtend.hook.feature.statusbar
 
-import io.github.YGHFv.HyperExtend.core.compatibleVersionCode
-
 import android.annotation.TargetApi
 import android.content.Context
 import android.graphics.Typeface
@@ -14,7 +12,6 @@ import android.os.Looper
 import android.text.method.TransformationMethod
 import android.util.TypedValue
 import android.view.View
-import android.view.ViewTreeObserver
 import android.widget.TextView
 import io.github.YGHFv.HyperExtend.core.ClockSettings as Config
 import io.github.YGHFv.HyperExtend.core.ModuleLog
@@ -27,7 +24,7 @@ import java.lang.reflect.Method
 import java.util.WeakHashMap
 import kotlin.math.roundToInt
 
-@TargetApi(29) // The version gate admits only the audited OS4 SystemUI.
+@TargetApi(29) // 宿主使用较新的框架 API；兼容性由目标方法结构决定。
 internal class StatusBarClock private constructor(settings: HookSettings) {
     private data class Style(val bold: Boolean, val size: Int, val left: Int, val right: Int, val vertical: Float, val defaultSize: Int) {
         val changed get() = bold || size != defaultSize || left != 0 || right != 0 || vertical != 0f
@@ -55,7 +52,7 @@ internal class StatusBarClock private constructor(settings: HookSettings) {
         val scroll: Boolean, val transform: TransformationMethod?)
 
     private inner class Binding(val view: TextView, val name: String, val role: Config.Role) :
-        View.OnAttachStateChangeListener, ViewTreeObserver.OnPreDrawListener {
+        View.OnAttachStateChangeListener {
         private val size = MobileTypeOwnedValue<Float>()
         private val face = MobileTypeOwnedValue<Typeface?>()
         private val left = MobileTypeOwnedValue<Int>()
@@ -67,7 +64,6 @@ internal class StatusBarClock private constructor(settings: HookSettings) {
         private val lines = MobileTypeOwnedValue<Lines>()
         private val visibility = MobileTypeOwnedValue<Int>()
         private val text = ClockTextOverride()
-        private var observer: ViewTreeObserver? = null
         private var failed = false
         private var nativeTimeWrite = false
 
@@ -81,20 +77,14 @@ internal class StatusBarClock private constructor(settings: HookSettings) {
         }
 
         override fun onViewAttachedToWindow(v: View) = protect {
-            if (observer != null) return@protect
-            observer = view.viewTreeObserver.also { it.addOnPreDrawListener(this) }
             refresh(format = true)
             if (formats.needsSeconds(name)) ticker.attach(view)
         }
 
         override fun onViewDetachedFromWindow(v: View) = protect {
             ticker.detach(view)
-            observer?.takeIf { it.isAlive }?.removeOnPreDrawListener(this)
-            observer = null
             restore()
         }
-
-        override fun onPreDraw(): Boolean { refresh(format = false); return true }
 
         // Let native updateTime compare against its own last text and preserve native
         // content descriptions, demo mode, and notification-header whitespace handling.
@@ -219,7 +209,6 @@ internal class StatusBarClock private constructor(settings: HookSettings) {
         bindings[view]?.get()?.let { return it }
         val name = runCatching { view.resources.getResourceEntryName(view.id) }.getOrNull() ?: return null
         val role = Config.role(name) ?: return null
-        if (view.context.packageManager.getPackageInfo("com.android.systemui", 0).compatibleVersionCode != 202602260L) return null
         return Binding(view, name, role).also {
             bindings[view] = WeakReference(it)
             view.addOnAttachStateChangeListener(it)

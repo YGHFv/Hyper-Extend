@@ -2,8 +2,8 @@
 package io.github.YGHFv.HyperExtend.hook.feature.systemui
 
 internal object MediaDarkPolicy {
-    fun enabled(version: Long, mainThread: Boolean, tinyScreen: Boolean, blocked: Boolean): Boolean =
-        version == 202602260L && mainThread && !tinyScreen && !blocked
+    fun enabled(mainThread: Boolean, tinyScreen: Boolean, blocked: Boolean): Boolean =
+        mainThread && !tinyScreen && !blocked
 
     fun nightMode(uiMode: Int): Int = (uiMode and 0x30.inv()) or 0x20
 }

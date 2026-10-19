@@ -22,7 +22,6 @@ import android.os.SystemClock
 import android.view.InputDevice
 import android.view.MotionEvent
 import android.view.View
-import io.github.YGHFv.HyperExtend.core.compatibleVersionCode
 import io.github.YGHFv.HyperExtend.hook.HookRuntime
 import io.github.YGHFv.HyperExtend.hook.HookSettings
 import io.github.YGHFv.HyperExtend.hook.SafeModeRuntime
@@ -48,7 +47,6 @@ internal object StatusBarGestures {
                 HookRuntime.deoptimize(methods.getValue(it), "$FEATURE/caller")
             }) return 0
         val trackers = WeakHashMap<View, Binding>()
-        var version: Long? = null
         return if (HookRuntime.hook(methods.getValue(t.touch), "$FEATURE/nativeTouch") { chain ->
             val view = chain.thisObject as? View ?: return@hook chain.proceed()
             val event = chain.args[0] as? MotionEvent ?: return@hook chain.proceed()
@@ -65,9 +63,7 @@ internal object StatusBarGestures {
                 throw failure
             }
             val allowed = runCatching {
-                val host = version ?: view.context.packageManager.getPackageInfo("com.android.systemui", 0)
-                    .compatibleVersionCode.also { version = it }
-                host == 202602260L && handler.get(view) != null && sample.history != null &&
+                handler.get(view) != null && sample.history != null &&
                     StatusBarGesturePolicy.eligible(settings.isOn(FEATURE), SafeModeRuntime.blocked,
                         original == true, view.isAttachedToWindow, view.isShown && view.windowVisibility == View.VISIBLE,
                         view.display?.displayId == 0,

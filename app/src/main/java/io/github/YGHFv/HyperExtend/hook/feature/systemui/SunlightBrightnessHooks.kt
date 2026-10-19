@@ -7,7 +7,6 @@ import android.os.PowerManager
 import android.provider.Settings
 import io.github.YGHFv.HyperExtend.core.ModuleLog
 import io.github.YGHFv.HyperExtend.core.SunlightModeSettings
-import io.github.YGHFv.HyperExtend.core.compatibleVersionCode
 import io.github.YGHFv.HyperExtend.hook.HookRuntime
 import io.github.YGHFv.HyperExtend.hook.HookSettings
 import io.github.YGHFv.HyperExtend.hook.Reflect
@@ -55,9 +54,7 @@ internal object SunlightBrightnessHooks {
 
     /** 本设备是否能用系统亮度设置面实现「最大/自定义亮度」。 */
     fun supported(context: Context): Boolean =
-        android.os.Build.VERSION.SDK_INT == 37 &&
-            context.packageManager.getPackageInfo("com.android.systemui", 0).compatibleVersionCode == 202602260L &&
-            range(context) != null &&
+        range(context) != null &&
             runCatching { Settings.System.canWrite(context) }.getOrDefault(false)
 
     /** 当前设置是否要求「改写亮度设置」而不是切换原生阳光模式偏好。 */

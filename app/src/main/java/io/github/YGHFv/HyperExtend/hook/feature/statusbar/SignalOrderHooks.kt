@@ -2,7 +2,6 @@
 package io.github.YGHFv.HyperExtend.hook.feature.statusbar
 
 import android.content.Context
-import io.github.YGHFv.HyperExtend.core.compatibleVersionCode
 import io.github.YGHFv.HyperExtend.hook.HookRuntime
 import io.github.YGHFv.HyperExtend.hook.feature.systemui.NotificationHooks
 
@@ -15,9 +14,7 @@ internal object SignalOrderHooks {
         val fields = t.fields.map { (owner, name, type) -> StatusIconHost.field(loader, owner, name, type) }
         if (!listOf(factory, caller).all { HookRuntime.deoptimize(it, "$FEATURE/factory") }) return 0
         return if (HookRuntime.hookAfter(factory, "$FEATURE/factory") { chain, result ->
-            val context = chain.args[0] as? Context ?: return@hookAfter result
-            if (result == null || !HookRuntime.settings().isOn(FEATURE) ||
-                context.packageManager.getPackageInfo("com.android.systemui", 0).compatibleVersionCode != 202602260L)
+            if (result == null || !HookRuntime.settings().isOn(FEATURE))
                 return@hookAfter result
             @Suppress("UNCHECKED_CAST")
             val slots = fields[0].get(result) as? ArrayList<Any> ?: return@hookAfter result

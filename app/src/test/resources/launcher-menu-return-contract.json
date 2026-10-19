@@ -1,0 +1,102 @@
+{
+  "schemaVersion": 1,
+  "policy": "menu-call-site-return-contract-offline-v1",
+  "status": "仅离线静态审核，不是安装许可；门槛 5 仍未关闭",
+  "image": {
+    "sha256": "b947b8db576539a57a2b2a5ba7e32749e06508fa88d2fae31316cbd14374387b",
+    "buildId": "4f1bdaeda6b1f98dde7d3ebc23163cd1",
+    "size": 29387672
+  },
+  "island": {
+    "symbol": "launcher_menu_island",
+    "source": "app/src/test/cpp/launcher_menu_island_arm64.S",
+    "size": 16,
+    "sha256": "445d381d25eccc062f4c1419c6c21cf62914a2cf4b62800989faaaf6e4c344de",
+    "words": [
+      "0x90000010",
+      "0x91000210",
+      "0xf9400210",
+      "0xd61f0200"
+    ],
+    "preservesX0": true,
+    "note": "叶蹦床只动 x16：adrp/add/ldr 取值槽、br 尾跳原目标。x0 是调用者要用的返回值，蹦床一个字节也不碰。"
+  },
+  "sites": [
+    {
+      "feature": "数量点",
+      "offset": "0x1147018",
+      "word": "0x94000137",
+      "target": "0x11474f4",
+      "continuationWord": "0xaa0003e2",
+      "returnUse": "转发",
+      "rewriteReturn": true,
+      "allowsTrampolineToWriteX0": true,
+      "note": "调用点之后立刻 mov x2, x0：getter 返回的是未装箱整数，数量点专用蹦床就是要改写 w0。"
+    },
+    {
+      "feature": "分享 APK",
+      "offset": "0x17fd75c",
+      "word": "0x940000c5",
+      "target": "0x17fda70",
+      "continuationWord": "0x1400000d",
+      "returnUse": "丢弃",
+      "rewriteReturn": false,
+      "allowsTrampolineToWriteX0": false,
+      "note": "接续是无条件 b <尾部>：返回值不被使用，尾部把 x0 换成 Dart 空对象。"
+    },
+    {
+      "feature": "分享 APK",
+      "offset": "0x17fda5c",
+      "word": "0x94000005",
+      "target": "0x17fda70",
+      "continuationWord": "0xaa1603e0",
+      "returnUse": "丢弃",
+      "rewriteReturn": false,
+      "allowsTrampolineToWriteX0": false,
+      "note": "接续是 mov x0, x22（Dart 空对象）：返回值被直接丢弃。"
+    },
+    {
+      "feature": "小窗",
+      "offset": "0x1b2f770",
+      "word": "0x94000038",
+      "target": "0x1b2f850",
+      "continuationWord": "0xaa0003e1",
+      "returnUse": "转发",
+      "rewriteReturn": false,
+      "allowsTrampolineToWriteX0": false,
+      "note": "接续把 x0 存进帧槽（返回的 Dart 对象要被后续使用），但本项不需要改写返回值，因此蹦床仍不得动 x0。"
+    },
+    {
+      "feature": "新任务",
+      "offset": "0x1b2f2f0",
+      "word": "0x94000083",
+      "target": "0x1b2f4fc",
+      "continuationWord": "0xaa0003e1",
+      "returnUse": "转发",
+      "rewriteReturn": false,
+      "allowsTrampolineToWriteX0": false,
+      "note": "同上：返回对象被存进帧槽，本项不改写返回值。"
+    },
+    {
+      "feature": "新任务",
+      "offset": "0x1b2f424",
+      "word": "0x94000036",
+      "target": "0x1b2f4fc",
+      "continuationWord": "0xaa0003e1",
+      "returnUse": "转发",
+      "rewriteReturn": false,
+      "allowsTrampolineToWriteX0": false,
+      "note": "同上：返回对象被存进帧槽，本项不改写返回值。"
+    }
+  ],
+  "counts": {
+    "sites": 6
+  },
+  "installPermitted": false,
+  "notClosedGates": [
+    "门槛1：本路线不依赖多字覆盖，但蹦床发布次序仍须独立验收。",
+    "门槛3：安全通道实机验收未做。",
+    "门槛5：只固定调用点返回值用法与叶蹦床不可写 x0；缓存同步、映射生命周期与安装窗口无并发执行仍未验收。"
+  ],
+  "verificationBoundary": "静态只读 + 白名单指令解码；不证明蹦床已接入安装路径、不证明四项功能的端到端行为。"
+}

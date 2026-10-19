@@ -23,13 +23,11 @@ class CardTileListTest {
         assertEquals(CardTileListSettings.ORDER, feature.config.single().key)
     }
 
-    @Test fun exactHostAndDisplayGateIsClosedByDefault() {
-        assertTrue(CardTileListPolicy.eligible(true, 202602260, 183022200, 0, true))
-        assertFalse(CardTileListPolicy.eligible(false, 202602260, 183022200, 0, true))
-        assertFalse(CardTileListPolicy.eligible(true, 202602261, 183022200, 0, true))
-        assertFalse(CardTileListPolicy.eligible(true, 202602260, 183022201, 0, true))
-        assertFalse(CardTileListPolicy.eligible(true, 202602260, 183022200, null, true))
-        assertFalse(CardTileListPolicy.eligible(true, 202602260, 183022200, 0, false))
+    @Test fun displayAndMainGatesDoNotUseVersions() {
+        assertTrue(CardTileListPolicy.eligible(true, 0, true))
+        assertFalse(CardTileListPolicy.eligible(false, 0, true))
+        assertFalse(CardTileListPolicy.eligible(true, null, true))
+        assertFalse(CardTileListPolicy.eligible(true, 0, false))
     }
 
     @Test fun detailScopeSeparatesOwnerNestedInvocationsAndFailure() {

@@ -5,8 +5,6 @@
  */
 package io.github.YGHFv.HyperExtend.hook.feature.systemui
 
-import io.github.YGHFv.HyperExtend.core.compatibleVersionCode
-
 import android.os.Looper
 import android.view.View
 import io.github.YGHFv.HyperExtend.core.ClassicQsSettings
@@ -35,14 +33,10 @@ internal object ClassicQsHooks {
         val previousLimits = WeakHashMap<View, Int>()
         val active = ThreadLocal<View?>()
         val measuring = ThreadLocal<Pair<View, Int>?>()
-        var supportedHost: Boolean? = null
-
         fun supported(view: View): Boolean {
             if (!ready.get() || Looper.myLooper() != Looper.getMainLooper() || view.display?.displayId != 0) return false
-            return supportedHost ?: runCatching {
-                (view.context.packageManager.getPackageInfo("com.android.systemui", 0).compatibleVersionCode == 202602260L)
-                    .also { supportedHost = it }
-            }.getOrDefault(false)
+            // 目标类、方法签名和字段类型已在安装阶段逐项校验。
+            return true
         }
         fun requested(view: View, quick: Boolean): Int? {
             if (!settings.isOn(feature)) return null

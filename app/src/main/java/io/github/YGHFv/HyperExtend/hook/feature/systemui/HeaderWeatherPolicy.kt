@@ -4,8 +4,8 @@ package io.github.YGHFv.HyperExtend.hook.feature.systemui
 internal object HeaderWeatherPolicy {
     const val REFRESH_MS = 15 * 60 * 1000L
     const val MAX_AGE_MS = 6 * 60 * 60 * 1000L
-    fun eligible(enabled: Boolean, version: Long, display: Int?, currentUser: Int?, trackerReady: Boolean) =
-        enabled && version == 202602260L && display == 0 && currentUser != null && currentUser >= 0 && trackerReady
+    fun eligible(enabled: Boolean, display: Int?, currentUser: Int?, trackerReady: Boolean) =
+        enabled && display == 0 && currentUser != null && currentUser >= 0 && trackerReady
 
     fun text(valid: Boolean, temperature: Int, unit: Int, description: String?, city: String?,
              showCity: Boolean, updated: Long, now: Long): String? {

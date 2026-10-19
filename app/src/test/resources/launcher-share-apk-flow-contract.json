@@ -1,0 +1,68 @@
+{
+  "schemaVersion": 1,
+  "policy": "share-apk-host-flow-offline-v1",
+  "installPermitted": false,
+  "notClosedGates": [1, 3, 5],
+  "image": {
+    "sha256": "b947b8db576539a57a2b2a5ba7e32749e06508fa88d2fae31316cbd14374387b",
+    "buildId": "4f1bdaeda6b1f98dde7d3ebc23163cd1",
+    "size": 29387672
+  },
+  "function": {
+    "name": "ValidShareAppShortcutMenu.shareApk",
+    "address": "0x17fda70",
+    "size": 188,
+    "sha256": "a6e69442573201ce3bdc5079701944eb0b3ea0e7f48deb861f5ecc7144ebd1a1",
+    "bytes": "fd79bfa9fd030faaef4100d1e00301aae30302aaa2831ff8e10316aa7394c697e10300aaa3835ff862e74291422c42f9a0031ff8dc93c697a1035ff8a3835ff862e74291423042f9d793c697851cc3971f00166bc0020054a2035ff8e10300aa8873c397e10300aa1992c697a0831ff87e090394e10300aa60e74291003442f9207000b8200080d220f000f8a0035ff820b001b860e74291003842f9207002b8e20301aaa1835ff8ffcbd797e00316aaef031daafd79c1a8c0035fd6"
+  },
+  "sites": [
+    {"address": "0x17fd75c", "word": "0x940000c5", "continuationWord": "0x1400000d"},
+    {"address": "0x17fda5c", "word": "0x94000005", "continuationWord": "0xaa1603e0"}
+  ],
+  "calls": [
+    {"address": "0x17fda8c", "target": "0x9a2c58", "role": "makeBundle", "symbol": null},
+    {"address": "0x17fdaa4", "target": "0x9a2a14", "role": "putFirst", "symbol": "BundleImpl.putString"},
+    {"address": "0x17fdab8", "target": "0x9a2a14", "role": "putSecond", "symbol": "BundleImpl.putString"},
+    {"address": "0x17fdabc", "target": "0x8c4cd0", "role": "getApp", "symbol": "getFrbAppInterface"},
+    {"address": "0x17fdad0", "target": "0x8da8f0", "role": "getContext", "symbol": "AppInterfaceRefImpl.context"},
+    {"address": "0x17fdad8", "target": "0x9a233c", "role": "getManager", "symbol": "ContextImpl.activityManager"},
+    {"address": "0x17fdae0", "target": "0x18c00d8", "role": "makeRecord", "symbol": null},
+    {"address": "0x17fdb18", "target": "0xdf0b14", "role": "startActivity", "symbol": "ActivityManagerImpl.startActivity"}
+  ],
+  "poolSlots": {
+    "firstKey": "0xb9458",
+    "secondKey": "0xb9460",
+    "firstField": "0xb9468",
+    "lastField": "0xb9470"
+  },
+  "recordWrites": [
+    {"address": "0x17fdaf0", "offset": "0x7", "size": 4, "value": "firstField"},
+    {"address": "0x17fdaf8", "offset": "0xf", "size": 8, "value": "one"},
+    {"address": "0x17fdb00", "offset": "0x1b", "size": 4, "value": "bundle"},
+    {"address": "0x17fdb0c", "offset": "0x27", "size": 4, "value": "lastField"}
+  ],
+  "nullBranch": {
+    "compare": "0x17fdac0",
+    "compareWord": "0x6b16001f",
+    "address": "0x17fdac4",
+    "word": "0x540002c0",
+    "target": "0x17fdb1c",
+    "comparisonBits": 32
+  },
+  "matrix": {
+    "scenarios": ["nonnull", "null", "low32-alias"],
+    "layouts": [0, 1],
+    "flags": [0, 7, 15],
+    "modes": ["direct", "island"],
+    "cases": 72,
+    "negativeControls": 8,
+    "boundaryAborts": 8
+  },
+  "unresolved": [
+    "makeBundle 与 makeRecord 是试验角色名，不是已确认的 Dart 函数名；它们的实现均为替身。",
+    "四个对象池槽只记录偏移和数据流，不把它们宣称为已解码的 Intent action、extra 键、MIME 或 chooser。",
+    "low32-alias 是故意构造的数值边界，不代表可构造这样的合法 Dart 对象。",
+    "不执行异常展开、GC、对象分配器、对象写屏障、Binder、文件准备或真正的 startActivity。"
+  ],
+  "verificationBoundary": "只读宿主 ELF 与叶蹦床对象；在隔离模拟器执行真实 shareApk 函数体，外部调用与对象池均为受控替身。证明所给模型下的参数、分支、字段写入、返回值和栈恢复，不证明 APK 分享端到端可用、异常回退或并发安装安全。"
+}

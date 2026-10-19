@@ -2,12 +2,12 @@
 package io.github.YGHFv.HyperExtend.hook.feature.systemui
 
 internal object LockscreenWallpaperPolicy {
-    fun eligible(version: Long?, mainThread: Boolean, enabled: Boolean, needAnimation: Boolean,
+    fun eligible(mainThread: Boolean, enabled: Boolean, needAnimation: Boolean,
                  systemAnimations: Boolean, attached: Boolean, displayId: Int?, defaultTheme: Boolean,
                  keyguardShowing: Boolean, fullAod: Boolean, depth: Boolean, video: Boolean,
                  flip: Boolean, occluded: Boolean, fromGone: Boolean, bouncer: Boolean,
                  dismissing: Boolean, superSave: Boolean): Boolean =
-        version == 202602260L && mainThread && enabled && needAnimation && systemAnimations && attached &&
+        mainThread && enabled && needAnimation && systemAnimations && attached &&
             displayId == 0 && defaultTheme && keyguardShowing && !fullAod && !depth && !video &&
             !flip && !occluded && !fromGone && !bouncer && !dismissing && !superSave
 }

@@ -6,13 +6,11 @@
 package io.github.YGHFv.HyperExtend.hook.feature.systemui
 
 import android.content.Context
-import io.github.YGHFv.HyperExtend.core.compatibleVersionCode
 import io.github.YGHFv.HyperExtend.core.hostDisplayIdOrNull
 import io.github.YGHFv.HyperExtend.hook.HookRuntime
 import io.github.YGHFv.HyperExtend.hook.HookSettings
 import io.github.YGHFv.HyperExtend.hook.SafeModeRuntime
 import java.lang.reflect.Modifier
-import java.util.concurrent.atomic.AtomicLong
 
 internal object ShadeHeaderBlurHooks {
     fun install(loader: ClassLoader, settings: HookSettings): Int {
@@ -28,16 +26,13 @@ internal object ShadeHeaderBlurHooks {
         // The Flow calculations, canvas path and clip animator must all see the same
         // selector. Do not leave compiled callers using a different inlined decision.
         if (!(callers + query).all { HookRuntime.deoptimize(it, "${t.FEATURE}/caller") }) return 0
-        val version = AtomicLong(0)
         return if (HookRuntime.hookAfter(query, "${t.FEATURE}/selector") { chain, original ->
             if (original != false || SafeModeRuntime.blocked || !settings.isOn(t.FEATURE)) return@hookAfter original
             runCatching {
                 val host = context.get(chain.thisObject) as? Context ?: return@runCatching original
-                val code = version.get().takeIf { it != 0L } ?: host.packageManager
-                    .getPackageInfo("com.android.systemui", 0).compatibleVersionCode.also { version.set(it) }
                 val display = host.hostDisplayIdOrNull()
-                if (code != 202602260L || display != 0) return@runCatching original
-                ShadeHeaderBlurPolicy.useGradient(false, true, code, display, supported.getBoolean(null))
+                if (display != 0) return@runCatching original
+                ShadeHeaderBlurPolicy.useGradient(false, true, display, supported.getBoolean(null))
             }.getOrDefault(original)
         }) 1 else 0
     }

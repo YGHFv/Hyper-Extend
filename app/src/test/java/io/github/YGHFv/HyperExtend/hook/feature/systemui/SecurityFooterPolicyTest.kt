@@ -6,17 +6,14 @@ import org.junit.Test
 
 class SecurityFooterPolicyTest {
     @Test fun suppressionRequiresKnownMainDisplayAndExactHost() {
-        assertTrue(SecurityFooterHooks.suppress(true, true, true, 0, 202602260L))
-        assertFalse(SecurityFooterHooks.suppress(true, true, true, null, 202602260L))
-        assertFalse(SecurityFooterHooks.suppress(true, true, true, 1, 202602260L))
-        assertFalse(SecurityFooterHooks.suppress(true, true, false, 0, 202602260L))
-        assertFalse(SecurityFooterHooks.suppress(true, true, true, 0, 202602261L))
-        assertFalse(SecurityFooterHooks.suppress(true, false, true, 0, 202602260L))
-        assertFalse(SecurityFooterHooks.suppress(false, true, true, 0, 202602260L))
+        assertTrue(SecurityFooterHooks.suppress(true, true, true, 0))
+        assertFalse(SecurityFooterHooks.suppress(true, true, true, null))
+        assertFalse(SecurityFooterHooks.suppress(true, true, true, 1))
+        assertFalse(SecurityFooterHooks.suppress(true, true, false, 0))
+        assertFalse(SecurityFooterHooks.suppress(true, false, true, 0))
+        assertFalse(SecurityFooterHooks.suppress(false, true, true, 0))
     }
-    @Test fun pluginRequiresBothVersions() {
-        assertTrue(SecurityFooterHooks.suppress(true, true, true, 0, 202602260L, 183022200L, true))
-        assertFalse(SecurityFooterHooks.suppress(true, true, true, 0, 202602260L, null, true))
-        assertFalse(SecurityFooterHooks.suppress(true, true, true, 0, 202602260L, 183022201L, true))
+    @Test fun pluginPathKeepsNativeBehaviorWithoutVersionGate() {
+        assertFalse(SecurityFooterHooks.suppress(true, true, true, 0, true))
     }
 }

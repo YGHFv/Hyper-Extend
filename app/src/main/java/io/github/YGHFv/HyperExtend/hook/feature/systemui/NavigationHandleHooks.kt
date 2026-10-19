@@ -5,7 +5,6 @@
  */
 package io.github.YGHFv.HyperExtend.hook.feature.systemui
 
-import io.github.YGHFv.HyperExtend.core.compatibleVersionCode
 
 import android.animation.ArgbEvaluator
 import android.content.res.Configuration
@@ -60,16 +59,12 @@ internal object NavigationHandleHooks {
         val lightBackground = SystemUiCustomSettings.color(settings.string(NavigationHandleSettings.LIGHT_BACKGROUND), true)
         val darkBackground = SystemUiCustomSettings.color(settings.string(NavigationHandleSettings.DARK_BACKGROUND), true)
         val evaluator = ArgbEvaluator()
-        var version: Long? = null
         val installed = methods.count { method ->
             HookRuntime.hook(method, "navigation_handle_custom/${method.name}") { chain ->
                 if (!ready.get() || Looper.myLooper() != Looper.getMainLooper()) return@hook chain.proceed()
                 val view = chain.thisObject as? View ?: return@hook chain.proceed()
                 if (view.display?.displayId != 0) return@hook chain.proceed()
-                val hostVersion = version ?: runCatching {
-                    view.context.packageManager.getPackageInfo("com.android.systemui", 0).compatibleVersionCode
-                }.getOrNull()?.also { version = it }
-                if (!NavigationHandlePolicy.supported(hostVersion, true) ||
+                if (!NavigationHandlePolicy.supported(true) ||
                     !settings.isOn(NavigationHandleSettings.FEATURE)) return@hook chain.proceed()
                 val radius = NavigationHandlePolicy.radiusPixels(radiusDp, view.resources.displayMetrics.density)
                     ?: return@hook chain.proceed()

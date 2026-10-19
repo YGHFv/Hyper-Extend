@@ -2,8 +2,8 @@
 package io.github.YGHFv.HyperExtend.hook.feature.systemui
 
 internal object CardTileListPolicy {
-    fun eligible(enabled: Boolean, systemUi: Long, plugin: Long, display: Int?, main: Boolean) =
-        enabled && systemUi == 202602260L && plugin == 183022200L && display == 0 && main
+    fun eligible(enabled: Boolean, display: Int?, main: Boolean) =
+        enabled && display == 0 && main
 }
 
 /** Only successful creations in one detail invocation suppress a later duplicate. */

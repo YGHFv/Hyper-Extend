@@ -7,8 +7,6 @@ package io.github.YGHFv.HyperExtend.hook.feature.systemui
 
 import io.github.YGHFv.HyperExtend.core.hostDisplayIdOrNull
 
-import io.github.YGHFv.HyperExtend.core.compatibleVersionCode
-
 import android.graphics.drawable.GradientDrawable
 import android.graphics.drawable.VectorDrawable
 import android.graphics.drawable.AnimatedVectorDrawable
@@ -53,16 +51,11 @@ internal object TileCornerHooks {
         val ready = AtomicBoolean(false)
         // Never keep Drawables or Views in a weak-key value: callbacks can retain the key.
         val shapes = WeakHashMap<GradientDrawable, Shape>()
-        var versions: Pair<Long, Long>? = null
         fun mainThread() = Looper.myLooper() == Looper.getMainLooper()
         fun eligible(view: View, id: String): Boolean = runCatching {
             if (!ready.get() || SafeModeRuntime.blocked || !mainThread() || !settings.isOn(id)) return@runCatching false
-            val host = versions ?: view.context.packageManager.let { pm ->
-                (pm.getPackageInfo("com.android.systemui", 0).compatibleVersionCode to
-                    pm.getPackageInfo(SystemUiPluginHooks.PACKAGE, 0).compatibleVersionCode).also { versions = it }
-            }
             val display = view.display?.displayId ?: view.context.hostDisplayIdOrNull()
-            if (!TileCornerPolicy.eligible(true, host.first, host.second, display,
+            if (!TileCornerPolicy.eligible(settings.isOn(id), display,
                     fields.getValue("card").getBoolean(view), fields.getValue("isDetailTile").getBoolean(view),
                     methods.getValue(t.theme).invoke(theme.get(null)) == true, methods.getValue(t.material).invoke(null, view.context) != false))
                 return@runCatching false

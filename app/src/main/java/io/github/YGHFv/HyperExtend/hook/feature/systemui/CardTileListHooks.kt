@@ -7,7 +7,6 @@ package io.github.YGHFv.HyperExtend.hook.feature.systemui
 import android.content.Context
 import android.os.Looper
 import io.github.YGHFv.HyperExtend.core.CardTileListSettings
-import io.github.YGHFv.HyperExtend.core.compatibleVersionCode
 import io.github.YGHFv.HyperExtend.core.hostDisplayIdOrNull
 import io.github.YGHFv.HyperExtend.hook.HookRuntime
 import io.github.YGHFv.HyperExtend.hook.HookSettings
@@ -32,19 +31,14 @@ internal object CardTileListHooks {
         val ready = AtomicBoolean(false)
         val controllers = WeakHashMap<Any, Boolean>()
         val scope = CardDetailCreationScope()
-        var versions: Pair<Long, Long>? = null
         fun main() = Looper.myLooper() == Looper.getMainLooper()
         val init = HookRuntime.hookAfter(methods.getValue(t.initialize), "$id/initialize") { chain, original ->
             if (!ready.get() || SafeModeRuntime.blocked || !main()) return@hookAfter original
             runCatching {
                 val controller = owner.get(chain.thisObject) ?: return@runCatching original
                 val context = methods.getValue(t.context).invoke(controller) as? Context ?: return@runCatching original
-                val host = versions ?: context.packageManager.let { pm ->
-                    (pm.getPackageInfo("com.android.systemui", 0).compatibleVersionCode to
-                        pm.getPackageInfo(SystemUiPluginHooks.PACKAGE, 0).compatibleVersionCode).also { versions = it }
-                }
-                if (!CardTileListPolicy.eligible(settings.isOn(id), host.first, host.second,
-                        context.hostDisplayIdOrNull(), true)) return@runCatching original
+                if (!CardTileListPolicy.eligible(settings.isOn(id), context.hostDisplayIdOrNull(), true))
+                    return@runCatching original
                 val requested = CardTileListSettings.parse(settings.string(CardTileListSettings.ORDER))
                     ?: return@runCatching original
                 // Native lazy stores this once, before the constructor builds exclusions.

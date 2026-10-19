@@ -6,13 +6,12 @@ import org.junit.Test
 
 class ShadeHeaderBlurTest {
     @Test fun existingGradientIsNeverRemovedAndUnsupportedDevicesStayNative() {
-        assertTrue(ShadeHeaderBlurPolicy.useGradient(true, false, null, null, false))
-        assertTrue(ShadeHeaderBlurPolicy.useGradient(false, true, 202602260, 0, true))
-        assertFalse(ShadeHeaderBlurPolicy.useGradient(false, false, 202602260, 0, true))
-        assertFalse(ShadeHeaderBlurPolicy.useGradient(false, true, 202602260, 0, false))
-        assertFalse(ShadeHeaderBlurPolicy.useGradient(false, true, 202602261, 0, true))
-        assertFalse(ShadeHeaderBlurPolicy.useGradient(false, true, 202602260, null, true))
-        assertFalse(ShadeHeaderBlurPolicy.useGradient(false, true, 202602260, 1, true))
+        assertTrue(ShadeHeaderBlurPolicy.useGradient(true, false, null, false))
+        assertTrue(ShadeHeaderBlurPolicy.useGradient(false, true, 0, true))
+        assertFalse(ShadeHeaderBlurPolicy.useGradient(false, false, 0, true))
+        assertFalse(ShadeHeaderBlurPolicy.useGradient(false, true, 0, false))
+        assertFalse(ShadeHeaderBlurPolicy.useGradient(false, true, null, true))
+        assertFalse(ShadeHeaderBlurPolicy.useGradient(false, true, 1, true))
     }
 
     @Test fun allSevenCallerSignaturesAndSelectorMatchEvidence() {

@@ -1,0 +1,403 @@
+{
+  "schemaVersion": 1,
+  "policy": "share-apk-entry-pilot-offline-v1",
+  "status": "仅离线静态审核，不是安装许可",
+  "installPermitted": false,
+  "image": {
+    "sha256": "b947b8db576539a57a2b2a5ba7e32749e06508fa88d2fae31316cbd14374387b",
+    "buildId": "4f1bdaeda6b1f98dde7d3ebc23163cd1",
+    "size": 29387672
+  },
+  "dartBooleanEncoding": {
+    "note": "Dart AOT 以 x22 为空对象基址：x22+#0x20 是真值对象、x22+#0x30 是假值对象。下列目击相互独立，任一不成立即拒绝本合同的布尔解释。",
+    "trueWord": "0x910082c0",
+    "falseWord": "0x9100c2c0",
+    "trueMeaning": "Dart true 对象（x22+0x20）",
+    "falseMeaning": "Dart false 对象（x22+0x30）",
+    "sharedReturnThunk": {
+      "address": "0x18ac804",
+      "headWord": "0xf85f83a2",
+      "headMnemonic": "ldur x2, [x29, #-8]",
+      "tailUserCount": 1094,
+      "note": "该返回蹦床同时被常量 getter 等同步函数与异步函数复用，因此「末指令是它」不能作为异步标记。"
+    },
+    "witnesses": [
+      {
+        "name": "Utilities.isSystemPackage",
+        "function": {
+          "name": "Utilities.isSystemPackage",
+          "address": "0x193ded8",
+          "size": 364,
+          "sha256": "394b937f75b7614e5a7bf27fa95f9397716bdaf85d5a1d1f7abc454bcb7a3264"
+        },
+        "meaning": "FLAG_SYSTEM 置位取真值对象，否则取假值对象",
+        "checks": [
+          {
+            "address": "0x193dfc4",
+            "word": "0x9100c2c0",
+            "role": "false"
+          },
+          {
+            "address": "0x193dfcc",
+            "word": "0x910082c0",
+            "role": "true"
+          }
+        ]
+      },
+      {
+        "name": "_StringBase.isEmpty",
+        "function": {
+          "name": "_StringBase.isEmpty",
+          "address": "0x86b900",
+          "size": 28,
+          "sha256": "35c0e73c0ec4ada839c91d10b290c70e845fe957ec5f0db7d5e4cf7f6476165d"
+        },
+        "meaning": "csel x0, 假值, 真值, ne —— 长度非零取真值对象",
+        "checks": [
+          {
+            "address": "0x86b90c",
+            "word": "0x910082c0",
+            "role": "true"
+          },
+          {
+            "address": "0x86b910",
+            "word": "0x9100c2d0",
+            "role": "false"
+          },
+          {
+            "address": "0x86b914",
+            "word": "0x9a801200",
+            "role": "other"
+          }
+        ]
+      },
+      {
+        "name": "SmallWindowConfig.isSupportMultipleTask",
+        "function": {
+          "name": "SmallWindowConfig.isSupportMultipleTask",
+          "address": "0x19ed0c4",
+          "size": 32,
+          "sha256": "92d376016be0625d86e3e8917da7815396c228765d5cb3d31ca6184260e96990"
+        },
+        "meaning": "该分支恒定返回真；改它无效",
+        "checks": [
+          {
+            "address": "0x19ed0dc",
+            "word": "0x910082c0",
+            "role": "true"
+          }
+        ]
+      },
+      {
+        "name": "List.isNotEmpty",
+        "function": {
+          "name": "List.isNotEmpty",
+          "address": "0xf67c84",
+          "size": 24,
+          "sha256": "87b4bc756aa36e689c0354dd6737d3444f77a1fa42394201d379356d7a517d4b"
+        },
+        "checks": [
+          {
+            "address": "0xf67c8c",
+            "word": "0x9100c2c0",
+            "role": "false"
+          },
+          {
+            "address": "0xf67c94",
+            "word": "0x910082c0",
+            "role": "true"
+          }
+        ]
+      },
+      {
+        "name": "List.isEmpty",
+        "function": {
+          "name": "List.isEmpty",
+          "address": "0xf6841c",
+          "size": 24,
+          "sha256": "1d771a7c469167163e284323a2f23d7dfe87ca6414f1e627694fdd2f3dbc08e4"
+        },
+        "checks": [
+          {
+            "address": "0xf68424",
+            "word": "0x9100c2c0",
+            "role": "false"
+          },
+          {
+            "address": "0xf6842c",
+            "word": "0x910082c0",
+            "role": "true"
+          }
+        ]
+      }
+    ]
+  },
+  "farPatchTemplate": {
+    "coverageBytes": 24,
+    "words": [
+      "0x58000091",
+      "0xd61f0220",
+      "0xd503201f",
+      "0xd503201f"
+    ],
+    "literalSlot": 16,
+    "mnemonics": [
+      "ldr x17, #16",
+      "br x17",
+      "nop",
+      "nop",
+      "<8 字节岛地址字面量>"
+    ],
+    "note": "与设备实测一致：后端在远距分支下写 ldr+br+nop+nop+字面量，共 24 字节。"
+  },
+  "pilot": {
+    "feature": "分享 APK",
+    "installPermitted": false,
+    "mode": "shareApk 入口替换（与上游拦截语义一致；本轮不接入安装路径）",
+    "target": {
+      "name": "ValidShareAppShortcutMenu.shareApk",
+      "address": "0x17fda70",
+      "size": 188,
+      "sha256": "a6e69442573201ce3bdc5079701944eb0b3ea0e7f48deb861f5ecc7144ebd1a1"
+    },
+    "window": {
+      "address": "0x17fda70",
+      "coverageBytes": 24,
+      "bytes": "fd79bfa9fd030faaef4100d1e00301aae30302aaa2831ff8",
+      "sha256": "c957f20abd5c27fdb30e8813dc3086de49e41a40140066896903ca9f8030fd52",
+      "words": [
+        "0xa9bf79fd",
+        "0xaa0f03fd",
+        "0xd10041ef",
+        "0xaa0103e0",
+        "0xaa0203e3",
+        "0xf81f83a2"
+      ],
+      "positionIndependent": true,
+      "resumeAddress": "0x17fda88",
+      "resumeBytes": "e10316aa7394c697e10300aa"
+    },
+    "directEntries": [
+      {
+        "address": "0x17fd75c",
+        "kind": "BL",
+        "target": "0x17fda70",
+        "word": "0x940000c5"
+      },
+      {
+        "address": "0x17fda5c",
+        "kind": "BL",
+        "target": "0x17fda70",
+        "word": "0x94000005"
+      }
+    ],
+    "windowInteriorEntries": [],
+    "pointerReferences": [],
+    "callSites": [
+      {
+        "address": "0x17fd75c",
+        "word": "0x940000c5",
+        "owner": "未命名菜单动作分发块（0x17fd6f8 起；按 w0 bit#4 二择一调 shareApk 或 showDisclaimerDialog）"
+      },
+      {
+        "address": "0x17fda5c",
+        "word": "0x94000005",
+        "owner": "未命名薄包装块（0x17fda00 起，ret 于 0x17fda6c）"
+      }
+    ],
+    "synchronousEvidence": {
+      "lastInstruction": "ret",
+      "epilogueWords": {
+        "0x17fdb20": "0xaa1d03ef",
+        "0x17fdb24": "0xa8c179fd",
+        "0x17fdb28": "0xd65f03c0"
+      },
+      "nullReturnAddress": "0x17fdb1c",
+      "nullReturnWord": "0xaa1603e0",
+      "callees": [
+        {
+          "address": "0x17fdaa4",
+          "target": "0x9a2a14",
+          "name": "BundleImpl.putString"
+        },
+        {
+          "address": "0x17fdab8",
+          "target": "0x9a2a14",
+          "name": "BundleImpl.putString"
+        },
+        {
+          "address": "0x17fdabc",
+          "target": "0x8c4cd0",
+          "name": "getFrbAppInterface"
+        },
+        {
+          "address": "0x17fdad0",
+          "target": "0x8da8f0",
+          "name": "AppInterfaceRefImpl.context"
+        },
+        {
+          "address": "0x17fdad8",
+          "target": "0x9a233c",
+          "name": "ContextImpl.activityManager"
+        },
+        {
+          "address": "0x17fdb18",
+          "target": "0xdf0b14",
+          "name": "ActivityManagerImpl.startActivity"
+        }
+      ]
+    },
+    "requirements": [
+      "覆盖 24 字节远距补丁（ldr+br+nop+nop+字面量），不允许自动降级到 12/16 字节",
+      "窗口内 6 条指令必须全部位置无关；出现位置相关指令即拒绝该候选",
+      "窗口内部不得存在外部直接跳转；两条合法 BL 入口必须恰好指向函数首地址",
+      "入口替换路径须保留已证的 Dart null 返回契约；仅由命名调用链不能断定池槽对应 chooser Intent，其字段语义、异步文件准备与失败处理仍待独立取证",
+      "发布顺序与并发安全适用门槛 1、5；两者关闭前不得接入安装路径或链入蹦床"
+    ],
+    "limitations": [
+      "只扫描 .text 的直接 B/BL，不覆盖间接调用表、异常入口或运行期生成代码",
+      "未证明安装窗口内不存在并发执行，未证明 Dobby 中继对并发线程的可见性",
+      "未在设备上执行，未接入安装路径，installPermitted 恒为 false"
+    ]
+  },
+  "isValidFinding": {
+    "name": "ValidShareAppShortcutMenu.isValid",
+    "function": {
+      "name": "ValidShareAppShortcutMenu.isValid",
+      "address": "0x1acbed0",
+      "size": 552,
+      "sha256": "b9fe010ba56bf51e38c1ff001b8c9ab64fa0e7918dd71215e3d39ddb6d162acf"
+    },
+    "conclusion": "本轮不把 isValid 作为试点挂载点，也不声称它存在恒真可见性分支：两条可达出口在 x0 装入的都是 Dart 假值对象。",
+    "evidence": [
+      "两条可达出口（0x1acbf30、0x1acc0f0）装入 x0 的都是 Dart 假值对象，随后走共享返回蹦床 0x18ac804；可达 CFG 中没有把真值对象交给 x0 的路径。",
+      "0x1acc05c/0x1acc060/0x1acc064 用 csel 计算了「myUserId==userId」的布尔，结果写入 [x29,#-0xf0]；该槽另有 isSystemPackage 结果与入参 x5 两次写入，而整函数的读取次数为 0。",
+      "函数末指令不是 ret 而是 b 0x18ac804；该蹦床被 1094 个函数复用，其中含恒定返回真的同步 getter，故「末指令为蹦床」不能判定异步。",
+      "函数含一处帧实体化调用 0x1acbf98 -> 0x18ac8bc，以及一处续体入口 0x1acc0b0；该续体经 _LoggerImpl.e 后并入 0x1acc0f0，本 CFG 之外可能还有未建模入口。"
+    ],
+    "exits": [
+      {
+        "address": "0x1acbf30",
+        "word": "0x9100c2c0",
+        "dartValue": "false",
+        "next": {
+          "address": "0x1acbf34",
+          "word": "0x17f78234"
+        }
+      },
+      {
+        "address": "0x1acc0f0",
+        "word": "0x9100c2c0",
+        "dartValue": "false",
+        "next": {
+          "address": "0x1acc0f4",
+          "word": "0x17f781c4"
+        }
+      }
+    ],
+    "interiorBranchTargets": [
+      {
+        "address": "0x1acbf64",
+        "word": "0x14000003",
+        "target": "0x1acbf70"
+      },
+      {
+        "address": "0x1acbf7c",
+        "word": "0x14000002",
+        "target": "0x1acbf84"
+      },
+      {
+        "address": "0x1acbff4",
+        "word": "0x14000002",
+        "target": "0x1acbffc"
+      },
+      {
+        "address": "0x1acc0ac",
+        "word": "0x14000011",
+        "target": "0x1acc0f0"
+      }
+    ],
+    "boolComputation": {
+      "x16": {
+        "address": "0x1acc05c",
+        "word": "0x910082d0"
+      },
+      "x17": {
+        "address": "0x1acc060",
+        "word": "0x9100c2d1"
+      },
+      "csel": {
+        "address": "0x1acc064",
+        "word": "0x9a910202"
+      }
+    },
+    "resumeEntry": {
+      "address": "0x1acc0b0",
+      "word": "0xd10403af"
+    },
+    "frameMaterialize": {
+      "address": "0x1acbf98",
+      "word": "0x97f78249",
+      "target": "0x18ac8bc"
+    },
+    "frameSlots": {
+      "-0xf8": {
+        "writes": [
+          "0x1acbf00"
+        ],
+        "reads": [
+          "0x1acbf10",
+          "0x1acbf9c",
+          "0x1acc03c",
+          "0x1acc048"
+        ]
+      },
+      "-0xf0": {
+        "writes": [
+          "0x1acbeec",
+          "0x1acbf94",
+          "0x1acc068"
+        ],
+        "reads": []
+      },
+      "-0xe8": {
+        "writes": [
+          "0x1acbee8",
+          "0x1acbf88",
+          "0x1acbffc"
+        ],
+        "reads": [
+          "0x1acbefc"
+        ]
+      },
+      "-0xe0": {
+        "writes": [
+          "0x1acbee4"
+        ],
+        "reads": [
+          "0x1acbf38",
+          "0x1acbfe4"
+        ]
+      },
+      "-0xd8": {
+        "writes": [
+          "0x1acbee0",
+          "0x1acc0b4"
+        ],
+        "reads": [
+          "0x1acc0d4"
+        ]
+      },
+      "-0x8": {
+        "writes": [
+          "0x1acbedc"
+        ],
+        "reads": []
+      }
+    },
+    "unresolved": [
+      "缺少异常处理表与异步元数据，无法判定该函数是同步 bool 还是返回 Future",
+      "写后未读的帧槽说明仍存在未建模入口；补证前不得据此改写上游可见性链"
+    ]
+  }
+}

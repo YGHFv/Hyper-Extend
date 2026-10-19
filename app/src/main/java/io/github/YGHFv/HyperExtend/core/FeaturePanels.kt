@@ -36,6 +36,7 @@ enum class FeaturePanel(val title: String, vararg val featureIds: String) {
     TOAST("Toast", ToastMaterialSettings.FEATURE),
     CARD("卡面", "nfc_card_face"),
     CREDENTIALS("凭据与通行密钥", "passkey_fix"),
+    LAUNCHER("桌面", "launcher_native_shortcuts_enabled"),
     OTHER("其他功能"),
 }
 

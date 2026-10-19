@@ -24,13 +24,13 @@ class HeaderWeatherTest {
     }
 
     @Test fun noCrossUserOrDisplayFallback() {
-        assertTrue(HeaderWeatherPolicy.eligible(true, 202602260, 0, 0, true))
-        assertTrue(HeaderWeatherPolicy.eligible(true, 202602260, 0, 10, true))
-        assertFalse(HeaderWeatherPolicy.eligible(true, 202602260, 0, -1, true))
-        assertFalse(HeaderWeatherPolicy.eligible(true, 202602260, 0, null, true))
-        assertFalse(HeaderWeatherPolicy.eligible(true, 202602260, 0, 0, false))
-        assertFalse(HeaderWeatherPolicy.eligible(true, 202602260, 1, 0, true))
-        assertFalse(HeaderWeatherPolicy.eligible(false, 202602260, 0, 0, true))
+        assertTrue(HeaderWeatherPolicy.eligible(true, 0, 0, true))
+        assertTrue(HeaderWeatherPolicy.eligible(true, 0, 10, true))
+        assertFalse(HeaderWeatherPolicy.eligible(true, 0, -1, true))
+        assertFalse(HeaderWeatherPolicy.eligible(true, 0, null, true))
+        assertFalse(HeaderWeatherPolicy.eligible(true, 0, 0, false))
+        assertFalse(HeaderWeatherPolicy.eligible(true, 1, 0, true))
+        assertFalse(HeaderWeatherPolicy.eligible(false, 0, 0, true))
     }
 
     @Test fun captionSpaceProtectsNativeContentAndRtl() {

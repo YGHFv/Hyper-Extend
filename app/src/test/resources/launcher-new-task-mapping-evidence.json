@@ -1,0 +1,36 @@
+{
+  "date": "2026-10-13",
+  "kind": "新任务(多开)与宿主 MultipleSmallWindow 的语义映射取证",
+  "hostImage": {
+    "sha256": "b947b8db576539a57a2b2a5ba7e32749e06508fa88d2fae31316cbd14374387b",
+    "buildId": "4f1bdaeda6b1f98dde7d3ebc23163cd1",
+    "size": 29387672
+  },
+  "upstreamSource": {
+    "file": "HyperCeiler/library/libhook/src/main/java/com/sevtinge/hyperceiler/libhook/rules/home/other/FreeformShortcutMenu.java",
+    "facts": [
+      "小窗：createFreeformIntent(component, isMultiTask=false)，不追加多任务标志",
+      "新任务：createFreeformIntent(component, isMultiTask=true)，追加 FLAG_ACTIVITY_MULTIPLE_TASK",
+      "两者都由 AppDetailsShortcutMenuItem 自定义项承载，仅分支参数不同",
+      "中文资源：floating_window=小窗，new_task=多开"
+    ]
+  },
+  "hostEvidence": {
+    "小窗 _startSmallWindowActivity": {
+      "address": "0x1b2f850",
+      "setFlags指令": "0x1b2f990",
+      "machineWord": "0xd2a20400",
+      "immediate": "0x10200000"
+    },
+    "新任务 _startMultipleSmallWindow": {
+      "address": "0x1b2f4fc",
+      "setFlags指令": "0x1b2f5f8",
+      "machineWord": "0xd2a30400",
+      "immediate": "0x18200000"
+    },
+    "差值": "0x08000000 = Intent.FLAG_ACTIVITY_MULTIPLE_TASK"
+  },
+  "conclusion": "宿主 MultipleSmallWindow* 与 SmallWindow* 同族，仅多任务标志不同；按上游分支语义，MultipleSmallWindow 即『新任务/多开』，SmallWindow 即『小窗』。",
+  "boundary": "由指令立即数与上游源码分支推定语义；未在实机读取菜单文本或触发行为，不构成安装许可。",
+  "installPermitted": false
+}

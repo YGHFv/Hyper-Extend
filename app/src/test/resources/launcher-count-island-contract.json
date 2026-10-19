@@ -1,0 +1,92 @@
+{
+  "schemaVersion": 1,
+  "policy": "count-call-site-island-offline-v1",
+  "status": "仅离线静态与语义试验，不是安装许可",
+  "image": {
+    "sha256": "b947b8db576539a57a2b2a5ba7e32749e06508fa88d2fae31316cbd14374387b",
+    "buildId": "4f1bdaeda6b1f98dde7d3ebc23163cd1",
+    "size": 29387672
+  },
+  "site": {
+    "feature": "数量点",
+    "callOffset": "0x1147018",
+    "word": "0x94000137",
+    "target": "0x11474f4",
+    "targetName": "ShortcutMenuGetXController._getMaxCountInCurrentOrientation",
+    "entryWord": "0xa9bf79fd",
+    "continuation": "0x114701c",
+    "continuationWindow": "e20300aaa1835ff8a2031ff820f05ff8007c4cd3e10100f9",
+    "note": "调用点被替换成 BL 本蹦床；本蹦床自己把 x30 置为岛内接续点，getter 照常执行完整副作用后返回到岛内。"
+  },
+  "island": {
+    "symbol": "launcher_count_island",
+    "source": "app/src/test/cpp/launcher_count_island_arm64.S",
+    "role": "改写原 getter 交给本次裁剪的裸整数上限，再回到调用点+4",
+    "size": 64,
+    "sha256": "1b5fa8d84d88e885f76eb5bf1cb58d886941f54f70955b55177a3add6df75645",
+    "afterOffset": 20,
+    "words": [
+      "0x100000be",
+      "0x90000010",
+      "0x91000210",
+      "0xf9400211",
+      "0xd61f0220",
+      "0x90000010",
+      "0x91000210",
+      "0x88dffe11",
+      "0x51001630",
+      "0x71003e1f",
+      "0x54000048",
+      "0x2a1103e0",
+      "0x90000010",
+      "0x91000210",
+      "0xf940021e",
+      "0xd61f03c0"
+    ],
+    "relocations": [
+      [4, 275, "launcher_count_island_original"],
+      [8, 277, "launcher_count_island_original"],
+      [20, 275, "launcher_count_island_state"],
+      [24, 277, "launcher_count_island_state"],
+      [48, 275, "launcher_count_island_continuation"],
+      [52, 277, "launcher_count_island_continuation"]
+    ],
+    "externals": [
+      "launcher_count_island_original",
+      "launcher_count_island_state",
+      "launcher_count_island_continuation"
+    ],
+    "note": "首条 ADR 把 x30 指向岛内偏移 20；中间段用 ldar + sub/cmp/b.hi 做无符号 5..20 范围判定，只有范围成立才 mov w0, w17；末段从数据槽取回调用点+4 并 br x30。无 RET、无 BL、无栈写入。"
+  },
+  "stateMatrix": [
+    "0x0",
+    "0x4",
+    "0x5",
+    "0x14",
+    "0x15",
+    "0x7fffffff",
+    "0xffffffff"
+  ],
+  "stockValues": [
+    "0x3",
+    "0x4"
+  ],
+  "semantics": {
+    "stateWord": "单个 32 位原子字：0 或 5..20 之外一律不干预；5..20 直接作为裸整数上限写进 w0（写 w0 会清零 x0 高 32 位）。",
+    "x30": "本蹦床必须改写 x30：被替换的本来就是 BL 原 getter，进入 getter 时 x30 天然不是调用点+4。进入 getter 前 x30 必须是岛内接续点，回到调用点+4 前必须由数据槽恢复。",
+    "clobber": "只允许 x16/x17 以及返回值 x0 变化；x15、x29、x19..x28 与全部向量寄存器必须保持。",
+    "floor": "被替换的本身就是一次函数调用，所以条件标志不承诺保持，审计也不检查 NZCV。",
+    "stack": "蹦床不动 Dart 栈（x15），也不动 C 栈（SP）。",
+    "memory": "除测试装置外零内存写入：蹦床只读三个数据槽。"
+  },
+  "counts": {
+    "negativeControls": 4
+  },
+  "notClosedGates": [
+    "门槛1：蹦床本体的发布次序与模块中继回填仍未验收，本工具只审计语义。",
+    "门槛3：安全通道实机验收未做，本工具不涉及。",
+    "门槛5：本工具不证明安装窗口无并发执行、新代码缓存同步、宿主映射生命周期与写入独占性。"
+  ],
+  "installPermitted": false,
+  "verificationBoundary": "静态只读 + 隔离模拟器语义试验；getter 用返回值替身（函数体依赖 Dart 运行期对象），四项功能端到端行为未验证，不构成安装许可。"
+}

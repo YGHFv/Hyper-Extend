@@ -1,0 +1,86 @@
+{
+  "schemaVersion": 1,
+  "policy": "share-stage-chain-source-v1",
+  "installPermitted": false,
+  "notClosedGates": [1, 3, 5],
+  "limits": {
+    "snapshotReport": 8,
+    "shareReportPerRequest": 8
+  },
+  "nativeEntry": {
+    "primary": [
+      "launcher_share_entry_bridge",
+      "share_entry_primary_entered",
+      "share_entry_package_ok",
+      "share_entry_bridge_acked"
+    ],
+    "secondary": [
+      "launcher_share_entry_bridge",
+      "share_entry_secondary_entered",
+      "share_entry_package_ok",
+      "share_entry_bridge_acked"
+    ]
+  },
+  "actionHookPlan": {
+    "validityReplacementsEnabled": true,
+    "validityReplacementKind": "async-false-result-exit-island",
+    "requiredActions": [
+      "kSharePrimaryCall",
+      "kShareSecondaryCall"
+    ],
+    "actionIslands": [
+      "launcher_menu_primary_trace",
+      "launcher_menu_secondary_trace"
+    ],
+    "requiredValidityPoints": [
+      "kShareValid",
+      "kFreeformValid"
+    ],
+    "validityExitIslands": [
+      "launcher_menu_share_valid_exit",
+      "launcher_menu_freeform_valid_exit"
+    ]
+  },
+  "trampoline": [
+    "launcher_menu_share_entry_primary:",
+    "mov     w0, #1",
+    "bl      launcher_share_entry_bridge",
+    "launcher_menu_share_entry_secondary:",
+    "mov     w0, #2",
+    "bl      launcher_share_entry_bridge"
+  ],
+  "wire": {
+    "transaction": "0x00484543",
+    "protocol": 1,
+    "queuedAck": "0x48455332"
+  },
+  "endpoint": [
+    "SHARE_REPORT_LIMIT = 8",
+    "private val shareReported = AtomicInteger(0)",
+    "reportShare(\"share queued point=$point\")",
+    "reportShare(",
+    "share rejected uid=$uid pid=$pid reason=${it.javaClass.simpleName}",
+    "share rejected caller uid=$uid pid=$pid"
+  ],
+  "endpointMessage": "launcher endpoint: share queued point=",
+  "systemServer": [
+    "private class Reporter",
+    "private val reported = AtomicInteger(0)",
+    "if (reported.getAndIncrement() < REPORT_LIMIT)",
+    "val reporter = Reporter()",
+    "forward(packageName, reporter)",
+    "reporter.report { \"apk resolved package=$packageName\" }",
+    "reporter.report { \"provider accepted package=$packageName\" }",
+    "reporter.report { \"activity launched package=$packageName\" }",
+    "ModuleLog.info(\"launcher share: ${message()}\")"
+  ],
+  "provider": [
+    "launcher share provider: begin package=$packageName",
+    "launcher share provider: file ready package=$packageName"
+  ],
+  "activity": [
+    "launcher share activity: uri received",
+    "launcher share activity: chooser started"
+  ],
+  "verificationBoundary": "只固定源码与构建产物中的阶段字符串、独立日志额度、主/次动作与可见性入口安装计划；不证明设备上调用点命中、Binder 应答、Provider 物化或 chooser 实际启动。"
+}

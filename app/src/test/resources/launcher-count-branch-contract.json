@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 1,
+  "policy": "post-length-conditional-branch-offline-v1",
+  "status": "仅离线审核，不是安装许可",
+  "architecture": {
+    "document": "ARM DDI 0487 L.a",
+    "section": "B2.2.5",
+    "page": 230,
+    "documentSha256": "20d6ab39200e3d0c84cfc5948c6d3983a7a1867c11c9babe1ee4c2ee311d5368",
+    "instructionPair": "B.cond -> B"
+  },
+  "site": {
+    "address": "0x1147054",
+    "originalWord": "0x540000ac",
+    "writeBytes": 4,
+    "keepAddress": "0x1147058",
+    "clipAddress": "0x1147068",
+    "guardStart": "0x1147048",
+    "guardBytes": "017c4193a3035ff83f0003ebac000054"
+  },
+  "island": {
+    "symbol": "launcher_count_branch_trial",
+    "size": 56,
+    "sha256": "34be921a3b35ba55cade8b1c1b4a762100100bb34f89434538ae67c34fd4d24f",
+    "relocations": [
+      [4, 275, "launcher_shortcut_count_state"],
+      [8, 277, "launcher_shortcut_count_state"],
+      [48, 282, "launcher_count_trial_keep"],
+      [52, 282, "launcher_count_trial_clip"]
+    ]
+  },
+  "publicationRequirements": [
+    "代码和配置数据使用独立页面；发布前配置为关闭",
+    "新代码完成数据与指令缓存同步并封为只读可执行后，才可发布分支",
+    "只修改目标处一个对齐的32位指令，拒绝多指令覆盖",
+    "发布后代码不可改写，代码页和数据页保留到进程结束",
+    "关闭只发布状态0；已读取旧值的调用可按旧值完成",
+    "补丁丢失或发布后失败转为关闭，不自动重装，不提前回收",
+    "实际宿主映射生命周期、写入独占性、内存属性和执行线程约束仍须验收"
+  ],
+  "installPermitted": false
+}

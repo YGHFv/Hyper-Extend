@@ -4,11 +4,9 @@ package io.github.YGHFv.HyperExtend.hook.feature.systemui
 
 import android.content.ComponentName
 import android.content.Context
-import android.os.Build
 import android.os.UserManager
 import android.provider.Settings
 import io.github.YGHFv.HyperExtend.core.SunlightModeSettings
-import io.github.YGHFv.HyperExtend.core.compatibleVersionCode
 import io.github.YGHFv.HyperExtend.hook.HookSettings
 
 internal object SunlightTilePolicy {
@@ -27,7 +25,6 @@ internal object SunlightTileHooks {
         override val iconName = "ic_qs_sunlight"
         override val settingsComponent: ComponentName? = null
         override fun supported(context: Context): Boolean {
-            if (Build.VERSION.SDK_INT != 37 || Build.FINGERPRINT != NotificationManagementTargets.FINGERPRINT) return false
             val user = context.getSystemService(UserManager::class.java) ?: return false
             if (user.hasUserRestriction(UserManager.DISALLOW_CONFIG_BRIGHTNESS) || !Settings.System.canWrite(context)) return false
             // 「系统默认模式」还是原来那条原生阳光模式偏好；只有它能用的机型才显示磁贴。

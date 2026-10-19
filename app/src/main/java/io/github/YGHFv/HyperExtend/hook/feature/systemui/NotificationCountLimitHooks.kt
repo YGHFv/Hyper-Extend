@@ -6,10 +6,6 @@
  */
 package io.github.YGHFv.HyperExtend.hook.feature.systemui
 
-import io.github.YGHFv.HyperExtend.core.compatibleVersionCode
-
-import android.content.Context
-import io.github.YGHFv.HyperExtend.core.ModuleLog
 import io.github.YGHFv.HyperExtend.hook.HookRuntime
 import io.github.YGHFv.HyperExtend.hook.Reflect
 
@@ -21,22 +17,14 @@ internal object NotificationCountLimitHooks {
     fun install(loader: ClassLoader): Int {
         val coordinator = Reflect.loadClass(loader, COORDINATOR) ?: return 0
         val listener = Reflect.loadClass(loader, CALLBACK) ?: return 0
+        // 只按目标结构放行：协调器/lambda 的外部引用与 onViewBound 参数必须同时匹配。
         val owner = Reflect.findField(listener, "f\$0")?.takeIf { it.type == coordinator } ?: return 0
-        val context = Reflect.findField(coordinator, "mContext")?.takeIf { it.type == Context::class.java } ?: return 0
         val entry = Reflect.loadClass(loader, "com.android.systemui.statusbar.notification.collection.NotificationEntry") ?: return 0
         val callback = listener.declaredMethods.singleOrNull {
             it.name == "onViewBound\$1" && it.returnType == Void.TYPE && it.parameterTypes.contentEquals(arrayOf(entry))
         } ?: return 0
-        var verified: Boolean? = null
         return if (HookRuntime.hook(callback, "$FEATURE/onViewBound") { chain ->
-                val supported = verified ?: run {
-                    val ctx = context.get(owner.get(chain.thisObject)) as? Context
-                    val version = ctx?.let { runCatching { it.packageManager.getPackageInfo("com.android.systemui", 0).compatibleVersionCode }.getOrNull() }
-                    (version == 202602260L).also {
-                        if (version != null) verified = it
-                        if (!it) ModuleLog.warn("$FEATURE: unverified host; keeping count limit")
-                    }
-                }
+                val supported = runCatching { owner.get(chain.thisObject) != null }.getOrDefault(false)
                 // This listener only selects and dismisses overflow entries. Do not alter
                 // NotifCollection.dismissNotification, app cancellations or system-server limits.
                 if (supported) null else chain.proceed()

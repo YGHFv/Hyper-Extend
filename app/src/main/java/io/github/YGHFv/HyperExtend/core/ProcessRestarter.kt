@@ -13,6 +13,8 @@
 package io.github.YGHFv.HyperExtend.core
 
 import java.util.concurrent.TimeUnit
+import io.github.YGHFv.HyperExtend.BuildConfig
+import io.github.YGHFv.HyperExtend.hook.feature.launcher.LauncherSafetyMaintenance
 
 /** 一次重启操作的结果。成功与失败都带一句**能直接显示给用户的话**。 */
 sealed interface RestartResult {
@@ -76,17 +78,29 @@ object ProcessRestarter {
      *
      * **必须在后台线程调用**：内部会阻塞等待外部进程。
      */
-    fun restart(scope: HyperScope): RestartResult {
+    fun restart(scope: HyperScope, recoverLauncher: Boolean = false): RestartResult {
         suMissing()?.let { return it }
+        val launcher = scope.process == "com.miui.home" && BuildConfig.LAUNCHER_NATIVE_PROTOTYPE
+        if (recoverLauncher && !launcher) return RestartResult.Failed("此恢复操作仅用于桌面原生保护。")
         val script = when (scope.restartKind) {
             RestartKind.KILL -> killScript(scope.process)
-            RestartKind.FORCE_STOP -> "am force-stop ${scope.process}; echo stopped"
+            RestartKind.FORCE_STOP -> "am force-stop ${scope.process} && echo stopped"
             // 设备重启不在这里做：它不是「重启一个进程」，而是要用户明确点第二次确认。
             // 把这个判断留在 UI 层，本函数就永远只做「结束某个进程」这一件可预期的事。
             RestartKind.REBOOT -> return RestartResult.Failed(
                 "系统服务无法单独结束进程，只能重启设备（右上角在热重载走不通时会给出该选项）。",
             )
         }
+        val restartTicket = if (launcher) {
+            LauncherSafetyMaintenance.requestForRestart(recoverLauncher).getOrElse {
+                return RestartResult.Failed(it.message ?: "重启请求写入失败，未结束桌面。")
+            }
+        } else null
+        val javaTicket = if (scope.id == "systemui") {
+            PlannedRestarts.request(listOf(scope.id)).getOrElse {
+                return RestartResult.Failed(it.message ?: "主动重启请求失败，未结束宿主。")
+            }
+        } else emptyMap()
 
         val su = RootAccess.suCommand()
         ModuleLog.info("restart ${scope.id}: $su -c $script")
@@ -94,6 +108,8 @@ object ProcessRestarter {
         val process = try {
             ProcessBuilder(su, "-c", script).redirectErrorStream(true).start()
         } catch (t: Throwable) {
+            restartTicket?.let(LauncherSafetyMaintenance::cancelRestart)
+            PlannedRestarts.cancel(javaTicket)
             ModuleLog.error("restart ${scope.id}: cannot start su ($su)", t)
             return RestartResult.Failed(NO_SU_HINT)
         }
@@ -118,6 +134,8 @@ object ProcessRestarter {
             .getOrDefault(false)
 
         if (!finished) {
+            restartTicket?.let(LauncherSafetyMaintenance::cancelRestart)
+            PlannedRestarts.cancel(javaTicket)
             process.destroyForcibly()
             ModuleLog.warn("restart ${scope.id}: timeout after ${TIMEOUT_SECONDS}s")
             return RestartResult.Failed(
@@ -132,7 +150,7 @@ object ProcessRestarter {
 
         ModuleLog.info("restart ${scope.id}: exit=$code output=${text.ifEmpty { "(empty)" }}")
 
-        return when (scope.restartKind) {
+        val result = when (scope.restartKind) {
             RestartKind.KILL -> when {
                 text.contains("killed:") -> RestartResult.Done(
                     "${scope.title} 已结束，系统会立刻把它重新拉起来，新的设置即刻生效。",
@@ -160,14 +178,26 @@ object ProcessRestarter {
 
             RestartKind.REBOOT -> RestartResult.Failed("内部错误：设备重启不应走到这里。")
         }
+        if (result is RestartResult.Failed) {
+            restartTicket?.let(LauncherSafetyMaintenance::cancelRestart)
+            PlannedRestarts.cancel(javaTicket)
+        }
+        return result
     }
 
     /**
      * 重启设备。**调用方必须已经拿到用户的明确确认**（这是全模块唯一的整机级操作）。
      */
     fun reboot(): RestartResult {
+        val scopes = listOf("system_server", "systemui") +
+            if (BuildConfig.LAUNCHER_NATIVE_PROTOTYPE) listOf("launcher") else emptyList()
+        val requests = PlannedRestarts.request(scopes, reboot = true).getOrElse {
+            return RestartResult.Failed(it.message ?: "无法确认主动重启，未重启设备。")
+        }
         ModuleLog.warn("reboot requested by user")
-        return runSuCommand("reboot", "重启命令已下发，设备即将重启。")
+        return runSuCommand("reboot", "重启命令已下发，设备即将重启。").also {
+            if (it is RestartResult.Failed) PlannedRestarts.cancel(requests)
+        }
     }
 
     /**
@@ -205,6 +235,7 @@ object ProcessRestarter {
             process.destroyForcibly()
             return RestartResult.Failed("等待 su 超时，操作可能未执行。")
         }
+        if (process.exitValue() != 0) return RestartResult.Failed("重启命令未成功执行。")
         return RestartResult.Done(successMessage)
     }
 

@@ -5,8 +5,6 @@
  */
 package io.github.YGHFv.HyperExtend.hook.feature.systemui
 
-import io.github.YGHFv.HyperExtend.core.compatibleVersionCode
-
 import android.animation.ValueAnimator
 import android.content.Context
 import android.os.Looper
@@ -33,22 +31,17 @@ internal object LockscreenWallpaperHooks {
         val ready = AtomicBoolean(false)
         val logged = AtomicBoolean(false)
         val scope = LockscreenWallpaperScope()
-        var version: Long? = null
         val wake = LockscreenWallpaperSettings.duration(true, settings.string(LockscreenWallpaperSettings.WAKE))
         val sleep = LockscreenWallpaperSettings.duration(false, settings.string(LockscreenWallpaperSettings.SLEEP))
         fun frame(host: Any, show: Boolean, needAnimation: Boolean): LockscreenWallpaperScope.Frame? {
             if (Looper.myLooper() != Looper.getMainLooper() || !needAnimation ||
                 !settings.isOn(LockscreenWallpaperSettings.FEATURE) || !ValueAnimator.areAnimatorsEnabled()) return null
-            val context = fields.getValue("context").get(host) as? Context ?: return null
             val root = fields.getValue("keyguardRootView").get(host) as? View ?: return null
-            val hostVersion = version ?: runCatching {
-                context.packageManager.getPackageInfo("com.android.systemui", 0).compatibleVersionCode
-            }.getOrNull()?.also { version = it }
-            if (hostVersion != 202602260L || !root.isAttachedToWindow || root.display?.displayId != 0) return null
+            if (!root.isAttachedToWindow || root.display?.displayId != 0) return null
             fun flag(name: String) = fields.getValue(name).getBoolean(host)
             fun query(spec: SystemUiMethod, field: String): Boolean =
                 methods.getValue(spec).invoke(fields.getValue(field).get(host)) as Boolean
-            if (!LockscreenWallpaperPolicy.eligible(hostVersion, true, true, needAnimation, true,
+            if (!LockscreenWallpaperPolicy.eligible(true, true, needAnimation, true,
                     root.isAttachedToWindow, root.display?.displayId, flag("isDefaultTheme"), flag("keyguardShowing"),
                     query(targets.fullAod, "miuiFullAodManager"), query(targets.depth, "keyguardCommonSettingObserver"),
                     query(targets.video, "miuiKeyguardWallPaperManager") || query(targets.videoDepth, "miuiKeyguardWallPaperManager"),

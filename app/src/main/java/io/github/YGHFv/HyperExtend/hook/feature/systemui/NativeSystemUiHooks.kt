@@ -8,7 +8,6 @@ package io.github.YGHFv.HyperExtend.hook.feature.systemui
 import android.content.Context
 import android.os.Looper
 import io.github.YGHFv.HyperExtend.core.NativeSystemUiSettings
-import io.github.YGHFv.HyperExtend.core.compatibleVersionCode
 import io.github.YGHFv.HyperExtend.core.hostDisplayIdOrNull
 import io.github.YGHFv.HyperExtend.hook.HookRuntime
 import io.github.YGHFv.HyperExtend.hook.HookSettings
@@ -31,7 +30,6 @@ internal object NativeSystemUiHooks {
         if (!(methods.values + constructor).all { HookRuntime.deoptimize(it, "native_systemui/caller") }) return 0
         val ready = AtomicBoolean(false)
         val scope = NativeExtensionScope()
-        var version: Long? = null
         val registration = HookRuntime.hook(methods.getValue(t.register), "native_systemui/pluginSelection") { chain ->
             val plugin = (chain.args[0] as? Class<*>)?.name
             val id = when (plugin) {
@@ -44,9 +42,7 @@ internal object NativeSystemUiHooks {
                 val extension = fields[0].get(chain.thisObject) ?: return@runCatching false
                 val owner = fields[1].get(extension) ?: return@runCatching false
                 val context = fields[2].get(owner) as? Context ?: return@runCatching false
-                val hostVersion = version ?: context.packageManager.getPackageInfo("com.android.systemui", 0)
-                    .compatibleVersionCode.also { version = it }
-                NativeSystemUiPolicy.eligible(settings.isOn(id), hostVersion, context.hostDisplayIdOrNull(),
+                NativeSystemUiPolicy.eligible(settings.isOn(id), context.hostDisplayIdOrNull(),
                     Looper.myLooper() == Looper.getMainLooper())
             }.getOrDefault(false)
             // The original caller still installs its default Supplier, builds the extension,

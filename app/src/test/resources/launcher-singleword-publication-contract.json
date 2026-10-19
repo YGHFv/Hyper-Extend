@@ -1,0 +1,108 @@
+{
+  "schemaVersion": 1,
+  "policy": "singleword-call-site-publication-offline-v1",
+  "status": "仅离线策略审计，不是安装许可；门槛 5 仍未关闭",
+  "architecture": {
+    "manual": {
+      "document": "ARM DDI 0487 L.a",
+      "section": "B2.2.5",
+      "page": 230,
+      "documentSha256": "20d6ab39200e3d0c84cfc5948c6d3983a7a1867c11c9babe1ee4c2ee311d5368",
+      "establishes": "concurrent-modification-exception-set",
+      "note": "BL 属于无同步并发修改例外集合；旧字与新字都在集合内时，架构保证取到旧或新之一，但不保证多条被改指令之间一致。"
+    },
+    "article": {
+      "title": "Caches and Self-Modifying Code: Working with Threads",
+      "author": "Jacob Bramley",
+      "date": "2025-01-21",
+      "url": "https://developer.arm.com/community/arm-community-blogs/b/architectures-and-processors-blog/posts/caches-self-modifying-code-working-with-threads",
+      "establishes": "prefetch-speculation-protection",
+      "note": "预取推测保护：新代码先用 dc cvau / dsb ish / ic ivau / dsb ish 完成同步，再改那一条分支；任何取到新分支的执行线程必定也能取到同步后的新代码。文章同时警告多字修改会出现新旧混合执行，且旧指令可能在新指令已被执行之后仍被执行，没有时间上限。"
+    }
+  },
+  "image": {
+    "sha256": "b947b8db576539a57a2b2a5ba7e32749e06508fa88d2fae31316cbd14374387b",
+    "buildId": "4f1bdaeda6b1f98dde7d3ebc23163cd1",
+    "size": 29387672
+  },
+  "protocol": {
+    "trampolinePublishedBeforeCommit": true,
+    "commitWords": 1,
+    "commitBits": 32,
+    "pageRetention": "process-lifetime",
+    "disable": "state-word-only",
+    "note": "先分配并写好蹦床页、完成缓存同步、封为 RX；再用单条对齐 32 位存储把调用点 BL 原目标换成 BL 蹦床。发布后代码页永久保留；关闭只写状态字，不回写机器字。"
+  },
+  "sites": [
+    {
+      "feature": "数量点",
+      "address": "0x1147018",
+      "word": "0x94000137",
+      "target": "0x11474f4",
+      "replacementKind": "BL",
+      "writeBytes": 4,
+      "aligned": true,
+      "returnAddress": "0x114701c"
+    },
+    {
+      "feature": "分享 APK",
+      "address": "0x17fd75c",
+      "word": "0x940000c5",
+      "target": "0x17fda70",
+      "replacementKind": "BL",
+      "writeBytes": 4,
+      "aligned": true,
+      "returnAddress": "0x17fd760"
+    },
+    {
+      "feature": "分享 APK",
+      "address": "0x17fda5c",
+      "word": "0x94000005",
+      "target": "0x17fda70",
+      "replacementKind": "BL",
+      "writeBytes": 4,
+      "aligned": true,
+      "returnAddress": "0x17fda60"
+    },
+    {
+      "feature": "小窗",
+      "address": "0x1b2f770",
+      "word": "0x94000038",
+      "target": "0x1b2f850",
+      "replacementKind": "BL",
+      "writeBytes": 4,
+      "aligned": true,
+      "returnAddress": "0x1b2f774"
+    },
+    {
+      "feature": "新任务",
+      "address": "0x1b2f2f0",
+      "word": "0x94000083",
+      "target": "0x1b2f4fc",
+      "replacementKind": "BL",
+      "writeBytes": 4,
+      "aligned": true,
+      "returnAddress": "0x1b2f2f4"
+    },
+    {
+      "feature": "新任务",
+      "address": "0x1b2f424",
+      "word": "0x94000036",
+      "target": "0x1b2f4fc",
+      "replacementKind": "BL",
+      "writeBytes": 4,
+      "aligned": true,
+      "returnAddress": "0x1b2f428"
+    }
+  ],
+  "counts": {
+    "sites": 6
+  },
+  "notClosedGates": [
+    "门槛1：本路线不靠多字覆盖，但蹦床发布次序仍须独立验收。",
+    "门槛3：安全通道实机验收未做，本工具不涉及。",
+    "门槛5：本工具只证明策略层协议无危险交错，不能替代实机验收；蹦床页内存属性与写入独占性、宿主映像映射生命周期、提交确为单条对齐 32 位存储都仍未取证。"
+  ],
+  "installPermitted": false,
+  "verificationBoundary": "静态只读 + 有限状态策略模型 + 官方文章论证；不是 ARM 硬件、herd7 或实机证明，不接入安装路径。"
+}

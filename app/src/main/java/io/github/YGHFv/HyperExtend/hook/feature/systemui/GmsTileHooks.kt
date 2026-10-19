@@ -16,7 +16,6 @@ import android.os.SystemClock
 import android.os.UserHandle
 import android.os.UserManager
 import io.github.YGHFv.HyperExtend.core.ModuleLog
-import io.github.YGHFv.HyperExtend.core.compatibleVersionCode
 import io.github.YGHFv.HyperExtend.hook.HookRuntime
 import io.github.YGHFv.HyperExtend.hook.SafeModeRuntime
 import io.github.YGHFv.HyperExtend.hook.feature.statusbar.StatusIconHost
@@ -90,8 +89,9 @@ internal object GmsTileHooks {
     @SuppressLint("NewApi")
     private fun supported(context: Context): Boolean {
         val user = context.getSystemService(UserManager::class.java) ?: return false
-        return context.packageManager.getPackageInfo("com.android.systemui", 0).compatibleVersionCode == 202602260L &&
-            user.isSystemUser && !user.isManagedProfile && context.checkSelfPermission(PERMISSION) == PackageManager.PERMISSION_GRANTED
+        // 版本号不参与放行；QSTile 接口、工厂调用点和字段已在 Api 初始化时按签名校验。
+        return user.isSystemUser && !user.isManagedProfile &&
+            context.checkSelfPermission(PERMISSION) == PackageManager.PERMISSION_GRANTED
     }
     private class Tile(val api: Api, val host: Any, context: Context, val falsing: Any, val starterLazy: Any?) {
         private val main = Handler(Looper.getMainLooper())
@@ -183,7 +183,7 @@ internal object GmsTileHooks {
             return try {
                 val info = context.packageManager.getPackageInfo(name, PackageManager.MATCH_DISABLED_COMPONENTS)
                 val application = requireNotNull(info.applicationInfo)
-                GmsTilePolicy.App(name, application.uid, info.compatibleVersionCode,
+                GmsTilePolicy.App(name, application.uid,
                     context.packageManager.getApplicationEnabledSetting(name), application.enabled)
             } catch (_: PackageManager.NameNotFoundException) { null }
         }

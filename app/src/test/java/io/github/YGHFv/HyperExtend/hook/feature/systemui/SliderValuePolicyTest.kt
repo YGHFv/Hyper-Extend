@@ -6,10 +6,8 @@ import org.junit.Test
 
 // Added for a future authorized test run; not executed in the code-only migration batch.
 class SliderValuePolicyTest {
-    @Test fun onlyAuditedVersionsAreAccepted() {
-        assertTrue(SliderValuePolicy.supported(202602260, 183022200))
-        assertFalse(SliderValuePolicy.supported(null, 183022200))
-        assertFalse(SliderValuePolicy.supported(202602260, 183022201))
+    @Test fun supportedDoesNotUseHostOrPluginVersion() {
+        assertTrue(SliderValuePolicy.supported())
     }
     @Test fun brightnessUsesActualRangeAndLongArithmetic() {
         assertEquals("0%", SliderValuePolicy.brightness(10, 10, 110))

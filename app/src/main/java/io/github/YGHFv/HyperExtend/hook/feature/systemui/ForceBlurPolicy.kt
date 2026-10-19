@@ -2,9 +2,9 @@
 package io.github.YGHFv.HyperExtend.hook.feature.systemui
 
 internal object ForceBlurPolicy {
-    fun supported(enabled: Boolean, blocked: Boolean, version: Long?, hardware: Boolean,
+    fun supported(enabled: Boolean, blocked: Boolean, hardware: Boolean,
         disabledProperty: Boolean, crossWindow: Boolean): Boolean =
-        enabled && !blocked && version == 202602260L && hardware && !disabledProperty && crossWindow
+        enabled && !blocked && hardware && !disabledProperty && crossWindow
 
     fun owns(expectedRadius: Int, actualRadius: Int, sameRoot: Boolean): Boolean =
         sameRoot && expectedRadius > 0 && expectedRadius == actualRadius

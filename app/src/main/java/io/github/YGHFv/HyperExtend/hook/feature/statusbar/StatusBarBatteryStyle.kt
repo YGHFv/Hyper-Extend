@@ -20,7 +20,6 @@ import android.os.Looper
 import android.util.TypedValue
 import android.view.View
 import android.widget.TextView
-import io.github.YGHFv.HyperExtend.core.compatibleVersionCode
 import io.github.YGHFv.HyperExtend.core.hostDisplayIdOrNull
 import io.github.YGHFv.HyperExtend.hook.HookRuntime
 import io.github.YGHFv.HyperExtend.hook.HookSettings
@@ -103,16 +102,11 @@ internal object StatusBarBatteryStyle {
         )
 
         val ready = AtomicBoolean(false)
-        var version: Long? = null
         val hooks = t.refresh.map { target ->
             HookRuntime.hookAfter(methods.getValue(target), "$FEATURE/${target.name}") { chain, original ->
                 if (!ready.get() || Looper.myLooper() != Looper.getMainLooper()) return@hookAfter original
                 val root = chain.thisObject as? View ?: return@hookAfter original
-                val allowed = runCatching {
-                    val host = version ?: root.context.packageManager.getPackageInfo("com.android.systemui", 0)
-                        .compatibleVersionCode.also { version = it }
-                    host == 202602260L && (root.display?.displayId ?: root.context.hostDisplayIdOrNull()) == 0
-                }.getOrDefault(false)
+                val allowed = (root.display?.displayId ?: root.context.hostDisplayIdOrNull()) == 0
                 if (allowed) apply(root, style, fields)
                 original
             }

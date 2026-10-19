@@ -77,6 +77,13 @@ val SCOPES: List<HyperScope> = listOf(
         restartKind = RestartKind.KILL,
     ),
     HyperScope(
+        id = "launcher",
+        title = "桌面",
+        summary = "桌面快捷菜单与应用图标操作",
+        process = "com.miui.home",
+        restartKind = RestartKind.FORCE_STOP,
+    ),
+    HyperScope(
         id = "settings",
         title = "系统设置",
         summary = "设置里的凭据提供方、自动填充等条目",

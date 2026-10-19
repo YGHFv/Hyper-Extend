@@ -12,7 +12,7 @@ internal object GmsTilePolicy {
         "com.google.android.onetimeinitializer", "com.google.android.partnersetup",
         "com.google.android.configupdater", "com.google.android.ext.shared",
         "com.google.android.printservice.recommendation")
-    data class App(val name: String, val uid: Int, val version: Long, val state: Int, val enabled: Boolean)
+    data class App(val name: String, val uid: Int, val state: Int, val enabled: Boolean)
     fun usable(apps: List<App>) = apps.any { it.name == CORE } && apps.size <= packages.size &&
         apps.map { it.name }.distinct().size == apps.size &&
         apps.all { it.name in packages && it.uid in 0..99999 && it.state in 0..4 }

@@ -3,6 +3,7 @@
 app/build/
 .gradle/
 .kotlin/
+.cxx/
 
 # 本机与私有环境
 local.properties

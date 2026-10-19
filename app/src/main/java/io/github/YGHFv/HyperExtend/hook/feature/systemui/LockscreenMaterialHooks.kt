@@ -11,7 +11,6 @@ import android.view.ViewTreeObserver
 import android.widget.FrameLayout
 import android.widget.ImageView
 import io.github.YGHFv.HyperExtend.core.LockscreenMaterialSettings as Config
-import io.github.YGHFv.HyperExtend.core.compatibleVersionCode
 import io.github.YGHFv.HyperExtend.hook.HookRuntime
 import io.github.YGHFv.HyperExtend.hook.HookSettings
 import io.github.YGHFv.HyperExtend.hook.SafeModeRuntime
@@ -30,7 +29,6 @@ internal class LockscreenMaterialHooks private constructor(loader: ClassLoader, 
     private val color = Config.color(settings.string(Config.COLOR))
     private val bindings = WeakHashMap<ImageView, WeakReference<Binding>>()
     @Volatile private var ready = false
-    private var supported: Boolean? = null
 
     private fun ordinary(): Boolean {
         val current = manager.get(null) ?: return false
@@ -131,13 +129,8 @@ internal class LockscreenMaterialHooks private constructor(loader: ClassLoader, 
             if (!ready || Looper.myLooper() != Looper.getMainLooper()) return@hookAfter result
             val image = chain.args[1] as? ImageView ?: return@hookAfter result
             val layout = chain.args[2] as? FrameLayout ?: return@hookAfter result
-            val host = supported ?: runCatching {
-                val pm = image.context.packageManager
-                LockscreenShortcutPolicy.supported(pm.getPackageInfo("com.android.systemui", 0).compatibleVersionCode,
-                    pm.getPackageInfo(LockscreenShortcutPolicy.PACKAGE, 0).compatibleVersionCode)
-            }.getOrDefault(false).also { supported = it }
             bindings[image]?.get()?.takeIf { it.owner.get() !== chain.thisObject || it.layout !== layout }?.dispose()
-            if (host && image.parent === layout && bindings[image]?.get() == null) {
+            if (LockscreenShortcutPolicy.supported() && image.parent === layout && bindings[image]?.get() == null) {
                 val binding = Binding(chain.thisObject!!, image, layout)
                 bindings[image] = WeakReference(binding); binding.start()
             }

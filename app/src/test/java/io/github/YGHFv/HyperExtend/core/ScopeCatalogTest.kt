@@ -7,7 +7,7 @@ import org.junit.Test
 class ScopeCatalogTest {
     @Test fun scopePriorityStartsWithFrameworkAndSystemUi() {
         assertEquals(
-            listOf("system_server", "systemui", "settings", "securitycenter", "screenshot",
+            listOf("system_server", "systemui", "launcher", "settings", "securitycenter", "screenshot",
                 "misound", "milink", "mishare", "tsmclient", "scanner"),
             SCOPES.map { it.id },
         )
@@ -16,7 +16,7 @@ class ScopeCatalogTest {
 
     @Test fun homeKeepsPriorityWhileExcludingSecondaryOnlyHosts() {
         assertEquals(
-            listOf("system_server", "systemui", "screenshot", "milink", "mishare", "tsmclient"),
+            listOf("system_server", "systemui", "launcher", "screenshot", "milink", "mishare", "tsmclient"),
             entryScopes().map { it.id },
         )
         assertTrue(entryScopes().all { featuresOfScope(it.id).isNotEmpty() })
@@ -40,6 +40,8 @@ class ScopeCatalogTest {
         val systemUi = scopeById("systemui")!!
         assertEquals("com.android.systemui", systemUi.process)
         assertEquals(RestartKind.KILL, systemUi.restartKind)
+        assertEquals("com.miui.home", scopeById("launcher")!!.process)
+        assertEquals(RestartKind.FORCE_STOP, scopeById("launcher")!!.restartKind)
         assertEquals(RestartKind.FORCE_STOP, scopeById("tsmclient")!!.restartKind)
         assertEquals("systemui", APP_VOLUME_FEATURE.entryScope?.id)
         assertEquals(listOf("systemui", "misound"), APP_VOLUME_FEATURE.scopes)

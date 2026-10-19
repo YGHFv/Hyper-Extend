@@ -2,8 +2,6 @@
 package io.github.YGHFv.HyperExtend.hook.feature.systemui
 
 internal object WindowDecorationTargets {
-    const val JAR = "/system_ext/framework/Miui-WindowManager-Shell.jar"
-    const val SHA256 = "aae1827abff92240c405a77794506bebbb801b06a57c7f66e501ec181af42ded"
     private const val DECOR = "com.android.wm.shell.multitasking.miuimultiwinswitch.miuiwindowdecor."
     private const val FREEFORM = "com.android.wm.shell.multitasking.miuifreeform."
     private const val TASK = "com.android.wm.shell.multitasking.common.taskmanager.MiuiFreeformModeTaskInfo"

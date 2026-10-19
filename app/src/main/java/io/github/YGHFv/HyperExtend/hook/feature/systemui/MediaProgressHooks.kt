@@ -14,7 +14,6 @@ import android.view.View
 import android.widget.SeekBar
 import android.widget.TextView
 import io.github.YGHFv.HyperExtend.core.MediaProgressSettings
-import io.github.YGHFv.HyperExtend.core.compatibleVersionCode
 import io.github.YGHFv.HyperExtend.hook.HookRuntime
 import io.github.YGHFv.HyperExtend.hook.HookSettings
 import java.lang.ref.WeakReference
@@ -46,7 +45,6 @@ internal object MediaProgressHooks {
         val nativeHeight = MediaNativeHeightHooks.install(loader, feature, heightScope)
         val bars = WeakHashMap<SeekBar, Binding>()
         val animation = WeakHashMap<Any, Boolean>()
-        var version: Boolean? = null
         fun main() = ready.get() && Looper.myLooper() == Looper.getMainLooper()
         val attach = HookRuntime.hookAfter(methods.getValue(SystemUiTargets.mediaAttach), "$feature/attach") { chain, result ->
             if (main()) {
@@ -90,11 +88,7 @@ internal object MediaProgressHooks {
             val holder = binding.holder.get() ?: return@hook chain.proceed()
             if (fields.getValue("holder").get(controller) !== holder || fields.getValue("seekBar").get(holder) !== bar)
                 return@hook chain.proceed()
-            val supported = version ?: runCatching {
-                (bar.context.packageManager.getPackageInfo("com.android.systemui", 0).compatibleVersionCode == 202602260L)
-                    .also { version = it }
-            }.getOrDefault(false)
-            val ordinary = supported && runCatching {
+            val ordinary = runCatching {
                 val material = fields.getValue("notificationMaterialStateInteractor").get(controller)
                 val flow = methods.getValue(target.flowValue)
                 val pendingAod = fields.getValue("mWillDoAodAnim").getBoolean(

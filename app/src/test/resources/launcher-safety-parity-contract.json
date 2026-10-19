@@ -1,0 +1,465 @@
+{
+  "schemaVersion": 1,
+  "期望来源": "独立基线模块 launcher_safety_parity_baseline",
+  "基线完整性": "基线常量表与文件指针表 HOST 的摘要一起写入审计工具内嵌指纹；HOST 的键集合或顺序被增删、值不是仓库内相对路径、路径逃出仓库根、指向的文件不存在，都会独立硬失败。因此只改合同、只改基线常量、只改 HOST 指针（把被审计对象换成伪造文件）、或合同+源码+基线三者同改都会硬失败。限制：BASELINE_FINGERPRINT 是本仓库里的明文常量，属于「一致性绊线」而非防篡改机制 —— 能改基线的人也能顺手改掉这个指纹并重定义断言，它不能作为不可伪造证据；真正的防篡改只能来自代码评审与提交历史。",
+  "policy": "launcher-safety-parity-offline-v1",
+  "installPermitted": false,
+  "notClosedGates": [
+    1,
+    3,
+    5
+  ],
+  "verificationBoundary": "本审计器只做静态源码与编译期常量的一致性核对，不执行 Kotlin/JUnit、不运行 Android、不接触设备、不安装。2026-10-14 原生入口已接只读安全预检；截至 2026-10-18，CMake 已把 safety_startup.cpp 链入原型，native_entry.cpp 已 include safety_startup.h，并从 query_configuration_once 的合格快照分支可达地进入 guarded_install_once，先校验快照用途，再调用 commit_safety_startup_once 提交启动状态。首次合格启动会在同一次事务中建立锁与状态，不要求人工点击初始化。预检自身仍只读取现成本地状态、不初始化或提交 next，但不能据此把随后调用真实持久化后端的整次事务称为只读。直接包含生产入口的 ARM64 离线试验由独立单测重新编译执行，以返回未发布、未提交的受控替身隔离提交后端；真实后端与受控武装/残留恢复由独立内存文件系统试验覆盖，不由本审计器执行或认证。生产授权方与实机并发仍需独立验收；当前结构接线与八项链路已由源码实测成立，「原生入口安全门禁接线」已核验通过，无该项缺口。防砖已确认=true 只是离线静态审计结论，不等于实机放行。接线可行性证据来自离线实测（真实 NDK 把 native_entry.cpp 与 safety_startup.cpp 一起交叉编译后解析 .dynsym）：导出表不变，被禁导入零命中，但相对单文件产物新增 7 个实际导入（__errno、__write_chk、flock、fstatat、fsync、openat、renameat），无消失导入；对应新增 7 个白名单条目（write、__write_chk、fsync、flock、renameat、fstatat、__errno），其中 openat 已在基础 IMPORTS 中。导入面从「只读」变为「可写宿主私有目录」。这份导入面证据不等于实机放行：当前启动提交、提交失败早退、安装许可证据与唯一 plan.hook_func(plan.target, plan.replacement, plan.backup_slot) 安装点均已接线，八项链路（entry_reachable、snapshot_gated、commit_result_controlled、install_dominated、install_plan_gated、failure_blocks_install、install_path_present、install_path_exclusive）均为 true，wired=true、structureWired=true。install_plan_gated 要求许可守卫之后的 resolve_launcher_install_plan(plan)/plan.ready() 非空校验支配唯一安装点，校验必须针对安装点同一计划对象、极性为失败即早退，不能被常量短路或运行期条件包裹；计划不完整即 fail-closed。计划三段来源已接线：host_call_site_address 通过 loader 唯一宿主映像解析目标，shortcut_replacement_entry 返回已链入蹦床，shortcut_backup_slot 返回后端回填槽；任一来源缺失或 loader 无法提供唯一合格映像时均 fail-closed；不得用占位实参伪造安装。普通构建由显式实验安装开关 LAUNCHER_NATIVE_EXPERIMENTAL_INSTALL 保持关闭；实验构建是否安装仍只由宿主现场身份、入口函数指针、安全状态和 Hook 点参数决定，不按框架版本号或桌面 APK 版本号匹配。完整链路验证器从导出入口（native_init/JNI）做函数可达性搜索，并逐项核对快照用途校验在提交之前、提交结果进入早退控制流、安装许可证据来自提交结果、失败时返回、安装许可判定本身进入真分支且安装调用严格在其后、真正调用已保存的 hook 指针、且全文仅一处 hook 调用点（别名调用另算）；孤立函数、字符串诱饵、不进控制流的调用、丢弃返回值的门禁、恒假分支或无条件跳转后的安装、恒定条件短路与另开第二处调用点都不算证据。合同声明与实测不一致会硬失败，不能只改合同和基线就声明 wired=true。其他三项证据：EscapeGateTest.kt 提供逃生门测试引用、README 覆盖两条投保属性、桌面令牌同时匹配 launcherNative 的 LauncherHostContract.PACKAGE 与 scope.list 的桌面项（不是主模块 SCOPES）；原型注入作用域恰好两项、顺序固定：桌面 com.miui.home 在前、system_server system 在后，多项、缺项、换序或空行干扰均报缺口。原型同时注入这两个宿主，是让 system_server 侧端点与桌面侧原生库在同一 APK 内同时生效的前提；产物存在不等于两端已加载或已验收。kLauncherSafetyScope 已用于只读打开包目录。逃生门证据要求属性字面量断言与真实 API 带期望值断言在同一测试方法体中，来源包含 tools/test_*.py 与 Kotlin 测试目录。本工具不构成安装许可，也不覆盖实机运行期时序、共享首选项损坏、属性读写权限或真实开机循环。内嵌指纹 BASELINE_FINGERPRINT 是仓库内明文一致性绊线，不是防篡改机制。完整链路验证器第六次加固后，可达性改为三值常量求值加语句级分析：if constexpr (false)、#define 名字 0 后写 if (名字)、for (; false;)、常量 switch 的不匹配分支、if (true) { return; } else 的 else 分支、无 break 的 while (true) 之后、嵌套块 return 之后、可达 goto 与其目标标签之间都算执行不到；导出入口自身只在死分支里调用整条链路也不算接线。第七、八次加固后补：快照门禁、提交结果守卫、安装许可判定与计划非空校验都必须无条件支配其后环节，早退要自身可达且真的跳过安装，安装点必须落在必然执行的位置；四处守卫的极性用符号化蕴含判定加真值表穷举。已知限制：条件编译只处理可静态判定的分支；支配与必然执行是语句级近似，不建模异常、并发、别名副作用与多线程时序。",
+  "toolchain": {
+    "target": "aarch64-linux-android29",
+    "flags": [
+      "-std=c++17",
+      "-fsyntax-only",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-mno-outline-atomics"
+    ],
+    "note": "原生判定只做编译期常量求值（-fsyntax-only），不产生目标文件、不链接、不运行。换编译器或换标准库会改变可用常量与 static_assert 的求值结果，必须重新实测并更新本文件。"
+  },
+  "fuse": {
+    "windowMs": 300000,
+    "minTimeMs": 1600000000000,
+    "kotlin": {
+      "objectName": "BootFusePolicy",
+      "windowConstant": "WINDOW_MS",
+      "minTimeConstant": "MIN_TIME",
+      "stateFields": [
+        "lastStartAt",
+        "rapidRestarts",
+        "disabled",
+        "lastResetToken",
+        "windowStartAt"
+      ]
+    },
+    "native": {
+      "windowConstant": "kSafetyFuseWindowMs",
+      "minTimeConstant": "kSafetyMinTimeMs",
+      "stateFields": [
+        "last_start_ms",
+        "rapid_restarts",
+        "disabled",
+        "last_reset_token",
+        "window_start_ms"
+      ]
+    },
+    "fieldPairs": [
+      [
+        "lastStartAt",
+        "last_start_ms"
+      ],
+      [
+        "rapidRestarts",
+        "rapid_restarts"
+      ],
+      [
+        "disabled",
+        "disabled"
+      ],
+      [
+        "lastResetToken",
+        "last_reset_token"
+      ],
+      [
+        "windowStartAt",
+        "window_start_ms"
+      ]
+    ]
+  },
+  "tripComparisons": {
+    "note": "结构与顺序由独立只读基线锁定。",
+    "kotlin": {
+      "now < MIN_TIME": 1,
+      "resetToken > previous.lastResetToken": 1,
+      "previous.disabled": 1,
+      "now < previous\\.lastStartAt": 1,
+      "previous\\.lastStartAt > 0 && now - previous\\.windowStartAt <= WINDOW_MS": 1,
+      "!countRestart": 1,
+      "coerceAtMost(3)": 1,
+      "count >= 3": 1
+    },
+    "native": {
+      "now < kSafetyMinTimeMs": 1,
+      "reset_token > previous.last_reset_token": 1,
+      "previous.disabled": 1,
+      "now < previous\\.last_start_ms": 1,
+      "previous\\.last_start_ms > 0 && now - previous\\.window_start_ms <= kSafetyFuseWindowMs": 1,
+      "!count_restart": 1,
+      "previous.rapid_restarts + 1 > 3 ? 3": 1,
+      "count >= 3": 1
+    }
+  },
+  "decodeCases": [
+    {
+      "id": "full_line",
+      "text": "1700000000000,2,0,7,1699999999000",
+      "valid": true,
+      "lastStartMs": 1700000000000,
+      "rapidRestarts": 2,
+      "disabled": false,
+      "resetToken": 7,
+      "windowStartMs": 1699999999000
+    },
+    {
+      "id": "legacy_two_columns",
+      "text": "1700000000000,0",
+      "valid": true,
+      "lastStartMs": 1700000000000,
+      "rapidRestarts": 0,
+      "disabled": false,
+      "resetToken": 0,
+      "windowStartMs": 1700000000000
+    },
+    {
+      "id": "count_three_trips",
+      "text": "1700000000000,3",
+      "valid": true,
+      "lastStartMs": 1700000000000,
+      "rapidRestarts": 3,
+      "disabled": true,
+      "resetToken": 0,
+      "windowStartMs": 1700000000000
+    },
+    {
+      "id": "empty",
+      "text": "",
+      "valid": false
+    },
+    {
+      "id": "missing_count",
+      "text": "1700000000000",
+      "valid": false
+    },
+    {
+      "id": "dangling_comma",
+      "text": "1700000000000,1,",
+      "valid": false
+    },
+    {
+      "id": "count_over_limit",
+      "text": "1700000000000,4",
+      "valid": false
+    },
+    {
+      "id": "boolean_not_zero_or_one",
+      "text": "1700000000000,1,2",
+      "valid": false
+    },
+    {
+      "id": "non_digit_column",
+      "text": "1700000000000,1,0,x",
+      "valid": false
+    },
+    {
+      "id": "window_after_start",
+      "text": "1700000000000,1,0,1,1800000000000",
+      "valid": false
+    }
+  ],
+  "cases": [
+    {
+      "id": "no_previous",
+      "previous": {
+        "lastStartMs": 0,
+        "rapidRestarts": 0,
+        "disabled": false,
+        "resetToken": 0,
+        "windowStartMs": 0
+      },
+      "havePrevious": false,
+      "nowMs": 1700000000000,
+      "token": 0,
+      "countRestart": true,
+      "ok": false,
+      "blocker": "kSafetyNotArmed"
+    },
+    {
+      "id": "clock_before_min_time",
+      "previous": {
+        "lastStartMs": 0,
+        "rapidRestarts": 0,
+        "disabled": false,
+        "resetToken": 0,
+        "windowStartMs": 0
+      },
+      "havePrevious": true,
+      "nowMs": 1000,
+      "token": 0,
+      "countRestart": true,
+      "ok": false,
+      "blocker": "kSafetyUnsafeClock"
+    },
+    {
+      "id": "clock_going_backwards",
+      "previous": {
+        "lastStartMs": 1700000000000,
+        "rapidRestarts": 0,
+        "disabled": false,
+        "resetToken": 0,
+        "windowStartMs": 1700000000000
+      },
+      "havePrevious": true,
+      "nowMs": 1699999999000,
+      "token": 0,
+      "countRestart": true,
+      "ok": false,
+      "blocker": "kSafetyUnsafeClock"
+    },
+    {
+      "id": "already_disabled_same_token",
+      "previous": {
+        "lastStartMs": 1700000000000,
+        "rapidRestarts": 3,
+        "disabled": true,
+        "resetToken": 5,
+        "windowStartMs": 1699999999000
+      },
+      "havePrevious": true,
+      "nowMs": 1700000000001,
+      "token": 5,
+      "countRestart": true,
+      "ok": false,
+      "blocker": "kSafetyFuseDisabled"
+    },
+    {
+      "id": "disabled_token_must_increase",
+      "previous": {
+        "lastStartMs": 1700000000000,
+        "rapidRestarts": 3,
+        "disabled": true,
+        "resetToken": 5,
+        "windowStartMs": 1699999999000
+      },
+      "havePrevious": true,
+      "nowMs": 1700000000001,
+      "token": 4,
+      "countRestart": true,
+      "ok": false,
+      "blocker": "kSafetyFuseDisabled"
+    },
+    {
+      "id": "manual_reset_strictly_increasing",
+      "previous": {
+        "lastStartMs": 1700000000000,
+        "rapidRestarts": 3,
+        "disabled": true,
+        "resetToken": 5,
+        "windowStartMs": 1699999999000
+      },
+      "havePrevious": true,
+      "nowMs": 1700000000001,
+      "token": 6,
+      "countRestart": true,
+      "ok": true,
+      "disabled": false,
+      "rapidRestarts": 0,
+      "nextWindowStartMs": 1700000000001,
+      "permitsInstall": true
+    },
+    {
+      "id": "first_restart_in_window",
+      "previous": {
+        "lastStartMs": 1700000000000,
+        "rapidRestarts": 0,
+        "disabled": false,
+        "resetToken": 0,
+        "windowStartMs": 1700000000000
+      },
+      "havePrevious": true,
+      "nowMs": 1700000001000,
+      "token": 0,
+      "countRestart": true,
+      "ok": true,
+      "disabled": false,
+      "rapidRestarts": 1,
+      "permitsInstall": true
+    },
+    {
+      "id": "second_restart_in_window",
+      "previous": {
+        "lastStartMs": 1700000001000,
+        "rapidRestarts": 1,
+        "disabled": false,
+        "resetToken": 0,
+        "windowStartMs": 1700000000000
+      },
+      "havePrevious": true,
+      "nowMs": 1700000002000,
+      "token": 0,
+      "countRestart": true,
+      "ok": true,
+      "disabled": false,
+      "rapidRestarts": 2,
+      "permitsInstall": true
+    },
+    {
+      "id": "third_restart_trips",
+      "previous": {
+        "lastStartMs": 1700000002000,
+        "rapidRestarts": 2,
+        "disabled": false,
+        "resetToken": 0,
+        "windowStartMs": 1700000000000
+      },
+      "havePrevious": true,
+      "nowMs": 1700000003000,
+      "token": 0,
+      "countRestart": true,
+      "ok": true,
+      "disabled": true,
+      "rapidRestarts": 3,
+      "permitsInstall": false
+    },
+    {
+      "id": "outside_window_recounts",
+      "previous": {
+        "lastStartMs": 1700000001000,
+        "rapidRestarts": 1,
+        "disabled": false,
+        "resetToken": 0,
+        "windowStartMs": 1700000000000
+      },
+      "havePrevious": true,
+      "nowMs": 1700001000000,
+      "token": 0,
+      "countRestart": true,
+      "ok": true,
+      "disabled": false,
+      "rapidRestarts": 0,
+      "nextWindowStartMs": 1700001000000,
+      "permitsInstall": true
+    },
+    {
+      "id": "no_count_restart_keeps_state",
+      "previous": {
+        "lastStartMs": 1700000000000,
+        "rapidRestarts": 1,
+        "disabled": false,
+        "resetToken": 0,
+        "windowStartMs": 1700000000000
+      },
+      "havePrevious": true,
+      "nowMs": 1700000000500,
+      "token": 0,
+      "countRestart": false,
+      "ok": true,
+      "disabled": false,
+      "rapidRestarts": 1,
+      "stateUnchanged": true,
+      "permitsInstall": true
+    },
+    {
+      "id": "exact_window_boundary_included",
+      "previous": {
+        "lastStartMs": 1700000200000,
+        "rapidRestarts": 2,
+        "disabled": false,
+        "resetToken": 0,
+        "windowStartMs": 1700000000000
+      },
+      "havePrevious": true,
+      "nowMs": 1700000300000,
+      "token": 0,
+      "countRestart": true,
+      "ok": true,
+      "disabled": true,
+      "rapidRestarts": 3,
+      "permitsInstall": false
+    },
+    {
+      "id": "just_past_window_boundary_recounts",
+      "previous": {
+        "lastStartMs": 1700000200000,
+        "rapidRestarts": 2,
+        "disabled": false,
+        "resetToken": 0,
+        "windowStartMs": 1700000000000
+      },
+      "havePrevious": true,
+      "nowMs": 1700000300001,
+      "token": 0,
+      "countRestart": true,
+      "ok": true,
+      "disabled": false,
+      "rapidRestarts": 0,
+      "nextWindowStartMs": 1700000300001,
+      "permitsInstall": true
+    }
+  ],
+  "kotlinTestMethods": [
+    "fourthStartTripsAndLatchSurvivesLongWait",
+    "windowIsNotExtendedByEveryRestart",
+    "exactWindowBoundaryIsIncluded",
+    "resetIsOneShotAndProtectionRemainsActive",
+    "noRestartDoesNotIncrementCounter",
+    "badClockAndUnreadableStateFailClosed",
+    "legacyStateIsPreservedAndNewStateRoundTrips",
+    "invalidStateCannotSilentlyResetCounters"
+  ],
+  "scope": {
+    "nativeToken": "com.miui.home",
+    "identityConstant": "PACKAGE",
+    "scopeList": [
+      "com.miui.home",
+      "system"
+    ],
+    "note": "原生 kLauncherSafetyScope 仍为桌面令牌，必须同时等于 launcherNative 身份契约 LauncherHostContract.PACKAGE 与 app/src/launcherNative/resources/META-INF/xposed/scope.list 的桌面项。注入作用域必须恰好两项、顺序固定：桌面 com.miui.home 在前、system_server system 在后；多项、缺项、换序或空行干扰均报缺口。原型同时注入桌面与 system_server，是让 system_server 侧端点与桌面侧原生库在同一 APK 内同时生效的前提，但产物存在不等于两端已加载或已验收。主模块 SCOPES 只列界面侧可重启宿主，桌面不在其中，不是一致性判据。本常量已被只读安全预检用于打开包目录；普通构建由实验安装开关保持关闭，实验构建只按现场 Hook 点参数决定挂载。"
+  },
+  "escapeGates": {
+    "killSwitch": {
+      "propertyConstant": "PROPERTY_NAME",
+      "property": "persist.sys.hyperextend.disabled",
+      "filesConstant": "FLAG_FILES",
+      "files": [
+        "/data/local/tmp/hyperextend.disabled",
+        "/sdcard/HyperExtend/disable"
+      ],
+      "readSignature": "private fun propertyFlag(): Boolean = try"
+    },
+    "bootLoopGuard": {
+      "propertyConstant": "DISABLED_PROPERTY",
+      "property": "persist.sys.hyperextend.framework_disabled",
+      "stateFileConstant": "STATE_FILE",
+      "stateFile": "/data/system/hyperextend_bootguard",
+      "systemUiStateFile": "files/hyperextend_systemui_bootguard",
+      "readSignature": "private fun readDisabledProperty(): Boolean? = try"
+    }
+  },
+  "readmeEscapedProperties": [
+    "persist.sys.hyperextend.disabled",
+    "persist.sys.hyperextend.framework_disabled"
+  ],
+  "nativeWiring": {
+    "wired": true,
+    "callTokens": [
+      "launcher::install_permitted",
+      "install_permitted",
+      "launcher::safety_fuse_next",
+      "safety_fuse_next",
+      "launcher::snapshot_safety_permits",
+      "snapshot_safety_permits"
+    ],
+    "note": "wired=true 表示完整静态接线已由源码实测成立：safety_startup.cpp 已由 CMake 链入原型，生产入口已 include safety_startup.h，并在普通快照用途门禁后可达地调用 commit_safety_startup_once；首次合格启动自动建立安全状态，提交失败早退，PermitEvidence 的安全证据来自提交结果，安装许可守卫之后通过 resolve_launcher_install_plan(plan) 校验计划，再执行唯一 plan.hook_func(plan.target, plan.replacement, plan.backup_slot)。八项链路 entry_reachable、snapshot_gated、commit_result_controlled、install_dominated、install_plan_gated、failure_blocks_install、install_path_present、install_path_exclusive 均为 true，直接安装点 1、别名安装点 0。install_plan_gated 要求 resolve_launcher_install_plan/plan.ready 的非空校验在许可之后支配唯一安装点、针对同一计划对象且失败必然早退；缺失、后置、极性反转、常量短路、前置于许可、校验另一对象或运行期条件包裹均拒绝，计划不完整即 fail-closed。计划三段来源已接线：loader 宿主映像解析、已链入蹦床入口和后端回填槽由同一计划收敛；loader 无法提供唯一合格映像时 fail-closed。普通构建由实验安装开关保持关闭；实验构建不按框架版本号或桌面 APK 版本号匹配，只校验入口函数指针、现场 Hook 点参数和当前宿主身份。真实后端具备锁、同步、原子替换、读回和单实例一次尝试逻辑；受控武装与残留恢复事务（maintain_safety_once）没有接入普通端点，也没有生产授权方，离线试验不构成实机验收。验证器继续拒绝孤立函数、字符串诱饵、错误顺序或极性、丢弃返回值、恒假分支或跳转绕过、证据自填 true、字段错位、别名或额外安装点；合同声明必须与源码实测一致。防砖已确认=true 只表示离线静态审计通过，不等于实机放行。",
+    "structuralWiring": {
+      "structureWired": true,
+      "feasibilityVerified": true,
+      "experimentalInstallSwitch": true,
+      "feasibilityEvidence": "2026-10-15 用真实 NDK clang（aarch64-linux-android26、-O2、_FORTIFY_SOURCE=2）分别编译 native_entry.cpp（单文件）与 native_entry.cpp+safety_startup.cpp，再按 launcher_native_package_audit 的算法解析 .dynsym 逐符号比对",
+      "feasibilityExports": 10,
+      "feasibilityImports": 27,
+      "readonlyImports": 20,
+      "newImports": ["__errno", "__write_chk", "flock", "fstatat", "fsync", "openat", "renameat"],
+      "newWhitelistEntries": ["write", "__write_chk", "fsync", "flock", "renameat", "fstatat", "__errno"],
+      "note": "structureWired=true、wired=true 表示结构接线与八项链路已由源码实测成立：CMake 已包含 launcher/safety_startup.cpp，native_entry.cpp 已 include safety_startup.h 并可达地调用 commit_safety_startup_once，首次启动自动建立状态，提交结果、安装许可与同一计划非空校验依次支配唯一安装点。install_plan_gated 要求 resolve_launcher_install_plan/plan.ready 失败即早退，计划不完整即 fail-closed。计划三段来源已接线并由同一计划非空校验收敛；loader 解析失败仍 fail-closed。留存的离线可行性证据说明导入面从只读变为可写宿主私有目录，不等于实机放行。普通构建由实验安装开关 LAUNCHER_NATIVE_EXPERIMENTAL_INSTALL 关闭；实验构建不按版本号筛选，只按现场入口、Hook 点参数和宿主身份校验。防砖已确认=true 只是离线静态审计结论。"
+    }
+  },
+  "experimentalInstallSwitch": {
+    "macro": "LAUNCHER_NATIVE_EXPERIMENTAL_INSTALL",
+    "constant": "kExperimentalInstallEnabled"
+  }
+}

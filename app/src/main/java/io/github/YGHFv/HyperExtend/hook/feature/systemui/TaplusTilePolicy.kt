@@ -5,7 +5,6 @@ internal object TaplusTilePolicy {
     const val FEATURE = "control_center_taplus_tile"
     const val SPEC = "hyperextend_taplus"
     const val PACKAGE = "com.miui.contentextension"
-    const val VERSION = 50015L
     const val AUTHORITY = "$PACKAGE.provider.switchcontrolprovider"
     const val PROVIDER = "$PACKAGE.provider.SwitchControlProvider"
     const val ACTIVITY = "$PACKAGE.setting.activity.MainSettingsActivity"

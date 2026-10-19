@@ -5,10 +5,16 @@
 package io.github.YGHFv.HyperExtend.hook.feature.systemui
 
 internal object TileMaterialPolicy {
-    fun eligible(enabled: Boolean, blocked: Boolean, host: Long, plugin: Long, display: Int?,
+    @Deprecated("版本号不参与运行期门禁")
+    fun eligible(enabled: Boolean, blocked: Boolean, systemUi: Long, plugin: Long, display: Int?,
+        classic: Boolean, material: Boolean, theme: Boolean, normal: Boolean, state: Int,
+        activeColor: Int, restricted: Boolean, transient: Boolean) =
+        eligible(enabled, blocked, display, classic, material, theme, normal, state, activeColor,
+            restricted, transient)
+    fun eligible(enabled: Boolean, blocked: Boolean, display: Int?,
         classic: Boolean, material: Boolean, theme: Boolean, normal: Boolean,
         state: Int, activeColor: Int, restricted: Boolean, transient: Boolean): Boolean =
-        enabled && !blocked && host == 202602260L && plugin == 183022200L && display == 0 &&
+        enabled && !blocked && display == 0 &&
             classic && material && theme && normal && state in 1..2 && activeColor == 0 &&
             !restricted && !transient
 

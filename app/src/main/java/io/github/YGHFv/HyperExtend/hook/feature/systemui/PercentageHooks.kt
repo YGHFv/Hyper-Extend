@@ -19,7 +19,6 @@ import android.view.accessibility.AccessibilityManager
 import android.widget.SeekBar
 import android.widget.TextView
 import io.github.YGHFv.HyperExtend.core.PercentageSettings as Config
-import io.github.YGHFv.HyperExtend.core.compatibleVersionCode
 import io.github.YGHFv.HyperExtend.hook.HookRuntime
 import io.github.YGHFv.HyperExtend.hook.HookSettings
 import io.github.YGHFv.HyperExtend.hook.SafeModeRuntime
@@ -42,9 +41,8 @@ internal class PercentageHooks private constructor(private val settings: HookSet
         Config.style(settings.string(Config.STYLE)) == 2 && settings.isOn(if (volume) Config.VOLUME else Config.BRIGHTNESS)
 
     private fun supported(bar: SeekBar, plugin: Boolean): Boolean = supported ?: runCatching {
-        val pm = bar.context.packageManager
-        pm.getPackageInfo("com.android.systemui", 0).compatibleVersionCode == 202602260L &&
-            (!plugin || pm.getPackageInfo(SystemUiPluginHooks.PACKAGE, 0).compatibleVersionCode == 183022200L)
+        // 目标类、字段与调用方已在 install 阶段逐项解析；版本号不再参与放行。
+        true
     }.getOrDefault(false).also { supported = it }
 
     private fun start(bar: SeekBar, volume: Boolean, value: (Int) -> String?): Binding? {
@@ -303,8 +301,7 @@ internal class PercentageHooks private constructor(private val settings: HookSet
                     if (!enabled(volume) || SafeModeRuntime.blocked) return@hook result
                     val host = supported ?: runCatching {
                         val pm = bar.context.packageManager
-                        SliderValuePolicy.supported(pm.getPackageInfo("com.android.systemui", 0).compatibleVersionCode,
-                            pm.getPackageInfo(SystemUiPluginHooks.PACKAGE, 0).compatibleVersionCode)
+                        SliderValuePolicy.supported()
                     }.getOrDefault(false).also { supported = it }
                     if (!host || bar.display?.displayId != 0) return@hook result
                     if (target.name == "onStartTrackingTouch" && bindings[bar]?.get() == null) {

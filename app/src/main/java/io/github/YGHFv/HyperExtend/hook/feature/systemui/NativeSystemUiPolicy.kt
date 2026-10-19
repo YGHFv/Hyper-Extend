@@ -14,8 +14,8 @@ internal object NativeSystemUiPolicy {
         else -> null
     }
 
-    fun eligible(enabled: Boolean, version: Long?, display: Int?, mainThread: Boolean) =
-        enabled && version == 202602260L && display == 0 && mainThread
+    fun eligible(enabled: Boolean, display: Int?, mainThread: Boolean) =
+        enabled && display == 0 && mainThread
 }
 
 /** A registration scope cannot escape to another thread or survive a throwing constructor. */

@@ -8,8 +8,8 @@ internal enum class NotificationBlendScene { SHADE, HEADS_UP, KEYGUARD, EXCLUDED
 
 internal object NotificationBlendPolicy {
     fun eligible(scene: NotificationBlendScene, enabled: Boolean, keyguard: Boolean,
-                 version: Long, display: Int?, main: Boolean) =
-        enabled && version == 202602260L && display == 0 && main &&
+                 display: Int?, main: Boolean) =
+        enabled && display == 0 && main &&
             scene != NotificationBlendScene.EXCLUDED && (scene != NotificationBlendScene.KEYGUARD || keyguard)
 
     fun colors(native: IntArray, scene: NotificationBlendScene, night: Boolean): IntArray? {

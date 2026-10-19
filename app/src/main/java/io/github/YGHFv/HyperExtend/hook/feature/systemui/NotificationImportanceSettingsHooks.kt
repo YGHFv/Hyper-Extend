@@ -2,8 +2,6 @@
  * Copyright (C) 2026 YGHFv; SPDX-License-Identifier: AGPL-3.0-or-later */
 package io.github.YGHFv.HyperExtend.hook.feature.systemui
 
-import io.github.YGHFv.HyperExtend.core.compatibleVersionCode
-
 import android.app.NotificationChannel
 import android.content.Context
 import android.os.Looper
@@ -52,10 +50,7 @@ internal class NotificationImportanceSettingsHooks(private val loader: ClassLoad
     // Keep a captured row until onResume has finished removing other preferences.
     private val candidates = WeakHashMap<Any, WeakReference<Any>>()
 
-    private fun supported(owner: Any): Boolean {
-        val ctx = context.get(owner) as? Context ?: return false
-        return ctx.packageManager.getPackageInfo("com.android.settings", 0).let { it.compatibleVersionCode == 37L && it.versionName == "17" }
-    }
+    private fun supported(owner: Any): Boolean = context.get(owner) is Context
     private fun restriction(owner: Any, value: NotificationChannel): String? = when {
         value.importance !in 1..4 -> "channel_level_${value.importance}"
         value.id == "miscellaneous" -> "legacy_channel"
@@ -97,7 +92,7 @@ internal class NotificationImportanceSettingsHooks(private val loader: ClassLoad
             HookRuntime.hookAfter(methods.getValue(spec), "notification_importance/settingsResume/${spec.owner}") { chain, original ->
                 val owner = chain.thisObject!!
                 if (ready && Looper.myLooper() == Looper.getMainLooper()) {
-                    if (!supported(owner)) diagnostic(owner, "bind skipped: host_version") else {
+                    if (!supported(owner)) diagnostic(owner, "bind skipped: host_context") else {
                         val pref = candidates.remove(owner)?.get() ?: find.invoke(owner, "importance")
                         if (pref != null) bind(owner, pref) else diagnostic(owner, "bind skipped: row_missing")
                     }

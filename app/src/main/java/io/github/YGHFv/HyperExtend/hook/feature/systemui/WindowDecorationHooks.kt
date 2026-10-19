@@ -2,16 +2,13 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later */
 package io.github.YGHFv.HyperExtend.hook.feature.systemui
 
-import android.os.Build
 import android.view.View
 import io.github.YGHFv.HyperExtend.core.ModuleLog
 import io.github.YGHFv.HyperExtend.core.WindowDecorationSettings
 import io.github.YGHFv.HyperExtend.hook.HookRuntime
 import io.github.YGHFv.HyperExtend.hook.HookSettings
 import io.github.YGHFv.HyperExtend.hook.feature.statusbar.StatusIconHost
-import java.io.File
 import java.lang.ref.WeakReference
-import java.security.MessageDigest
 import java.util.WeakHashMap
 import java.util.concurrent.atomic.AtomicBoolean
 
@@ -20,23 +17,7 @@ internal object WindowDecorationHooks {
         val keys = listOf(WindowDecorationSettings.HIDE_DOT, WindowDecorationSettings.DISABLE_MENU,
             WindowDecorationSettings.DISABLE_INFINITY, WindowDecorationSettings.HIDE_BOTTOM)
         if (keys.none(settings::isOn)) return@buildList
-        // The resource APK's version does not identify the separately updated code library.
-        val exactLibrary = runCatching {
-            val digest = MessageDigest.getInstance("SHA-256")
-            File(WindowDecorationTargets.JAR).inputStream().use { input ->
-                val buffer = ByteArray(32768)
-                while (true) {
-                    val size = input.read(buffer)
-                    if (size < 0) break
-                    digest.update(buffer, 0, size)
-                }
-            }
-            digest.digest().joinToString("") { "%02x".format(it) } == WindowDecorationTargets.SHA256
-        }.getOrDefault(false)
-        if (Build.VERSION.SDK_INT != 37 || !exactLibrary) {
-            ModuleLog.warn("window decoration: unsupported implementation library; no hooks installed")
-            return@buildList
-        }
+        // 每个功能只按目标类、方法签名、字段类型和调用点解析；不绑定宿主版本或库哈希。
         installSystemUiFeature(settings, WindowDecorationSettings.HIDE_DOT) { hideDot(loader, settings) }
         installSystemUiFeature(settings, WindowDecorationSettings.DISABLE_MENU) { disableMenu(loader, settings) }
         installSystemUiFeature(settings, WindowDecorationSettings.DISABLE_INFINITY) { infinity(loader, settings) }

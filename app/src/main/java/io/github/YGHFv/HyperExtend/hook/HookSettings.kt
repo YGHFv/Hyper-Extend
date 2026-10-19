@@ -32,7 +32,13 @@ import io.github.YGHFv.HyperExtend.core.featureById
  * 「用户第一次装这个模块时开关长什么样」，不是「读不到设置时该猜什么」。二者混淆的后果是
  * 一批用户根本没开过的功能在后台被装上了 hook。
  */
-class HookSettings internal constructor(private val prefs: SharedPreferences?) {
+/**
+ * [prefs] 保持 `internal` 而不是 `private` 的原因：**只有**桌面配置通道的端点需要
+ * 逐键读取用户原始写入值（见 hook/feature/launcher/LauncherSnapshotEndpoint）。
+ * 其余任何地方都该走 [isOn] / [string] / [number] —— 那些会做「子项必须先过主开关」
+ * 与「读不到一律为假」的收敛，直接摸句柄就等于绕过这两条安全约定。
+ */
+class HookSettings internal constructor(internal val prefs: SharedPreferences?) {
     internal fun safeModeDisabled(scope: String): Boolean = runCatching {
         prefs?.getBoolean(io.github.YGHFv.HyperExtend.core.SafeModeKeys.disabled(scope), false) ?: true
     }.getOrDefault(true)

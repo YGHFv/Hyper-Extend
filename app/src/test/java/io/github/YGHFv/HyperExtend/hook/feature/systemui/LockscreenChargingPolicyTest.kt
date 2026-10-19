@@ -55,14 +55,14 @@ class LockscreenChargingPolicyTest {
         assertNull(details(sample.copy(currentMicroamps = 0, status = 5)))
         assertEquals("32.5 \u00b0C", details(sample.copy(currentMicroamps = 0, status = 5), temp = true))
     }
-    private fun eligible(version: Long = 202602260, attached: Boolean = true, shown: Boolean = true,
+    private fun eligible(attached: Boolean = true, shown: Boolean = true,
         visible: Boolean = true, dozing: Boolean = false, blocked: Boolean = false, tiny: Boolean = false,
         plugged: Boolean = true, defender: Boolean = false, reverse: Int = 0, reposition: Boolean = false,
-        type: Int = 3, match: Boolean = true) = LockscreenChargingPolicy.eligible(version, attached, shown,
+        type: Int = 3, match: Boolean = true) = LockscreenChargingPolicy.eligible(attached, shown,
             visible, dozing, blocked, tiny, plugged, defender, reverse, reposition, type, match)
     @Test fun onlyAuditedAttachedVisibleChargingIndicationIsEligible() {
         assertTrue(eligible())
-        assertFalse(eligible(version = 202602261)); assertFalse(eligible(attached = false))
+        assertFalse(eligible(attached = false))
         assertFalse(eligible(shown = false)); assertFalse(eligible(visible = false))
         assertFalse(eligible(plugged = false)); assertFalse(eligible(match = false))
     }

@@ -4,7 +4,6 @@ package io.github.YGHFv.HyperExtend.hook.feature.statusbar
 import android.content.Context
 import io.github.YGHFv.HyperExtend.core.ModuleLog
 import io.github.YGHFv.HyperExtend.core.WIFI_STANDARD_KEY
-import io.github.YGHFv.HyperExtend.core.compatibleVersionCode
 import io.github.YGHFv.HyperExtend.hook.HookRuntime
 import io.github.YGHFv.HyperExtend.hook.HookSettings
 import io.github.YGHFv.HyperExtend.hook.SafeModeRuntime
@@ -13,7 +12,6 @@ import io.github.YGHFv.HyperExtend.hook.feature.systemui.NotificationHooks
 import java.lang.reflect.InvocationTargetException
 import java.lang.reflect.Proxy
 import java.util.concurrent.atomic.AtomicBoolean
-import java.util.concurrent.atomic.AtomicReference
 
 internal object WifiStandardHooks {
     fun install(loader: ClassLoader, settings: HookSettings): Int {
@@ -28,7 +26,6 @@ internal object WifiStandardHooks {
         val collector = Class.forName(t.COLLECTOR, false, loader)
         if (!collector.isInterface || !listOf(emit, collect, resume).all {
                 HookRuntime.deoptimize(it, "status_bar_icons/wifi-standard-caller") }) return 0
-        val version = AtomicReference<Long?>(null)
         fun mode(): Int {
             if (SafeModeRuntime.blocked) return 0
             val now = HookRuntime.settings()
@@ -39,13 +36,8 @@ internal object WifiStandardHooks {
             val id = fields[0].getInt(owner)
             val raw = chain.args[0] as? Int ?: return@hook chain.proceed()
             if (mode() != 1 || id != 2 || raw !in 4..5) return@hook chain.proceed()
-            val code = version.get() ?: run {
-                // Read the process application only inside a real native emission.
-                val context = application.invoke(null) as? Context ?: return@hook chain.proceed()
-                context.packageManager.getPackageInfo("com.android.systemui", 0).compatibleVersionCode
-                    .also { version.set(it) }
-            }
-            if (code != 202602260L) return@hook chain.proceed()
+            // Read the process application only inside a real native emission.
+            if (application.invoke(null) !is Context) return@hook chain.proceed()
             val original = fields[1].get(owner)?.takeIf { collector.isInstance(it) } ?: return@hook chain.proceed()
             val active = AtomicBoolean(true)
             val bridge = Proxy.newProxyInstance(loader, arrayOf(collector)) { proxy, method, args ->
@@ -53,7 +45,7 @@ internal object WifiStandardHooks {
                     method == delegateEmit -> {
                         val incoming = args?.getOrNull(0)
                         val value = if (active.get() && incoming is Int)
-                            WifiStandardPolicy.recover(code, mode(), id, raw, incoming) ?: incoming
+                            WifiStandardPolicy.recover(mode(), id, raw, incoming) ?: incoming
                         else incoming
                         try {
                             // Return the downstream suspension sentinel unchanged; never resume or replay.

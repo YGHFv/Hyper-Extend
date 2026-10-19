@@ -1,0 +1,89 @@
+{
+  "schemaVersion": 1,
+  "policy": "menu-trampoline-landing-offline-v1",
+  "status": "仅离线静态审核，不是安装许可",
+  "architecture": {
+    "form": "B / BL",
+    "immediateBits": 26,
+    "signed": true,
+    "alignmentBytes": 4,
+    "reachBytes": 134217728,
+    "note": "26 位有符号立即数按 4 字节缩放，可达偏移是 ±2^27 字节。蹦床必须落在每条候选调用点的可达范围内，这是编码硬约束，不是策略选择。"
+  },
+  "image": {
+    "sha256": "b947b8db576539a57a2b2a5ba7e32749e06508fa88d2fae31316cbd14374387b",
+    "buildId": "4f1bdaeda6b1f98dde7d3ebc23163cd1",
+    "size": 29387672
+  },
+  "mapsRequirements": {
+    "pageSize": 4096,
+    "minimumHoleBytes": 32768,
+    "maximumIslandBytes": 4096,
+    "holeAlignmentBytes": 16,
+    "packagePathSuffix": "com.miui.home",
+    "note": "空洞取来自本机 /proc 映射快照的未映射区间；合同只固定「页大小、最小长度、落点对齐、宿主包路径后缀」这四条结构常量，不记录任何绝对地址。快照文本与加载基址是本机运行期信息，只作为命令输入，不入库。"
+  },
+  "sites": [
+    {
+      "feature": "数量点",
+      "offset": "0x1147018",
+      "word": "0x94000137",
+      "kind": "BL",
+      "target": "0x11474f4",
+      "targetName": "ShortcutMenuGetXController._getMaxCountInCurrentOrientation"
+    },
+    {
+      "feature": "分享 APK",
+      "offset": "0x17fd75c",
+      "word": "0x940000c5",
+      "kind": "BL",
+      "target": "0x17fda70",
+      "targetName": "ValidShareAppShortcutMenu.shareApk"
+    },
+    {
+      "feature": "分享 APK",
+      "offset": "0x17fda5c",
+      "word": "0x94000005",
+      "kind": "BL",
+      "target": "0x17fda70",
+      "targetName": "ValidShareAppShortcutMenu.shareApk"
+    },
+    {
+      "feature": "小窗",
+      "offset": "0x1b2f770",
+      "word": "0x94000038",
+      "kind": "BL",
+      "target": "0x1b2f850",
+      "targetName": "ValidSmallWindowShortcutMenu._startSmallWindowActivity"
+    },
+    {
+      "feature": "新任务",
+      "offset": "0x1b2f2f0",
+      "word": "0x94000083",
+      "kind": "BL",
+      "target": "0x1b2f4fc",
+      "targetName": "ValidMultipleSmallWindowShortcutMenu._startMultipleSmallWindow"
+    },
+    {
+      "feature": "新任务",
+      "offset": "0x1b2f424",
+      "word": "0x94000036",
+      "kind": "BL",
+      "target": "0x1b2f4fc",
+      "targetName": "ValidMultipleSmallWindowShortcutMenu._startMultipleSmallWindow"
+    }
+  ],
+  "installPermitted": false,
+  "encodingRequirements": [
+    "调用点的 BL 必须能把 26 位立即数编码到蹦床起点。",
+    "蹦床内部的 BL/B 必须能编码回原目标与调用点+4；这里按蹦床首字与末字两种最坏情况同时取上界。",
+    "蹦床落点必须 16 字节对齐，空洞必须整页对齐且不短于合同下限。",
+    "候选调用点必须落在私有、可读可执行、有文件支撑的宿主包映射里；映射已经可写会与待发布前提矛盾。"
+  ],
+  "notClosedGates": [
+    "门槛1：蹦床本体的发布次序与模块中继回填仍未验收，本工具不涉及。",
+    "门槛3：安全通道实机验收未做，本工具不涉及。",
+    "门槛5：存在可达空洞不等于该空洞在安装窗口内仍空闲；分配竞态、缓存同步、宿主映射生命周期与写入独占性仍缺证据。"
+  ],
+  "verificationBoundary": "只证明「映射快照中存在同时服务全部候选调用点的、可达且页对齐的空洞」这一编码前提；不分配页面、不写内存、不证明空洞在运行期仍空闲、不审计蹦床语义。"
+}

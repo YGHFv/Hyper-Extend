@@ -4,7 +4,6 @@ package io.github.YGHFv.HyperExtend.hook.feature.systemui
 import android.content.ComponentName
 import android.content.Context
 import android.media.AudioManager
-import android.os.Build
 import android.os.UserManager
 import io.github.YGHFv.HyperExtend.core.AudioMuteSettings
 import io.github.YGHFv.HyperExtend.hook.Reflect
@@ -53,7 +52,6 @@ internal object AudioMuteHooks {
         override val settingsComponent: ComponentName? =
             ComponentName("com.android.settings", "com.android.settings.MiuiSoundSettingsActivity")
         override fun supported(context: Context): Boolean {
-            if (Build.VERSION.SDK_INT != 37 || Build.FINGERPRINT != NotificationManagementTargets.FINGERPRINT) return false
             val user = context.getSystemService(UserManager::class.java) ?: return false
             // 主静音与音频输出直连，受管资料不允许在这里改。
             if (user.isManagedProfile) return false

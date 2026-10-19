@@ -16,13 +16,12 @@ class TileCornerPolicyTest {
         for (value in listOf(0, -1, 100)) assertNull(TileCornerPolicy.radius(value, 100f))
     }
     @Test fun excludedContextsRemainNative() {
-        fun eligible(enabled: Boolean = true, systemUi: Long? = 202602260L, plugin: Long? = 183022200L,
-            display: Int? = 0, card: Boolean = false, detail: Boolean = false,
+        fun eligible(enabled: Boolean = true, display: Int? = 0, card: Boolean = false, detail: Boolean = false,
             theme: Boolean = true, material: Boolean = false) =
-            TileCornerPolicy.eligible(enabled, systemUi, plugin, display, card, detail, theme, material)
+            TileCornerPolicy.eligible(enabled, display, card, detail, theme, material)
         assertTrue(eligible())
-        assertFalse(eligible(enabled = false)); assertFalse(eligible(systemUi = null))
-        assertFalse(eligible(plugin = 1L)); assertFalse(eligible(display = null)); assertFalse(eligible(display = 1))
+        assertFalse(eligible(enabled = false))
+        assertFalse(eligible(display = null)); assertFalse(eligible(display = 1))
         assertFalse(eligible(card = true)); assertFalse(eligible(detail = true))
         assertFalse(eligible(theme = false)); assertFalse(eligible(material = true))
     }

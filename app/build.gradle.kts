@@ -1,12 +1,66 @@
+import org.gradle.api.tasks.Sync
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.plugin.compose")
 }
 
+// 原生载体尚未通过宿主验收，只在显式请求的本地原型构建中打包。
+val launcherNativePrototype = providers.gradleProperty("launcherNativePrototype")
+    .map { it.toBooleanStrict() }.getOrElse(false)
+val launcherNativeExperimentalInstall = providers.gradleProperty("launcherNativeExperimentalInstall")
+    .map { it.toBooleanStrict() }.getOrElse(false)
+
+check(!launcherNativeExperimentalInstall || launcherNativePrototype) {
+    "launcherNativeExperimentalInstall 只能与 launcherNativePrototype 一起启用"
+}
+
+val mergedLauncherNativeResources = layout.buildDirectory.dir("generated/launcherNativeResources")
+val mergeLauncherNativeResources = if (launcherNativePrototype) {
+    tasks.register<Sync>("mergeLauncherNativeResources") {
+        from("src/main/resources")
+        from("src/launcherNative/resources") {
+            // 这个文件只描述原生身份；最终 APK 需要同时保留 Java 宿主作用域。
+            exclude("META-INF/xposed/scope.list")
+        }
+        into(mergedLauncherNativeResources)
+        doLast {
+            val mainScope = file("src/main/resources/META-INF/xposed/scope.list")
+                .readLines().map(String::trim).filter(String::isNotEmpty)
+            val nativeScope = file("src/launcherNative/resources/META-INF/xposed/scope.list")
+                .readLines().map(String::trim).filter(String::isNotEmpty)
+            val mergedScope = (mainScope + nativeScope).distinct().joinToString("\n", postfix = "\n")
+            file(mergedLauncherNativeResources.get().asFile.resolve("META-INF/xposed/scope.list"))
+                .apply { parentFile.mkdirs(); writeText(mergedScope) }
+        }
+    }
+} else null
+
 android {
     namespace = "io.github.YGHFv.HyperExtend"
     // miuix 0.9.4 → Compose 这套栈要求 compileSdk 37（允许高于 targetSdk，不影响运行时行为）。
     compileSdk = 37
+
+    if (launcherNativePrototype) {
+        ndkVersion = "29.0.14206865"
+        externalNativeBuild {
+            cmake {
+                path = file("src/main/cpp/CMakeLists.txt")
+                version = "3.22.1"
+            }
+        }
+        sourceSets.getByName("main") {
+            kotlin.directories += "src/launcherNative/java"
+
+            // 同名 scope.list 不能依赖资源目录覆盖：覆盖会把 Java 宿主作用域裁成桌面和 system，
+            // 结果是原生库能被发现，但 SystemUI/MiSound 的 Java 入口根本不会进入。
+            // 原型只把 launcherNative 的原生清单合入主资源，并显式生成两侧作用域的并集。
+            resources.srcDir(mergedLauncherNativeResources.get().asFile)
+        }
+        sourceSets.getByName("test") {
+            kotlin.directories += "src/launcherNativeTest/java"
+        }
+    }
 
     defaultConfig {
         applicationId = "io.github.YGHFv.HyperExtend"
@@ -17,6 +71,15 @@ android {
         targetSdk = 35
         versionCode = 5
         versionName = "0.1.4"
+        if (launcherNativePrototype) {
+            ndk { abiFilters += "arm64-v8a" }
+            externalNativeBuild {
+                cmake {
+                    arguments += "-DANDROID_STL=none"
+                    arguments += "-DLAUNCHER_NATIVE_EXPERIMENTAL_INSTALL=$launcherNativeExperimentalInstall"
+                }
+            }
+        }
     }
 
     compileOptions {
@@ -63,7 +126,15 @@ android {
 
     buildTypes.configureEach {
         buildConfigField("long", "BUILD_TIME", "${System.currentTimeMillis()}L")
+        buildConfigField("boolean", "LAUNCHER_NATIVE_PROTOTYPE", launcherNativePrototype.toString())
     }
+}
+
+if (launcherNativePrototype) {
+    // AGP 不会为自定义生成目录自动推导 Sync 任务依赖，显式接入 Java 资源处理任务。
+    val mergeTask = requireNotNull(mergeLauncherNativeResources)
+    tasks.matching { it.name == "processReleaseJavaRes" || it.name == "processDebugJavaRes" }
+        .configureEach { dependsOn(mergeTask) }
 }
 
 dependencies {

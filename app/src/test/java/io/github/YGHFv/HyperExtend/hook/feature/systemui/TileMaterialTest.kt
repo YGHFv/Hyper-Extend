@@ -15,15 +15,13 @@ class TileMaterialTest {
         assertFalse(entry.hasDetailPage)
     }
     @Test fun retainsNativeCapabilityAndRestrictedStateGates() {
-        fun allow(enabled: Boolean = true, blocked: Boolean = false, host: Long = 202602260,
-            plugin: Long = 183022200, display: Int? = 0, classic: Boolean = true,
+        fun allow(enabled: Boolean = true, blocked: Boolean = false, display: Int? = 0, classic: Boolean = true,
             material: Boolean = true, theme: Boolean = true, normal: Boolean = true,
             state: Int = 2, color: Int = 0, restricted: Boolean = false, transient: Boolean = false) =
-            TileMaterialPolicy.eligible(enabled, blocked, host, plugin, display, classic, material,
+            TileMaterialPolicy.eligible(enabled, blocked, display, classic, material,
                 theme, normal, state, color, restricted, transient)
         assertTrue(allow()); assertTrue(allow(state = 1))
         assertFalse(allow(enabled = false)); assertFalse(allow(blocked = true))
-        assertFalse(allow(host = 202602261)); assertFalse(allow(plugin = 183022201))
         assertFalse(allow(display = null)); assertFalse(allow(display = 1))
         assertFalse(allow(classic = false)); assertFalse(allow(material = false))
         assertFalse(allow(theme = false)); assertFalse(allow(normal = false))

@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "policy": "gate5-residual-offline-v1",
+  "status": "仅离线只读取证，不是安装许可；门槛 5 仍未关闭",
+  "image": {
+    "sha256": "b947b8db576539a57a2b2a5ba7e32749e06508fa88d2fae31316cbd14374387b",
+    "buildId": "4f1bdaeda6b1f98dde7d3ebc23163cd1",
+    "size": 29387672
+  },
+  "mapsRequirements": {
+    "pageSize": 4096,
+    "packagePathSuffix": "com.miui.home",
+    "note": "页大小与宿主包名是结构常量；映射快照与材料路径只留本机，不入库。由留存 APK 的未压缩 ELF 条目独立确定文件起点，再用全部文件 PT_LOAD 唯一推导基址；不从调用点偏移等式自证。"
+  },
+  "sites": [
+    {
+      "feature": "数量点",
+      "offset": "0x1147018",
+      "word": "0x94000137",
+      "target": "0x11474f4"
+    },
+    {
+      "feature": "分享 APK",
+      "offset": "0x17fd75c",
+      "word": "0x940000c5",
+      "target": "0x17fda70"
+    },
+    {
+      "feature": "分享 APK",
+      "offset": "0x17fda5c",
+      "word": "0x94000005",
+      "target": "0x17fda70"
+    },
+    {
+      "feature": "小窗",
+      "offset": "0x1b2f770",
+      "word": "0x94000038",
+      "target": "0x1b2f850"
+    },
+    {
+      "feature": "新任务",
+      "offset": "0x1b2f2f0",
+      "word": "0x94000083",
+      "target": "0x1b2f4fc"
+    },
+    {
+      "feature": "新任务",
+      "offset": "0x1b2f424",
+      "word": "0x94000036",
+      "target": "0x1b2f4fc"
+    }
+  ],
+  "counts": {
+    "sites": 6
+  },
+  "installPermitted": false,
+  "trialSource": "app/src/main/cpp/launcher/singleword_publish.cpp",
+  "trialSourceNote": "门槛 5 残余项 (c) 的机器码证据针对**生产实现**，不再针对测试目录里的等价写法。工具会核对本字段与被编译的文件一致，防止把证据来源换回替身。",
+  "trialSymbols": [
+    "launcher_commit_call_site",
+    "launcher_publish_trampoline",
+    "launcher_publish_then_commit"
+  ],
+  "notClosedGates": [
+    "门槛3：安全通道实机验收未做，本工具不涉及。",
+    "门槛5：本工具只增加三项残余的静态取证，不证明未来页权限、写入独占或卸载行为，不关闭门槛 5，也不构成安装许可。"
+  ],
+  "verificationBoundary": "编译期机器码、宿主 ELF/APK 结构、历史进程映射快照的只读证据；不写内存、不分配页面、不链接 SO、不接触设备，不证明快照完整采集、实际内存类型、未来写入独占、卸载行为、实机安装实现或运行期竞争。"
+}

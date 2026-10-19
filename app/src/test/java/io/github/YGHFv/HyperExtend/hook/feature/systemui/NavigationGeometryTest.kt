@@ -25,11 +25,10 @@ class NavigationGeometryTest {
         assertEquals(false, NavigationGeometryPolicy.landscape(2))
         assertEquals(true, NavigationGeometryPolicy.landscape(3))
         assertNull(NavigationGeometryPolicy.landscape(-1))
-        assertTrue(NavigationGeometryPolicy.eligible(202602260, 0, 2, false, true))
-        assertFalse(NavigationGeometryPolicy.eligible(202602260, 0, 2, true, true))
-        assertFalse(NavigationGeometryPolicy.eligible(202602260, 0, 0, false, true))
-        assertFalse(NavigationGeometryPolicy.eligible(202602260, null, 2, false, true))
-        assertFalse(NavigationGeometryPolicy.eligible(202602261, 0, 2, false, true))
+        assertTrue(NavigationGeometryPolicy.eligible(0, 2, false, true))
+        assertFalse(NavigationGeometryPolicy.eligible(0, 2, true, true))
+        assertFalse(NavigationGeometryPolicy.eligible(0, 0, false, true))
+        assertFalse(NavigationGeometryPolicy.eligible(null, 2, false, true))
     }
 
     @Test fun geometryParametersLiveOnTheMergedNavigationCard() {

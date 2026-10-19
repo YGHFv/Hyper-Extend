@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "policy": "gate3-readonly-log-window-v1",
+  "installPermitted": false,
+  "gate3Closed": false,
+  "notClosedGates": [1, 3, 5],
+  "transaction": "0x00484541",
+  "endpointReportLimit": 8,
+  "countLimit": [5, 20],
+  "channelBits": {
+    "kChannelNoBinder": 1,
+    "kChannelNoWindowService": 2,
+    "kChannelTransactFailed": 4,
+    "kChannelShortReply": 8,
+    "kChannelSnapshotRejected": 16,
+    "kChannelNotQueried": 32,
+    "kChannelBusy": 64,
+    "kChannelWrongProcess": 128
+  },
+  "snapshotBits": {
+    "kSnapshotAckMismatch": 1,
+    "kSnapshotProtocolMismatch": 2,
+    "kSnapshotMalformed": 4,
+    "kSnapshotStaleRevision": 8,
+    "kSnapshotUnsafeClock": 16,
+    "kSnapshotExpired": 32,
+    "kSnapshotNotArmed": 64
+  },
+  "nativeTemplates": {
+    "start": "只读诊断：开始单次快照查询；入口已到达；install_permitted=false",
+    "done": "只读诊断：查询完成 channel=0x%x snapshot=0x%x revision=%d features=%d limit=%d armed=%d；install_permitted=false",
+    "identityRejected": "只读诊断：工作线程身份复核失败；install_permitted=false",
+    "threadFailed": "只读诊断：工作线程创建失败，不重试；install_permitted=false"
+  },
+  "safetyTemplate": "只读安全预检：blockers=0x%x；persisted=%s；install_permitted=false",
+  "endpointTemplates": {
+    "installed": "launcher endpoint: installed=$ok (transaction=${LauncherSnapshotWire.TRANSACTION})",
+    "served": "served revision=${snapshot.revision} features=${snapshot.features} limit=${snapshot.countLimit}",
+    "rejected": "rejected caller uid=$uid pid=$pid",
+    "replyFailed": "launcher endpoint: reply failed",
+    "safeMode": "launcher endpoint: safe mode engaged — not installing",
+    "missingClass": "launcher endpoint: android.view.IWindowManager\\$Stub not found",
+    "missingMethod": "launcher endpoint: IWindowManager\\$Stub#onTransact not found"
+  },
+  "verificationBoundary": "只校验所给文本的新增窗口与双端字段一致性，不认证日志来源、采集时间、实际加载 APK、调用方身份或事务唯一对应；不证明本地持久化熔断、恢复令牌或线程时序，不关闭门槛 3。"
+}
