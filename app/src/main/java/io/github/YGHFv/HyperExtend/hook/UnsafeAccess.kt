@@ -88,6 +88,18 @@ internal object UnsafeAccess {
         } ?: false
     }
 
+    /** 写一个 `static` 对象字段（含 `static final`），用于进程级设备标识。 */
+    fun putStaticObject(field: Field, value: Any?): Boolean {
+        val instance = unsafe ?: return false
+        val put = putObjectMethod ?: return false
+        val base = staticFieldBaseMethod ?: return false
+        val offset = staticFieldOffsetMethod ?: return false
+        return Reflect.attempt {
+            put.invoke(instance, base.invoke(instance, field), offset.invoke(instance, field) as Long, value)
+            true
+        } ?: false
+    }
+
     /** 写一个实例 `boolean` 字段（含 `final`）。 */
     fun putBooleanField(field: Field, target: Any?, value: Boolean): Boolean {
         val instance = unsafe ?: return false

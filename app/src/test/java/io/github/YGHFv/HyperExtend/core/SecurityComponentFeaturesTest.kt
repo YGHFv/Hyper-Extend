@@ -8,7 +8,7 @@ import org.junit.Test
 
 class SecurityComponentFeaturesTest {
     @Test fun securityComponentFeaturesHaveUniqueHostsAndGroups() {
-        assertEquals(18, SECURITY_COMPONENT_FEATURES.size)
+        assertEquals(24, SECURITY_COMPONENT_FEATURES.size)
         assertEquals(
             SECURITY_COMPONENT_FEATURES.size,
             SECURITY_COMPONENT_FEATURES.map { it.id }.distinct().size,
@@ -18,8 +18,25 @@ class SecurityComponentFeaturesTest {
             assertNotNull(scope)
             assertEquals(listOf(scope?.id), feature.scopes)
             assertEquals(scope?.id, feature.entryGroup?.scopeId)
-            assertTrue(!feature.hasDetailPage)
+            assertEquals(feature.config.isNotEmpty(), feature.hasDetailPage)
         }
+    }
+
+    @Test fun configurableSecurityFeaturesExposeOnlyExpectedTextRows() {
+        val installSource = featureById("package_installer_install_source")!!
+        assertEquals(
+            listOf(PACKAGE_INSTALLER_SOURCE_PACKAGE_KEY),
+            installSource.config.filterIsInstance<HyperText>().map { it.key },
+        )
+        val device = featureById("market_device_modify")!!
+        assertEquals(
+            listOf(
+                MARKET_DEVICE_DEVICE_KEY,
+                MARKET_DEVICE_MODEL_KEY,
+                MARKET_DEVICE_MANUFACTURER_KEY,
+            ),
+            device.config.filterIsInstance<HyperText>().map { it.key },
+        )
     }
 
     @Test fun securityComponentHostsAreVisibleOnHome() {

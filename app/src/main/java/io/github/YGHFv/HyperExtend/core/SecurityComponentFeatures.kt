@@ -5,6 +5,11 @@
 
 package io.github.YGHFv.HyperExtend.core
 
+const val PACKAGE_INSTALLER_SOURCE_PACKAGE_KEY = "package_installer_source_package"
+const val MARKET_DEVICE_DEVICE_KEY = "market_device_device"
+const val MARKET_DEVICE_MODEL_KEY = "market_device_model"
+const val MARKET_DEVICE_MANUFACTURER_KEY = "market_device_manufacturer"
+
 /**
  * 安全组件作用域功能。
  *
@@ -53,6 +58,58 @@ val SECURITY_COMPONENT_FEATURES: List<HyperFeature> = listOf(
         license = "AGPL-3.0",
         defaultEnabled = false,
         requirement = "与安装器云检查同时关闭可避免恢复安装流程时再次上传。",
+        group = ScopeFeatureGroup.PACKAGE_INSTALLER_SECURITY,
+    ),
+    HyperFeature(
+        id = "package_installer_disable_safe_mode_tip",
+        title = "隐藏安全守护提示",
+        summary = "安装页不再显示安全守护与安全模式推荐卡片",
+        scopes = listOf("packageinstaller"),
+        origin = "西米露 / HyperCeiler · DisableSafeModelTip",
+        license = "AGPL-3.0",
+        defaultEnabled = false,
+        requirement = "只隐藏安装器自己的安全守护列表项，不修改系统的安全模式状态。",
+        group = ScopeFeatureGroup.PACKAGE_INSTALLER_SECURITY,
+    ),
+    HyperFeature(
+        id = "package_installer_all_system_app",
+        title = "将安装包视为系统应用",
+        summary = "在安装器判断待装应用时补上系统应用标记",
+        scopes = listOf("packageinstaller"),
+        origin = "西米露 / HyperCeiler · AllAsSystemApp",
+        license = "AGPL-3.0",
+        defaultEnabled = false,
+        requirement = "会改变安装器内的系统应用判定，可能影响系统应用更新提示与安装策略。",
+        group = ScopeFeatureGroup.PACKAGE_INSTALLER_SECURITY,
+    ),
+    HyperFeature(
+        id = "package_installer_install_source",
+        title = "自定义安装来源",
+        summary = "让安装启动页把来源应用识别为指定包名",
+        scopes = listOf("packageinstaller"),
+        origin = "西米露 / HyperCeiler · InstallSource",
+        license = "AGPL-3.0",
+        defaultEnabled = false,
+        requirement = "填写来源应用包名；留空时不安装 Hook。仅在 InstallStart.onCreate 调用链内改写。",
+        config = listOf(
+            HyperText(
+                PACKAGE_INSTALLER_SOURCE_PACKAGE_KEY,
+                "来源包名",
+                summary = "例如 com.android.fileexplorer；不会影响其他 Activity 的来源查询",
+                placeholder = "com.android.fileexplorer",
+            ),
+        ),
+        group = ScopeFeatureGroup.PACKAGE_INSTALLER_SECURITY,
+    ),
+    HyperFeature(
+        id = "package_installer_display_more_info",
+        title = "显示完整 APK 信息",
+        summary = "在安装页补充包名、版本、SDK 与文件大小",
+        scopes = listOf("packageinstaller"),
+        origin = "西米露 / HyperCeiler · DisplayMoreApkInfoNew",
+        license = "AGPL-3.0",
+        defaultEnabled = false,
+        requirement = "复用原生文本控件，不替换安装页布局；宿主找不到应用信息控件时跳过。",
         group = ScopeFeatureGroup.PACKAGE_INSTALLER_SECURITY,
     ),
     HyperFeature(
@@ -198,6 +255,37 @@ val SECURITY_COMPONENT_FEATURES: List<HyperFeature> = listOf(
         origin = "西米露 / HyperCeiler · DisableStartPushDialog",
         license = "AGPL-3.0",
         defaultEnabled = false,
+        group = ScopeFeatureGroup.MARKET_SECURITY,
+    ),
+    HyperFeature(
+        id = "market_disable_ads",
+        title = "关闭应用商店广告",
+        summary = "关闭详情页推荐、开屏广告与详情广告请求",
+        scopes = listOf("market"),
+        origin = "西米露 / HyperCeiler · DisableAds",
+        license = "AGPL-3.0",
+        defaultEnabled = false,
+        requirement = "只改写应用商店自身的广告判断，不承诺覆盖第三方广告 SDK。",
+        group = ScopeFeatureGroup.MARKET_SECURITY,
+    ),
+    HyperFeature(
+        id = "market_device_modify",
+        title = "自定义设备标识",
+        summary = "应用商店启动前伪装设备标识",
+        scopes = listOf("market"),
+        origin = "西米露 / HyperCeiler · DeviceModify",
+        license = "AGPL-3.0",
+        defaultEnabled = false,
+        requirement = "只影响应用商店进程，留空字段保持原值；修改后需重启应用商店。",
+        config = listOf(
+            HyperText(MARKET_DEVICE_DEVICE_KEY, "DEVICE", placeholder = "例如 device"),
+            HyperText(MARKET_DEVICE_MODEL_KEY, "MODEL", placeholder = "例如 model"),
+            HyperText(
+                MARKET_DEVICE_MANUFACTURER_KEY,
+                "MANUFACTURER",
+                placeholder = "例如 manufacturer",
+            ),
+        ),
         group = ScopeFeatureGroup.MARKET_SECURITY,
     ),
 )
