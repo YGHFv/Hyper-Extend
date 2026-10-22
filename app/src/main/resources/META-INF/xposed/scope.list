@@ -2,6 +2,10 @@ com.android.systemui
 system
 com.android.settings
 com.miui.securitycenter
+com.miui.packageinstaller
+com.miui.guardprovider
+com.xiaomi.joyose
+com.xiaomi.market
 com.xiaomi.scanner
 com.miui.tsmclient
 com.miui.screenshot

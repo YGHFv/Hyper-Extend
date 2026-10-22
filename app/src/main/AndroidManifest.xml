@@ -39,6 +39,11 @@
         <package android:name="com.milink.service" />
         <package android:name="com.miui.mishare.connectivity" />
         <package android:name="com.miui.misound" />
+        <package android:name="com.miui.securitycenter" />
+        <package android:name="com.miui.packageinstaller" />
+        <package android:name="com.miui.guardprovider" />
+        <package android:name="com.xiaomi.joyose" />
+        <package android:name="com.xiaomi.market" />
         <intent>
             <action android:name="android.service.credentials.CredentialProviderService" />
         </intent>

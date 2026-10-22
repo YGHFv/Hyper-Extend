@@ -28,7 +28,12 @@
         <item>com.miui.tsmclient</item>
         <item>com.android.settings</item>
         <item>com.miui.securitycenter</item>
+        <item>com.miui.packageinstaller</item>
+        <item>com.miui.guardprovider</item>
+        <item>com.xiaomi.joyose</item>
+        <item>com.xiaomi.market</item>
         <item>com.xiaomi.scanner</item>
+        <item>com.miui.misound</item>
         <item>system</item>
         <item>com.miui.screenshot</item>
         <item>com.milink.service</item>

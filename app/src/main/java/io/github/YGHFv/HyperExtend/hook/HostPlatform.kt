@@ -32,6 +32,10 @@ internal object HostPlatform {
     const val SYSTEMUI = "com.android.systemui"
     const val SETTINGS = "com.android.settings"
     const val SECURITY_CENTER = "com.miui.securitycenter"
+    const val PACKAGE_INSTALLER = "com.miui.packageinstaller"
+    const val GUARD_PROVIDER = "com.miui.guardprovider"
+    const val JOYOSE = "com.xiaomi.joyose"
+    const val MARKET = "com.xiaomi.market"
     const val XIAOMI_SCANNER = "com.xiaomi.scanner"
     const val TSM_CLIENT = "com.miui.tsmclient"
 

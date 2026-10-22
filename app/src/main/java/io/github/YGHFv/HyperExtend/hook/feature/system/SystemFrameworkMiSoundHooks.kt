@@ -30,6 +30,40 @@ import io.github.YGHFv.HyperExtend.hook.Reflect
 import org.json.JSONObject
 import java.io.File
 
+private val SUPPORTED_EFFECTS = setOf(
+    MISOUND_EFFECT_NONE,
+    MISOUND_EFFECT_DOLBY,
+    MISOUND_EFFECT_MISOUND,
+    MISOUND_EFFECT_KEEP,
+)
+
+/**
+ * 一次耳机音效切换需要恢复的完整状态。
+ *
+ * [spatial] 或 [surround] 为 null 表示不干预对应子项。旧版本只记忆主音效，
+ * 因此从旧 JSON 读出的状态天然只有 [main]，不会把用户后来打开的空间音频关掉。
+ */
+internal data class MiSoundEffectState(
+    val main: String,
+    val spatial: Boolean? = null,
+    val surround: Boolean? = null,
+)
+
+/** 耳机切换策略保持为纯函数，便于在没有 Android 运行时的单测里覆盖兼容分支。 */
+internal object MiSoundEffectPolicy {
+    fun connectionTarget(
+        remembered: MiSoundEffectState?,
+        defaultEffect: String,
+    ): MiSoundEffectState = remembered ?: MiSoundEffectState(defaultEffect)
+
+    /** 仅框架侧 AudioEffectCenter 能读写空间音频与环绕声。 */
+    fun forBackend(state: MiSoundEffectState, supportsThreeState: Boolean): MiSoundEffectState =
+        if (supportsThreeState) state else state.copy(spatial = null, surround = null)
+
+    fun legacyEffect(value: String?): MiSoundEffectState? =
+        value?.takeIf { it in SUPPORTED_EFFECTS }?.let(::MiSoundEffectState)
+}
+
 /**
  * 系统框架端的耳机音效切换。
  *
@@ -96,7 +130,7 @@ internal object SystemFrameworkMiSoundHooks {
                 ).ifBlank { "1" } != "0",
                 rememberDevice = settings.string(MISOUND_REMEMBER_DEVICE_KEY).ifBlank { "0" } == "1",
                 defaultEffect = settings.string(MISOUND_DEFAULT_EFFECT_KEY)
-                    .takeIf { it in supportedEffects }
+                    .takeIf { it in SUPPORTED_EFFECTS }
                     ?: MISOUND_EFFECT_NONE,
             )
         }
@@ -112,7 +146,7 @@ internal object SystemFrameworkMiSoundHooks {
         private val audioManager = context.getSystemService(AudioManager::class.java)
         private var connected = false
         private var deviceId: String? = null
-        private var speakerEffect: String? = null
+        private var speakerState: MiSoundEffectState? = null
         private var started = false
 
         private val receiver = object : BroadcastReceiver() {
@@ -157,30 +191,31 @@ internal object SystemFrameworkMiSoundHooks {
         }
 
         private fun onConnected(id: String, initial: Boolean) {
-            val current = controller.currentEffect()
+            val current = controller.currentState()
             if (!initial) {
-                speakerEffect = current
-                if (policy.rememberDevice) memory.saveSpeakerEffect(current)
+                speakerState = current
+                if (policy.rememberDevice) memory.saveSpeakerState(current)
             }
-            val remembered = if (policy.rememberDevice) memory.effectForDevice(id) else null
-            val target = remembered ?: policy.defaultEffect
-            if (!initial && target != MISOUND_EFFECT_KEEP) controller.applyEffect(target)
+            val remembered = if (policy.rememberDevice) memory.stateForDevice(id) else null
+            val target = MiSoundEffectPolicy.connectionTarget(remembered, policy.defaultEffect)
+            val effective = MiSoundEffectPolicy.forBackend(target, controller.frameworkEffect)
+            controller.applyState(effective)
             ModuleLog.info(
-                "misound_effect: connected id=$id initial=$initial remembered=$remembered target=$target",
+                "misound_effect: connected id=$id initial=$initial remembered=$remembered target=$effective",
             )
         }
 
         private fun onDisconnected() {
             val closingId = deviceId
             if (policy.rememberDevice && closingId != null) {
-                memory.saveDeviceEffect(closingId, controller.currentEffect())
+                memory.saveDeviceState(closingId, controller.currentState())
             }
             val restore = if (policy.rememberDevice) {
-                memory.speakerEffect() ?: speakerEffect
+                memory.speakerState() ?: speakerState
             } else {
-                speakerEffect
+                speakerState
             }
-            if (restore != null) controller.applyEffect(restore)
+            restore?.let(controller::applyState)
             ModuleLog.info("misound_effect: disconnected id=$closingId restore=$restore")
         }
 
@@ -266,12 +301,31 @@ internal object SystemFrameworkMiSoundHooks {
             }
         }
 
+        fun currentState(): MiSoundEffectState {
+            val main = currentEffect()
+            if (!frameworkEffect) return MiSoundEffectState(main)
+            val instance = ensureCenter() ?: return MiSoundEffectState(main)
+            return MiSoundEffectState(
+                main = main,
+                spatial = readOptionalEffect(instance, spatialEffectKey),
+                surround = readOptionalEffect(instance, surroundEffectKey),
+            )
+        }
+
         fun applyEffect(effect: String) {
             when (effect) {
                 MISOUND_EFFECT_KEEP -> Unit
                 MISOUND_EFFECT_DOLBY, MISOUND_EFFECT_MISOUND -> setMainEffect(effect)
                 else -> setMainEffect(MISOUND_EFFECT_NONE)
             }
+        }
+
+        fun applyState(state: MiSoundEffectState) {
+            applyEffect(state.main)
+            if (!frameworkEffect) return
+            val instance = ensureCenter() ?: return
+            state.spatial?.let { setOptionalEffect(instance, spatialEffectKey, it) }
+            state.surround?.let { setOptionalEffect(instance, surroundEffectKey, it) }
         }
 
         private fun setMainEffect(effect: String) {
@@ -311,6 +365,25 @@ internal object SystemFrameworkMiSoundHooks {
         private fun isActive(center: Any, effect: String): Boolean =
             Reflect.callWith(center, "isEffectActive", effect) as? Boolean == true
 
+        private val spatialEffectKey: String? by lazy { staticStringField("EFFECT_SPATIAL_AUDIO") }
+        private val surroundEffectKey: String? by lazy { staticStringField("EFFECT_SURROUND") }
+
+        private fun readOptionalEffect(center: Any, effect: String?): Boolean? =
+            effect?.let { isActive(center, it) }
+
+        private fun setOptionalEffect(center: Any, effect: String?, enabled: Boolean) {
+            if (effect == null) {
+                ModuleLog.warn("misound_effect: optional effect constant unavailable")
+                return
+            }
+            Reflect.callWith(center, "setEffectActive", effect, enabled)
+        }
+
+        private fun staticStringField(name: String): String? =
+            centerClass?.let { Reflect.findField(it, name) }?.let {
+                Reflect.attempt { it.get(null) as? String }
+            }
+
         private fun createEffect(clazz: Class<*>?): Any? {
             if (clazz == null) return null
             val constructor = clazz.declaredConstructors.firstOrNull {
@@ -335,25 +408,54 @@ internal object SystemFrameworkMiSoundHooks {
         }.getOrElse { JSONObject() }
 
         @Synchronized
-        fun effectForDevice(id: String): String? =
-            root.optJSONObject("devices")?.optString(id)?.takeIf { it in supportedEffects }
+        fun stateForDevice(id: String): MiSoundEffectState? {
+            val devices = root.optJSONObject("devices") ?: return null
+            val value = devices.opt(id)
+            return when {
+                value is JSONObject -> parseState(value)
+                value is String -> MiSoundEffectPolicy.legacyEffect(value)
+                else -> null
+            }
+        }
 
         @Synchronized
-        fun saveDeviceEffect(id: String, effect: String) {
+        fun saveDeviceState(id: String, state: MiSoundEffectState) {
             val devices = root.optJSONObject("devices") ?: JSONObject().also { root.put("devices", it) }
-            devices.put(id, effect)
+            devices.put(id, encodeState(state))
             persist()
         }
 
         @Synchronized
-        fun speakerEffect(): String? =
-            root.optString("speaker").takeIf { it in supportedEffects }
+        fun speakerState(): MiSoundEffectState? {
+            root.optJSONObject("speaker_state")?.let { return parseState(it) }
+            return MiSoundEffectPolicy.legacyEffect(root.optString("speaker"))
+        }
 
         @Synchronized
-        fun saveSpeakerEffect(effect: String) {
-            root.put("speaker", effect)
+        fun saveSpeakerState(state: MiSoundEffectState) {
+            // 保留旧字段，让降级回旧版本时仍能恢复主音效。
+            root.put("speaker", state.main)
+            root.put("speaker_state", encodeState(state))
             persist()
         }
+
+        private fun parseState(value: JSONObject): MiSoundEffectState? {
+            val main = value.optString("main").takeIf { it in SUPPORTED_EFFECTS } ?: return null
+            return MiSoundEffectState(
+                main = main,
+                spatial = value.optionalBoolean("spatial"),
+                surround = value.optionalBoolean("surround"),
+            )
+        }
+
+        private fun encodeState(state: MiSoundEffectState): JSONObject = JSONObject().apply {
+            put("main", state.main)
+            state.spatial?.let { put("spatial", it) }
+            state.surround?.let { put("surround", it) }
+        }
+
+        private fun JSONObject.optionalBoolean(name: String): Boolean? =
+            if (has(name)) optBoolean(name) else null
 
         @Synchronized
         private fun persist() {
@@ -375,12 +477,5 @@ internal object SystemFrameworkMiSoundHooks {
         AudioDeviceInfo.TYPE_WIRED_HEADSET,
         AudioDeviceInfo.TYPE_WIRED_HEADPHONES,
         AudioDeviceInfo.TYPE_USB_HEADSET,
-    )
-
-    private val supportedEffects = setOf(
-        MISOUND_EFFECT_NONE,
-        MISOUND_EFFECT_DOLBY,
-        MISOUND_EFFECT_MISOUND,
-        MISOUND_EFFECT_KEEP,
     )
 }

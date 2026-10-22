@@ -27,6 +27,11 @@ import io.github.YGHFv.HyperExtend.hook.feature.NfcCardFace
 import io.github.YGHFv.HyperExtend.hook.feature.PasskeyFix
 import io.github.YGHFv.HyperExtend.hook.feature.RotationSuggestionHider
 import io.github.YGHFv.HyperExtend.hook.feature.WallpaperMonetFix
+import io.github.YGHFv.HyperExtend.hook.feature.security.GuardProviderSecurityHooks
+import io.github.YGHFv.HyperExtend.hook.feature.security.JoyoseHooks
+import io.github.YGHFv.HyperExtend.hook.feature.security.MarketSecurityHooks
+import io.github.YGHFv.HyperExtend.hook.feature.security.PackageInstallerSecurityHooks
+import io.github.YGHFv.HyperExtend.hook.feature.security.SecurityCenterSecurityHooks
 import io.github.YGHFv.HyperExtend.hook.feature.statusbar.ScreenshotStatusBar
 import io.github.YGHFv.HyperExtend.hook.feature.statusbar.StatusBarBatteryStyle
 import io.github.YGHFv.HyperExtend.hook.feature.statusbar.BatteryDetailHooks
@@ -136,9 +141,26 @@ internal object HookDispatcher {
                 NotificationImportanceHooks.installSettings(loader, settings) +
                 PasskeyFix.installPackage(packageName, loader, settings)).joinToString()
         }
-        HostPlatform.SECURITY_CENTER,
-        HostPlatform.XIAOMI_SCANNER,
-        -> { loader, settings -> PasskeyFix.installPackage(packageName, loader, settings) }
+        HostPlatform.SECURITY_CENTER -> { loader, settings ->
+            val passkey = PasskeyFix.installPackage(packageName, loader, settings)
+            val security = SecurityCenterSecurityHooks.install(loader, settings)
+            "$passkey, securitycenter_security=$security"
+        }
+        HostPlatform.PACKAGE_INSTALLER -> { loader, settings ->
+            "package_installer_security=${PackageInstallerSecurityHooks.install(loader, settings)}"
+        }
+        HostPlatform.GUARD_PROVIDER -> { loader, settings ->
+            "guard_provider_security=${GuardProviderSecurityHooks.install(loader, settings)}"
+        }
+        HostPlatform.JOYOSE -> { loader, settings ->
+            "joyose=${JoyoseHooks.install(loader, settings)}"
+        }
+        HostPlatform.MARKET -> { loader, settings ->
+            "market_security=${MarketSecurityHooks.install(loader, settings)}"
+        }
+        HostPlatform.XIAOMI_SCANNER -> { loader, settings ->
+            PasskeyFix.installPackage(packageName, loader, settings)
+        }
 
         else -> null
     }
