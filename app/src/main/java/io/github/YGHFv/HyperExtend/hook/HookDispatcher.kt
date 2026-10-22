@@ -49,6 +49,7 @@ import io.github.YGHFv.HyperExtend.hook.feature.systemui.ControlCenterHooks
 import io.github.YGHFv.HyperExtend.hook.feature.systemui.installSystemUiFeature
 import io.github.YGHFv.HyperExtend.hook.feature.systemui.SystemUiCustomHooks
 import io.github.YGHFv.HyperExtend.hook.feature.systemui.MediaCardHooks
+import io.github.YGHFv.HyperExtend.hook.feature.system.SystemLockTaskHooks
 import java.util.concurrent.ConcurrentHashMap
 
 /**
@@ -114,6 +115,10 @@ internal object HookDispatcher {
         "com.miui.mishare.connectivity" -> { loader, settings ->
             if (settings.isOn("mishare_receive_guard")) "mishare_receive_guard=${MiShareReceiveGuard.install(loader)}"
             else "no feature enabled"
+        }
+        "com.miui.home" -> { loader, settings ->
+            val installed = SystemLockTaskHooks.installLauncher(loader, settings)
+            if (installed > 0) "guided_access_home=$installed" else "no feature enabled"
         }
         HostPlatform.SYSTEMUI -> { loader, settings -> installSystemUi(loader, settings) }
         HostPlatform.TSM_CLIENT -> { loader, settings -> installNfcCardFace(loader, settings) }
@@ -256,6 +261,9 @@ internal object HookDispatcher {
         parts.installSystemUiFeature(settings, "status_bar_network_speed") { StatusBarNetworkSpeed.install(loader, settings) }
         parts.installSystemUiFeature(settings, "status_bar_clock") { StatusBarClock.install(loader, settings) }
         parts.installSystemUiFeature(settings, "status_bar_double_tap") { StatusBarGestures.install(loader, settings) }
+        runCatching { SystemLockTaskHooks.installSystemUi(loader, settings) }
+            .onSuccess { if (it > 0) parts += "guided_access_ui=$it" }
+            .onFailure { ModuleLog.error("guided access SystemUI hooks failed", it) }
         return if (parts.isEmpty()) "no feature enabled" else parts.joinToString(",")
     }
 

@@ -168,6 +168,17 @@ fun featuresOfScope(scopeId: String): List<HyperFeature> =
 
 /** 二级菜单仍属于原宿主，没有独立的总开关或重启目标。 */
 enum class ScopeFeatureGroup(val scopeId: String, val title: String, val summary: String) {
+    SYSTEM_FRAMEWORK_CORE("system_server", "核心破解", "签名、系统应用更新与包管理限制"),
+    SYSTEM_FRAMEWORK_FREEFORM("system_server", "小窗", "小窗数量、黑名单、气泡与前台固定"),
+    SYSTEM_FRAMEWORK_VOLUME("system_server", "音量", "默认音量流、档位与安全限制"),
+    SYSTEM_FRAMEWORK_DISPLAY("system_server", "显示", "深色模式与温控亮度"),
+    SYSTEM_FRAMEWORK_DISPLAY_NOTIFY("system_server", "显示与通知", "屏幕方向、截屏、通知与系统提示"),
+    SYSTEM_FRAMEWORK_UNDERLYING("system_server", "底层", "安装、包管理、剪贴板、日志与兼容性"),
+    SYSTEM_FRAMEWORK_SHORTCUTS("system_server", "快捷菜单", "分享、打开方式与文本处理菜单"),
+    SYSTEM_FRAMEWORK_LOCK_TASK("system_server", "引导式访问", "固定应用、电源键退出与状态栏屏蔽"),
+    SYSTEM_FRAMEWORK_INPUT("system_server", "输入法", "输入法列表权限与全面屏导航栏兼容"),
+    SYSTEM_FRAMEWORK_MIPAD("system_server", "平板输入", "触控笔、ESC 与多指手势"),
+    SYSTEM_FRAMEWORK_AUDIO("system_server", "音效", "耳机连接时自动切换音效"),
     STATUS_BAR("systemui", "状态栏", "图标、电池、网速、时钟与手势"),
     LOCK_SCREEN("systemui", "锁屏", "锁屏通知、状态栏与解锁提示"),
     CONTROL_CENTER("systemui", "通知与控制中心", "通知提醒、背景与显示设置"),

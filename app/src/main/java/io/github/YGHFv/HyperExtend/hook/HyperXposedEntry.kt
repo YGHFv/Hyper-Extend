@@ -15,8 +15,8 @@ package io.github.YGHFv.HyperExtend.hook
 import android.os.Bundle
 import io.github.YGHFv.HyperExtend.core.ModuleLog
 import io.github.YGHFv.HyperExtend.hook.feature.PasskeyFix
-import io.github.YGHFv.HyperExtend.hook.feature.RotationLockGuard
 import io.github.YGHFv.HyperExtend.hook.feature.launcher.LauncherSnapshotEndpoint
+import io.github.YGHFv.HyperExtend.hook.feature.system.SystemFrameworkHooks
 import io.github.libxposed.api.XposedInterface
 import io.github.libxposed.api.XposedModule
 import io.github.libxposed.api.XposedModuleInterface.HotReloadingParam
@@ -130,6 +130,10 @@ class HyperXposedEntry : XposedModule() {
             return
         }
         PasskeyFix.installSystemServer(loader, settings)
+        // 反违规词 Hook 必须赶在 Wi-Fi 服务模块被 SystemServiceManager 加载前安装；
+        // 其余目标由安装器自行推迟到 startOtherServices 返回之后。
+        runCatching { SystemFrameworkHooks.installEarly(loader, settings) }
+            .onFailure { ModuleLog.error("system framework early hooks unavailable", it) }
         runCatching {
             io.github.YGHFv.HyperExtend.hook.feature.systemui.NotificationManagementHooks.installServer(loader, settings)
         }.onFailure { ModuleLog.error("notification management server adapter unavailable", it) }
@@ -138,9 +142,9 @@ class HyperXposedEntry : XposedModule() {
         // 且**不是**安装许可 —— 是否挂 hook 由桌面侧的 install_permitted 决定。
         runCatching { LauncherSnapshotEndpoint.install(loader, settings) }
             .onFailure { ModuleLog.error("launcher snapshot endpoint unavailable", it) }
-        // 旋转锁定保护同样住在 system_server：它守的是「强制停止」这个动作本身，
-        // 而 system_server 正是所有 force-stop 的必经之地。
-        RotationLockGuard.installDeferred(loader, settings)
+        // 旋转锁定保护与系统框架功能共用同一个延迟安装锚点，避免重复挂载
+        // `SystemServer#startOtherServices`。
+        SystemFrameworkHooks.installDeferred(loader, settings)
     }
 
     private fun hasCapability(capability: Long): Boolean =

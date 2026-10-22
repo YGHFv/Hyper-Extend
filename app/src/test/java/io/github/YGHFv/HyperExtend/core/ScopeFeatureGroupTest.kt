@@ -32,6 +32,26 @@ class ScopeFeatureGroupTest {
         )
     }
 
+    @Test fun systemFrameworkUsesOnlyVisibleSubmenus() {
+        assertEquals(listOf("passkey_fix"), featuresOfScopePage("system_server").map { it.id })
+        assertEquals(
+            listOf(
+                ScopeFeatureGroup.SYSTEM_FRAMEWORK_CORE,
+                ScopeFeatureGroup.SYSTEM_FRAMEWORK_FREEFORM,
+                ScopeFeatureGroup.SYSTEM_FRAMEWORK_VOLUME,
+                ScopeFeatureGroup.SYSTEM_FRAMEWORK_DISPLAY,
+                ScopeFeatureGroup.SYSTEM_FRAMEWORK_DISPLAY_NOTIFY,
+                ScopeFeatureGroup.SYSTEM_FRAMEWORK_UNDERLYING,
+                ScopeFeatureGroup.SYSTEM_FRAMEWORK_SHORTCUTS,
+                ScopeFeatureGroup.SYSTEM_FRAMEWORK_LOCK_TASK,
+                ScopeFeatureGroup.SYSTEM_FRAMEWORK_INPUT,
+                ScopeFeatureGroup.SYSTEM_FRAMEWORK_MIPAD,
+                ScopeFeatureGroup.SYSTEM_FRAMEWORK_AUDIO,
+            ),
+            featureGroupsOfScope("system_server"),
+        )
+    }
+
     @Test fun groupingDoesNotLoseFeaturesOrChangeHostCounts() {
         val all = featuresOfScope("systemui")
         val visible = featuresOfScopePage("systemui") +

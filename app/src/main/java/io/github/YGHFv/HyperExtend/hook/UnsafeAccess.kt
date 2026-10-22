@@ -88,6 +88,17 @@ internal object UnsafeAccess {
         } ?: false
     }
 
+    /** 写一个实例 `boolean` 字段（含 `final`）。 */
+    fun putBooleanField(field: Field, target: Any?, value: Boolean): Boolean {
+        val instance = unsafe ?: return false
+        val put = putBooleanMethod ?: return false
+        val offset = objectFieldOffsetMethod ?: return false
+        return Reflect.attempt {
+            put.invoke(instance, target, offset.invoke(instance, field) as Long, value)
+            true
+        } ?: false
+    }
+
     /** 写一个实例字段（含 `final`）。`mHybridService` 就是这种。 */
     fun putObjectField(field: Field, target: Any?, value: Any?): Boolean {
         val instance = unsafe ?: return false
