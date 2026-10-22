@@ -701,9 +701,9 @@ constexpr const char *install_stage_name(bool preparing, InstalledPoint point) {
     }
 }
 
-// 分享动作由主、次两个调用点的 trace 蹦床接管：保存调用者寄存器后，把 x1 中的
-// tagged 包名交给原生分享桥，经 Binder 转给 system_server 排队；蹦床不调用宿主
-// shareApk，恢复现场后以 Dart null 返回到原调用点之后。
+// 分享动作由主、次两个闭包入口蹦床接管：保存调用者寄存器后，把闭包外层对象中
+// 的 tagged 包名交给原生分享桥，经 Binder 转给 system_server 排队。ACK 成功时由
+// 入口蹦床直接以 Dart null 返回，避免再次执行宿主闭包；桥失败时才透明尾跳原闭包。
 
 bool hook_spec_ready(const LauncherHookSpec &spec) {
     return spec.target != nullptr && spec.replacement != nullptr &&
@@ -860,8 +860,8 @@ launcher::backend::InstallError install_launcher_spec(
 }
 
 uint32_t points_installed() {
-    const bool share_actions = g_share_primary_island.published &&
-        g_share_secondary_island.published;
+    const bool share_actions = g_share_entry_primary_island.published &&
+        g_share_entry_secondary_island.published;
     const bool freeform = g_freeform_island.published;
     bool share_validity = g_host_points.share_valid_exit_count != 0;
     for (size_t index = 0; index < g_host_points.share_valid_exit_count; ++index)
@@ -1062,10 +1062,13 @@ int install_launcher_batch(void *first_target, void *first_replacement, void **f
     const bool need_share = menu_feature_requested(features, launcher::kSnapshotFeatureShare);
     const bool need_freeform = menu_feature_requested(features, launcher::kSnapshotFeatureFreeform);
     void *count_target = need_count ? menu_site_for(launcher::kCountCall) : nullptr;
+    // 点击闭包在调用 shareApk 前仍可能被免责声明/状态分支短路，因此不能把
+    // shareApk 的 BL 当成唯一运行入口。入口蹦床先取得包名并在 ACK 后消费闭包，
+    // 这样既覆盖短路分支，也不会再落入原 shareApk 造成重复请求。
     void *share_primary_target = need_share
-        ? menu_site_for(launcher::kSharePrimaryCall) : nullptr;
+        ? menu_site_for(launcher::kSharePrimaryEntry) : nullptr;
     void *share_secondary_target = need_share
-        ? menu_site_for(launcher::kShareSecondaryCall) : nullptr;
+        ? menu_site_for(launcher::kShareSecondaryEntry) : nullptr;
     void *freeform_target = need_freeform
         ? menu_site_for(launcher::kFreeformCall) : nullptr;
     const LauncherHookSpec count_specs[] = {
@@ -1073,15 +1076,13 @@ int install_launcher_batch(void *first_target, void *first_replacement, void **f
             reinterpret_cast<void *>(&launcher_shortcut_count_island),
             &launcher_shortcut_count_original, false, 0, nullptr},
     };
-    // 两个 BL 都已在当前宿主中核对为分享闭包通向 shareApk 的唯一调用点；
-    // 直接接管调用点，避免入口匹配受闭包序言变化影响。
     const LauncherHookSpec share_action_specs[] = {
         {share_primary_target,
-            reinterpret_cast<void *>(&launcher_menu_primary_trace),
-            &launcher_menu_original_primary, false, 0, nullptr},
+            reinterpret_cast<void *>(&launcher_menu_share_entry_primary),
+            &launcher_menu_entry_original_primary, false, 0, nullptr},
         {share_secondary_target,
-            reinterpret_cast<void *>(&launcher_menu_secondary_trace),
-            &launcher_menu_original_share_secondary, false, 0, nullptr},
+            reinterpret_cast<void *>(&launcher_menu_share_entry_secondary),
+            &launcher_menu_entry_original_secondary, false, 0, nullptr},
     };
     const LauncherHookSpec freeform_specs[] = {
         {freeform_target,
@@ -1197,9 +1198,11 @@ bool resolve_launcher_install_plan(LauncherInstallPlan &plan) {
         replacement = reinterpret_cast<void *>(&launcher_shortcut_count_island);
         backup_slot = &launcher_shortcut_count_original;
     } else if (menu_feature_requested(g_install_features, launcher::kSnapshotFeatureShare)) {
-        site = menu_site_for(launcher::kSharePrimaryCall);
-        replacement = reinterpret_cast<void *>(&launcher_menu_primary_trace);
-        backup_slot = &launcher_menu_original_primary;
+        // shareApk 的 BL 只覆盖闭包内部的正常路径；免责声明和状态检查会在到达
+        // 该 BL 之前返回。入口计划才是实际点击的完整接入点。
+        site = menu_site_for(launcher::kSharePrimaryEntry);
+        replacement = reinterpret_cast<void *>(&launcher_menu_share_entry_primary);
+        backup_slot = &launcher_menu_entry_original_primary;
     } else if (menu_feature_requested(g_install_features, launcher::kSnapshotFeatureFreeform)) {
         site = menu_site_for(launcher::kFreeformCall);
         replacement = reinterpret_cast<void *>(&launcher_menu_freeform_island);
@@ -1207,8 +1210,16 @@ bool resolve_launcher_install_plan(LauncherInstallPlan &plan) {
     }
     uintptr_t original = 0;
     uint32_t expected_old = 0;
-    const bool entry_patch = false;
-    if (!decode_call_site(site, &original, &expected_old)) {
+    const bool entry_patch = replacement ==
+        reinterpret_cast<void *>(&launcher_menu_share_entry_primary);
+    if (entry_patch) {
+        expected_old = g_host_points.original[launcher::kSharePrimaryEntry];
+        original = reinterpret_cast<uintptr_t>(site);
+        if (site == nullptr || expected_old == 0) {
+            plan = {};
+            return false;
+        }
+    } else if (!decode_call_site(site, &original, &expected_old)) {
         plan = {};
         return false;
     }

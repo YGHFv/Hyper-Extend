@@ -280,14 +280,18 @@ launcher_menu_secondary_trace:
  * 和阶段对象字段，不修改这两块内存。
  *
  * 主入口若看到免责声明标志位，不调用分享桥，恢复现场后尾跳透明原闭包。
- * 否则只把包名交给桥做转发与取证，随后无条件恢复现场并透明跳回原闭包。
- * 分享闭包本身负责 Dart Future 的建立与异步退栈；入口蹦床不能直接 ret，
- * 否则会把异步调用改写成同步返回，破坏宿主菜单的分发链。
+ * 桥返回 ACK 时，入口已经完成一次完整宿主闭包调用所需的返回语义，恢复现场
+ * 后直接返回 Dart null；这样不会再次执行原闭包并重复提交分享请求。桥失败或
+ * 包名无法解析时才透明尾跳原闭包，保留宿主原有行为。
  */
     .hidden launcher_menu_share_entry_primary
     .globl  launcher_menu_share_entry_primary
     .type   launcher_menu_share_entry_primary, %function
 launcher_menu_share_entry_primary:
+    // 入口替换跳过宿主闭包前两条 Dart 序言；直接用原调用者帧解析参数，
+    // ACK 返回时再让宿主看到与原闭包相同的帧指针。
+    stp     x29, x30, [x15, #-16]!
+    mov     x29, x15
     sub     sp, sp, #1568
     stp     x19, x20, [sp]
     stp     x21, x22, [sp, #16]
@@ -337,19 +341,21 @@ launcher_menu_share_entry_primary:
     str     x17, [sp, #752]
     str     x18, [sp, #760]
 
-    // 主闭包：[x29+0x10] 的 w0 bit#4 表示免责声明分支，不在此处接管。
+    // 主闭包的 [x29+0x10] bit#4 是免责声明分支；该分支必须继续执行原闭包。
     ldr     x9, [x29, #0x10]
     tbnz    w9, #4, .Lshare_entry_primary_fallback
-    // outer = [x29+0x18]；stage = low32[outer+7] + (heap_bits << 32)；
-    // package = low32[stage+0xf] + (heap_bits << 32)。
+    // outer = [x29+0x18]；stage = low32[outer+0x17] + (heap_bits << 32)；
+    // package = low32[stage+0xf] + (heap_bits << 32)。免责声明分支仍由原闭包
+    // 负责，入口只接管能够解析出包名的正常点击路径。
     ldr     x9, [x29, #0x18]
-    ldur    w10, [x9, #7]
+    ldur    w10, [x9, #0x17]
     add     x10, x10, x28, lsl #32
     ldur    w1, [x10, #0xf]
     add     x1, x1, x28, lsl #32
     mov     w0, #1
     bl      launcher_share_entry_bridge
-    b       .Lshare_entry_primary_fallback
+    cbnz    w0, .Lshare_entry_primary_fallback
+    b       .Lshare_entry_primary_acked
 
 .Lshare_entry_primary_fallback:
     ldr     x9, [sp, #608]
@@ -401,12 +407,66 @@ launcher_menu_share_entry_primary:
     ldr     x16, [x16]
     br      x16
 
+.Lshare_entry_primary_acked:
+    ldr     x9, [sp, #608]
+    msr     nzcv, x9
+    ldr     x16, [sp, #744]
+    ldr     x17, [sp, #752]
+    ldr     x18, [sp, #760]
+    ldr     x14, [sp, #728]
+    ldr     x15, [sp, #736]
+    ldr     x12, [sp, #712]
+    ldr     x13, [sp, #720]
+    ldr     x10, [sp, #696]
+    ldr     x11, [sp, #704]
+    ldr     x8, [sp, #680]
+    ldr     x6, [sp, #664]
+    ldr     x7, [sp, #672]
+    ldr     x4, [sp, #648]
+    ldr     x5, [sp, #656]
+    ldr     x2, [sp, #632]
+    ldr     x3, [sp, #640]
+    ldr     x0, [sp, #616]
+    ldr     x1, [sp, #624]
+    ldr     x9, [sp, #688]
+    ldp     q30, q31, [sp, #576]
+    ldp     q28, q29, [sp, #544]
+    ldp     q26, q27, [sp, #512]
+    ldp     q24, q25, [sp, #480]
+    ldp     q22, q23, [sp, #448]
+    ldp     q20, q21, [sp, #416]
+    ldp     q18, q19, [sp, #384]
+    ldp     q16, q17, [sp, #352]
+    ldp     q14, q15, [sp, #320]
+    ldp     q12, q13, [sp, #288]
+    ldp     q10, q11, [sp, #256]
+    ldp     q8, q9, [sp, #224]
+    ldp     q6, q7, [sp, #192]
+    ldp     q4, q5, [sp, #160]
+    ldp     q2, q3, [sp, #128]
+    ldp     q0, q1, [sp, #96]
+    // x29 仍需恢复为已建立的 Dart 帧；x30 从该帧弹出原调用者返回地址，
+    // 保持宿主原始闭包的退栈语义。
+    ldr     x29, [sp, #80]
+    ldp     x27, x28, [sp, #64]
+    ldp     x25, x26, [sp, #48]
+    ldp     x23, x24, [sp, #32]
+    ldp     x21, x22, [sp, #16]
+    ldp     x19, x20, [sp]
+    add     sp, sp, #1568
+    mov     x0, x22
+    ldp     x29, x30, [x15], #16
+    ret
+
     .size launcher_menu_share_entry_primary, .-launcher_menu_share_entry_primary
 
     .hidden launcher_menu_share_entry_secondary
     .globl  launcher_menu_share_entry_secondary
     .type   launcher_menu_share_entry_secondary, %function
 launcher_menu_share_entry_secondary:
+    // 次入口同样直接使用原调用者帧，避免入口蹦床改变 Dart 栈深度。
+    stp     x29, x30, [x15, #-16]!
+    mov     x29, x15
     sub     sp, sp, #1568
     stp     x19, x20, [sp]
     stp     x21, x22, [sp, #16]
@@ -452,15 +512,17 @@ launcher_menu_share_entry_secondary:
     str     x17, [sp, #752]
     str     x18, [sp, #760]
 
-    // 次闭包：outer = [x29+0x10]，其余字段解析与主闭包相同。
+    // 次闭包：outer = [x29+0x10]，stage = low32[outer+0x17]，其余字段解析
+    // 与主闭包相同。
     ldr     x9, [x29, #0x10]
-    ldur    w10, [x9, #7]
+    ldur    w10, [x9, #0x17]
     add     x10, x10, x28, lsl #32
     ldur    w1, [x10, #0xf]
     add     x1, x1, x28, lsl #32
     mov     w0, #2
     bl      launcher_share_entry_bridge
-    b       .Lshare_entry_secondary_fallback
+    cbnz    w0, .Lshare_entry_secondary_fallback
+    b       .Lshare_entry_secondary_acked
 
 .Lshare_entry_secondary_fallback:
     ldr     x9, [sp, #608]
@@ -511,6 +573,56 @@ launcher_menu_share_entry_secondary:
     add     x16, x16, :lo12:launcher_menu_entry_original_secondary
     ldr     x16, [x16]
     br      x16
+
+.Lshare_entry_secondary_acked:
+    ldr     x9, [sp, #608]
+    msr     nzcv, x9
+    ldr     x16, [sp, #744]
+    ldr     x17, [sp, #752]
+    ldr     x18, [sp, #760]
+    ldr     x14, [sp, #728]
+    ldr     x15, [sp, #736]
+    ldr     x12, [sp, #712]
+    ldr     x13, [sp, #720]
+    ldr     x10, [sp, #696]
+    ldr     x11, [sp, #704]
+    ldr     x8, [sp, #680]
+    ldr     x6, [sp, #664]
+    ldr     x7, [sp, #672]
+    ldr     x4, [sp, #648]
+    ldr     x5, [sp, #656]
+    ldr     x2, [sp, #632]
+    ldr     x3, [sp, #640]
+    ldr     x0, [sp, #616]
+    ldr     x1, [sp, #624]
+    ldr     x9, [sp, #688]
+    ldp     q30, q31, [sp, #576]
+    ldp     q28, q29, [sp, #544]
+    ldp     q26, q27, [sp, #512]
+    ldp     q24, q25, [sp, #480]
+    ldp     q22, q23, [sp, #448]
+    ldp     q20, q21, [sp, #416]
+    ldp     q18, q19, [sp, #384]
+    ldp     q16, q17, [sp, #352]
+    ldp     q14, q15, [sp, #320]
+    ldp     q12, q13, [sp, #288]
+    ldp     q10, q11, [sp, #256]
+    ldp     q8, q9, [sp, #224]
+    ldp     q6, q7, [sp, #192]
+    ldp     q4, q5, [sp, #160]
+    ldp     q2, q3, [sp, #128]
+    ldp     q0, q1, [sp, #96]
+    // ACK 与宿主原闭包一样，从已建立的 Dart 帧弹出调用者 x29/x30。
+    ldr     x29, [sp, #80]
+    ldp     x27, x28, [sp, #64]
+    ldp     x25, x26, [sp, #48]
+    ldp     x23, x24, [sp, #32]
+    ldp     x21, x22, [sp, #16]
+    ldp     x19, x20, [sp]
+    add     sp, sp, #1568
+    mov     x0, x22
+    ldp     x29, x30, [x15], #16
+    ret
 
     .size launcher_menu_share_entry_secondary, .-launcher_menu_share_entry_secondary
 

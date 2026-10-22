@@ -44,19 +44,22 @@ constexpr Word kShare[] = {
     {0xf81f03a0}, {0x94000000, 0xfc000000}, {0xf85f03a1}, {0xf85f83a3},
     {0x91400362, 0xffc003ff}, {0xf9400042, 0xffc003ff},
 };
-// 两个分享闭包的入口都先建立 fp 帧，再从调用者帧取外层对象；外层对象 +7
-// 指向阶段对象，阶段对象 +0xf 才是分享包名。主闭包还带免责声明分支，次闭包
-// 直接分享。这里只固定跨版本稳定的取参、字段和调用结构，不把 BL 位移当作
-// 版本指纹。
+// 两个分享闭包的入口都先建立 fp 帧，再从调用者帧取外层对象；当前宿主的
+// 外层对象 +0x17 指向阶段对象，阶段对象 +0xf 才是分享包名。主闭包还带
+// 免责声明分支，次闭包直接分享。这里只固定取参、字段和分支结构，不把
+// BL 位移当作版本指纹。
 constexpr Word kSharePrimaryEntry[] = {
-    {0xa9bf79fd}, {0xaa0f03fd}, {0xf9401ba0}, {0xb8400011, 0xffc003ff},
-    {0x8b1c0021}, {0xf9400ba0}, {0x37180060},
+    {0xa9bf79fd}, {0xaa0f03fd}, {0xf9400fa0}, {0xb8417001},
+    {0x8b1c8021}, {0xf9400ba0}, {0x37200000, 0xfff8001f},
+    {0xb8417020}, {0x8b1c8000}, {0xb8417002}, {0x8b1c8042},
+    {0x6b16005f}, {0x54000001, 0xff00001f}, {0xaa1603e0},
+    {0x14000000, 0xfc000000}, {0xb8407040},
 };
 constexpr Word kShareSecondaryEntry[] = {
-    {0xa9bf79fd}, {0xaa0f03fd}, {0xf9400ba0}, {0xb8400011, 0xffc003ff},
-    {0x8b1c0021}, {0xb8400010, 0xffc003ff}, {0x8b1c0000}, {0xb8400012, 0xffc003ff},
-    {0x8b1c0042}, {0x6b16005f}, {0x54000001, 0xff00001f}, {0xaa1603e0},
-    {0x14000002}, {0xb8400040, 0xffc003ff}, {0x8b1c0000},
+    {0xa9bf79fd}, {0xaa0f03fd}, {0xf9400ba0}, {0xb8417001},
+    {0x8b1c8021}, {0xb8413020}, {0x8b1c8000}, {0xb8417002},
+    {0x8b1c8042}, {0x6b16005f}, {0x54000001, 0xff00001f}, {0xaa1603e0},
+    {0x14000000, 0xfc000000}, {0xb8407040}, {0x8b1c8000},
 };
 constexpr Word kSharePrimaryCallTail[] = {{0xaa1603e0}, {0xaa1d03ef}, {0xa8c179fd}, {0xd65f03c0}};
 constexpr Word kShareSecondaryCallTail[] = {
@@ -287,10 +290,11 @@ inline bool resolve(const dl_phdr_info &image, HookPoints *out) {
                 out->freeform_valid_exit_words, &out->freeform_valid_exit_count))
             out->address[launcher::kFreeformValid] = 0;
     }
-    // 入口只在自身唯一命中和内部调用结构也完整时启用；否则安装计划 fail-closed。
-    if (matches[5] == 1 && out->address[kSharePrimaryCall] != 0)
+    // 入口只在自身唯一命中时启用；内部 BL 调用点是独立诊断证据，不能作为
+    // 入口安装的前置条件，因为当前 AOT 的闭包入口与内部调用点版本布局不同。
+    if (matches[5] == 1)
         out->address[launcher::kSharePrimaryEntry] = starts[5];
-    if (matches[6] == 1 && out->address[kShareSecondaryCall] != 0)
+    if (matches[6] == 1)
         out->address[launcher::kShareSecondaryEntry] = starts[6];
     bool any = false;
     for (size_t i = 0; i < kHookPointCount; ++i) {

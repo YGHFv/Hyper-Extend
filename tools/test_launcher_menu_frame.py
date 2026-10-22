@@ -150,7 +150,7 @@ class MenuFrameTest(unittest.TestCase):
             self.assertIn(slot, fallback_body)
             self.assertIn("br      x16", fallback_body)
 
-    def test_share_entry_bridge_always_falls_back_to_original_closure(self):
+    def test_share_entry_ack_consumes_closure_and_failure_falls_back(self):
         raw, sites = fixture()
         host = ElfImage(bytes(raw))
         for primary in [True, False]:

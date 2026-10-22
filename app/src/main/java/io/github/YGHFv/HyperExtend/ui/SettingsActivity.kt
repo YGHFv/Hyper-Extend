@@ -174,7 +174,11 @@ class SettingsActivity : ComponentActivity() {
         if (intent.action != LauncherShareBridge.LAUNCH_ACTION) return
         intent.removeExtra(LauncherShareBridge.EXTRA_SHARE_URI)
         io.github.YGHFv.HyperExtend.core.ModuleLog.info("launcher share activity: uri received")
-        runCatching { LauncherShareBridge.launchFromPending(this, uri) }
+        runCatching {
+            check(LauncherShareBridge.launchFromPending(this, uri)) {
+                "待分享文件不存在或 URI 无效"
+            }
+        }
             .onSuccess { io.github.YGHFv.HyperExtend.core.ModuleLog.info(
                 "launcher share activity: chooser started",
             ) }

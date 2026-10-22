@@ -681,7 +681,9 @@ PrepareError prepare_transparent_entry_island(uintptr_t site, uintptr_t replacem
         return PrepareError::kSealFailed;
     }
     __atomic_store_n(original_trampoline_slot,
-        island_address + kTrampolineOffset, __ATOMIC_RELEASE);
+        // 入口蹦床已经执行原闭包前两条 Dart 序言；回退只能从复制序言的
+        // 第三条开始，否则会重复压入 Dart 帧并破坏 x15/x29。
+        island_address + kTrampolineOffset + 2 * sizeof(uint32_t), __ATOMIC_RELEASE);
     out->sealed = true;
     out->slots_published = true;
     return PrepareError::kNone;

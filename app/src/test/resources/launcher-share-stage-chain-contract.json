@@ -25,12 +25,12 @@
     "validityReplacementsEnabled": true,
     "validityReplacementKind": "async-false-result-exit-island",
     "requiredActions": [
-      "kSharePrimaryCall",
-      "kShareSecondaryCall"
+      "kSharePrimaryEntry",
+      "kShareSecondaryEntry"
     ],
     "actionIslands": [
-      "launcher_menu_primary_trace",
-      "launcher_menu_secondary_trace"
+      "launcher_menu_share_entry_primary",
+      "launcher_menu_share_entry_secondary"
     ],
     "requiredValidityPoints": [
       "kShareValid",

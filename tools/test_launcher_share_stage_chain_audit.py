@@ -137,12 +137,12 @@ class ContractTest(unittest.TestCase):
     def test_action_plan_requires_both_share_islands(self):
         changed = sources()
         changed["native"] = changed["native"].replace(
-            "const bool share_actions = g_share_primary_island.published &&\n"
-            "        g_share_secondary_island.published;",
-            "const bool share_actions = g_share_primary_island.published;",
+            "const bool share_actions = g_share_entry_primary_island.published &&\n"
+            "        g_share_entry_secondary_island.published;",
+            "const bool share_actions = g_share_entry_primary_island.published;",
             1,
         )
-        with self.assertRaisesRegex(AuditError, "分享主、次动作岛页必须分别发布"):
+        with self.assertRaisesRegex(AuditError, "分享主、次入口岛页必须分别发布"):
             audit.verify_contract(contract(), changed)
 
     def test_native_install_must_hook_async_validity_false_exits(self):

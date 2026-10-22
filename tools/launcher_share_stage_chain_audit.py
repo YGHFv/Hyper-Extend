@@ -41,11 +41,11 @@ def verify_action_hook_plan(contract, native_source):
             "async-false-result-exit-island",
             "异步可见性必须在 false 结果出口适配")
     require(plan["requiredActions"] == [
-        "kSharePrimaryCall", "kShareSecondaryCall",
-    ], "动作安装合同必须包含分享主、次调用点")
+        "kSharePrimaryEntry", "kShareSecondaryEntry",
+    ], "动作安装合同必须包含分享主、次闭包入口")
     require(plan["actionIslands"] == [
-        "launcher_menu_primary_trace", "launcher_menu_secondary_trace",
-    ], "动作安装合同必须绑定主、次分享蹦床")
+        "launcher_menu_share_entry_primary", "launcher_menu_share_entry_secondary",
+    ], "动作安装合同必须绑定主、次分享入口蹦床")
     require(plan["requiredValidityPoints"] == ["kShareValid", "kFreeformValid"],
             "分享和小窗的异步可见性识别点必须齐全")
     require(plan["validityExitIslands"] == [
@@ -56,21 +56,21 @@ def verify_action_hook_plan(contract, native_source):
         r"const bool share_actions = ([^;]+);", native_source)
     require(share_definition is not None and all(
         name in share_definition.group(1) for name in (
-            "g_share_primary_island.published",
-            "g_share_secondary_island.published",
-        )), "分享主、次动作岛页必须分别发布")
+            "g_share_entry_primary_island.published",
+            "g_share_entry_secondary_island.published",
+        )), "分享主、次入口岛页必须分别发布")
     freeform_definition = re.search(
         r"const bool freeform = ([^;]+);", native_source)
     require(freeform_definition is not None and all(
         name in freeform_definition.group(1) for name in (
             "g_freeform_island.published",
         )), "小窗安装完成判定必须要求动作岛页已发布")
-    require("menu_site_for(launcher::kSharePrimaryCall)" in native_source
-            and "menu_site_for(launcher::kShareSecondaryCall)" in native_source,
-            "安装计划必须解析分享主、次调用点")
-    require("reinterpret_cast<void *>(&launcher_menu_primary_trace)" in native_source
-            and "reinterpret_cast<void *>(&launcher_menu_secondary_trace)" in native_source,
-            "安装计划必须把主、次调用点接到对应分享蹦床")
+    require("menu_site_for(launcher::kSharePrimaryEntry)" in native_source
+            and "menu_site_for(launcher::kShareSecondaryEntry)" in native_source,
+            "安装批次必须解析分享主、次闭包入口")
+    require("reinterpret_cast<void *>(&launcher_menu_share_entry_primary)" in native_source
+            and "reinterpret_cast<void *>(&launcher_menu_share_entry_secondary)" in native_source,
+            "安装批次必须把主、次闭包入口接到对应分享蹦床")
     install_body = native_source.split("int install_launcher_batch(", 1)[1].split(
         "// 受控安装计划的解析", 1)[0]
     require("g_share_valid_specs" in install_body

@@ -172,6 +172,8 @@ def run_share_entry_frame(menu, host, primary, bridge_result, disclaimer=False):
     original_slot = module + symbol(
         menu, "launcher_menu_entry_original_primary" if primary
         else "launcher_menu_entry_original_secondary")
+    # 真实入口回退槽指向透明岛复制序言的第三条；前两条已经由入口蹦床
+    # 执行，因此回退不会重复压入 Dart 帧。夹具直接把该槽模拟为第三条目标。
     machine.mem_write(original_slot, struct.pack("<Q", target))
     machine.mem_write(target, struct.pack("<I", 0xD503201F))
 
@@ -186,7 +188,7 @@ def run_share_entry_frame(menu, host, primary, bridge_result, disclaimer=False):
         machine.mem_write(frame + 0x10, struct.pack("<Q", 0x10 if disclaimer else 0))
     # x28 在本试验中固定为零，tagged 指针的低 32 位就是对象完整地址。
     # 不能在这里减掉堆基址，否则闭包会把字段解释成另一个未初始化对象。
-    machine.mem_write(outer + 7, struct.pack("<I", stage & 0xFFFFFFFF))
+    machine.mem_write(outer + 0x17, struct.pack("<I", stage & 0xFFFFFFFF))
     machine.mem_write(stage + 0xF, struct.pack("<I", package & 0xFFFFFFFF))
     machine.mem_write(package - 1, struct.pack("<Q", 94 << 12))
     machine.mem_write(package + 7, struct.pack("<I", 19))
@@ -197,6 +199,9 @@ def run_share_entry_frame(menu, host, primary, bridge_result, disclaimer=False):
 
     expected = {index: 0x5150000000000000 | (index << 16) | (1 if primary else 2)
                 for index in range(31)}
+    # 入口蹦床补执行原始 Dart 序言；入口前 x15 还要再向上 16 字节，执行
+    # `stp ..., [x15, #-16]!` 后才得到这里的 Dart 帧。回退继续从第三条
+    # 原指令执行时，x15/x29 必须保持已建立的帧；它们与 C 栈 SP 是两套栈指针。
     expected[15], expected[22], expected[28] = frame, heap + 0x4001, 0
     expected[29], expected[30] = frame, source + 0x234
     expected[1] = package
@@ -205,6 +210,7 @@ def run_share_entry_frame(menu, host, primary, bridge_result, disclaimer=False):
                  for index in range(32)]
     for index, value in expected.items():
         machine.reg_write(getattr(reg, f"UC_ARM64_REG_X{index}"), value)
+    machine.reg_write(reg.UC_ARM64_REG_X15, frame + 16)
     for index, value in enumerate(initial_q):
         machine.reg_write(getattr(reg, f"UC_ARM64_REG_Q{index}"), value)
     machine.reg_write(reg.UC_ARM64_REG_SP, stack + 0x8000)
@@ -231,6 +237,8 @@ def run_share_entry_frame(menu, host, primary, bridge_result, disclaimer=False):
             caller_returned.append(True)
             require(m.reg_read(reg.UC_ARM64_REG_SP) == stack + 0x8000,
                     "返回调用者前未恢复栈")
+            require(m.reg_read(reg.UC_ARM64_REG_X15) == frame + 16,
+                    "ACK 路径未弹出 Dart 帧")
             require(m.reg_read(reg.UC_ARM64_REG_NZCV) == initial_nzcv,
                     "返回调用者前未恢复条件标志")
             actual_q = [m.reg_read(getattr(reg, f"UC_ARM64_REG_Q{index}"))
@@ -265,14 +273,16 @@ def run_share_entry_frame(menu, host, primary, bridge_result, disclaimer=False):
         raise AssertionError(
             "入口帧执行失败：%s pc=%#x sp=%#x hook_pc=%#x" %
             (error, pc, sp, locals().get("current_pc", 0))) from error
-    # 无论桥结果如何，入口都只负责转发和取证，点击语义必须由原闭包完成。
-    require(fallback_entered == [True], "入口没有透明回退到原闭包")
+    # ACK 成功消费闭包；桥失败或免责声明分支才透明回退到原闭包。
+    require(fallback_entered == ([] if bridge_result == 0 and not disclaimer else [True]),
+            "入口 ACK/失败路径没有按合同消费或回退")
     # 免责声明分支不调用桥；其它路径必须恰好到达一次。
     require(bridge_calls == ([] if disclaimer else [(1 if primary else 2, package)]),
             "入口桥调用次数或参数不符")
-    require(not caller_returned, "入口直接返回调用者，绕过了原闭包")
+    require(caller_returned == ([True] if bridge_result == 0 and not disclaimer else []),
+            "入口 ACK 路径没有直接返回，或失败路径错误绕过原闭包")
     return {"入口": "主" if primary else "次", "ACK": bridge_result,
-            "回退": True, "桥参数": "通过"}
+            "回退": bool(fallback_entered), "桥参数": "通过"}
 
 
 def run_validity_frame(menu, host, share, original_result, feature_state):
