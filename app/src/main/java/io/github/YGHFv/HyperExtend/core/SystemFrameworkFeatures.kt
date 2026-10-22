@@ -873,6 +873,26 @@ val SYSTEM_FRAMEWORK_FEATURES: List<HyperFeature> = listOf(
         license = "AGPL-3.0",
         defaultEnabled = false,
         requirement = "需要同时启用系统框架、系统界面与音质音效作用域",
+        config = listOf(
+            HyperChoice(
+                key = MISOUND_LOCK_SELECTION_KEY,
+                title = "连接耳机时锁定选择",
+                summary = "避免音效磁贴或设置页在播放期间意外切换",
+                entries = MISOUND_LOCK_SELECTION_CHOICES,
+            ),
+            HyperChoice(
+                key = MISOUND_REMEMBER_DEVICE_KEY,
+                title = "按设备记忆音效",
+                summary = "再次连接同一副耳机时恢复上次选择的音效",
+                entries = MISOUND_REMEMBER_DEVICE_CHOICES,
+            ),
+            HyperChoice(
+                key = MISOUND_DEFAULT_EFFECT_KEY,
+                title = "默认音效",
+                summary = "没有设备记忆时应用；需要设备支持对应音效",
+                entries = MISOUND_DEFAULT_EFFECT_CHOICES,
+            ),
+        ),
         group = ScopeFeatureGroup.SYSTEM_FRAMEWORK_AUDIO,
     ),
 )

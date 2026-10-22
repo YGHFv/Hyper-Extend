@@ -22,12 +22,13 @@ import java.util.WeakHashMap
 /** Share loader discovery so volume, control-center and shortcut adapters do not compete. */
 internal object SystemUiPluginHooks {
     const val PACKAGE = "miui.systemui.plugin"
+    private const val MISOUND_FEATURE = "system_framework_misound_effect"
     private val loaders = Collections.newSetFromMap(WeakHashMap<ClassLoader, Boolean>())
 
     fun install(loader: ClassLoader, settings: HookSettings): List<String> {
         // 「控制中心亮度值 / 音量值」两张卡片已并入 slider_percentage（原生原位数值方式），
         // 所以这里只有 PercentageSettings.FEATURE 一个条目；Style 决定装浮层还是原生原位标签。
-        val appearance = listOf(AppVolumeSettings.FEATURE, "control_center_hide_edit", SecurityFooterHooks.FEATURE, VolumeFooterHooks.FEATURE, VolumeThemeHooks.FEATURE, StockTilesPolicy.FEATURE, GmsTilePolicy.FEATURE, TaplusTilePolicy.FEATURE, SunlightTilePolicy.FEATURE, AudioMuteSettings.FEATURE, VolumeLongPressPolicy.FEATURE, TileCornerSettings.FEATURE, TileColorSettings.FEATURE, TileMaterialSettings.FEATURE, CardTileColorSettings.FEATURE, CardTileListSettings.FEATURE, PercentageSettings.FEATURE)
+        val appearance = listOf(AppVolumeSettings.FEATURE, MISOUND_FEATURE, "control_center_hide_edit", SecurityFooterHooks.FEATURE, VolumeFooterHooks.FEATURE, VolumeThemeHooks.FEATURE, StockTilesPolicy.FEATURE, GmsTilePolicy.FEATURE, TaplusTilePolicy.FEATURE, SunlightTilePolicy.FEATURE, AudioMuteSettings.FEATURE, VolumeLongPressPolicy.FEATURE, TileCornerSettings.FEATURE, TileColorSettings.FEATURE, TileMaterialSettings.FEATURE, CardTileColorSettings.FEATURE, CardTileListSettings.FEATURE, PercentageSettings.FEATURE)
             .filter { settings.isOn(it) }
         val shortcuts = (LockscreenShortcutPolicy.features + LockscreenMaterialSettings.FEATURE).filter { settings.isOn(it) }
         val enabled = appearance + shortcuts
@@ -37,6 +38,7 @@ internal object SystemUiPluginHooks {
         val info = factory.getDeclaredField("pluginAppInfo").apply { isAccessible = true }
         var shortcutDiscovery = shortcuts.isNotEmpty()
         var tilesDiscovery = StockTilesPolicy.FEATURE in appearance || GmsTilePolicy.FEATURE in appearance || TaplusTilePolicy.FEATURE in appearance || SunlightTilePolicy.FEATURE in appearance || AudioMuteSettings.FEATURE in appearance
+        var miSoundDiscovery = MISOUND_FEATURE in appearance
         var pressDiscovery = VolumeLongPressPolicy.FEATURE in appearance
         var editDiscovery = EditButtonHooks.FEATURE in appearance
         val tileAppearance = setOf(TileCornerSettings.FEATURE, TileColorSettings.FEATURE)
@@ -51,6 +53,7 @@ internal object SystemUiPluginHooks {
         fun discover(packageName: String, pluginLoader: ClassLoader) {
             val selected = when (packageName) {
                 PACKAGE -> appearance.filter { (it !in setOf(StockTilesPolicy.FEATURE, GmsTilePolicy.FEATURE, TaplusTilePolicy.FEATURE, SunlightTilePolicy.FEATURE, AudioMuteSettings.FEATURE) || tilesDiscovery) &&
+                    (it != MISOUND_FEATURE || miSoundDiscovery) &&
                     (it != VolumeLongPressPolicy.FEATURE || pressDiscovery) &&
                     (it != EditButtonHooks.FEATURE || editDiscovery) &&
                     (it !in tileAppearance || cornerDiscovery) &&
@@ -84,6 +87,7 @@ internal object SystemUiPluginHooks {
                 runCatching {
                     val count = when (id) {
                         AppVolumeSettings.FEATURE -> AppVolumeEntryHooks.installPlugin(pluginLoader, settings)
+                        MISOUND_FEATURE -> MiSoundEffectTileHooks.install(pluginLoader, settings)
                         StockTilesPolicy.FEATURE -> StockTilesHooks.installPlugin(pluginLoader, loader, settings)
                         GmsTilePolicy.FEATURE -> GmsTileEditorHooks.installPlugin(pluginLoader)
                         TaplusTilePolicy.FEATURE -> TaplusTileEditorHooks.installPlugin(pluginLoader)
@@ -102,7 +106,7 @@ internal object SystemUiPluginHooks {
                         else -> 0
                     }
                     val verification = if (id in tileAppearance ||
-                        id in setOf(EditButtonHooks.FEATURE, VolumeThemeHooks.FEATURE, VolumeFooterHooks.FEATURE,
+                        id in setOf(MISOUND_FEATURE, EditButtonHooks.FEATURE, VolumeThemeHooks.FEATURE, VolumeFooterHooks.FEATURE,
                             TileMaterialSettings.FEATURE, PercentageSettings.FEATURE, CardTileColorSettings.FEATURE, CardTileListSettings.FEATURE, StockTilesPolicy.FEATURE, GmsTilePolicy.FEATURE, TaplusTilePolicy.FEATURE, SunlightTilePolicy.FEATURE, AudioMuteSettings.FEATURE))
                         "source targets reviewed; runtime acceptance pending"
                     else "static targets verified; runtime acceptance pending"
@@ -111,7 +115,7 @@ internal object SystemUiPluginHooks {
                 }.onFailure { ModuleLog.error("systemui_plugin/$id unsupported; retaining native behavior", it) }
             }
         }
-        if (shortcuts.isNotEmpty() || tilesDiscovery || pressDiscovery || editDiscovery || cornerDiscovery || themeDiscovery || footerDiscovery || securityDiscovery || cardColorDiscovery || cardListDiscovery || percentageDiscovery || materialDiscovery) {
+        if (shortcuts.isNotEmpty() || tilesDiscovery || miSoundDiscovery || pressDiscovery || editDiscovery || cornerDiscovery || themeDiscovery || footerDiscovery || securityDiscovery || cardColorDiscovery || cardListDiscovery || percentageDiscovery || materialDiscovery) {
             val discoveryReady = runCatching {
                 val instance = Class.forName("com.android.systemui.shared.plugins.PluginInstance", false, loader)
                 val callers = listOf(factory.getDeclaredMethod("createPlugin", instance), factory.getDeclaredMethod("createPluginContext"))
@@ -119,6 +123,7 @@ internal object SystemUiPluginHooks {
             }.getOrDefault(false)
             shortcutDiscovery = shortcutDiscovery && discoveryReady
             tilesDiscovery = tilesDiscovery && discoveryReady
+            miSoundDiscovery = miSoundDiscovery && discoveryReady
             pressDiscovery = pressDiscovery && discoveryReady
             editDiscovery = editDiscovery && discoveryReady
             cornerDiscovery = cornerDiscovery && discoveryReady

@@ -17,6 +17,7 @@ import io.github.YGHFv.HyperExtend.core.ModuleLog
 import io.github.YGHFv.HyperExtend.core.AppVolumeSettings
 import io.github.YGHFv.HyperExtend.hook.feature.systemui.SystemUiPluginHooks
 import io.github.YGHFv.HyperExtend.hook.feature.volume.MiSoundVolumeHooks
+import io.github.YGHFv.HyperExtend.hook.feature.volume.MiSoundEffectHooks
 import io.github.YGHFv.HyperExtend.core.NFC_IMAGE_KEY
 import io.github.YGHFv.HyperExtend.hook.feature.ScreenshotClipboard
 import io.github.YGHFv.HyperExtend.hook.feature.MilinkClipboardGuard
@@ -93,9 +94,16 @@ internal object HookDispatcher {
      */
     private fun hostTask(packageName: String): HostTask? = when (packageName) {
         AppVolumeSettings.PACKAGE -> { loader, settings ->
-            buildList {
-                installSystemUiFeature(settings, AppVolumeSettings.FEATURE) { MiSoundVolumeHooks.install(loader) }
-            }.joinToString()
+            val parts = mutableListOf<String>()
+            parts.installSystemUiFeature(settings, AppVolumeSettings.FEATURE) {
+                MiSoundVolumeHooks.install(loader)
+            }
+            if (settings.isOn("system_framework_misound_effect")) {
+                runCatching { MiSoundEffectHooks.install(loader, settings) }
+                    .onSuccess { parts += "system_framework_misound_effect=$it" }
+                    .onFailure { ModuleLog.error("misound_effect MiSound hooks failed", it) }
+            }
+            parts.joinToString().ifEmpty { "no feature enabled" }
         }
         "com.miui.screenshot" -> { loader, settings ->
             val parts = mutableListOf<String>()

@@ -79,6 +79,7 @@ internal object SystemFrameworkHooks {
             "gms_doze" to { SystemFrameworkGmsDozeHooks.install(loader, settings) },
             "input" to { SystemFrameworkInputHooks.install(loader, settings) },
             "mipad" to { SystemFrameworkMipadHooks.install(loader, settings) },
+            "misound" to { SystemFrameworkMiSoundHooks.install(loader, settings) },
             "lock_task" to { SystemLockTaskHooks.installServer(loader, settings) },
             "hook_entry" to { SystemFrameworkHookEntryHooks.install(loader, settings) },
         )
