@@ -36,6 +36,7 @@ import io.github.YGHFv.HyperExtend.hook.feature.security.AnalyticsHooks
 import io.github.YGHFv.HyperExtend.hook.feature.security.CloudServiceHooks
 import io.github.YGHFv.HyperExtend.hook.feature.security.HtmlViewerHooks
 import io.github.YGHFv.HyperExtend.hook.feature.security.TrustServiceHooks
+import io.github.YGHFv.HyperExtend.hook.feature.settings.SettingsFeatureHooks
 import io.github.YGHFv.HyperExtend.hook.feature.statusbar.ScreenshotStatusBar
 import io.github.YGHFv.HyperExtend.hook.feature.statusbar.StatusBarBatteryStyle
 import io.github.YGHFv.HyperExtend.hook.feature.statusbar.BatteryDetailHooks
@@ -143,6 +144,7 @@ internal object HookDispatcher {
             (ControlCenterHooks.installSettings(loader, settings) +
                 io.github.YGHFv.HyperExtend.hook.feature.systemui.NotificationManagementHooks.installSettings(loader, settings) +
                 NotificationImportanceHooks.installSettings(loader, settings) +
+                "settings_features=${SettingsFeatureHooks.install(loader, settings)}" +
                 PasskeyFix.installPackage(packageName, loader, settings)).joinToString()
         }
         HostPlatform.SECURITY_CENTER -> { loader, settings ->

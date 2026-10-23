@@ -1,4 +1,7 @@
 <resources>
     <string name="module_name">澎湃补全计划</string>
     <string name="module_description">把散落在各个小模块里的澎湃 OS 补全功能收进一个开关面板：手势横条、壁纸取色、原生通知图标、NFC 卡面、通行密钥</string>
+    <string name="system_settings_wifipassword_btn_title">查看</string>
+    <string name="system_settings_wifi_password_label">密码</string>
+    <string name="system_settings_wifi_password_dlgtitle">WiFi 详情</string>
 </resources>

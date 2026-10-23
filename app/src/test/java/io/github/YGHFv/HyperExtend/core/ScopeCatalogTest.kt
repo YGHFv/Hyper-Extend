@@ -18,7 +18,7 @@ class ScopeCatalogTest {
 
     @Test fun homeKeepsPriorityWhileExcludingSecondaryOnlyHosts() {
         assertEquals(
-            listOf("system_server", "systemui", "launcher", "securitycenter",
+            listOf("system_server", "systemui", "launcher", "settings", "securitycenter",
                 "packageinstaller", "guardprovider", "joyose", "trustservice", "cloudservice",
                 "analytics", "htmlviewer", "market", "screenshot", "milink", "mishare",
                 "tsmclient"),

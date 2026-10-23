@@ -575,7 +575,7 @@ val FEATURES: List<HyperFeature> = listOf(
         requirement = "需重启设备生效",
         group = ScopeFeatureGroup.SYSTEM_FRAMEWORK_DISPLAY_NOTIFY,
     ),
-) + SYSTEM_FRAMEWORK_FEATURES + SECURITY_COMPONENT_FEATURES + STATUS_BAR_FEATURES +
+) + SYSTEM_FRAMEWORK_FEATURES + SETTINGS_FEATURES + SECURITY_COMPONENT_FEATURES + STATUS_BAR_FEATURES +
     SYSTEM_UI_FEATURES + APP_VOLUME_FEATURE
 
 /** 按 id 取功能；找不到返回 null——调用方负责记日志，不抛异常（hook 侧绝不能因设置异常崩）。 */
