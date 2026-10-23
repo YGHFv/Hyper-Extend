@@ -18,68 +18,82 @@ internal object SystemFrameworkCorePatchHooks {
     private const val PM_UTILS = "com.android.server.pm.PackageManagerServiceUtils"
     private const val SIGNING_DETAILS = "android.content.pm.SigningDetails"
 
+    /** 总开关与子项的设置键；子项键必须与 `core/SystemFrameworkFeatures` 里的登记逐字一致。 */
+    private const val FEATURE = "system_framework_core_patch"
+    private const val OP_ALLOW_UPDATE = "system_framework_core_patch_allow_update_system_app"
+    private const val OP_ISOLATION = "system_framework_core_patch_bypass_isolation_violation"
+    private const val OP_LOW_API = "system_framework_core_patch_disable_low_api_check"
+    private const val OP_PERSISTENT = "system_framework_core_patch_disable_persistent"
+    private const val OP_DOWNGRADE = "system_framework_core_patch_downgrade"
+    private const val OP_EXACT_SIGNATURE = "system_framework_core_patch_exact_signature"
+    private const val OP_VERIFICATION_AGENT = "system_framework_core_patch_verification_agent"
+    private const val OP_SIGNATURE = "system_framework_core_patch_signature"
+    private const val OP_DIGEST = "system_framework_core_patch_digest"
+    private const val OP_SHARED_USER = "system_framework_core_patch_shared_user"
+    private const val OP_ANDROID_INSTALLER = "system_framework_use_android_package_installer"
+    private const val OP_FINGERPRINT = "system_framework_core_patch_fingerprint_guard"
+
     /** 安装请求存在嵌套时，只有内层 preparePackage 执行期间才放宽持久化判定。 */
     private val prepareDepth = ThreadLocal.withInitial<Int> { 0 }
 
     /** Cts 判定只在应用包安装器选择链路中短暂伪造，不污染其它包管理调用。 */
     private val ctsDepth = ThreadLocal.withInitial<Int> { 0 }
 
+    /**
+     * 总开关关闭时一个 hook 都不装；打开后把**全部子项**的 hook 都装上，
+     * 是否真正干预由每个回调里的 `settings.isOn(子项)` 实时决定。
+     *
+     * 这样用户只需为「总开关」重启一次 system_server，之后调整任意子项都能立即生效
+     * （`HookSettings` 不缓存取值，每次 isOn 都读框架托管的 RemotePreferences）。
+     * 少数在安装期写静态字段的扩展项无法回退，仍标注为需重启。
+     */
     fun install(loader: ClassLoader, settings: HookSettings): Int {
+        if (!settings.isOn(FEATURE)) return 0
         var count = 0
-        if (settings.isOn("system_framework_core_patch_allow_update_system_app")) {
-            count += installAllowUpdateSystemApp(loader)
-        }
-        if (settings.isOn("system_framework_core_patch_bypass_isolation_violation")) {
-            count += installBypassIsolationViolation(loader)
-        }
-        if (settings.isOn("system_framework_core_patch_disable_low_api_check")) {
-            count += installDisableLowApiCheck(loader)
-        }
-        if (settings.isOn("system_framework_core_patch_disable_persistent")) {
-            count += installDisablePersistent(loader)
-        }
-        if (settings.isOn("system_framework_core_patch_downgrade")) count += installDowngrade(loader)
-        if (settings.isOn("system_framework_core_patch_exact_signature")) count += installExactSignature(loader)
-        if (settings.isOn("system_framework_core_patch_verification_agent")) {
-            count += installVerificationAgent(loader)
-        }
-        if (settings.isOn("system_framework_core_patch_signature")) count += installSignatureBypass(loader)
-        if (settings.isOn("system_framework_core_patch_digest")) count += installDigestBypass(loader)
-        if (settings.isOn("system_framework_core_patch_shared_user")) count += installSharedUserBypass(loader)
-        if (settings.isOn("system_framework_use_android_package_installer")) {
-            count += installAndroidPackageInstaller(loader)
-        }
-        if (settings.isOn("system_framework_core_patch_fingerprint_guard")) {
-            count += installFingerprintGuard(loader)
-        }
+        count += installAllowUpdateSystemApp(loader, settings)
+        count += installBypassIsolationViolation(loader, settings)
+        count += installDisableLowApiCheck(loader, settings)
+        count += installDisablePersistent(loader, settings)
+        count += installDowngrade(loader, settings)
+        count += installExactSignature(loader, settings)
+        count += installVerificationAgent(loader, settings)
+        count += installSignatureBypass(loader, settings)
+        count += installDigestBypass(loader, settings)
+        count += installSharedUserBypass(loader, settings)
+        count += installAndroidPackageInstaller(loader, settings)
+        count += installFingerprintGuard(loader, settings)
         return count
     }
 
-    private fun installAllowUpdateSystemApp(loader: ClassLoader): Int {
+    private fun installAllowUpdateSystemApp(loader: ClassLoader, settings: HookSettings): Int {
         val clazz = Reflect.loadClass(loader, PM_SERVICE_IMPL) ?: return missing(PM_SERVICE_IMPL)
         val method = Reflect.findMethods(clazz, "canBeUpdate", paramCount = 1).firstOrNull {
             it.parameterTypes[0] == String::class.java && it.returnType == Void.TYPE
         } ?: return missing("$PM_SERVICE_IMPL#canBeUpdate(String)")
-        return if (HookRuntime.hook(method, "core_patch_allow_update/$PM_SERVICE_IMPL#canBeUpdate") { null }) 1 else 0
-    }
-
-    private fun installBypassIsolationViolation(loader: ClassLoader): Int {
-        val clazz = Reflect.loadClass(loader, PM_SERVICE_IMPL) ?: return missing(PM_SERVICE_IMPL)
-        val method = Reflect.findMethods(clazz, "verifyIsolationViolation", paramCount = 2).firstOrNull {
-            it.returnType == Void.TYPE
-        } ?: return missing("$PM_SERVICE_IMPL#verifyIsolationViolation(ParsedPackage,InstallSource)")
-        return if (HookRuntime.hook(method, "core_patch_isolation/$PM_SERVICE_IMPL#verifyIsolationViolation") {
-                null
+        return if (HookRuntime.hook(method, "core_patch_allow_update/$PM_SERVICE_IMPL#canBeUpdate") { chain ->
+                if (settings.isOn(OP_ALLOW_UPDATE)) null else chain.proceed()
             }
         ) 1 else 0
     }
 
-    private fun installDisableLowApiCheck(loader: ClassLoader): Int {
+    private fun installBypassIsolationViolation(loader: ClassLoader, settings: HookSettings): Int {
+        val clazz = Reflect.loadClass(loader, PM_SERVICE_IMPL) ?: return missing(PM_SERVICE_IMPL)
+        val method = Reflect.findMethods(clazz, "verifyIsolationViolation", paramCount = 2).firstOrNull {
+            it.returnType == Void.TYPE
+        } ?: return missing("$PM_SERVICE_IMPL#verifyIsolationViolation(ParsedPackage,InstallSource)")
+        return if (HookRuntime.hook(method, "core_patch_isolation/$PM_SERVICE_IMPL#verifyIsolationViolation") { chain ->
+                if (settings.isOn(OP_ISOLATION)) null else chain.proceed()
+            }
+        ) 1 else 0
+    }
+
+    private fun installDisableLowApiCheck(loader: ClassLoader, settings: HookSettings): Int {
         val clazz = Reflect.loadClass(loader, INSTALL_HELPER) ?: return missing(INSTALL_HELPER)
         val method = Reflect.findMethods(clazz, "preparePackage", paramCount = 1).firstOrNull {
             it.returnType == Void.TYPE
         } ?: return missing("$INSTALL_HELPER#preparePackage(InstallRequest)")
         return if (HookRuntime.hook(method, "core_patch_low_api/$INSTALL_HELPER#preparePackage") { chain ->
+                if (!settings.isOn(OP_LOW_API)) return@hook chain.proceed()
                 val request = chain.args.getOrNull(0)
                 val installArgs = request?.let { Reflect.readField(it, "mInstallArgs") }
                 if (installArgs != null) {
@@ -95,7 +109,7 @@ internal object SystemFrameworkCorePatchHooks {
         ) 1 else 0
     }
 
-    private fun installDisablePersistent(loader: ClassLoader): Int {
+    private fun installDisablePersistent(loader: ClassLoader, settings: HookSettings): Int {
         val helper = Reflect.loadClass(loader, INSTALL_HELPER)
         val prepare = helper?.let { Reflect.findMethods(it, "preparePackage", paramCount = 1) }
             ?.firstOrNull { it.returnType == Void.TYPE }
@@ -108,6 +122,7 @@ internal object SystemFrameworkCorePatchHooks {
         }
         var count = 0
         if (HookRuntime.hook(prepare, "core_patch_persistent/$INSTALL_HELPER#preparePackage") { chain ->
+                if (!settings.isOn(OP_PERSISTENT)) return@hook chain.proceed()
                 prepareDepth.set(prepareDepth.currentDepth() + 1)
                 try {
                     chain.proceed()
@@ -119,37 +134,42 @@ internal object SystemFrameworkCorePatchHooks {
         ) count++
         if (HookRuntime.hook(isPersistent, "core_patch_persistent/PackageSetting#isPersistent") { chain ->
                 val original = chain.proceed()
-                if (original == true && prepareDepth.currentDepth() > 0) false else original
+                if (settings.isOn(OP_PERSISTENT) && original == true && prepareDepth.currentDepth() > 0) {
+                    false
+                } else {
+                    original
+                }
             }
         ) count++
         return count
     }
 
-    private fun installDowngrade(loader: ClassLoader): Int {
+    private fun installDowngrade(loader: ClassLoader, settings: HookSettings): Int {
         val clazz = Reflect.loadClass(loader, PM_UTILS) ?: return missing(PM_UTILS)
         val methods = Reflect.findMethods(clazz, "checkDowngrade")
             .filter { it.returnType == Void.TYPE }
         if (methods.isEmpty()) return missing("$PM_UTILS#checkDowngrade")
         return methods.count {
-            HookRuntime.hook(it, "core_patch_downgrade/$PM_UTILS#checkDowngrade") { null }
+            HookRuntime.hook(it, "core_patch_downgrade/$PM_UTILS#checkDowngrade") { chain ->
+                if (settings.isOn(OP_DOWNGRADE)) null else chain.proceed()
+            }
         }
     }
 
-    private fun installExactSignature(loader: ClassLoader): Int {
+    private fun installExactSignature(loader: ClassLoader, settings: HookSettings): Int {
         val clazz = Reflect.loadClass(loader, SIGNING_DETAILS) ?: return missing(SIGNING_DETAILS)
         val methods = Reflect.findMethods(clazz, "signaturesMatchExactly")
             .filter { it.returnType == Boolean::class.javaPrimitiveType }
         if (methods.isEmpty()) return missing("$SIGNING_DETAILS#signaturesMatchExactly")
         return methods.count {
-            HookRuntime.hookReturning(
+            HookRuntime.hook(
                 it,
                 "core_patch_exact_signature/$SIGNING_DETAILS#signaturesMatchExactly",
-                true,
-            )
+            ) { chain -> if (settings.isOn(OP_EXACT_SIGNATURE)) true else chain.proceed() }
         }
     }
 
-    private fun installVerificationAgent(loader: ClassLoader): Int {
+    private fun installVerificationAgent(loader: ClassLoader, settings: HookSettings): Int {
         var count = 0
         for (className in listOf(
             "com.android.server.pm.VerifyingSession",
@@ -159,18 +179,19 @@ internal object SystemFrameworkCorePatchHooks {
             val clazz = Reflect.loadClass(loader, className) ?: continue
             for (method in Reflect.findMethods(clazz, "isVerificationEnabled")) {
                 if (method.returnType != Boolean::class.javaPrimitiveType) continue
-                if (HookRuntime.hookReturning(
+                if (HookRuntime.hook(
                         method,
                         "core_patch_verification_agent/$className#isVerificationEnabled",
-                        false,
-                    )
+                    ) { chain ->
+                        if (settings.isOn(OP_VERIFICATION_AGENT)) false else chain.proceed()
+                    }
                 ) count++
             }
         }
         return count
     }
 
-    private fun installSignatureBypass(loader: ClassLoader): Int {
+    private fun installSignatureBypass(loader: ClassLoader, settings: HookSettings): Int {
         var count = 0
         val scan = Reflect.loadClass(loader, "com.android.server.pm.ScanPackageUtils")
         if (scan != null) {
@@ -179,7 +200,7 @@ internal object SystemFrameworkCorePatchHooks {
                 if (HookRuntime.hook(
                         method,
                         "core_patch_signature/ScanPackageUtils#assertMinSignatureSchemeIsValid",
-                    ) { null }
+                    ) { chain -> if (settings.isOn(OP_SIGNATURE)) null else chain.proceed() }
                 ) count++
             }
         }
@@ -191,11 +212,10 @@ internal object SystemFrameworkCorePatchHooks {
                 paramCount = 1,
             )) {
                 if (method.returnType != Int::class.javaPrimitiveType) continue
-                if (HookRuntime.hookReturning(
+                if (HookRuntime.hook(
                         method,
                         "core_patch_signature/ApkSignatureVerifier#getMinimumSignatureSchemeVersionForTargetSdk",
-                        1,
-                    )
+                    ) { chain -> if (settings.isOn(OP_SIGNATURE)) 1 else chain.proceed() }
                 ) count++
             }
         }
@@ -209,7 +229,9 @@ internal object SystemFrameworkCorePatchHooks {
                             "core_patch_signature/StrictJarVerifier#<init>",
                         ) { chain ->
                             val result = chain.proceed()
-                            UnsafeAccess.putBooleanField(field, chain.thisObject, false)
+                            if (settings.isOn(OP_SIGNATURE)) {
+                                UnsafeAccess.putBooleanField(field, chain.thisObject, false)
+                            }
                             result
                         }
                     ) count++
@@ -219,18 +241,17 @@ internal object SystemFrameworkCorePatchHooks {
         return count
     }
 
-    private fun installDigestBypass(loader: ClassLoader): Int {
+    private fun installDigestBypass(loader: ClassLoader, settings: HookSettings): Int {
         var count = 0
         val strictJar = Reflect.loadClass(loader, "android.util.jar.StrictJarVerifier")
         if (strictJar != null) {
             for (name in listOf("verifyMessageDigest", "verify")) {
                 for (method in Reflect.findMethods(strictJar, name)) {
                     if (method.returnType != Boolean::class.javaPrimitiveType) continue
-                    if (HookRuntime.hookReturning(
+                    if (HookRuntime.hook(
                             method,
                             "core_patch_digest/StrictJarVerifier#$name",
-                            true,
-                        )
+                        ) { chain -> if (settings.isOn(OP_DIGEST)) true else chain.proceed() }
                     ) count++
                 }
             }
@@ -239,31 +260,36 @@ internal object SystemFrameworkCorePatchHooks {
         if (digest != null) {
             for (method in Reflect.findMethods(digest, "isEqual", paramCount = 2)) {
                 if (method.returnType != Boolean::class.javaPrimitiveType) continue
-                if (HookRuntime.hookReturning(method, "core_patch_digest/MessageDigest#isEqual", true)) count++
+                if (HookRuntime.hook(method, "core_patch_digest/MessageDigest#isEqual") { chain ->
+                        if (settings.isOn(OP_DIGEST)) true else chain.proceed()
+                    }
+                ) count++
             }
         }
         val assets = Reflect.loadClass(loader, "android.content.res.AssetManager")
         val table = assets?.let { Reflect.findMethods(it, "containsAllocatedTable", paramCount = 0) }
             ?.firstOrNull { it.returnType == Boolean::class.javaPrimitiveType }
         if (table != null &&
-            HookRuntime.hookReturning(table, "core_patch_digest/AssetManager#containsAllocatedTable", false)
+            HookRuntime.hook(table, "core_patch_digest/AssetManager#containsAllocatedTable") { chain ->
+                if (settings.isOn(OP_DIGEST)) false else chain.proceed()
+            }
         ) count++
         return count
     }
 
-    private fun installSharedUserBypass(loader: ClassLoader): Int {
+    private fun installSharedUserBypass(loader: ClassLoader, settings: HookSettings): Int {
         var count = 0
         val reconcile = Reflect.loadClass(loader, "com.android.server.pm.ReconcilePackageUtils")
         val allowField = reconcile?.let {
             Reflect.staticFieldOrNull(it, "ALLOW_NON_PRELOADS_SYSTEM_SHAREDUIDS")
         }
-        if (allowField != null && UnsafeAccess.putStaticBoolean(allowField, true)) count++
 
         val signing = Reflect.loadClass(loader, SIGNING_DETAILS)
         if (signing != null) {
             for (method in Reflect.findMethods(signing, "hasCommonAncestor", paramCount = 1)) {
                 if (method.returnType != Boolean::class.javaPrimitiveType) continue
                 if (HookRuntime.hook(method, "core_patch_shared_user/SigningDetails#hasCommonAncestor") { chain ->
+                        if (!settings.isOn(OP_SHARED_USER)) return@hook chain.proceed()
                         val fromVerify = Thread.currentThread().stackTrace.any {
                             it.methodName == "verifySignatures"
                         }
@@ -278,6 +304,12 @@ internal object SystemFrameworkCorePatchHooks {
                 if (method.returnType != Boolean::class.javaPrimitiveType) continue
                 if (HookRuntime.hook(method, "core_patch_shared_user/PackageManagerServiceUtils#verifySignatures") {
                         chain ->
+                        if (!settings.isOn(OP_SHARED_USER)) return@hook chain.proceed()
+                        // 该静态开关按包重算，只能置真不能安全回退；
+                        // 因此关闭本子项后需要重启一次 system_server。
+                        if (allowField != null && UnsafeAccess.isAvailable) {
+                            UnsafeAccess.putStaticBoolean(allowField, true)
+                        }
                         val fromPrepare = Thread.currentThread().stackTrace.any {
                             it.methodName.startsWith("preparePackage")
                         }
@@ -289,13 +321,13 @@ internal object SystemFrameworkCorePatchHooks {
         return count
     }
 
-    private fun installAndroidPackageInstaller(loader: ClassLoader): Int {
+    private fun installAndroidPackageInstaller(loader: ClassLoader, settings: HookSettings): Int {
         val clazz = Reflect.loadClass(loader, PM_SERVICE_IMPL) ?: return missing(PM_SERVICE_IMPL)
         var count = 0
         for (method in Reflect.findMethods(clazz, "isCTS", paramCount = 0)) {
             if (method.returnType != Boolean::class.javaPrimitiveType) continue
             if (HookRuntime.hook(method, "android_package_installer/$PM_SERVICE_IMPL#isCTS") {
-                    ctsDepth.currentDepth() > 0
+                    settings.isOn(OP_ANDROID_INSTALLER) && ctsDepth.currentDepth() > 0
                 }
             ) count++
         }
@@ -306,6 +338,7 @@ internal object SystemFrameworkCorePatchHooks {
         )) {
             for (method in Reflect.findMethods(clazz, name)) {
                 if (HookRuntime.hook(method, "android_package_installer/$PM_SERVICE_IMPL#$name") { chain ->
+                        if (!settings.isOn(OP_ANDROID_INSTALLER)) return@hook chain.proceed()
                         ctsDepth.set(ctsDepth.currentDepth() + 1)
                         try {
                             chain.proceed()
@@ -320,7 +353,7 @@ internal object SystemFrameworkCorePatchHooks {
         return count
     }
 
-    private fun installFingerprintGuard(loader: ClassLoader): Int {
+    private fun installFingerprintGuard(loader: ClassLoader, settings: HookSettings): Int {
         val clazz = Reflect.loadClass(
             loader,
             "com.android.server.biometrics.sensors.fingerprint.aidl.FingerprintProvider",
@@ -331,7 +364,7 @@ internal object SystemFrameworkCorePatchHooks {
         return if (HookRuntime.hook(
                 method,
                 "core_patch_fingerprint/FingerprintProvider#copyFingerprintXml",
-            ) { null }
+            ) { chain -> if (settings.isOn(OP_FINGERPRINT)) null else chain.proceed() }
         ) 1 else 0
     }
 

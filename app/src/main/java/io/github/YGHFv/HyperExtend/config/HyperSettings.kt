@@ -77,8 +77,10 @@ object HyperSettings {
      *     「改系统原生隐藏偏好」档（见 `core/NavigationHandleSettings.MODE_NATIVE`）。
      * v6：`lockscreen_left_flashlight` 卡片并入 `lockscreen_hide_left_shortcut` 的
      *     「处理方式」选择项（见 `core/LockscreenShortcutSettings`）：上游本来就是一个三选一下拉框。
+     * v7：核心破解的 12 个独立开关合并为单一总开关 `system_framework_core_patch`，
+     *     老用户只要开过其中任意一项，就把总开关补成开启（子项键原样保留）。
      */
-    const val SCHEMA_VERSION = 6
+    const val SCHEMA_VERSION = 7
     /**
      * 字符串型设置。
      *
@@ -136,6 +138,8 @@ object HyperSettings {
             applyNativeHideMerge(prefs, editor)
             // v5 -> v6：独立卡片「锁屏左侧入口替换为手电筒」并入锁屏左侧按钮卡片的三选一。
             applyLeftButtonMerge(prefs, editor)
+            // v6 -> v7：核心破解的多个独立开关并入单一总开关。
+            applyCorePatchMasterMerge(prefs, editor)
             editor.putInt(KEY_SCHEMA, SCHEMA_VERSION)
             editor.apply()
             ModuleLog.info("settings migrated schema $stored -> $SCHEMA_VERSION")
@@ -198,6 +202,36 @@ object HyperSettings {
         plan.applyTo(editor)
         editor.remove(LockscreenShortcutSettings.LEGACY_FLASHLIGHT_CARD)
     }
+
+    /**
+     * v6→v7：核心破解从 12 个独立开关合并为一个总开关。
+     *
+     * 子项键与老开关逐字相同，所以只需在「老用户开过任意子项」时把总开关补成开启；
+     * 一个都没开过（或从没进过界面）时一个字节都不写。
+     */
+    private fun applyCorePatchMasterMerge(prefs: SharedPreferences, editor: SharedPreferences.Editor) {
+        if (prefs.contains(CORE_PATCH_MASTER)) return
+        val enabled = CORE_PATCH_OPTION_KEYS.any { prefs.booleanOrNull(it) == true }
+        if (enabled) editor.putBoolean(CORE_PATCH_MASTER, true)
+    }
+
+    private const val CORE_PATCH_MASTER = "system_framework_core_patch"
+
+    /** 合并前的 12 个独立开关键，也是合并后的子项键。 */
+    private val CORE_PATCH_OPTION_KEYS = listOf(
+        "system_framework_core_patch_allow_update_system_app",
+        "system_framework_core_patch_bypass_isolation_violation",
+        "system_framework_core_patch_disable_low_api_check",
+        "system_framework_core_patch_disable_persistent",
+        "system_framework_core_patch_downgrade",
+        "system_framework_core_patch_exact_signature",
+        "system_framework_core_patch_verification_agent",
+        "system_framework_core_patch_signature",
+        "system_framework_core_patch_digest",
+        "system_framework_core_patch_shared_user",
+        "system_framework_use_android_package_installer",
+        "system_framework_core_patch_fingerprint_guard",
+    )
 
     private fun MergedCardMigration.Plan.applyTo(editor: SharedPreferences.Editor) {
         switches.forEach { (key, value) -> editor.putBoolean(key, value) }
