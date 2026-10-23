@@ -86,6 +86,10 @@ enum class FeaturePanel(val title: String, vararg val featureIds: String) {
     GUARD_PROVIDER_SECURITY("安全检测", "guard_provider_disable_root_check",
         "guard_provider_disable_app_list_upload"),
     CLOUD_CONTROL("云控", "joyose_disable_cloud_control", "joyose_enable_gpu_tuner"),
+    TRUST_SECURITY("风险检测", "trustservice_disable_mrm"),
+    CLOUD_SYNC("云同步", "micloud_service_list"),
+    TELEMETRY("遥测上报", "analytics_fuck_guard"),
+    HTML_VIEWER_CLOUD("云控", "html_viewer_disable_cloud_control"),
     MARKET_SECURITY("应用安全", "market_bypass_risk_check",
         "market_disable_package_monitor", "market_disable_start_push_dialog",
         "market_disable_ads", "market_device_modify"),
@@ -95,7 +99,7 @@ enum class FeaturePanel(val title: String, vararg val featureIds: String) {
     TOAST("Toast", ToastMaterialSettings.FEATURE),
     CARD("卡面", "nfc_card_face"),
     CREDENTIALS("凭据与通行密钥", "passkey_fix"),
-    LAUNCHER("桌面", "launcher_native_shortcuts_enabled"),
+    LAUNCHER("桌面", "launcher_native_shortcuts_enabled", "home_other_disable_prestart"),
     OTHER("其他功能"),
 }
 

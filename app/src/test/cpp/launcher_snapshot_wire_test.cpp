@@ -7,6 +7,8 @@ static_assert(kSnapshotFeatureCount == 1, "数量功能位必须是 bit0");
 static_assert(kSnapshotFeatureShare == 2, "分享功能位必须是 bit1");
 static_assert(kSnapshotFeatureFreeform == 4, "小窗功能位必须是 bit2");
 static_assert(kSnapshotFeatureTasks == 8, "新任务功能位必须是 bit3");
+static_assert(kSnapshotFeaturePrestart == 16, "预加载功能位必须是 bit4");
+static_assert(kSnapshotFeatureAll == 31, "线路可表示 bit0..bit4");
 
 // 一个字段齐备、时钟正常的快照。issued/expires 用开机时钟的整秒，租期恰好 30 秒。
 constexpr Snapshot valid{kSnapshotAck, kSnapshotProtocol, 1, 1000, 1030, 1, 5, 1, 0, 0};
@@ -30,14 +32,14 @@ static_assert(snapshot_errors({kSnapshotAck, kSnapshotProtocol, INT32_MAX, 1000,
     == 0, "序号到 INT32_MAX 仍合法");
 
 // 功能位与上限范围与既有 JNI 预检保持同一语义。
-static_assert(snapshot_errors({kSnapshotAck, kSnapshotProtocol, 1, 1000, 1030, 16, 5, 1, 0, 0}, 0, 1000)
+static_assert(snapshot_errors({kSnapshotAck, kSnapshotProtocol, 1, 1000, 1030, 32, 5, 1, 0, 0}, 0, 1000)
     & kSnapshotMalformed, "未知功能位拒绝");
 static_assert(snapshot_errors({kSnapshotAck, kSnapshotProtocol, 1, 1000, 1030, 1, 4, 1, 0, 0}, 0, 1000)
     & kSnapshotMalformed, "上限低于 5 拒绝");
 static_assert(snapshot_errors({kSnapshotAck, kSnapshotProtocol, 1, 1000, 1030, 1, 21, 1, 0, 0}, 0, 1000)
     & kSnapshotMalformed, "上限高于 20 拒绝");
-static_assert(snapshot_errors({kSnapshotAck, kSnapshotProtocol, 1, 1000, 1030, 15, 20, 1, 0, 0}, 0, 1000)
-    == 0, "四个开关与上限上界有效");
+static_assert(snapshot_errors({kSnapshotAck, kSnapshotProtocol, 1, 1000, 1030, 31, 20, 1, 0, 0}, 0, 1000)
+    == 0, "全部已定义功能位与上限上界有效");
 
 // 全关配置合法但不能作为有效功能快照使用。
 constexpr Snapshot allOff{kSnapshotAck, kSnapshotProtocol, 1, 1000, 1030, 0, 5, 1, 0, 0};
@@ -58,6 +60,11 @@ static_assert(!snapshot_features_supported_by_production(kSnapshotFeatureTasks),
     "新任务位仍不得进入生产安装链路");
 static_assert(snapshot_features_supported_by_production(kSnapshotFeatureCount),
     "只有数量位才可进入数量安装链路");
+static_assert(snapshot_features_supported_by_production(kSnapshotFeaturePrestart),
+    "预加载位应可被生产快照接受");
+static_assert(snapshot_prestart_enabled(kSnapshotFeaturePrestart), "预加载位判定");
+static_assert(!snapshot_prestart_enabled(kSnapshotFeatureCount), "菜单位不得误判为预加载");
+static_assert((kSnapshotMenuFeatures & kSnapshotFeaturePrestart) == 0, "预加载不属于代码页菜单位");
 
 // 保留位与负值字段一律畸形，防止未来升级被旧版本误读。
 static_assert(snapshot_errors({kSnapshotAck, kSnapshotProtocol, 1, 1000, 1030, 1, 5, 1, 0, 1}, 0, 1000)

@@ -49,6 +49,11 @@ constexpr int32_t kSnapshotFeatureCount = 1 << 0;
 constexpr int32_t kSnapshotFeatureShare = 1 << 1;
 constexpr int32_t kSnapshotFeatureFreeform = 1 << 2;
 constexpr int32_t kSnapshotFeatureTasks = 1 << 3;
+// 禁用应用预加载。它不经过快捷菜单主开关，也不安装任何代码页蹦床：
+// 只在桌面进程的 __system_property_get 观察器里改写五个预加载属性。
+constexpr int32_t kSnapshotFeaturePrestart = 1 << 4;
+// 线路可表示的全部功能位（bit0..bit4）。新任务 bit3 仍未接入生产安装链路。
+constexpr int32_t kSnapshotFeatureAll = 0x1F;
 
 enum SnapshotBlocker : uint32_t {
     kSnapshotAckMismatch = 1U << 0,        // 首字不是确认码：不是本通道的应答
@@ -74,7 +79,7 @@ struct Snapshot {
     int32_t revision;
     int32_t issued_s;    // 开机单调时钟整秒
     int32_t expires_s;   // 开机单调时钟整秒
-    int32_t features;    // 四个菜单开关位：数量、分享、小窗、新任务
+    int32_t features;    // 功能位：数量、分享、小窗、新任务（未接入）、禁止预加载
     int32_t count_limit;
     int32_t safety_armed;         // 0/1
     int32_t safety_reset_token;   // 用户人工恢复令牌，非负
@@ -98,7 +103,7 @@ constexpr uint32_t snapshot_errors(const Snapshot &snapshot, uint32_t last_revis
     if (snapshot.protocol != kSnapshotProtocol) errors |= kSnapshotProtocolMismatch;
     // revision 是 int32_t，其上限就是 INT32_MAX，不需要再比 UINT32_MAX。
     if (snapshot.revision <= 0 ||
-        snapshot.features < 0 || snapshot.features > 15 ||
+        snapshot.features < 0 || snapshot.features > kSnapshotFeatureAll ||
         snapshot.count_limit < kSnapshotCountLimitMin ||
         snapshot.count_limit > kSnapshotCountLimitMax ||
         snapshot.issued_s < 0 || snapshot.expires_s < 0 ||
@@ -136,9 +141,18 @@ constexpr bool snapshot_has_features(const Snapshot &snapshot) {
 // 数量安装链路静默忽略。
 constexpr bool snapshot_features_supported_by_production(int32_t features) {
     constexpr int32_t supported = kSnapshotFeatureCount | kSnapshotFeatureShare |
-        kSnapshotFeatureFreeform;
+        kSnapshotFeatureFreeform | kSnapshotFeaturePrestart;
     return features != 0 && (features & ~supported) == 0;
 }
+
+// 预加载功能位与快捷菜单位相互独立；调用方仍需先确认快照已成功采纳。
+constexpr bool snapshot_prestart_enabled(int32_t features) {
+    return (features & kSnapshotFeaturePrestart) != 0;
+}
+
+// 快捷菜单位（数量、分享、小窗）。只有这些位需要代码页安装计划。
+constexpr int32_t kSnapshotMenuFeatures = kSnapshotFeatureCount | kSnapshotFeatureShare |
+    kSnapshotFeatureFreeform;
 
 // 普通启动的安全计算：快照有效、无恢复请求 **且** 本地熔断状态允许。
 // 计算结果不替代持久化提交或实机验收。

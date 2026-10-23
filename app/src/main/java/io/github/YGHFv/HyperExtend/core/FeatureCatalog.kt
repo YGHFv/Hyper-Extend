@@ -555,6 +555,16 @@ val FEATURES: List<HyperFeature> = listOf(
         ),
     ),
     HyperFeature(
+        id = "home_other_disable_prestart",
+        title = "禁用应用预加载",
+        summary = "让桌面读取预加载属性时一律得到 false",
+        scopes = listOf("launcher"),
+        origin = "西米露 / HyperCeiler · DisablePrestart",
+        license = "AGPL-3.0",
+        defaultEnabled = false,
+        requirement = "通过桌面原生属性 Hook 生效；仅原型构建支持，需桌面与系统框架同时启用模块。",
+    ),
+    HyperFeature(
         id = "rotation_lock_fix",
         title = "旋转锁定保护",
         summary = "强行停止应用后仍保留方向锁定",

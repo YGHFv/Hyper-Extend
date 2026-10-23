@@ -43,6 +43,10 @@
         <package android:name="com.miui.packageinstaller" />
         <package android:name="com.miui.guardprovider" />
         <package android:name="com.xiaomi.joyose" />
+          <package android:name="com.xiaomi.trustservice" />
+          <package android:name="com.miui.cloudservice" />
+          <package android:name="com.miui.analytics" />
+          <package android:name="com.android.htmlviewer" />
         <package android:name="com.xiaomi.market" />
         <intent>
             <action android:name="android.service.credentials.CredentialProviderService" />

@@ -51,6 +51,9 @@ internal object LauncherSnapshotWire {
     const val FEATURE_SHARE = 1 shl 1
     const val FEATURE_FREEFORM = 1 shl 2
     const val FEATURE_TASKS = 1 shl 3
+    /** 禁用应用预加载。它不依赖快捷菜单主开关，走同一份原生属性快照。 */
+    const val FEATURE_PRESTART = 1 shl 4
+    /** 快捷菜单的四个功能位；预加载位单独计算，不参与主开关门禁。 */
     const val FEATURE_MASK = 0xF
 
     // 设置键。取自 core/LauncherNativeSettings；集中在这里是为了让「通道读哪些键」
@@ -60,6 +63,7 @@ internal object LauncherSnapshotWire {
     const val SHARE = "home_other_allow_share_apk"
     const val FREEFORM = "home_other_freeform_shortcut_menu"
     const val TASKS = "home_other_tasks_shortcut_menu"
+    const val PRESTART = "home_other_disable_prestart"
     const val COUNT_LIMIT = "launcher_native_shortcut_count_limit"
 
     /** 拒绝应答：确认码 + 协议 + 全 0；序号和上限非法，原生侧先判 kSnapshotMalformed。 */
@@ -138,18 +142,22 @@ internal fun buildLauncherSnapshot(
     }
     // 类型错误（写成字符串/整数）按「没配」处理，而不是按 true —— 与 HookSettings
     // 的 fail-closed 一致：读不准的开关一律当作关。
-    val requested = (if (flag(LauncherSnapshotWire.COUNT)) LauncherSnapshotWire.FEATURE_COUNT else 0) or
+    val menuRequested = (if (flag(LauncherSnapshotWire.COUNT)) LauncherSnapshotWire.FEATURE_COUNT else 0) or
         (if (flag(LauncherSnapshotWire.SHARE)) LauncherSnapshotWire.FEATURE_SHARE else 0) or
         (if (flag(LauncherSnapshotWire.FREEFORM)) LauncherSnapshotWire.FEATURE_FREEFORM else 0) or
         (if (flag(LauncherSnapshotWire.TASKS)) LauncherSnapshotWire.FEATURE_TASKS else 0)
-    // 主开关关着时功能位一律为 0：这样「用户从没进过界面」不会变成「子项全开」。
+    // 快捷菜单主开关关着时，菜单功能位一律为 0：这样「用户从没进过界面」不会
+    // 变成「子项全开」；预加载位不经过该主开关，但同样受安全模式门禁约束。
     val safetyDisabled = when (val value = read("safety.launcher.disabled")) {
         null -> false
         is Boolean -> value
         else -> true
     }
-    val enabled = flag(LauncherSnapshotWire.MASTER) && !safetyDisabled
-    val features = if (enabled) requested else 0
+    val menuEnabled = flag(LauncherSnapshotWire.MASTER) && !safetyDisabled
+    // 预加载与快捷菜单主开关无关：用户只想要「别预加载」时不应被迫打开快捷菜单扩展。
+    val prestartEnabled = flag(LauncherSnapshotWire.PRESTART) && !safetyDisabled
+    val features = (if (menuEnabled) menuRequested else 0) or
+        (if (prestartEnabled) LauncherSnapshotWire.FEATURE_PRESTART else 0)
     val limit = when (val raw = read(LauncherSnapshotWire.COUNT_LIMIT)) {
         is Int -> raw
         // 滑块在设置层存的是十进制字符串（见 core/FeatureCatalog 的 HyperSlider）。
@@ -158,7 +166,7 @@ internal fun buildLauncherSnapshot(
     }.coerceIn(LauncherSnapshotWire.COUNT_LIMIT_MIN, LauncherSnapshotWire.COUNT_LIMIT_MAX)
 
     // 线路上的「已武装」只表示配置主开关，不证明本地状态已持久化或授权恢复。
-    val armed = enabled || resetToken > 0
+    val armed = menuEnabled || prestartEnabled || resetToken > 0
     if (resetToken !in 0..Int.MAX_VALUE) return null
     return LauncherSnapshot(revision, issuedSeconds, features, limit, armed, resetToken)
 }

@@ -32,6 +32,10 @@ import io.github.YGHFv.HyperExtend.hook.feature.security.JoyoseHooks
 import io.github.YGHFv.HyperExtend.hook.feature.security.MarketSecurityHooks
 import io.github.YGHFv.HyperExtend.hook.feature.security.PackageInstallerSecurityHooks
 import io.github.YGHFv.HyperExtend.hook.feature.security.SecurityCenterSecurityHooks
+import io.github.YGHFv.HyperExtend.hook.feature.security.AnalyticsHooks
+import io.github.YGHFv.HyperExtend.hook.feature.security.CloudServiceHooks
+import io.github.YGHFv.HyperExtend.hook.feature.security.HtmlViewerHooks
+import io.github.YGHFv.HyperExtend.hook.feature.security.TrustServiceHooks
 import io.github.YGHFv.HyperExtend.hook.feature.statusbar.ScreenshotStatusBar
 import io.github.YGHFv.HyperExtend.hook.feature.statusbar.StatusBarBatteryStyle
 import io.github.YGHFv.HyperExtend.hook.feature.statusbar.BatteryDetailHooks
@@ -154,6 +158,18 @@ internal object HookDispatcher {
         }
         HostPlatform.JOYOSE -> { loader, settings ->
             "joyose=${JoyoseHooks.install(loader, settings)}"
+        }
+        HostPlatform.TRUST_SERVICE -> { loader, settings ->
+            "trustservice=${TrustServiceHooks.install(loader, settings)}"
+        }
+        HostPlatform.CLOUD_SERVICE -> { loader, settings ->
+            "cloudservice=${CloudServiceHooks.install(loader, settings)}"
+        }
+        HostPlatform.ANALYTICS -> { loader, settings ->
+            "analytics=${AnalyticsHooks.install(loader, settings)}"
+        }
+        HostPlatform.HTML_VIEWER -> { loader, settings ->
+            "htmlviewer=${HtmlViewerHooks.install(loader, settings)}"
         }
         HostPlatform.MARKET -> { loader, settings ->
             "market_security=${MarketSecurityHooks.install(loader, settings)}"

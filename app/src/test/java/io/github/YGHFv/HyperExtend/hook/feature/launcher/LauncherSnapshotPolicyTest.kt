@@ -80,6 +80,31 @@ class LauncherSnapshotPolicyTest {
         assertFalse(off.armed)
     }
 
+    @Test fun prestartIsIndependentFromTheShortcutMasterSwitch() {
+        // 只打开「禁用应用预加载」：不需要快捷菜单主开关，也不产生菜单功能位。
+        val onlyPrestart = mapOf(LauncherSnapshotWire.PRESTART to true)
+        val snapshot = buildLauncherSnapshot(1, 1000) { onlyPrestart[it] }!!
+        assertEquals(LauncherSnapshotWire.FEATURE_PRESTART, snapshot.features)
+        assertTrue(snapshot.armed)
+        assertEquals(0, snapshot.features and LauncherSnapshotWire.FEATURE_MASK)
+
+        // 主开关打开不会顺带打开预加载。
+        val onlyMaster = mapOf(LauncherSnapshotWire.MASTER to true)
+        val master = buildLauncherSnapshot(1, 1000) { onlyMaster[it] }!!
+        assertEquals(0, master.features and LauncherSnapshotWire.FEATURE_PRESTART)
+        assertTrue(master.armed)
+    }
+
+    @Test fun prestartRespectsTheLauncherSafetySwitch() {
+        val settings = mapOf(
+            LauncherSnapshotWire.PRESTART to true,
+            SafeModeKeys.disabled("launcher") to true,
+        )
+        val snapshot = buildLauncherSnapshot(1, 1000) { settings[it] }!!
+        assertEquals(0, snapshot.features and LauncherSnapshotWire.FEATURE_PRESTART)
+        assertFalse(snapshot.armed)
+    }
+
     @Test fun malformedSettingTypesFailClosedInsteadOfOpeningFeatures() {
         val snapshot = buildLauncherSnapshot(1, 1000) { key -> when (key) {
             // 字符串冒充布尔：必须当作关，而不是当作真。
@@ -137,7 +162,8 @@ class LauncherSnapshotPolicyTest {
     @Test fun recoveryPreferencesAreNeitherReadNorForwarded() {
         val configurationKeys = setOf(
             LauncherSnapshotWire.MASTER, LauncherSnapshotWire.COUNT, LauncherSnapshotWire.SHARE,
-            LauncherSnapshotWire.FREEFORM, LauncherSnapshotWire.TASKS, LauncherSnapshotWire.COUNT_LIMIT,
+            LauncherSnapshotWire.FREEFORM, LauncherSnapshotWire.TASKS,
+            LauncherSnapshotWire.PRESTART, LauncherSnapshotWire.COUNT_LIMIT,
             SafeModeKeys.disabled("launcher"),
         )
         val resetKeys = listOf(

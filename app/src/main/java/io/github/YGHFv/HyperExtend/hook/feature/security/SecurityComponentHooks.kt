@@ -370,6 +370,144 @@ internal object JoyoseHooks {
     }
 }
 
+/**
+ * 小米信任服务的 MRM 风险检测。
+ *
+ * 当前宿主的唯一靶点是 `Y0.h#b(): boolean`：方法内部初始化
+ * `vendor.xiaomi.hardware.mrm.IMrm`，失败时返回 false；两个上游字符串
+ * `MiTrustService/statusEventHandle` 与 `try init mrmd Service` 都位于该方法。
+ * 安装前直接返回 false，阻止 MRM 服务初始化与后续风险事件处理。
+ */
+internal object TrustServiceHooks {
+    fun install(loader: ClassLoader, settings: HookSettings): Int {
+        if (!settings.isOn("trustservice_disable_mrm")) return 0
+        val clazz = Reflect.loadClass(loader, "Y0.h")
+            ?: return missingHook("trustservice/Y0.h")
+        val methods = Reflect.findMethods(clazz, "b", 0).filter {
+            it.returnType == Boolean::class.javaPrimitiveType
+        }
+        if (methods.size != 1) return missingHook("trustservice/Y0.h#b")
+        return if (HookRuntime.hookReturning(methods.single(), "trustservice/Y0.h#b", false)) {
+            1
+        } else {
+            0
+        }
+    }
+}
+
+/**
+ * 小米云服务的云同步类别列表。
+ *
+ * 当前宿主的唯一靶点是 `Y4.a$c#a(Context, List): void`，方法内部按短信、
+ * 通话、浏览器、创作等条件从传入列表里原地 `remove`。上游对 void 方法设置
+ * `null` 没有实际返回值意义，真实语义是跳过原方法；因此这里直接跳过，
+ * 让宿主保留完整的同步类别列表。
+ */
+internal object CloudServiceHooks {
+    fun install(loader: ClassLoader, settings: HookSettings): Int {
+        if (!settings.isOn("micloud_service_list")) return 0
+        val clazz = Reflect.loadClass(loader, "Y4.a\$c")
+            ?: return missingHook("cloudservice/Y4.a\$c")
+        val method = Reflect.findMethods(clazz, "a", 2).singleOrNull {
+            it.returnType == Void.TYPE &&
+                it.parameterTypes[0] == Context::class.java &&
+                it.parameterTypes[1] == List::class.java
+        } ?: return missingHook("cloudservice/Y4.a\$c#a")
+        return if (HookRuntime.hook(method, "cloudservice/Y4.a\$c#a") { null }) 1 else 0
+    }
+}
+
+/**
+ * 小米统计服务的使用数据收集与网络状态上报。
+ *
+ * 当前宿主的靶点与上游一一对应：
+ * - 上游通过 `Don't collect usage below Android KK 4.4` 字符串定位**所有**使用量
+ *   事件构造入口；当前宿主该字符串落在两个方法上，必须同时拦截：
+ *   `a.b.a.e.h0.y#g(long, long, boolean): JSONObject` 与
+ *   `a.b.a.f.f.m#f(long, long): JSONObject`，返回 null 跳过事件内容构造。
+ * - `a.b.a.a.a.c.a#V(Context): String` 是网络状态（`WIFI/5G/4G/3G/2G/NONE`），
+ *   固定返回 `NONE`。
+ * - `a.b.a.a.a.c.a#l0(): boolean` 是网络连通判断，固定返回 false。
+ *
+ * `NetworkUtil` 字符串在当前宿主只出现在上述 `V` 与 `l0` 两个方法中；上游
+ * 旧签名的 `NetworkUtil#a(Context): int` 在此版本会误伤同类的 `K(Context): int`
+ * （`getCoreVersionCode`），因此不按旧签名硬套，避免把版本号上报改成 0。
+ */
+internal object AnalyticsHooks {
+    fun install(loader: ClassLoader, settings: HookSettings): Int {
+        if (!settings.isOn("analytics_fuck_guard")) return 0
+        var count = 0
+        count += hookUsageJson(loader)
+        count += hookNetworkState(loader)
+        return count
+    }
+
+    private fun hookUsageJson(loader: ClassLoader): Int {
+        var count = 0
+        val legacy = Reflect.loadClass(loader, "a.b.a.e.h0.y")?.let { clazz ->
+            Reflect.findMethods(clazz, "g", 3).singleOrNull {
+                it.returnType.name == "org.json.JSONObject" &&
+                    it.parameterTypes[0] == Long::class.javaPrimitiveType &&
+                    it.parameterTypes[1] == Long::class.javaPrimitiveType &&
+                    it.parameterTypes[2] == Boolean::class.javaPrimitiveType
+            }?.let { method ->
+                if (HookRuntime.hook(method, "analytics/usage#g") { null }) 1 else 0
+            }
+        } ?: 0
+        count += legacy
+        val variant = Reflect.loadClass(loader, "a.b.a.f.f.m")?.let { clazz ->
+            Reflect.findMethods(clazz, "f", 2).singleOrNull {
+                it.returnType.name == "org.json.JSONObject" &&
+                    it.parameterTypes[0] == Long::class.javaPrimitiveType &&
+                    it.parameterTypes[1] == Long::class.javaPrimitiveType
+            }?.let { method ->
+                if (HookRuntime.hook(method, "analytics/usage#f") { null }) 1 else 0
+            }
+        } ?: 0
+        count += variant
+        if (count == 0) missingHook("analytics/usage")
+        return count
+    }
+
+    private fun hookNetworkState(loader: ClassLoader): Int {
+        val clazz = Reflect.loadClass(loader, "a.b.a.a.a.c.a")
+            ?: return missingHook("analytics/a.b.a.a.a.c.a")
+        var count = 0
+        val networkState = Reflect.findMethods(clazz, "V", 1).singleOrNull {
+            it.returnType == String::class.java &&
+                it.parameterTypes[0] == Context::class.java
+        }
+        if (networkState != null &&
+            HookRuntime.hookReturning(networkState, "analytics/network_state#V", "NONE")
+        ) {
+            count++
+        }
+        val connected = Reflect.findMethods(clazz, "l0", 0).singleOrNull {
+            it.returnType == Boolean::class.javaPrimitiveType
+        }
+        if (connected != null &&
+            HookRuntime.hookReturning(connected, "analytics/network_connected#l0", false)
+        ) {
+            count++
+        }
+        if (count == 0) missingHook("analytics/network")
+        return count
+    }
+}
+
+/** 设置云控数据更新任务（宿主包名为 HTMLViewer 的系统服务）。 */
+internal object HtmlViewerHooks {
+    fun install(loader: ClassLoader, settings: HookSettings): Int {
+        if (!settings.isOn("html_viewer_disable_cloud_control")) return 0
+        val clazz = Reflect.loadClass(loader, "com.android.settings.cloud.JobTask")
+            ?: return missingHook("htmlviewer/JobTask")
+        val method = Reflect.findMethods(clazz, "updateCloudAllData", 0).singleOrNull {
+            it.returnType == Void.TYPE
+        } ?: return missingHook("htmlviewer/JobTask#updateCloudAllData")
+        return if (HookRuntime.hook(method, "htmlviewer/updateCloudAllData") { null }) 1 else 0
+    }
+}
+
 /** 安全中心的 Root 环境、安装拦截、联网验证与支付扫描。 */
 internal object SecurityCenterSecurityHooks {
     fun install(loader: ClassLoader, settings: HookSettings): Int {

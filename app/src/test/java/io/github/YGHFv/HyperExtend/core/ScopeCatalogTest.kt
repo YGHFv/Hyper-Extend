@@ -8,8 +8,9 @@ class ScopeCatalogTest {
     @Test fun scopePriorityStartsWithFrameworkAndSystemUi() {
         assertEquals(
             listOf("system_server", "systemui", "launcher", "settings", "securitycenter",
-                "packageinstaller", "guardprovider", "joyose", "market", "screenshot",
-                "misound", "milink", "mishare", "tsmclient", "scanner"),
+                "packageinstaller", "guardprovider", "joyose", "trustservice", "cloudservice",
+                "analytics", "htmlviewer", "market", "screenshot", "misound", "milink",
+                "mishare", "tsmclient", "scanner"),
             SCOPES.map { it.id },
         )
         assertEquals(SCOPES.size, SCOPES.map { it.id }.distinct().size)
@@ -18,8 +19,9 @@ class ScopeCatalogTest {
     @Test fun homeKeepsPriorityWhileExcludingSecondaryOnlyHosts() {
         assertEquals(
             listOf("system_server", "systemui", "launcher", "securitycenter",
-                "packageinstaller", "guardprovider", "joyose", "market",
-                "screenshot", "milink", "mishare", "tsmclient"),
+                "packageinstaller", "guardprovider", "joyose", "trustservice", "cloudservice",
+                "analytics", "htmlviewer", "market", "screenshot", "milink", "mishare",
+                "tsmclient"),
             entryScopes().map { it.id },
         )
         assertTrue(entryScopes().all { featuresOfScope(it.id).isNotEmpty() })

@@ -8,6 +8,8 @@ import json
 import struct
 import zipfile
 
+from pathlib import Path
+
 from launcher_native_audit import AuditError, ElfImage, require
 
 
@@ -17,11 +19,17 @@ SCOPE = "META-INF/xposed/scope.list"
 LAUNCHER_SCOPE = "com.miui.home"
 SYSTEM_SCOPE = "system"
 PROTOTYPE_SCOPES = [LAUNCHER_SCOPE, SYSTEM_SCOPE]
-JAVA_SCOPES = [
-    "com.android.systemui", "system", "com.android.settings", "com.miui.securitycenter",
-    "com.xiaomi.scanner", "com.miui.tsmclient", "com.miui.screenshot", "com.milink.service",
-    "com.miui.mishare.connectivity", "com.miui.misound",
-]
+# 正式 Java 作用域的唯一事实来源是仓库源 scope.list：新增宿主时这里会自动跟随，
+# 避免硬编码清单与真实构建漂移。原型构建产物的作用域恰好是「源清单 + 桌面」。
+SCOPE_LIST_SOURCE = Path(__file__).resolve().parent.parent / "app/src/main/resources/META-INF/xposed/scope.list"
+
+
+def _load_java_scopes():
+    return [line.strip() for line in SCOPE_LIST_SOURCE.read_text(encoding="utf-8").splitlines()
+            if line.strip()]
+
+
+JAVA_SCOPES = _load_java_scopes()
 MERGED_PROTOTYPE_SCOPES = JAVA_SCOPES + [LAUNCHER_SCOPE]
 BRIDGE = b"Lio/github/YGHFv/HyperExtend/hook/launcher/LauncherNativeBridge;"
 PROTOTYPE_PREFIX = b"Lio/github/YGHFv/HyperExtend/hook/launcher/"

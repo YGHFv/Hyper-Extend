@@ -177,6 +177,54 @@ val SECURITY_COMPONENT_FEATURES: List<HyperFeature> = listOf(
     ),
 
     HyperFeature(
+        id = "trustservice_disable_mrm",
+        title = "关闭风险检测",
+        summary = "阻止信任服务初始化 MRM 风险检测",
+        scopes = listOf("trustservice"),
+        origin = "西米露 / HyperCeiler · DisableMrm",
+        license = "AGPL-3.0",
+        defaultEnabled = false,
+        requirement = "只关闭本机风险检测初始化，不修改云端信任服务配置。",
+        group = ScopeFeatureGroup.TRUST_SERVICE_SECURITY,
+    ),
+
+    HyperFeature(
+        id = "micloud_service_list",
+        title = "保留云同步完整类别",
+        summary = "不再从云同步列表中移除短信、通话、浏览器与创作等类别",
+        scopes = listOf("cloudservice"),
+        origin = "西米露 / HyperCeiler · CloudList",
+        license = "AGPL-3.0",
+        defaultEnabled = false,
+        requirement = "跳过宿主的同步类别裁剪；实际云同步仍由系统账号与网络状态决定。",
+        group = ScopeFeatureGroup.CLOUD_SERVICE_SYNC,
+    ),
+
+    HyperFeature(
+        id = "analytics_fuck_guard",
+        title = "禁止使用统计上报",
+        summary = "停止收集使用数据，并让统计服务把网络状态视为不可用",
+        scopes = listOf("analytics"),
+        origin = "西米露 / HyperCeiler · FuckMiuiUpload",
+        license = "AGPL-3.0",
+        defaultEnabled = false,
+        requirement = "只影响小米统计服务自身的上报判定，不拦截第三方应用的网络请求。",
+        group = ScopeFeatureGroup.ANALYTICS_TELEMETRY,
+    ),
+
+    HyperFeature(
+        id = "html_viewer_disable_cloud_control",
+        title = "禁用云控",
+        summary = "跳过设置云控数据的定时更新任务",
+        scopes = listOf("htmlviewer"),
+        origin = "西米露 / HyperCeiler · DisableUpdateCloudAllData",
+        license = "AGPL-3.0",
+        defaultEnabled = false,
+        requirement = "只跳过宿主自己的云控数据更新，不修改已下载到本地的配置。",
+        group = ScopeFeatureGroup.HTML_VIEWER_CLOUD,
+    ),
+
+    HyperFeature(
         id = "security_center_disable_root_environment",
         title = "隐藏 Root 环境检查",
         summary = "关闭安全中心、病毒扫描与支付安全中的 Root 检测",

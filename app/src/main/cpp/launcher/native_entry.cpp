@@ -185,6 +185,9 @@ void *g_binder_ndk_handle = nullptr;
 // 修订号同时充当跨调用的防回放高水位：下一次事务必须看到严格更大的序号才采纳，
 // 否则一份被截获的旧回复可以在租期内反复冒充当前配置。
 alignas(8) uint64_t g_snapshot_record = 0;
+// 只有在快照被完整采纳（guarded_install_once 返回 0）后才启用预加载属性改写。
+// 它不依赖代码页蹦床，因此单独记录，避免「快照已写、安装被拒」时提前生效。
+alignas(4) uint32_t g_prestart_enabled = 0;
 // 所有查询共用不等待的闸门，防止原生 worker 与人工 JNI 查询并发采纳旧回复。
 // owner 一旦确定就不重置；fork 后不能沿用父进程的 Binder 类和防回放状态。
 uint32_t g_channel_owner = 0;
@@ -311,9 +314,30 @@ void lifecycle_setprogname(const char *name) {
     }
 }
 
+bool is_prestart_property(const char *name) {
+    return descriptor_matches(name, "persist.sys.usap_pool_enabled") ||
+        descriptor_matches(name, "persist.sys.dynamic_usap_enabled") ||
+        descriptor_matches(name, "persist.sys.prestart.proc") ||
+        descriptor_matches(name, "persist.sys.prestart.feedback.enable") ||
+        descriptor_matches(name, "persist.sys.launch_response_optimization.enable");
+}
+
 int lifecycle_property_get(const char *name, char *value) {
     // 某些 HYOS 版本在 setprogname 前先读取属性，因此两条信号都触发同一幂等采纳。
     launcher_child_adopted();
+    // 预加载只在快照完整采纳后改写；未取得快照或功能未启用时完全透传宿主行为。
+    // 值固定为 "false"，与上游 DisablePrestart 的布尔结果一致。
+    if (name != nullptr && value != nullptr &&
+        __atomic_load_n(&g_prestart_enabled, __ATOMIC_ACQUIRE) != 0 &&
+        is_prestart_property(name)) {
+        value[0] = 'f';
+        value[1] = 'a';
+        value[2] = 'l';
+        value[3] = 's';
+        value[4] = 'e';
+        value[5] = '\0';
+        return 5;
+    }
     return g_original_system_property_get != nullptr
         ? g_original_system_property_get(name, value) : 0;
 }
@@ -362,6 +386,7 @@ void atfork_child_reset() {
     __atomic_store_n(&g_module_loaded_logged, 0U, __ATOMIC_RELEASE);
     __atomic_store_n(&g_channel_status, launcher::kChannelNotQueried, __ATOMIC_RELEASE);
     __atomic_store_n(&g_snapshot_record, 0U, __ATOMIC_RELEASE);
+    __atomic_store_n(&g_prestart_enabled, 0U, __ATOMIC_RELEASE);
     __atomic_store_n(&g_safety_preflight_record, 0U, __ATOMIC_RELEASE);
     __atomic_store_n(&g_diagnostic_record, 0U, __ATOMIC_RELEASE);
     __atomic_store_n(&g_specialization_logged, 0U, __ATOMIC_RELEASE);
@@ -1288,6 +1313,12 @@ uint32_t guarded_install_once(const launcher::Snapshot &snapshot, uint32_t last_
         launcher::diagnostic_context_ready(context), launcher::safety_evidence(result), true};
     // 安装许可支配唯一的安装点：许可未通过就在这里早退，后面不会执行安装调用。
     if (!launcher::install_permitted(evidence)) return kPreflightInstallDenied;
+    // 只启用「禁止预加载」时没有需要改写的代码页调用点：属性观察器已由
+    // install_lifecycle_observers 安装，快照采纳与安全提交完成后即可生效。
+    if ((snapshot.features & launcher::kSnapshotMenuFeatures) == 0) {
+        (void)publish_installed_feature_state(snapshot);
+        return 0;
+    }
     if (launcher::kExperimentalInstallEnabled) {
         __android_log_print(ANDROID_LOG_WARN, "HELauncherInstall",
             "实验安装许可通过；开始验证桌面代码页与蹦床计划");
@@ -1786,6 +1817,11 @@ uint32_t query_configuration_once(launcher::Snapshot &snapshot, uint32_t &snapsh
         const uint32_t install_result =
             guarded_install_once(snapshot, previous_revision, persistence_committed, request_ptr);
         launcher::experimental_entry_trace("install_result", install_result);
+        // 只有整份快照被采纳后才启用预加载属性改写；任何安装/安全拒绝都保持透传。
+        __atomic_store_n(&g_prestart_enabled,
+            (install_result == 0 && launcher::snapshot_prestart_enabled(snapshot.features))
+                ? 1U : 0U,
+            __ATOMIC_RELEASE);
     }
     __atomic_store_n(&g_channel_status, blockers, __ATOMIC_RELEASE);
     __atomic_store_n(&g_channel_busy, 0, __ATOMIC_RELEASE);

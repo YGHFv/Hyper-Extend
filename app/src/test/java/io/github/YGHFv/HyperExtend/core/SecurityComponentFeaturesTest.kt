@@ -8,7 +8,7 @@ import org.junit.Test
 
 class SecurityComponentFeaturesTest {
     @Test fun securityComponentFeaturesHaveUniqueHostsAndGroups() {
-        assertEquals(24, SECURITY_COMPONENT_FEATURES.size)
+        assertEquals(28, SECURITY_COMPONENT_FEATURES.size)
         assertEquals(
             SECURITY_COMPONENT_FEATURES.size,
             SECURITY_COMPONENT_FEATURES.map { it.id }.distinct().size,
@@ -48,6 +48,10 @@ class SecurityComponentFeaturesTest {
                     "packageinstaller",
                     "guardprovider",
                     "joyose",
+                    "trustservice",
+                    "cloudservice",
+                    "analytics",
+                    "htmlviewer",
                     "market",
                 ),
             ),
