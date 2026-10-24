@@ -125,7 +125,8 @@ internal object HookDispatcher {
                 parts += "screenshot_clipboard=${ScreenshotClipboard.install(loader)}"
             }
             if (settings.isOn(ScreenshotEditorSettings.PRIVACY_FEATURE) ||
-                settings.isOn(ScreenshotEditorSettings.DEVICE_FEATURE)) {
+                settings.isOn(ScreenshotEditorSettings.DEVICE_FEATURE) ||
+                settings.isOn(ScreenshotEditorSettings.CROP_FEATURE)) {
                 parts += "screenshot_editor=${ScreenshotEditorHooks.install(loader, settings)}"
             }
             // Native capture-layer exclusion runs entirely in the screenshot host.

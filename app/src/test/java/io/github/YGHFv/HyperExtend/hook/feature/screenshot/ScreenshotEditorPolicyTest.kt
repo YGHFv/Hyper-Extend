@@ -47,6 +47,26 @@ class ScreenshotEditorPolicyTest {
         assertTrue(ScreenshotEditorSettings.DEVICE in HyperSettings.STRING_KEYS)
     }
 
+    @Test fun cropFloorKeepsHostMeaningAndNeverReachesZero() {
+        val floor = ScreenshotEditorSettings.CROP_MIN_SIZE_PX
+        // 只放宽，不收紧：宿主自己算出来的值更小或已为 0 时原样回传。
+        assertEquals(floor, ScreenshotEditorPolicy.relaxMinCropSize(100, floor))
+        assertEquals(8, ScreenshotEditorPolicy.relaxMinCropSize(8, floor))
+        assertEquals(0, ScreenshotEditorPolicy.relaxMinCropSize(0, floor))
+        // 归一是本功能与上游实现唯一的、也是刻意的差别。
+        assertTrue(ScreenshotEditorPolicy.relaxMinCropSize(100, floor) > 0)
+        // 下限本身不可信（0 或负）时不改宿主。
+        assertEquals(100, ScreenshotEditorPolicy.relaxMinCropSize(100, 0))
+        assertEquals(100, ScreenshotEditorPolicy.relaxMinCropSize(100, -1))
+    }
+
+    @Test fun cropFeatureStaysSimpleAndDefaultsOff() {
+        val crop = featureById(ScreenshotEditorSettings.CROP_FEATURE)!!
+        assertEquals(listOf("screenshot"), crop.scopes)
+        assertFalse(crop.defaultEnabled)
+        assertFalse(crop.hasDetailPage)
+    }
+
     @Test fun hooksUseOnlyTheExactCurrentHostMembers() {
         val signatures = javaClass.getResourceAsStream("/screenshot-editor-cached-host-members.txt")!!
             .bufferedReader().use { it.readLines().toSet() }
@@ -62,8 +82,9 @@ class ScreenshotEditorPolicyTest {
             val signature = descriptor(method.owner) + "->" + method.name +
                 "(" + method.parameters.joinToString("") { descriptor(it) } + ")" + descriptor(method.returns)
             assertTrue(signature, signature in signatures)
-            assertTrue(method.isStatic)
+            // 裁剪靶点是宿主内部类的 private 实例方法，其余三个都是静态方法。
+            assertEquals(method != ScreenshotEditorTargets.cropMinSize, method.isStatic)
         }
-        assertEquals(3, signatures.size)
+        assertEquals(4, signatures.size)
     }
 }

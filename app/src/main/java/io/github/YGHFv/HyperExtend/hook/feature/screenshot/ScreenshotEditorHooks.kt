@@ -16,6 +16,9 @@ internal object ScreenshotEditorHooks {
         if (settings.isOn(ScreenshotEditorSettings.DEVICE_FEATURE)) {
             installed += installShellDevice(loader, settings)
         }
+        if (settings.isOn(ScreenshotEditorSettings.CROP_FEATURE)) {
+            installed += installCropMinSize(loader, settings)
+        }
         return installed
     }
 
@@ -39,6 +42,19 @@ internal object ScreenshotEditorHooks {
                 val original = chain.args[0] as? String ?: return@hook chain.proceed()
                 val replacement = ScreenshotEditorPolicy.remapShellQuery(original, Build.DEVICE, custom)
                 if (replacement == original) chain.proceed() else chain.proceed(arrayOf(replacement))
+            }) 1 else 0
+    }
+
+    private fun installCropMinSize(loader: ClassLoader, settings: HookSettings): Int {
+        val method = NotificationHooks.resolve(loader, ScreenshotEditorTargets.cropMinSize) ?: return 0
+        return if (HookRuntime.hook(method, "screenshot_editor/cropMinSize") { chain ->
+                val original = chain.proceed()
+                if (!settings.isOn(ScreenshotEditorSettings.CROP_FEATURE)) return@hook original
+                // 原值参与计算而不是直接返回常量：宿主的 100 是「显示坐标系」的下限，
+                // 换分辨率/换版本时它可能已经不等于 100，直接写死会把宿主自己的判断换掉。
+                // 读不到整数就原样回传 —— 绝不为了「实现更简洁」去二次调用 proceed。
+                val current = original as? Int ?: return@hook original
+                ScreenshotEditorPolicy.relaxMinCropSize(current, ScreenshotEditorSettings.CROP_MIN_SIZE_PX)
             }) 1 else 0
     }
 }

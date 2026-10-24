@@ -369,6 +369,20 @@ val FEATURES: List<HyperFeature> = listOf(
         requirement = "仅当前 com.miui.screenshot 宿主的 ShellResourceFetcher 资源查询。只替换本次查询键，不修改 Build.DEVICE，不影响其他进程；目标设备没有对应资源时保持原生。修改后重启截图进程生效。",
     ),
     HyperFeature(
+        id = ScreenshotEditorSettings.CROP_FEATURE,
+        title = "解锁截图裁剪最小尺寸",
+        summary = "允许把截图裁剪框拖到比系统默认更小的范围",
+        scopes = listOf("screenshot"),
+        origin = "西米露 / HyperCeiler · UnlockMinimumCropLimit2",
+        license = "AGPL-3.0",
+        defaultEnabled = false,
+        requirement = "仅当前 com.miui.screenshot 宿主的裁剪框最小边长计算：" +
+            "全应用取证只有裁剪拖拽这一处在用它（唯一调用点）。" +
+            "只放宽下限、不取消下限（宿主的 100 放宽到 ${ScreenshotEditorSettings.CROP_MIN_SIZE_PX}，同一坐标系），" +
+            "以免拖出亚像素裁剪框后保存时因零宽位图崩溃；不改缩放上限、导出与保存逻辑。" +
+            "修改后重启截图进程生效。",
+    ),
+    HyperFeature(
         id = "screenshot_clipboard",
         title = "截图自动写入剪贴板",
         summary = "截图保存后自动复制到剪贴板",

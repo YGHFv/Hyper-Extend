@@ -139,7 +139,7 @@ enum class FeaturePanel(val title: String, vararg val featureIds: String) {
         "market_disable_ads", "market_device_modify"),
     THEME("主题与取色", "wallpaper_monet", "systemui_monet_custom"),
     SCREENSHOT_EDITOR("截图编辑器", ScreenshotEditorSettings.PRIVACY_FEATURE,
-        ScreenshotEditorSettings.DEVICE_FEATURE),
+        ScreenshotEditorSettings.DEVICE_FEATURE, ScreenshotEditorSettings.CROP_FEATURE),
     CLIPBOARD("剪贴板", "clipboard_native_overlay", "screenshot_clipboard", "milink_clipboard_guard"),
     TRANSFER("文件接收", "mishare_receive_guard"),
     TOAST("Toast", ToastMaterialSettings.FEATURE),
