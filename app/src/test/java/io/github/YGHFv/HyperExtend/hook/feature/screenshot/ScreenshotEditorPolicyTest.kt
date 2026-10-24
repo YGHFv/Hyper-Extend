@@ -47,17 +47,25 @@ class ScreenshotEditorPolicyTest {
         assertTrue(ScreenshotEditorSettings.DEVICE in HyperSettings.STRING_KEYS)
     }
 
-    @Test fun cropFloorKeepsHostMeaningAndNeverReachesZero() {
-        val floor = ScreenshotEditorSettings.CROP_MIN_SIZE_PX
-        // 只放宽，不收紧：宿主自己算出来的值更小或已为 0 时原样回传。
-        assertEquals(floor, ScreenshotEditorPolicy.relaxMinCropSize(100, floor))
-        assertEquals(8, ScreenshotEditorPolicy.relaxMinCropSize(8, floor))
-        assertEquals(0, ScreenshotEditorPolicy.relaxMinCropSize(0, floor))
-        // 归一是本功能与上游实现唯一的、也是刻意的差别。
-        assertTrue(ScreenshotEditorPolicy.relaxMinCropSize(100, floor) > 0)
-        // 下限本身不可信（0 或负）时不改宿主。
+    @Test fun cropRelaxOnlyLoosensAndNeverReachesZero() {
+        val divisor = ScreenshotEditorSettings.CROP_RELAX_DIVISOR
+        assertEquals(12, ScreenshotEditorPolicy.relaxMinCropSize(100, divisor))
+        // 绝不收紧：结果永远不大于宿主自己算出来的值。
+        for (original in 1..400) {
+            val relaxed = ScreenshotEditorPolicy.relaxMinCropSize(original, divisor)
+            assertTrue("$original -> $relaxed", relaxed in 1..original)
+        }
+        // 上游的 returnConstant(0) 会抹掉钳位，让保存路径上的零宽位图成为可能。
+        // 小宿主值是最容易复现这一点的一档：4 / 8 整除就是 0。
+        assertEquals(1, ScreenshotEditorPolicy.relaxMinCropSize(4, divisor))
+        assertEquals(1, ScreenshotEditorPolicy.relaxMinCropSize(1, divisor))
+        // 宿主自己已不设限（0 或负）时原样回传，不替宿主编一个下限。
+        assertEquals(0, ScreenshotEditorPolicy.relaxMinCropSize(0, divisor))
+        assertEquals(-1, ScreenshotEditorPolicy.relaxMinCropSize(-1, divisor))
+        // 分母不可信时不改宿主。
+        assertEquals(100, ScreenshotEditorPolicy.relaxMinCropSize(100, 1))
         assertEquals(100, ScreenshotEditorPolicy.relaxMinCropSize(100, 0))
-        assertEquals(100, ScreenshotEditorPolicy.relaxMinCropSize(100, -1))
+        assertEquals(100, ScreenshotEditorPolicy.relaxMinCropSize(100, -8))
     }
 
     @Test fun cropFeatureStaysSimpleAndDefaultsOff() {

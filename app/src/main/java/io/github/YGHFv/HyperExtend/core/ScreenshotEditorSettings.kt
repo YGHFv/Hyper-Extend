@@ -13,30 +13,39 @@ object ScreenshotEditorSettings {
     fun device(raw: String): String? = raw.trim().takeIf(DEVICE_PATTERN::matches)
 
     /**
-     * 解锁后的裁剪框最小边长，单位是**显示坐标系**（宿主指令链
-     * `getImageMatrix().mapRadius(calculateMinPixels())` 之后的那个坐标系），
-     * 宿主的原生下限是同一坐标系里的常量 100。
+     * 裁剪框最小边长的放宽倍数（分母）。宿主算出的下限除以它，就是本功能给出的新下限。
      *
-     * 刻意**不归零**。宿主的保存路径 `ScreenCropEntry#apply` 直接拿裁剪框宽高去
-     * `Bitmap.createBitmap((int)(w + 0.5f), (int)(h + 0.5f), ...)`，中间没有任何非空校验。
-     * 归零之后这个下限不再钳位（`constraint()` 会允许拖到任意小），亚像素宽度取整为 0
-     * 就崩在保存动作上 —— 上游 HyperCeiler / Cemiuiler 的 `returnConstant(0)` 正是这条
-     * 路径上的崩溃窗口，本模块不照抄。
+     * ## 为什么不能像上游那样直接 `returnConstant(0)`
      *
-     * 换算链（决定「多大才算安全」）：`apply` 在取整之前先用
-     * `setRectToRect(mBitmapArea, RectF(0, 0, bitmap.width, bitmap.height), FILL)`
-     * 把 `mCropArea` 从显示坐标映回**图像像素**，所以真正进入 `createBitmap` 的是
-     * 「显示尺寸 × 图像/显示之比」。图大于屏时这个比值 > 1（更安全），图小于屏被放大显示时
-     * < 1，最窄处可以远小于显示值。因此下限只要 ≥ 1 个显示像素就不可能取整为 0，
-     * 留到 16 是为了给放大显示的场景留出余量，同时肉眼仍然认为那是一个可拖的框。
+     * 保存路径 `ScreenCropEntry#apply` 是
+     * `Bitmap.createBitmap((int)(mCropArea.width() + 0.5f), (int)(mCropArea.height() + 0.5f), …)`，
+     * **没有任何宽高非空校验**；而 `mCropArea` 能被拖到多小，正是由本方法这个下限钳位的
+     * （`onFreeResize` 里 4 处 `constraint()` 全拿它当硬下限）。下限归零 = 钳位消失 =
+     * 可以拖出亚像素裁剪框 = 保存时 `IllegalArgumentException: width must be > 0`，
+     * 崩在用户点「保存」的那一刻。上游 HyperCeiler / Cemiuiler 就是这个缺陷。
      *
-     * ⚠️ 数值选取的理由要说清楚：16 这个数**不是**宿主常量
-     * `CROP_AREA_MIN_PIXELS = 16.0f` 的直接复用 —— 那个常量在**图像坐标系**
-     * （`calculateMinPixels` 的返回值，还要经 `mapRadius` 映射），与本方法的返回坐标系
-     * 不同，量级不可比，只是因为宿主自己用了这个数才显得不突兀。
-     * 真正的硬约束只有「≥ 1 显示像素」加上「必须显著小于宿主的 100，否则不算解锁」。
+     * ## 为什么是「除以 8」而不是写死一个显示像素常量
+     *
+     * 单位不可移植。本方法的返回值在**显示坐标系**，而 `apply` 在取整之前先用
+     * `setRectToRect(mBitmapArea, RectF(0,0,bitmap.width, bitmap.height), FILL)`
+     * 把 `mCropArea` 从显示坐标映回**图像像素**，所以进 `createBitmap` 的是
+     * `显示尺寸 / scale`（`scale` = 显示/图像的缩放系数，即宿主 `mapRadius` 用的那个）。
+     * 任何绝对显示像素值都会随用户缩放倍数而变，写死的数没法保证非零。
+     *
+     * ⚠️ 这里否掉的正是「写死一个显示像素常量」这条路：宿主自己的
+     * `下限 = max(mapRadius(CROP_AREA_MIN_PIXELS=16.0f), 100) = max(16·scale, 100)`
+     * 是**随 scale 线性变化**的，它因此恒有 `下限/scale ≥ 16`，也就是宿主从来不允许
+     * 保存出小于 16 个**图像像素**的图。换成固定值就把这条自洽关系断了 ——
+     * 放大倍数越高，固定显示像素折算回图像侧越小，`scale = 400` 时 16 显示像素
+     * 只剩 0.04 图像像素，取整即 0，一样崩在保存上。上一版提交里的固定 16 就是这个缺陷。
+     *
+     * 按比例放宽则保留这条关系：宿主值 `/8` 之后仍有 `值/8/scale ≥ 2` 个图像像素。
+     * 整除最多再损失 `(k-1)/k / scale` 个像素，`scale ≈ 16` 的交叉处最不利。
+     * 对 `scale ∈ (0, 400)` 数值扫描：`k=8` 最坏 2.36（含 `+0.5f`）→ 位图宽恒 ≥ 2；
+     * `k=16` 最坏 1.36 → 恒 ≥ 1；`k=32` 最坏 0.88 → **会出现 0 宽位图**。
+     * 所以分母 8 是「留出一档余量」的选择，不是随手取的经验数；上限在 16 与 32 之间。
      */
-    const val CROP_MIN_SIZE_PX = 16
+    const val CROP_RELAX_DIVISOR = 8
 
     val config = listOf(
         HyperText(

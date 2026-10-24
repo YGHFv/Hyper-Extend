@@ -11,22 +11,30 @@ internal object ScreenshotEditorPolicy {
     }
 
     /**
-     * 把裁剪框的最小边长压到 [floorPx]，但**绝不归零、也绝不抬高**。
+     * 按比例放宽裁剪框的最小边长，并保证两件事：**只会变松**、**绝不归零**。
      *
-     * 为什么不照抄上游的 `returnConstant(0)`：宿主的保存路径
-     * `ScreenCropEntry#apply` 里是
-     * `Bitmap.createBitmap((int)(mCropArea.width() + 0.5f), (int)(mCropArea.height() + 0.5f), ...)`，
-     * **没有任何宽高非空校验**；而 `mCropArea` 正是被这个最小值钳位的矩形
-     * （`onFreeResize` 里 4 处 `constraint()` 都拿它当硬下限）。归零之后，把裁剪框拖到
-     * 亚像素宽度、导出时 `(int)(w + 0.5f)` 取整为 0，就会走到
-     * `IllegalArgumentException: width must be > 0` —— 直接崩在截图编辑器的保存动作上。
+     * 为什么不照抄上游的 `returnConstant(0)`：保存路径 `ScreenCropEntry#apply` 里是
+     * `Bitmap.createBitmap((int)(mCropArea.width() + 0.5f), (int)(mCropArea.height() + 0.5f), …)`，
+     * **没有任何宽高非空校验**；而 `mCropArea` 能拖到多小正是由这个最小值钳位的
+     * （`onFreeResize` 里 4 处 `constraint()` 都拿它当硬下限）。下限归零 = 钳位消失 =
+     * 能拖出亚像素裁剪框 = 点保存时 `IllegalArgumentException: width must be > 0`。
      *
-     * 用 `minOf` 而不是常量替换还有第二层意思：**只会变松，不会变紧**。
-     * 换宿主版本之后如果这个数本来就比下限小（甚至为 0，即宿主自己已不设限），
-     * 原样回传，不替宿主编一个更大的限制。
+     * 非零性分两层，说清楚各层管到哪里：
+     *
+     * - **当前宿主**由比例保证：宿主值 ≥ 16·scale，故 `值/8` 折算回图像侧仍 ≥ 2 个
+     *   图像像素，取整必然非零。这一层是**可证明**的。
+     * - `coerceAtLeast(1)` 只保证「下限不被我们彻底抹掉」，它管的是另一类缺陷：
+     *   宿主公式若换成返回一个很小的值（返回 4、分母 8 → `4/8 == 0`），整除本身就
+     *   把下限变成了 0，等于我们亲手复现上游那个崩溃。钳到 1 之后
+     *   `original >= 1` 时结果必然落在 `1..original` —— 只放宽、不收紧、不清零。
+     *   ⚠️ 但**不要把它当成非零保存的保证**：1 个显示像素在放大状态下折算回图像侧
+     *   依然可能取整为 0。那一路只能靠比例成立，不能靠这个 1。
+     *
+     * 非正的宿主值（0 或负，语义是宿主自己已不设限）原样回传：不替它编一个限制，
+     * 也不让它变成我们引入的行为。
      */
-    fun relaxMinCropSize(original: Int, floorPx: Int): Int {
-        if (floorPx <= 0 || original <= 0) return original
-        return minOf(original, floorPx)
+    fun relaxMinCropSize(original: Int, divisor: Int): Int {
+        if (divisor <= 1 || original <= 0) return original
+        return (original / divisor).coerceAtLeast(1)
     }
 }

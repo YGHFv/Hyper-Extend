@@ -50,11 +50,11 @@ internal object ScreenshotEditorHooks {
         return if (HookRuntime.hook(method, "screenshot_editor/cropMinSize") { chain ->
                 val original = chain.proceed()
                 if (!settings.isOn(ScreenshotEditorSettings.CROP_FEATURE)) return@hook original
-                // 原值参与计算而不是直接返回常量：宿主的 100 是「显示坐标系」的下限，
-                // 换分辨率/换版本时它可能已经不等于 100，直接写死会把宿主自己的判断换掉。
+                // 按原值的比例放宽，而不是返回常量：宿主的下限在显示坐标系里，
+                // 会随用户缩放倍数变化，写死的绝对值换版本/换分辨率就失去意义。
                 // 读不到整数就原样回传 —— 绝不为了「实现更简洁」去二次调用 proceed。
                 val current = original as? Int ?: return@hook original
-                ScreenshotEditorPolicy.relaxMinCropSize(current, ScreenshotEditorSettings.CROP_MIN_SIZE_PX)
+                ScreenshotEditorPolicy.relaxMinCropSize(current, ScreenshotEditorSettings.CROP_RELAX_DIVISOR)
             }) 1 else 0
     }
 }

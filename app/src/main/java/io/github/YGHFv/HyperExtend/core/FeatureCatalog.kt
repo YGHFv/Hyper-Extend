@@ -378,7 +378,7 @@ val FEATURES: List<HyperFeature> = listOf(
         defaultEnabled = false,
         requirement = "仅当前 com.miui.screenshot 宿主的裁剪框最小边长计算：" +
             "全应用取证只有裁剪拖拽这一处在用它（唯一调用点）。" +
-            "只放宽下限、不取消下限（宿主的 100 放宽到 ${ScreenshotEditorSettings.CROP_MIN_SIZE_PX}，同一坐标系），" +
+            "只放宽下限、不取消下限（宿主的下限按 ${ScreenshotEditorSettings.CROP_RELAX_DIVISOR} 倍缩小，且至少保留 1 像素），" +
             "以免拖出亚像素裁剪框后保存时因零宽位图崩溃；不改缩放上限、导出与保存逻辑。" +
             "修改后重启截图进程生效。",
     ),
