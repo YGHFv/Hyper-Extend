@@ -446,15 +446,19 @@ val SYSTEM_UI_FEATURES: List<HyperFeature> = listOf(
         requirement = "锁屏、正在快捷回复、通知菜单和全屏来电等提醒不自动收起；系统延长提醒使用 10 秒。修改后重启系统界面生效，待真机验收。",
     ),
     HyperFeature(
-        id = "control_center_hide_carrier",
-        title = "隐藏控制中心运营商名称",
-        summary = "只隐藏运营商区域，保留隐私提示",
+        id = CarrierTextSettings.FEATURE,
+        title = "控制中心运营商名称",
+        summary = "去掉双卡分隔符、隐藏名称或显示设备名称",
         scopes = listOf("systemui"),
         origin = "西米露 / HyperCeiler · CustomCarrierText",
         license = "AGPL-3.0",
         defaultEnabled = false,
         group = ScopeFeatureGroup.CONTROL_CENTER,
-        requirement = "仅迁移隐藏名称模式，不含去分隔符、设备名称替换或隐藏 HD 图标；保留麦克风、相机、定位等隐私提示与布局占位。修改后重启系统界面生效，待真机验收。",
+        config = CarrierTextSettings.config,
+        requirement = "四种处理方式作用在同一处运营商文本上，只能选一个，默认「保持原生」。只影响控制中心与通知中心的运营商名称区域：" +
+            "隐藏名称只收起该区域，保留麦克风、相机、定位等隐私提示与布局占位；去掉分隔符同时收起双卡之间那条线并保留其占位宽度；" +
+            "显示设备名称读取系统设置里的设备名（读不到时保持原生文本，不伪造）。" +
+            "不改 HD/业务图标、不改双卡数量判定，也不改宿主自身显示的运营商来源。修改后重启系统界面生效，待真机验收。",
     ),
     HyperFeature(
         id = MediaCardSettings.LAYOUT,

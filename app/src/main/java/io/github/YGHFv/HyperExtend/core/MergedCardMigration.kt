@@ -165,4 +165,27 @@ internal object MergedCardMigration {
         else LockscreenShortcutSettings.MODE_FLASHLIGHT
         return Plan(switches, mapOf(LockscreenShortcutSettings.MODE to selected))
     }
+
+    /**
+     * v7→v8：纯开关「隐藏控制中心运营商名称」→ [CarrierTextSettings] 的四选一。
+     *
+     * 卡片主键**没变**（仍是 `control_center_hide_carrier`），所以要搬的只有 `mode`：
+     * 老用户当时唯一能做的事就是隐藏名称，那正是合并后的 `MODE_HIDE`。
+     * 不写这一笔的话，升级后 `mode` 读出来是缺省的「保持原生」——
+     * 他正在用的隐藏会静默失效，而开关明明还开着（最难查的那种 bug）。
+     *
+     * - 开关为真且没显式选过处理方式 → 写 `mode=2`。
+     * - 开关为真但已经选过（升级后又进过界面）→ 只保留卡片，不动他的选择。
+     * - 开关为假或从没出现过 → 一个字节都不写。「只加不减」的老规矩：
+     *   写 `mode=0` 对一个关着的功能毫无意义，却会把它标成「用户显式选过保持原生」。
+     *
+     * @param hide 老布尔开关的值；键不存在传 null
+     * @param mode 当前已存的处理方式；没存过传 null
+     * @return 需要写入的键；无事可做时返回 null
+     */
+    fun carrierTextModePlan(hide: Boolean?, mode: String?): Plan? {
+        if (hide != true) return null
+        if (mode != null) return Plan(emptyMap(), emptyMap())
+        return Plan(emptyMap(), mapOf(CarrierTextSettings.MODE to CarrierTextSettings.MODE_HIDE))
+    }
 }

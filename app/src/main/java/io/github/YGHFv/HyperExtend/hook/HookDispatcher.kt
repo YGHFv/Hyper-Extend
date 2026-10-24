@@ -15,6 +15,7 @@ package io.github.YGHFv.HyperExtend.hook
 import android.content.pm.ApplicationInfo
 import io.github.YGHFv.HyperExtend.core.ModuleLog
 import io.github.YGHFv.HyperExtend.core.AppVolumeSettings
+import io.github.YGHFv.HyperExtend.core.CarrierTextSettings
 import io.github.YGHFv.HyperExtend.hook.feature.systemui.SystemUiPluginHooks
 import io.github.YGHFv.HyperExtend.hook.feature.volume.MiSoundVolumeHooks
 import io.github.YGHFv.HyperExtend.hook.feature.volume.MiSoundEffectHooks
@@ -57,6 +58,7 @@ import io.github.YGHFv.HyperExtend.hook.feature.systemui.LockScreenHooks
 import io.github.YGHFv.HyperExtend.hook.feature.systemui.NotificationHooks
 import io.github.YGHFv.HyperExtend.hook.feature.systemui.NotificationImportanceHooks
 import io.github.YGHFv.HyperExtend.hook.feature.systemui.NotificationExpansionHooks
+import io.github.YGHFv.HyperExtend.hook.feature.systemui.CarrierTextHooks
 import io.github.YGHFv.HyperExtend.hook.feature.systemui.ClipboardOverlayHooks
 import io.github.YGHFv.HyperExtend.hook.feature.systemui.ControlCenterHooks
 import io.github.YGHFv.HyperExtend.hook.feature.systemui.installSystemUiFeature
@@ -291,6 +293,8 @@ internal object HookDispatcher {
         parts += NotificationHooks.install(loader, settings)
         parts.installSystemUiFeature(settings, NotificationCountLimitHooks.FEATURE) { NotificationCountLimitHooks.install(loader) }
         parts += NotificationExpansionHooks.install(loader, settings)
+        // 控制中心运营商名称：上游那条四选一下拉框，独立于通知展开/收起两张卡。
+        parts.installSystemUiFeature(settings, CarrierTextSettings.FEATURE) { CarrierTextHooks.install(loader, settings) }
         parts += ControlCenterHooks.install(loader, settings)
         parts += SystemUiCustomHooks.install(loader, settings)
         parts += MediaCardHooks.install(loader, settings)

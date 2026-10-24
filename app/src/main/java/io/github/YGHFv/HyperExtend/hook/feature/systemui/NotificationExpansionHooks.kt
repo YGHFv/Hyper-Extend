@@ -25,17 +25,12 @@ internal object NotificationExpansionHooks {
     private const val PRESENTER = "com.android.systemui.statusbar.phone.StatusBarNotificationPresenter"
     internal val presenterTarget = SystemUiMethod(PRESENTER, "onExpandClicked", "void",
         listOf(ROW, "com.android.systemui.statusbar.notification.collection.EntryAdapter", "boolean"))
-    internal val carrierTarget = SystemUiMethod("com.android.systemui.controlcenter.shade.ControlCenterHeaderController",
-        "updateCarrierAndPrivacyVisible", "void", listOf(
-            "com.android.systemui.plugins.miui.statusbar.MiuiPrivacyController\$MiuiPromptInfo",
-            "com.android.systemui.plugins.miui.statusbar.MiuiPrivacyController\$AndroidPromptInfo"))
 
     fun install(loader: ClassLoader, settings: HookSettings): List<String> = buildList {
         installSystemUiFeature(settings, Settings.EXPAND) { expand(loader, SystemUiCustomSettings.packages(settings.string(Settings.PACKAGES))) }
         installSystemUiFeature(settings, Settings.COLLAPSE) {
             timeout(loader, settings.number(Settings.timeout.key, Settings.timeout.default, Settings.timeout.min, Settings.timeout.max) * 100L)
         }
-        installSystemUiFeature(settings, "control_center_hide_carrier") { hideCarrier(loader) }
     }
 
     private fun unlocked(row: View): Boolean = Reflect.attempt {
@@ -169,17 +164,6 @@ internal object NotificationExpansionHooks {
                 original
             }) count++
         return count
-    }
-
-    private fun hideCarrier(loader: ClassLoader): Int {
-        val type = Reflect.loadClass(loader, "com.android.systemui.controlcenter.shade.ControlCenterHeaderController") ?: return 0
-        val target = type.declaredMethods.single(carrierTarget::matches)
-        val field = Reflect.findField(type, "carrierLayout") ?: return 0
-        return if (HookRuntime.hookAfter(target, "control_center_hide_carrier/update") { chain, original ->
-                // Keep all privacy prompts and their visibility/spacing calculations intact.
-                (field.get(chain.thisObject) as? View)?.let { if (it.visibility == View.VISIBLE) it.visibility = View.INVISIBLE }
-                original
-            }) 1 else 0
     }
 }
 

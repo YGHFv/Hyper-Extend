@@ -22,6 +22,7 @@ import io.github.YGHFv.HyperExtend.core.MONET_SCHEME_KEY
 import io.github.YGHFv.HyperExtend.core.MergedCardMigration
 import io.github.YGHFv.HyperExtend.core.ModuleLog
 import io.github.YGHFv.HyperExtend.core.LockscreenShortcutSettings
+import io.github.YGHFv.HyperExtend.core.CarrierTextSettings
 import io.github.YGHFv.HyperExtend.core.NavigationHandleSettings
 import io.github.YGHFv.HyperExtend.core.NotificationImportanceSettings
 import io.github.YGHFv.HyperExtend.core.PercentageSettings
@@ -79,8 +80,11 @@ object HyperSettings {
      *     「处理方式」选择项（见 `core/LockscreenShortcutSettings`）：上游本来就是一个三选一下拉框。
      * v7：核心破解的 12 个独立开关合并为单一总开关 `system_framework_core_patch`，
      *     老用户只要开过其中任意一项，就把总开关补成开启（子项键原样保留）。
+     * v8：纯开关「隐藏控制中心运营商名称」升级为「处理方式」四选一
+     *     （见 `core/CarrierTextSettings`）：老开关为真的用户搬成 `mode=2`（隐藏名称），
+     *     也就是他当时唯一能做的那件事。卡片主键没变，所以只写这一个配置键。
      */
-    const val SCHEMA_VERSION = 7
+    const val SCHEMA_VERSION = 8
     /**
      * 字符串型设置。
      *
@@ -140,6 +144,8 @@ object HyperSettings {
             applyLeftButtonMerge(prefs, editor)
             // v6 -> v7：核心破解的多个独立开关并入单一总开关。
             applyCorePatchMasterMerge(prefs, editor)
+            // v7 -> v8：控制中心运营商名称的纯开关升级为「处理方式」四选一。
+            applyCarrierTextModeMerge(prefs, editor)
             editor.putInt(KEY_SCHEMA, SCHEMA_VERSION)
             editor.apply()
             ModuleLog.info("settings migrated schema $stored -> $SCHEMA_VERSION")
@@ -201,6 +207,20 @@ object HyperSettings {
         ) ?: return
         plan.applyTo(editor)
         editor.remove(LockscreenShortcutSettings.LEGACY_FLASHLIGHT_CARD)
+    }
+
+    /**
+     * v7→v8 的键搬迁：控制中心运营商名称的纯开关 → 「处理方式」四选一。
+     *
+     * 与前面几次合并不同，这里**没有老键要删**：卡片主键就是老开关的键，
+     * 它继续作为主开关存在。所以整个迁移只做一件事 —— 把「开着」显式落成 `mode=2`。
+     */
+    private fun applyCarrierTextModeMerge(prefs: SharedPreferences, editor: SharedPreferences.Editor) {
+        val plan = MergedCardMigration.carrierTextModePlan(
+            prefs.booleanOrNull(CarrierTextSettings.FEATURE),
+            prefs.stringOrNull(CarrierTextSettings.MODE),
+        ) ?: return
+        plan.applyTo(editor)
     }
 
     /**
@@ -457,8 +477,12 @@ object HyperSettings {
         val root = JSONObject(json)
         var applied = 0
         val editor = localPrefs(context).edit()
+        // 两段都要提前取出来：运营商那一笔搬迁**同时**读布尔段（老开关）与字符串段（已选的处理方式），
+        // 而它必须排在字符串段之后落笔 —— 见下面那段注释里空串的顺序问题。
+        val exportedSwitches = root.optJSONObject("switches")
+        val exportedStrings = root.optJSONObject("strings")
 
-        root.optJSONObject("switches")?.let { switches ->
+        exportedSwitches?.let { switches ->
             for (feature in FEATURES) {
                 if (applyBoolean(editor, switches, feature.id, feature.defaultEnabled)) applied++
                 for (option in feature.options) {
@@ -477,12 +501,29 @@ object HyperSettings {
                 plan.configs.forEach { (key, value) -> editor.putString(key, value); applied++ }
             }
         }
-        root.optJSONObject("strings")?.let { strings ->
+        exportedStrings?.let { strings ->
             for (key in STRING_KEYS) {
                 if (strings.has(key)) {
                     editor.putString(key, strings.optString(key, ""))
                     applied++
                 }
+            }
+        }
+
+        // 老备份里「隐藏控制中心运营商名称」还只是一个布尔开关：按同一条规则落成 mode=2。
+        // 不这么做的话，从 v0.1.6 之前的备份恢复会把开关恢复成开着、但处理方式停在「保持原生」，
+        // 界面显示「已开启」而什么都不改 —— 与迁移漏键是同一个 bug 的另一条入口。
+        //
+        // 放在字符串段**之后**是有原因的：这样老开关为真时这一笔是最后一手写下的值，
+        // 而「备份里已经带了显式 mode」时 plan 自己就是空的（不覆盖用户的选择），两种都不会互相打架。
+        // 导出只写非空的字符串配置，所以「键不存在」= 没显式选过；空串按同一个意思处理，
+        // 别让一个手改出来的空值把这次搬迁整个跳过（写在前面时它会反把 mode 清回空）。
+        exportedSwitches?.let { switches ->
+            MergedCardMigration.carrierTextModePlan(
+                switches.booleanOrNull(CarrierTextSettings.FEATURE),
+                exportedStrings?.stringOrNull(CarrierTextSettings.MODE)?.takeIf { it.isNotEmpty() },
+            )?.let { plan ->
+                plan.configs.forEach { (key, value) -> editor.putString(key, value); applied++ }
             }
         }
 

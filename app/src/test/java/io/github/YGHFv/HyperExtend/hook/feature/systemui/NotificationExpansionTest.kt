@@ -28,14 +28,12 @@ class NotificationExpansionTest {
         assertEquals(45, NotificationExpansionSettings.timeout.default)
         assertFalse(featureById(NotificationExpansionSettings.EXPAND)!!.defaultEnabled)
         assertFalse(featureById(NotificationExpansionSettings.COLLAPSE)!!.defaultEnabled)
-        assertTrue(featureById("control_center_hide_carrier")!!.requirement!!.contains("隐私"))
     }
-    @Test fun os4PresenterAndCarrierSignaturesAreNotLegacyOverloads() {
+
+    @Test fun os4PresenterSignatureIsNotTheLegacyOverload() {
         assertEquals(3, NotificationExpansionHooks.presenterTarget.parameters.size)
         assertEquals("com.android.systemui.statusbar.notification.collection.EntryAdapter",
             NotificationExpansionHooks.presenterTarget.parameters[1])
         assertEquals("boolean", NotificationExpansionHooks.presenterTarget.parameters[2])
-        assertEquals(2, NotificationExpansionHooks.carrierTarget.parameters.size)
-        assertTrue(NotificationExpansionHooks.carrierTarget.parameters.all { it.contains("PromptInfo") })
     }
 }
