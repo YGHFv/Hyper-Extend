@@ -427,6 +427,19 @@ val FEATURES: List<HyperFeature> = listOf(
             "当前为静态适配，未做设备验收。",
     ),
     HyperFeature(
+        id = MilinkSettings.UNLOCK_SEND_APP,
+        title = "解锁全部应用流转（设备互联侧）",
+        summary = "放宽设备互联侧的应用流转查询、设备能力与副屏白名单",
+        scopes = listOf("milink"),
+        origin = "西米露 / HyperCeiler · UnlockSendApp",
+        license = "AGPL-3.0",
+        defaultEnabled = false,
+        requirement = "仅放开设备互联宿主的 MiuiSynergySdk 查询结果、RemoteDeviceInfo 两项能力" +
+            "及副屏应用白名单；查询仍先经过 isMirrorNotAlive，不伪造远端存活。" +
+            "完整功能所需的 com.xiaomi.mirror 服务端白名单与 RelayApplication 处理尚无宿主材料，" +
+            "因此仅标记为设备互联侧部分支持。修改后重启设备互联生效，未做设备验收。",
+    ),
+    HyperFeature(
         id = "mishare_receive_guard",
         title = "接收文件索引冲突修复",
         summary = "绕过残留媒体索引，使用备用文件名接收",

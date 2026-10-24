@@ -27,6 +27,7 @@ import io.github.YGHFv.HyperExtend.core.MilinkSettings
 import io.github.YGHFv.HyperExtend.hook.feature.MilinkClipboardGuard
 import io.github.YGHFv.HyperExtend.hook.feature.milink.MilinkHpplayBlocker
 import io.github.YGHFv.HyperExtend.hook.feature.milink.MilinkRegionCheck
+import io.github.YGHFv.HyperExtend.hook.feature.milink.MilinkSendAppUnlock
 import io.github.YGHFv.HyperExtend.hook.feature.mishare.MiShareReceiveGuard
 import io.github.YGHFv.HyperExtend.hook.feature.NativeNotifyIcon
 import io.github.YGHFv.HyperExtend.hook.feature.NfcCardFace
@@ -148,6 +149,9 @@ internal object HookDispatcher {
             }
             if (settings.isOn(MilinkSettings.BLOCK_HPPLAY)) {
                 parts += "${MilinkSettings.BLOCK_HPPLAY}=${MilinkHpplayBlocker.install(loader)}"
+            }
+            if (settings.isOn(MilinkSettings.UNLOCK_SEND_APP)) {
+                parts += "${MilinkSettings.UNLOCK_SEND_APP}=${MilinkSendAppUnlock.install(loader)}"
             }
             parts.joinToString(",").ifEmpty { "no feature enabled" }
         }

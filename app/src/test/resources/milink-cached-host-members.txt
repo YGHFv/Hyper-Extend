@@ -3,3 +3,10 @@ Lcom/xiaomi/dist/universalclipboardservice/utils/LyraUtil;->getDeviceRegion(Land
 Lcom/xiaomi/dist/file/service/utils/LyraUtil;->isSameRegionWithLocal(Landroid/content/Context;Ljava/lang/String;)Z
 Lcom/xiaomi/dist/file/service/utils/LyraUtil;->getDeviceRegion(Landroid/content/Context;Ljava/lang/String;)Ljava/lang/String;
 Lcom/hpplay/common/utils/ContextPath;->makeDir([Ljava/lang/String;Ljava/lang/String;)V
+Lcom/xiaomi/mirror/synergy/MiuiSynergySdk;->isMirrorNotAlive()Z
+Lcom/xiaomi/mirror/synergy/MiuiSynergySdk;->isSupportSendApp(Landroid/content/Context;Ljava/lang/String;Ljava/lang/String;)Z
+Lcom/xiaomi/mirror/synergy/MiuiSynergySdk;->isSupportSendAppToPhone(Landroid/content/Context;Ljava/lang/String;)Z
+Lcom/xiaomi/mirror/synergy/CallMethod;->doCall(Landroid/content/ContentResolver;Ljava/lang/String;Ljava/lang/String;Landroid/os/Bundle;)Landroid/os/Bundle;
+Lcom/xiaomi/mirror/RemoteDeviceInfo;->isSupportSendApp()Z
+Lcom/xiaomi/mirror/RemoteDeviceInfo;->isSupportSubScreen()Z
+Lcom/milink/util/z0;->c(Ljava/lang/String;)Z

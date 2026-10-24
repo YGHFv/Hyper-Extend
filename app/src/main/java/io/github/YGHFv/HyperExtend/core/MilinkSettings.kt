@@ -5,4 +5,5 @@ package io.github.YGHFv.HyperExtend.core
 object MilinkSettings {
     const val REGION_CHECK = "milink_disable_pc_clipboard_region_check"
     const val BLOCK_HPPLAY = "milink_fuck_hpplay"
+    const val UNLOCK_SEND_APP = "milink_unlock_send_app"
 }

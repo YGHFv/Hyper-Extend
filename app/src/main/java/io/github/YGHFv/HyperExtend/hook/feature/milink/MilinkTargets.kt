@@ -25,6 +25,10 @@ internal object MilinkTargets {
         "com.xiaomi.dist.universalclipboardservice.utils.LyraUtil"
     private const val FILE_SERVICE_LYRA = "com.xiaomi.dist.file.service.utils.LyraUtil"
     private const val CONTEXT_PATH = "com.hpplay.common.utils.ContextPath"
+    private const val MIUI_SYNERGY_SDK = "com.xiaomi.mirror.synergy.MiuiSynergySdk"
+    private const val REMOTE_DEVICE_INFO = "com.xiaomi.mirror.RemoteDeviceInfo"
+    private const val CALL_METHOD = "com.xiaomi.mirror.synergy.CallMethod"
+    private const val SUB_SCREEN_APPS = "com.milink.util.z0"
 
     private val universalClipboardRegionCheck = MilinkTarget(
         owner = UNIVERSAL_CLIPBOARD_LYRA,
@@ -61,6 +65,60 @@ internal object MilinkTargets {
         returns = "void",
         isStatic = false,
     )
+    private val mirrorNotAlive = MilinkTarget(
+        owner = MIUI_SYNERGY_SDK,
+        name = "isMirrorNotAlive",
+        parameters = emptyList(),
+        returns = "boolean",
+        isStatic = true,
+    )
+    private val synergySendApp = MilinkTarget(
+        owner = MIUI_SYNERGY_SDK,
+        name = "isSupportSendApp",
+        parameters = listOf("android.content.Context", "java.lang.String", "java.lang.String"),
+        returns = "boolean",
+        isStatic = false,
+    )
+    private val synergySendAppToPhone = MilinkTarget(
+        owner = MIUI_SYNERGY_SDK,
+        name = "isSupportSendAppToPhone",
+        parameters = listOf("android.content.Context", "java.lang.String"),
+        returns = "boolean",
+        isStatic = false,
+    )
+    private val callMethod = MilinkTarget(
+        owner = CALL_METHOD,
+        name = "doCall",
+        parameters = listOf(
+            "android.content.ContentResolver",
+            "java.lang.String",
+            "java.lang.String",
+            "android.os.Bundle",
+        ),
+        returns = "android.os.Bundle",
+        isStatic = true,
+    )
+    private val remoteSendApp = MilinkTarget(
+        owner = REMOTE_DEVICE_INFO,
+        name = "isSupportSendApp",
+        parameters = emptyList(),
+        returns = "boolean",
+        isStatic = false,
+    )
+    private val remoteSubScreen = MilinkTarget(
+        owner = REMOTE_DEVICE_INFO,
+        name = "isSupportSubScreen",
+        parameters = emptyList(),
+        returns = "boolean",
+        isStatic = false,
+    )
+    private val subScreenApp = MilinkTarget(
+        owner = SUB_SCREEN_APPS,
+        name = "c",
+        parameters = listOf("java.lang.String"),
+        returns = "boolean",
+        isStatic = true,
+    )
 
     val regionTargets: List<MilinkTarget> = listOf(
         universalClipboardRegionCheck,
@@ -71,7 +129,27 @@ internal object MilinkTargets {
 
     val hpplayDirectoryTarget: MilinkTarget = hpplayMakeDir
 
-    val all: List<MilinkTarget> = regionTargets + hpplayDirectoryTarget
+    val sendAppEvidenceTargets: List<MilinkTarget> = listOf(
+        mirrorNotAlive,
+        synergySendApp,
+        synergySendAppToPhone,
+    )
+
+    val sendAppCallMethodTarget: MilinkTarget = callMethod
+
+    val sendAppAdditionalTargets: List<MilinkTarget> = listOf(
+        remoteSendApp,
+        remoteSubScreen,
+        subScreenApp,
+    )
+
+    val sendAppHookTargets: List<MilinkTarget> =
+        listOf(sendAppCallMethodTarget) + sendAppAdditionalTargets
+
+    val subScreenWhitelistTarget: MilinkTarget = subScreenApp
+
+    val all: List<MilinkTarget> = regionTargets + hpplayDirectoryTarget +
+        sendAppEvidenceTargets + sendAppHookTargets
 
     fun resolve(loader: ClassLoader, target: MilinkTarget): Method? {
         val clazz = Reflect.loadClass(loader, target.owner) ?: return null
@@ -89,6 +167,8 @@ internal object MilinkTargets {
         "boolean" -> Boolean::class.javaPrimitiveType!!
         "void" -> Void.TYPE
         "android.content.Context" -> Context::class.java
+        "android.content.ContentResolver" -> android.content.ContentResolver::class.java
+        "android.os.Bundle" -> android.os.Bundle::class.java
         "java.lang.String" -> String::class.java
         "[java.lang.String" -> Array<String>::class.java
         else -> error("unsupported Milink target type: $name")
