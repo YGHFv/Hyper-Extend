@@ -29,6 +29,7 @@ internal object SystemFrameworkCorePatchHooks {
     private const val OP_VERIFICATION_AGENT = "system_framework_core_patch_verification_agent"
     private const val OP_SIGNATURE = "system_framework_core_patch_signature"
     private const val OP_DIGEST = "system_framework_core_patch_digest"
+    private const val OP_OVERRIDE_SIGNATURE = "system_framework_core_patch_override_signature"
     private const val OP_SHARED_USER = "system_framework_core_patch_shared_user"
     private const val OP_ANDROID_INSTALLER = "system_framework_use_android_package_installer"
     private const val OP_FINGERPRINT = "system_framework_core_patch_fingerprint_guard"
@@ -59,6 +60,7 @@ internal object SystemFrameworkCorePatchHooks {
         count += installVerificationAgent(loader, settings)
         count += installSignatureBypass(loader, settings)
         count += installDigestBypass(loader, settings)
+        count += installSignatureOverride(loader, settings)
         count += installSharedUserBypass(loader, settings)
         count += installAndroidPackageInstaller(loader, settings)
         count += installFingerprintGuard(loader, settings)
@@ -275,6 +277,86 @@ internal object SystemFrameworkCorePatchHooks {
             }
         ) count++
         return count
+    }
+
+    /**
+     * 覆盖安装「同包名、不同签名」的应用，以及共享 UID 的能力判定。
+     *
+     * 宿主在 `PackageManagerServiceUtils#verifySignatures` 里用
+     * `SigningDetails#checkCapability(SigningDetails, int)` 判定新包能否继承已安装包的能力，
+     * 判否就抛 `PackageManagerException(-7, "Existing package … signatures do not match …")`。
+     * 上游 DigestCreakPatch 放宽的正是这一处，而本模块此前完全没有挂它 —— 于是其余靶点
+     * （签名方案版本、jar 摘要、分包精确匹配）全都被这个异常挡在前面，用户看到的现象就是
+     * 「核心破解开了，覆盖装不同签名的包仍然失败」。
+     *
+     * 放宽范围由 [CorePatchSignaturePolicy] 收敛：`PERMISSION`(4) 与 `AUTH`(16) 绝不伪造；
+     * SHARED_USER_ID(2) 只在「共享 UID 签名兼容」开启时才放宽。
+     * `checkCapability(String, int)` 这个重载服务于 key-set 升级与账户认证，不挂。
+     */
+    private fun installSignatureOverride(loader: ClassLoader, settings: HookSettings): Int {
+        val clazz = Reflect.loadClass(loader, SIGNING_DETAILS) ?: return missing(SIGNING_DETAILS)
+        val utils = Reflect.loadClass(loader, PM_UTILS)
+        val methods = Reflect.findMethods(clazz, "checkCapability", paramCount = 2)
+            .filter { it.returnType == Boolean::class.javaPrimitiveType }
+            .filter { it.parameterTypes[0] == clazz }
+        if (methods.isEmpty()) return missing("$SIGNING_DETAILS#checkCapability(SigningDetails,int)")
+        // UNKNOWN（无签名 / 首次安装）的 getSignatures() 恒为 null，用它区分「真有两把签名」
+        // 与「占位对象」。句柄在安装期解析一次：宿主改名时这里直接记一条 missing，
+        // 而不是让 hook 装上后在每次回调里静默反射失败（那种「开了没效果」最难查）。
+        val getSignatures = Reflect.findMethods(clazz, "getSignatures", paramCount = 0)
+            .firstOrNull { it.returnType.isArray }
+            ?.also { it.isAccessible = true }
+            ?: return missing("$SIGNING_DETAILS#getSignatures()")
+        // `SigningDetails` 是 final 类且方法体极小，ART 大概率把 checkCapability 编进调用方
+        // 成为内联副本 —— 只挂被 hook 那一个方法会出现「hook 装上了但永远不触发」。
+        // 因此先把那几处调用方反优化回解释执行（与上游 SharedUserPatch 同一手法）。
+        // 失败不阻断：本机 JIT 未必真的内联过，装了 hook 仍然可能正常生效。
+        //
+        // 名单就是宿主里 `checkCapability(SigningDetails,int)` 的全部调用方。
+        // `comparePackageSignatures` 与 `ComputerEngine#checkSignaturesInternal` 走的是
+        // `compareSignatures` 数组比较，**不经过** `checkCapability`，反优化它们没有任何作用；
+        // 而它们拦的是 overlay 与特权共享 UID（`-16`），本就不属于「覆盖安装不同签名」这条子项。
+        utils?.let { target ->
+            for (name in listOf(
+                "verifySignatures",
+                "matchSignatureInSystem",
+                "canJoinSharedUserId",
+            )) {
+                Reflect.findMethods(target, name).forEach {
+                    HookRuntime.deoptimize(it, "core_patch_override_signature/$PM_UTILS#$name")
+                }
+            }
+        }
+        return methods.count { method ->
+            HookRuntime.hook(
+                method,
+                "core_patch_override_signature/$SIGNING_DETAILS#checkCapability",
+            ) { chain ->
+                val override = settings.isOn(OP_OVERRIDE_SIGNATURE)
+                val sharedUser = settings.isOn(OP_SHARED_USER)
+                if (!override && !sharedUser) return@hook chain.proceed()
+                val capability = chain.args.getOrNull(1) as? Int
+                // 先用最便宜的判据筛掉「压根不在白名单」的调用：`PERMISSION`(4) 会被权限
+                // 校验频繁询问，若每次都抓栈就把一条热点路径变成常数级的栈回溯开销。
+                if (!CorePatchSignaturePolicy.forgesCapability(
+                        capability,
+                        overrideEnabled = override,
+                        sharedUserEnabled = sharedUser,
+                    )
+                ) {
+                    return@hook chain.proceed()
+                }
+                val frames = CorePatchSignaturePolicy.frameNames(Thread.currentThread().stackTrace)
+                if (!CorePatchSignaturePolicy.inInstallPath(frames)) return@hook chain.proceed()
+                val other = chain.args.getOrNull(0)
+                val self = chain.thisObject
+                if (self == null || other == null || self === other) return@hook chain.proceed()
+                if (getSignatures.invoke(self) == null || getSignatures.invoke(other) == null) {
+                    return@hook chain.proceed()
+                }
+                true
+            }
+        }
     }
 
     private fun installSharedUserBypass(loader: ClassLoader, settings: HookSettings): Int {

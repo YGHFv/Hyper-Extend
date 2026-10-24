@@ -217,7 +217,12 @@ object HyperSettings {
 
     private const val CORE_PATCH_MASTER = "system_framework_core_patch"
 
-    /** 合并前的 12 个独立开关键，也是合并后的子项键。 */
+    /**
+     * 合并前的 12 个独立开关键。
+     *
+     * 只列**当时真实存在**的键：新加的子项（例如 `…_override_signature`）不可能有
+     * 「合并前就被打开」的历史，塞进来反而会让这段迁移读起来像「所有子项都被追溯过」。
+     */
     private val CORE_PATCH_OPTION_KEYS = listOf(
         "system_framework_core_patch_allow_update_system_app",
         "system_framework_core_patch_bypass_isolation_violation",

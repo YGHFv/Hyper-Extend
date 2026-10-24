@@ -78,7 +78,7 @@ val SYSTEM_FRAMEWORK_FEATURES: List<HyperFeature> = listOf(
             HyperOption(
                 id = "system_framework_core_patch_signature",
                 title = "禁用软件包管理器签名验证",
-                summary = "允许使用旧签名方案或签名不符的应用继续安装",
+                summary = "允许使用旧签名方案的应用继续安装",
                 defaultEnabled = false,
                 group = "常规",
             ),
@@ -86,6 +86,18 @@ val SYSTEM_FRAMEWORK_FEATURES: List<HyperFeature> = listOf(
                 id = "system_framework_core_patch_digest",
                 title = "禁用系统完整性校验",
                 summary = "允许修改过内容的 APK 继续通过部分摘要检查",
+                defaultEnabled = false,
+                group = "常规",
+            ),
+            // 上游把这条叫 digest_creak，原文是「允许直接覆盖安装同包名不同签名的应用」。
+            // 它的靶点是 SigningDetails#checkCapability，与上面两项（都由上游 auth_creak 拆分而来）
+            // 不是同一处判定：本模块此前只迁了 auth_creak 那一半，所以「开了核心破解仍然覆盖不了
+            // 不同签名的包」—— 宿主先在 verifySignatures 里抛 -7，其余靶点根本轮不到。
+            // 上面「禁用软件包管理器签名验证」的旧文案曾经承诺过这件事，但实现里没有，已改回准确说法。
+            HyperOption(
+                id = "system_framework_core_patch_override_signature",
+                title = "允许覆盖安装不同签名",
+                summary = "同包名不同签名时继续覆盖安装",
                 defaultEnabled = false,
                 group = "常规",
             ),
