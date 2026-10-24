@@ -30,9 +30,14 @@ internal object CarrierTextTargets {
     )
 
     /**
-     * 双卡分隔符所在容器自己的测量入口。宿主只在「左右两个运营商都该显示」时
-     * 才把分隔符置为 VISIBLE，所以去掉 `" | "` 之后还必须让分隔符不可见，
-     * 否则会剩下一条孤立的竖线。用 `hookAfter`：先让宿主把宽度算完，只改可见性。
+     * 双卡分隔符所在容器自己的测量入口 —— 本 ROM 上「去掉分隔符」的**主要**手段。
+     *
+     * 取证：控制中心的左右两个 `ControlCenterCarrierText` 各自只收自己那个卡槽的文本
+     * （回调体开头 `if-ne slot, innerCarrierSlotId → return-void`），而 `" | "` 只出现在
+     * `updateCarrierText` 拼 `mCurrentFinalCarrier`（`23ee26`）那一处，喂给的是
+     * 双参重载 `onCarrierTextChanged(I,String)V`（状态栏 / 锁屏时钟），**不会进到控制中心**。
+     * 所以本 ROM 的分隔符是**独立视图**（`carrierSeparatorView` / `carrierSeparatorText`），
+     * 只能让视图不可见；文本剥离留在策略里当作跨版本兜底，在本 ROM 上是无害的空操作。
      */
     val measure = SystemUiMethod(LAYOUT, "onMeasure", "void", listOf("int", "int"))
 

@@ -100,12 +100,21 @@ internal object CarrierTextHooks {
         ).filterNotNull()
         if (separators.isEmpty()) return 0
         return if (HookRuntime.hookAfter(measure, "control_center_hide_carrier/measure") { chain, original ->
-                // 先让宿主把宽度与可见性全部算完，只收回它刚刚置为 VISIBLE 的那条线：
-                // INVISIBLE 保留它占的位，GONE 会让原生布局重排（那是改布局，不是改分隔符）。
+                // 用 alpha 而不是可见性，两个原因都是硬的：
+                // 1) **可见性会被宿主改回去，跟着改就是一场反复的无效改动**。`onMeasure` 每一趟都
+                //    无条件把分隔符写成 VISIBLE（左右两张卡都该显示时）或 GONE（只有一张时）。
+                //    我们挂在它之后改 INVISIBLE，下一趟测量就被宿主覆写回去 —— 两个值来回翻，
+                //    每翻一次都是一次重绘/重排，效果却时有时无（表现为「线一闪一闪」）。
+                //    上游 OS4 分支正是这么写的。alpha 是宿主完全不碰的属性：一次写定就稳定，
+                //    下面 `!= 0f` 的判断让后续重复测量连多余的那次重绘都不产生。
+                // 2) **不改宿主的宽度分配分支**。宿主测量时用 `getVisibility() == 0` 挑分隔符并
+                //    从可用宽度里减掉它；只要它不是 VISIBLE，宿主就走「只有一张卡」那条分支
+                //    把整行宽度给单侧文本 —— 那是改布局，不是去分隔符。alpha 保持 VISIBLE，
+                //    宽度分配与原生逐字一致。
                 if (settings.isOn(CarrierTextSettings.FEATURE)) {
                     for (field in separators) {
                         (Reflect.attempt { field.get(chain.thisObject) } as? View)
-                            ?.let { if (it.visibility == View.VISIBLE) it.visibility = View.INVISIBLE }
+                            ?.let { if (it.alpha != 0f) it.alpha = 0f }
                     }
                 }
                 original

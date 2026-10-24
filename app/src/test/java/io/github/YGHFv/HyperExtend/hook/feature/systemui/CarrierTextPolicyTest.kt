@@ -35,6 +35,13 @@ class CarrierTextPolicyTest {
         assertEquals("", transform("3", 2, 1, "中国联通", "我的手机"))
     }
 
+    @Test fun deviceNameStillFillsThePrimarySlotWhenTheHostSendsNoText() {
+        // 只有 SIM2 在用时的第一次回调：生产方对两张卡用同一个 count 去重，
+        // 跟着数量走的格位会漏掉第二次回调，所以这里刻意仍然把名字写进 0 号卡槽。
+        // 与「空文本不替宿主塞内容」不矛盾：那条是给分隔符档定的，这一档的语义就是固定占一格。
+        assertEquals("我的手机", transform("3", 2, 0, "", "我的手机"))
+    }
+
     @Test fun deviceNameFallsBackToNativeTextWhenUnavailable() {
         for (blank in listOf(null, "", "   ")) {
             assertNull(transform("3", 1, 0, "中国移动", blank))
