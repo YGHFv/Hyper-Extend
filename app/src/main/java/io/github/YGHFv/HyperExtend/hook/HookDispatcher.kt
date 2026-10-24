@@ -24,10 +24,12 @@ import io.github.YGHFv.HyperExtend.hook.feature.ScreenshotClipboard
 import io.github.YGHFv.HyperExtend.hook.feature.screenshot.ScreenshotEditorHooks
 import io.github.YGHFv.HyperExtend.core.ScreenshotEditorSettings
 import io.github.YGHFv.HyperExtend.core.MilinkSettings
+import io.github.YGHFv.HyperExtend.core.MiShareSettings
 import io.github.YGHFv.HyperExtend.hook.feature.MilinkClipboardGuard
 import io.github.YGHFv.HyperExtend.hook.feature.milink.MilinkHpplayBlocker
 import io.github.YGHFv.HyperExtend.hook.feature.milink.MilinkRegionCheck
 import io.github.YGHFv.HyperExtend.hook.feature.milink.MilinkSendAppUnlock
+import io.github.YGHFv.HyperExtend.hook.feature.mishare.MiShareAutoTurnOffGuard
 import io.github.YGHFv.HyperExtend.hook.feature.mishare.MiShareReceiveGuard
 import io.github.YGHFv.HyperExtend.hook.feature.NativeNotifyIcon
 import io.github.YGHFv.HyperExtend.hook.feature.NfcCardFace
@@ -156,8 +158,14 @@ internal object HookDispatcher {
             parts.joinToString(",").ifEmpty { "no feature enabled" }
         }
         "com.miui.mishare.connectivity" -> { loader, settings ->
-            if (settings.isOn("mishare_receive_guard")) "mishare_receive_guard=${MiShareReceiveGuard.install(loader)}"
-            else "no feature enabled"
+            val parts = mutableListOf<String>()
+            if (settings.isOn("mishare_receive_guard")) {
+                parts += "mishare_receive_guard=${MiShareReceiveGuard.install(loader)}"
+            }
+            if (settings.isOn(MiShareSettings.DISABLE_AUTO_OFF)) {
+                parts += "${MiShareSettings.DISABLE_AUTO_OFF}=${MiShareAutoTurnOffGuard.install(loader)}"
+            }
+            parts.joinToString(",").ifEmpty { "no feature enabled" }
         }
         "com.miui.home" -> { loader, settings ->
             val installed = SystemLockTaskHooks.installLauncher(loader, settings)

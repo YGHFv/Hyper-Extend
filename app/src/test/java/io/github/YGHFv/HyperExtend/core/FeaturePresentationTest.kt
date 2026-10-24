@@ -16,6 +16,7 @@ class FeaturePresentationTest {
                 "screenshot_clipboard", "milink_clipboard_guard",
                 MilinkSettings.REGION_CHECK, MilinkSettings.BLOCK_HPPLAY,
                 MilinkSettings.UNLOCK_SEND_APP, "mishare_receive_guard",
+                MiShareSettings.DISABLE_AUTO_OFF,
                 "screenshot_unlock_privacy_marking", "screenshot_unlock_minimum_crop_limit",
                 "rotation_suggestion", "rotation_lock_fix", "status_bar_double_tap", "status_bar_screenshot_hide",
                 "home_other_disable_prestart",

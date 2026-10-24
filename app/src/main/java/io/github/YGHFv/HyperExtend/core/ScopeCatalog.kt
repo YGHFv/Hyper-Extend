@@ -177,7 +177,7 @@ val SCOPES: List<HyperScope> = listOf(
     HyperScope(
         id = "mishare",
         title = "小米互传",
-        summary = "接收文件保存与媒体库索引冲突保护",
+        summary = "接收文件保存与临时开启自动关闭治理",
         process = "com.miui.mishare.connectivity",
         restartKind = RestartKind.KILL,
     ),

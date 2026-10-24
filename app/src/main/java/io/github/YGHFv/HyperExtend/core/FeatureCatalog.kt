@@ -450,6 +450,18 @@ val FEATURES: List<HyperFeature> = listOf(
         requirement = "在接收端启用并重启互传。需 Android 11+，不限制互传版本；目标方法不匹配时跳过。仅处理 Download/MiShare，不删除索引或主动覆盖文件。",
     ),
     HyperFeature(
+        id = MiShareSettings.DISABLE_AUTO_OFF,
+        title = "阻止互传自动关闭",
+        summary = "阻止临时开启到点自动关闭",
+        scopes = listOf("mishare"),
+        origin = "西米露 / HyperCeiler · NoAutoTurnOff",
+        license = "AGPL-3.0",
+        defaultEnabled = false,
+        requirement = "启用后需重启互传生效。只跳过互传自己建立的 10 分钟自动关闭定时器，" +
+            "不伪造互传开关状态；目标方法不匹配时跳过。上游的全局字符串替换与全局 Toast 抑制" +
+            "刻意不迁移，所以「%d 分钟后自动关闭」的提示仍会照原样出现。当前为静态适配，未做设备验收。",
+    ),
+    HyperFeature(
         id = "wallpaper_monet",
         group = ScopeFeatureGroup.SYSTEM_UI_OTHER,
         title = "壁纸取色修复",

@@ -143,7 +143,7 @@ enum class FeaturePanel(val title: String, vararg val featureIds: String) {
     CLIPBOARD("剪贴板", "clipboard_native_overlay", "screenshot_clipboard"),
     MILINK("跨设备互联", "milink_clipboard_guard", MilinkSettings.REGION_CHECK,
         MilinkSettings.BLOCK_HPPLAY, MilinkSettings.UNLOCK_SEND_APP),
-    TRANSFER("文件接收", "mishare_receive_guard"),
+    TRANSFER("文件接收", "mishare_receive_guard", MiShareSettings.DISABLE_AUTO_OFF),
     TOAST("Toast", ToastMaterialSettings.FEATURE),
     CARD("卡面", "nfc_card_face"),
     CREDENTIALS("凭据与通行密钥", "passkey_fix"),
