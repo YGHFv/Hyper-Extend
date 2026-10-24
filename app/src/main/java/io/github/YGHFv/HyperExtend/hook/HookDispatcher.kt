@@ -23,7 +23,10 @@ import io.github.YGHFv.HyperExtend.core.NFC_IMAGE_KEY
 import io.github.YGHFv.HyperExtend.hook.feature.ScreenshotClipboard
 import io.github.YGHFv.HyperExtend.hook.feature.screenshot.ScreenshotEditorHooks
 import io.github.YGHFv.HyperExtend.core.ScreenshotEditorSettings
+import io.github.YGHFv.HyperExtend.core.MilinkSettings
 import io.github.YGHFv.HyperExtend.hook.feature.MilinkClipboardGuard
+import io.github.YGHFv.HyperExtend.hook.feature.milink.MilinkHpplayBlocker
+import io.github.YGHFv.HyperExtend.hook.feature.milink.MilinkRegionCheck
 import io.github.YGHFv.HyperExtend.hook.feature.mishare.MiShareReceiveGuard
 import io.github.YGHFv.HyperExtend.hook.feature.NativeNotifyIcon
 import io.github.YGHFv.HyperExtend.hook.feature.NfcCardFace
@@ -136,8 +139,17 @@ internal object HookDispatcher {
             parts.joinToString(",").ifEmpty { "no feature enabled" }
         }
         "com.milink.service" -> { loader, settings ->
-            if (settings.isOn("milink_clipboard_guard")) "milink_clipboard_guard=${MilinkClipboardGuard.install(loader)}"
-            else "no feature enabled"
+            val parts = mutableListOf<String>()
+            if (settings.isOn("milink_clipboard_guard")) {
+                parts += "milink_clipboard_guard=${MilinkClipboardGuard.install(loader)}"
+            }
+            if (settings.isOn(MilinkSettings.REGION_CHECK)) {
+                parts += "${MilinkSettings.REGION_CHECK}=${MilinkRegionCheck.install(loader)}"
+            }
+            if (settings.isOn(MilinkSettings.BLOCK_HPPLAY)) {
+                parts += "${MilinkSettings.BLOCK_HPPLAY}=${MilinkHpplayBlocker.install(loader)}"
+            }
+            parts.joinToString(",").ifEmpty { "no feature enabled" }
         }
         "com.miui.mishare.connectivity" -> { loader, settings ->
             if (settings.isOn("mishare_receive_guard")) "mishare_receive_guard=${MiShareReceiveGuard.install(loader)}"

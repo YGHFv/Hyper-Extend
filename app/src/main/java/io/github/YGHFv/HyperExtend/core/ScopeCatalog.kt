@@ -170,7 +170,7 @@ val SCOPES: List<HyperScope> = listOf(
     HyperScope(
         id = "milink",
         title = "设备互联",
-        summary = "跨设备剪贴板与文件读取保护",
+        summary = "跨设备剪贴板、文件读取与共享存储目录治理",
         process = "com.milink.service",
         restartKind = RestartKind.KILL,
     ),

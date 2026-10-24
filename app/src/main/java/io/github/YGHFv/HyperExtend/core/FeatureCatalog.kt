@@ -403,6 +403,30 @@ val FEATURES: List<HyperFeature> = listOf(
         requirement = "启用设备互联作用域，重启其进程生效。",
     ),
     HyperFeature(
+        id = MilinkSettings.REGION_CHECK,
+        title = "关闭电脑管家剪贴板地区校验",
+        summary = "修复电脑管家向手机或平板同步剪贴板时被地区校验拦截",
+        scopes = listOf("milink"),
+        origin = "西米露 / HyperCeiler · DisablePcManagerClipboardRegionCheck",
+        license = "AGPL-3.0",
+        defaultEnabled = false,
+        requirement = "仅设备互联的剪贴板与文件服务两组 LyraUtil 地区判断：" +
+            "将 isSameRegionWithLocal 固定为 true、getDeviceRegion 固定为 cn。" +
+            "不改设备鉴权、连接建立和传输方法；修改后重启设备互联生效。当前为静态适配，未做设备验收。",
+    ),
+    HyperFeature(
+        id = MilinkSettings.BLOCK_HPPLAY,
+        title = "阻止生成乐播投屏目录",
+        summary = "阻止设备互联通过乐播 SDK 在共享存储建立空目录",
+        scopes = listOf("milink"),
+        origin = "西米露 / HyperCeiler · FuckHpplay",
+        license = "AGPL-3.0",
+        defaultEnabled = false,
+        requirement = "仅跳过共享存储下 Xiaomi/com.milink.service 与旧版 com.milink.service 目录树的 " +
+            "ContextPath#makeDir；不碰私有目录，也不删除已有文件。修改后重启设备互联生效。" +
+            "当前为静态适配，未做设备验收。",
+    ),
+    HyperFeature(
         id = "mishare_receive_guard",
         title = "接收文件索引冲突修复",
         summary = "绕过残留媒体索引，使用备用文件名接收",

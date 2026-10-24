@@ -13,7 +13,8 @@ class FeaturePresentationTest {
     @Test fun standaloneSwitchesDoNotNeedAnExtraPage() {
         assertEquals(
             setOf(
-                "screenshot_clipboard", "milink_clipboard_guard", "mishare_receive_guard",
+                "screenshot_clipboard", "milink_clipboard_guard",
+                MilinkSettings.REGION_CHECK, MilinkSettings.BLOCK_HPPLAY, "mishare_receive_guard",
                 "screenshot_unlock_privacy_marking", "screenshot_unlock_minimum_crop_limit",
                 "rotation_suggestion", "rotation_lock_fix", "status_bar_double_tap", "status_bar_screenshot_hide",
                 "home_other_disable_prestart",
