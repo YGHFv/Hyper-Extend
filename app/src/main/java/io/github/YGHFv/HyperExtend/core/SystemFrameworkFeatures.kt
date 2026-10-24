@@ -108,6 +108,16 @@ val SYSTEM_FRAMEWORK_FEATURES: List<HyperFeature> = listOf(
                 defaultEnabled = false,
                 group = "常规",
             ),
+            // 上游把「覆盖安装不同签名」拆成 digest_creak 与 use_pre_signature 两个开关：
+            // 前者放宽能力判定与 key-set，后者额外把已安装应用的签名（含其 signature 级权限）
+            // 直接送给新包。风险高一档，所以这里同样拆成两个子项，不并到上一项里顺带打开。
+            HyperOption(
+                id = "system_framework_core_patch_use_pre_signature",
+                title = "沿用已安装应用的签名",
+                summary = "同包名时沿用已安装应用的签名与其签名级权限（仅用户主动安装生效）",
+                defaultEnabled = false,
+                group = "常规",
+            ),
             HyperOption(
                 id = "system_framework_core_patch_exact_signature",
                 title = "禁用分包签名匹配",

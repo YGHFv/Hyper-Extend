@@ -19,7 +19,7 @@ class SystemFrameworkCorePatchFeatureTest {
         assertEquals("核心破解", feature.title)
         assertFalse(feature.defaultEnabled)
         assertEquals(listOf("常规", "扩展"), featureDetailPanels(feature).map { it.title })
-        assertEquals(7, featureDetailPanels(feature)[0].options.size)
+        assertEquals(8, featureDetailPanels(feature)[0].options.size)
         assertEquals(6, featureDetailPanels(feature)[1].options.size)
     }
 
@@ -31,6 +31,7 @@ class SystemFrameworkCorePatchFeatureTest {
             "system_framework_core_patch_digest",
             "system_framework_core_patch_override_signature",
             "system_framework_core_patch_shared_user",
+            "system_framework_core_patch_use_pre_signature",
             "system_framework_core_patch_exact_signature",
             "system_framework_use_android_package_installer",
             "system_framework_core_patch_disable_low_api_check",

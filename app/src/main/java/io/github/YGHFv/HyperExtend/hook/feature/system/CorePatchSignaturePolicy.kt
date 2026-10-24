@@ -77,6 +77,38 @@ internal object CorePatchSignaturePolicy {
     )
 
     /**
+     * 「只有用户主动安装」才算数的帧：key-set 旁路与权限签名延续只在这里放开。
+     *
+     * ## 为什么不能只看 `preparePackage`
+     *
+     * 本机（A17）的调用图是**两条分开的管线**，取证自 services.jar 反编译：
+     * - `prepareInstallPackages -> preparePackage -> doesSignatureMatchForPermissions`
+     *   （`InstallPackageHelper` 内 `preparePackage` 的三处调用，逐字核对）
+     * - `installPackagesTraced -> reconcileInstallPackages -> ReconcilePackageUtils.reconcilePackages
+     *   -> shouldCheckUpgradeKeySetLocked`（`ReconcilePackageUtils:88`）
+     *
+     * 前者在 `preparePackage` 返回**之后**才走后者，所以 key-set 那两处的栈里**没有** `preparePackage`。
+     * 上游 SharedUserPatch 只按 `startsWith("preparePackage")` 判，在 A17 上对 `reconcilePackages`
+     * 这条路径根本命中不了（它那条 hook 实际只护住了 `doesSignatureMatchForPermissions` 的 key-set 分支）。
+     * 照抄那条判据的结果就是「子项开着、hook 装上了、永远不触发」，正是本模块最该避免的一类 bug。
+     *
+     * ## 三个名字够不够把开机扫描挡在外面
+     *
+     * 够，两条证据都核对过：
+     * - 开机/系统包扫描走 `processParseResult -> addForInitLI -> reconcilePackages`
+     *   （`InstallPackageHelper` 反编译 6577 -> 371），栈上没有这三个名字，仍走宿主判定。
+     * - 用户安装里 key-set 有两条到达路径：`preparePackage` 自己就直接调
+     *   `shouldCheckUpgradeKeySetLocked`/`checkUpgradeKeySetLocked`（5127/5129、5858/5860），
+     *   `installPackagesTraced` 也另走一条 `reconcileInstallPackages -> reconcilePackages`（2915 -> 102）。
+     *   只列 `preparePackage` 会漏掉后一条，所以这三个名字是必需的，不是保险起见。
+     */
+    private val USER_INSTALL_FRAMES = listOf(
+        "preparePackage",
+        "reconcileInstallPackages",
+        "installPackagesTraced",
+    )
+
+    /**
      * 该能力是否落在允许伪造的白名单内。
      *
      * `2`（SHARED_USER_ID）单独由「共享 UID 签名兼容」子项决定：上游把 1/2/8 一起放开，
@@ -102,6 +134,28 @@ internal object CorePatchSignaturePolicy {
                 frame.contains('$' + base)
         }
     }
+
+    /** 当前调用是否来自「用户主动安装」（`InstallPackageHelper#preparePackage`）这一条链。 */
+    fun inUserInstallPath(frameNames: Set<String>): Boolean = frameNames.any { frame ->
+        USER_INSTALL_FRAMES.any { base ->
+            frame == base ||
+                (frame.length > base.length && frame.startsWith(base) && frame[base.length] == '$') ||
+                frame.contains('$' + base)
+        }
+    }
+
+    /**
+     * 「沿用已安装签名」的包名门禁。
+     *
+     * `doesSignatureMatchForPermissions(definingPackageName, parsedPackage, flags)` 的第一个参数是
+     * **声明该权限的包名**（宿主在 `preparePackage` 里逐条权限调用它：自定义权限传应用自己的包名，
+     * 引用别人的权限则传那个定义方），第二个才是待安装包。
+     * 只有两者逐字相同才放行 —— 也就是「只允许一个新包沿用**它自己**以前那份签名所声明的权限」，
+     * 否则任意应用都能靠改名/改内容接走别人声明的 `signature` 级权限。
+     * 上游 DigestCreakPatch 用的是同一条判据（注释原文：avoid another one that tries to impersonate）。
+     */
+    fun samePackageName(installedName: String?, parsedName: String?): Boolean =
+        !installedName.isNullOrBlank() && !parsedName.isNullOrBlank() && installedName == parsedName
 
     /** 从真实栈帧取方法名集合。 */
     fun frameNames(stack: Array<StackTraceElement>): Set<String> =

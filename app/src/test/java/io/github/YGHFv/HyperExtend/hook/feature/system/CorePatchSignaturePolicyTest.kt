@@ -33,6 +33,43 @@ class CorePatchSignaturePolicyTest {
         assertTrue(forges(CorePatchSignaturePolicy.CAP_ROLLBACK))
     }
 
+    /**
+     * key-set 与「沿用已安装签名」只认用户安装链，开机扫描一律不放开。
+     *
+     * 用户安装有两个可辨识的帧：`preparePackage`（权限签名延续、以及它自己内联的 key-set 判定）
+     * 与 `installPackagesTraced`/`reconcileInstallPackages`（session 提交后的批量 reconcile）。
+     * 开机扫描走 `processParseResult -> addForInitLI -> reconcilePackages`，这三个帧一个都没有，
+     * 因此必须判否（失败关闭）—— 否则会在无人操作时改写系统包的签名与 key-set 判定。
+     */
+    @Test
+    fun userInstallPathAcceptsInstallPipelineFramesOnly() {
+        assertTrue(CorePatchSignaturePolicy.inUserInstallPath(setOf("preparePackage")))
+        // javac 合成与 lambda 后缀同样算用户安装。
+        assertTrue(CorePatchSignaturePolicy.inUserInstallPath(setOf("lambda\$preparePackage\$3")))
+        assertTrue(CorePatchSignaturePolicy.inUserInstallPath(setOf("access\$preparePackage")))
+        assertTrue(CorePatchSignaturePolicy.inUserInstallPath(setOf("installPackagesTraced")))
+        assertTrue(CorePatchSignaturePolicy.inUserInstallPath(setOf("reconcileInstallPackages")))
+        // 开机扫描：这些帧单独出现时不得放开。
+        assertFalse(CorePatchSignaturePolicy.inUserInstallPath(setOf("verifySignatures")))
+        assertFalse(CorePatchSignaturePolicy.inUserInstallPath(setOf("reconcilePackages")))
+        assertFalse(CorePatchSignaturePolicy.inUserInstallPath(setOf("addForInitLI")))
+        assertFalse(CorePatchSignaturePolicy.inUserInstallPath(setOf("processParseResult")))
+        assertFalse(CorePatchSignaturePolicy.inUserInstallPath(emptySet()))
+        // 前缀相似但不带 `$` 分隔的帧名不能误判成安装链。
+        assertFalse(CorePatchSignaturePolicy.inUserInstallPath(setOf("preparePackageFoo")))
+    }
+
+    /** 包名门禁是「沿用已安装签名」唯一的冒充防线，空值与不同名都必须判否。 */
+    @Test
+    fun preSignatureRequiresVerbatimPackageNameMatch() {
+        assertTrue(CorePatchSignaturePolicy.samePackageName("com.example.app", "com.example.app"))
+        assertFalse(CorePatchSignaturePolicy.samePackageName("com.example.app", "com.example.other"))
+        assertFalse(CorePatchSignaturePolicy.samePackageName("com.example.app", "com.example.appp"))
+        for (blank in listOf(null, "", "   ")) {
+            assertFalse(CorePatchSignaturePolicy.samePackageName(blank, "com.example.app"))
+            assertFalse(CorePatchSignaturePolicy.samePackageName("com.example.app", blank))
+        }
+    }
     @Test
     fun permissionAndAuthAreNeverForged() {
         for (capability in listOf(
