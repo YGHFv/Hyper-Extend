@@ -348,6 +348,27 @@ data class HyperOption(
  */
 val FEATURES: List<HyperFeature> = listOf(
     HyperFeature(
+        id = ScreenshotEditorSettings.PRIVACY_FEATURE,
+        title = "解锁截图隐私打码",
+        summary = "在截图画笔中启用隐私信息打码入口",
+        scopes = listOf("screenshot"),
+        origin = "西米露 / HyperCeiler · UnlockPrivacyMarking",
+        license = "AGPL-3.0",
+        defaultEnabled = false,
+        requirement = "仅当前 com.miui.screenshot 宿主，且宿主仍有 ScreenMosaicView#isSupportPrivacyMarking。只放宽入口判断，不伪造 OCR 结果、不绕过联网或识别失败提示；修改后重启截图进程生效。",
+    ),
+    HyperFeature(
+        id = ScreenshotEditorSettings.DEVICE_FEATURE,
+        title = "自定义截图外壳",
+        summary = "按指定设备标识选择截图编辑器外壳素材",
+        scopes = listOf("screenshot"),
+        origin = "西米露 / HyperCeiler · DeviceShellCustomize",
+        license = "AGPL-3.0",
+        defaultEnabled = false,
+        config = ScreenshotEditorSettings.config,
+        requirement = "仅当前 com.miui.screenshot 宿主的 ShellResourceFetcher 资源查询。只替换本次查询键，不修改 Build.DEVICE，不影响其他进程；目标设备没有对应资源时保持原生。修改后重启截图进程生效。",
+    ),
+    HyperFeature(
         id = "screenshot_clipboard",
         title = "截图自动写入剪贴板",
         summary = "截图保存后自动复制到剪贴板",

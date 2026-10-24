@@ -73,6 +73,7 @@ import io.github.YGHFv.HyperExtend.core.HyperColor
 import io.github.YGHFv.HyperExtend.core.MobileSignalSettings
 import io.github.YGHFv.HyperExtend.core.DualRowSignalSettings
 import io.github.YGHFv.HyperExtend.core.MobileTypeTextSettings
+import io.github.YGHFv.HyperExtend.core.ScreenshotEditorSettings
 import io.github.YGHFv.HyperExtend.core.MONET_SCHEMES
 import io.github.YGHFv.HyperExtend.core.MONET_SCHEME_KEY
 import io.github.YGHFv.HyperExtend.core.NFC_IMAGE_KEY
@@ -313,6 +314,8 @@ internal fun FeatureDetailPage(
                                         validate = { draft ->
                                             if (row.key == MobileTypeTextSettings.TEXT && draft.isNotBlank() &&
                                                 MobileTypeTextSettings.text(draft) == null) "最多 8 个字符，不能包含换行或方向控制符"
+                                            else if (row.key == ScreenshotEditorSettings.DEVICE && draft.isNotBlank() &&
+                                                ScreenshotEditorSettings.device(draft) == null) "最多 64 个字符，仅允许英文字母、数字、点、下划线和连字符"
                                             else null
                                         },
                                     )

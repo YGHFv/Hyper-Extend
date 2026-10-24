@@ -14,6 +14,7 @@ class FeaturePresentationTest {
         assertEquals(
             setOf(
                 "screenshot_clipboard", "milink_clipboard_guard", "mishare_receive_guard",
+                "screenshot_unlock_privacy_marking",
                 "rotation_suggestion", "rotation_lock_fix", "status_bar_double_tap", "status_bar_screenshot_hide",
                 "home_other_disable_prestart",
             ) + SYSTEM_FRAMEWORK_FEATURES.filterNot { it.hasDetailPage }.map { it.id } +

@@ -1,0 +1,3 @@
+Lcom/miui/gallery/editor/photo/screen/shell/res/ShellResourceFetcher;->getResId()J
+Lcom/miui/gallery/editor/photo/screen/shell/res/ShellResourceFetcher;->getResId(Ljava/lang/String;)J
+Lcom/miui/gallery/editor/photo/screen/mosaic/ScreenMosaicView;->isSupportPrivacyMarking()Z

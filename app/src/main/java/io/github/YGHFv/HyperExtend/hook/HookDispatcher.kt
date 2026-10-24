@@ -20,6 +20,8 @@ import io.github.YGHFv.HyperExtend.hook.feature.volume.MiSoundVolumeHooks
 import io.github.YGHFv.HyperExtend.hook.feature.volume.MiSoundEffectHooks
 import io.github.YGHFv.HyperExtend.core.NFC_IMAGE_KEY
 import io.github.YGHFv.HyperExtend.hook.feature.ScreenshotClipboard
+import io.github.YGHFv.HyperExtend.hook.feature.screenshot.ScreenshotEditorHooks
+import io.github.YGHFv.HyperExtend.core.ScreenshotEditorSettings
 import io.github.YGHFv.HyperExtend.hook.feature.MilinkClipboardGuard
 import io.github.YGHFv.HyperExtend.hook.feature.mishare.MiShareReceiveGuard
 import io.github.YGHFv.HyperExtend.hook.feature.NativeNotifyIcon
@@ -119,6 +121,10 @@ internal object HookDispatcher {
             val parts = mutableListOf<String>()
             if (settings.isOn("screenshot_clipboard")) {
                 parts += "screenshot_clipboard=${ScreenshotClipboard.install(loader)}"
+            }
+            if (settings.isOn(ScreenshotEditorSettings.PRIVACY_FEATURE) ||
+                settings.isOn(ScreenshotEditorSettings.DEVICE_FEATURE)) {
+                parts += "screenshot_editor=${ScreenshotEditorHooks.install(loader, settings)}"
             }
             // Native capture-layer exclusion runs entirely in the screenshot host.
             if (settings.isOn("status_bar_screenshot_hide")) {

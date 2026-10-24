@@ -156,7 +156,7 @@ val SCOPES: List<HyperScope> = listOf(
     HyperScope(
         id = "screenshot",
         title = "截屏",
-        summary = "截图保存与自动复制到剪贴板",
+        summary = "截图保存、编辑器外观与隐私打码",
         process = "com.miui.screenshot",
         restartKind = RestartKind.KILL,
     ),
