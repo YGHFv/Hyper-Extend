@@ -38,6 +38,7 @@ import io.github.YGHFv.HyperExtend.core.ProcessRestarter
 import io.github.YGHFv.HyperExtend.core.RestartKind
 import io.github.YGHFv.HyperExtend.core.RestartResult
 import io.github.YGHFv.HyperExtend.core.ScopeFeatureGroup
+import io.github.YGHFv.HyperExtend.core.directFeatureOfGroup
 import io.github.YGHFv.HyperExtend.core.featureGroupsOfScope
 import io.github.YGHFv.HyperExtend.core.featuresOfScopePage
 import io.github.YGHFv.HyperExtend.core.featurePanels
@@ -206,10 +207,19 @@ internal fun ScopeDetailPage(
                         if (index > 0) RowDivider()
                         val children = remember(scope.id, item) { featuresOfScopePage(scope.id, item) }
                         val enabled = children.count { isFeatureActive(it, switches, strings) }
+                        val direct = directFeatureOfGroup(item)
                         FeatureRow(
                             title = item.title,
                             summary = item.summary,
-                            statusText = "已启用 $enabled / ${children.size}",
+                            statusText = if (direct != null) {
+                                if (isFeatureActive(direct, switches, strings)) {
+                                    "已启用 · 进入设置"
+                                } else {
+                                    "进入设置"
+                                }
+                            } else {
+                                "已启用 $enabled / ${children.size}"
+                            },
                             onClick = { onOpenGroup(item) },
                         )
                     }

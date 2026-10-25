@@ -130,7 +130,7 @@ internal object SettingsFeatureHooks {
             count += hookScreenEnhancement(loader, "memc")
         }
         if (settings.isOn("system_settings_allow_never_lock_screen")) {
-            count += hookNeverLockScreen(loader)
+            count += hookMoreScreenTimeouts(loader)
         }
         if (settings.isOn("system_settings_more_notifications")) {
             count += hookMoreNotifications(loader)
@@ -982,10 +982,11 @@ internal object SettingsFeatureHooks {
     }
 
     /**
-     * OLED 宿主会把「永不」超时从下拉里过滤掉。设备策略没有设置上限时，
-     * 保留宿主原始条目，只执行按钮禁用状态刷新。
+     * 当前宿主的 `KeyguardTimeoutDropDownPreference#disableUnusableTimeouts()` 会在 OLED 上
+     * 把 2147483647（「永不」）过滤掉，并且原生数组只到 10 分钟。这里在原生过滤前补齐
+     * 20 / 30 / 60 分钟与「永不」；设备策略没有上限时跳过原生过滤，有上限时仍交给宿主裁剪。
      */
-    private fun hookNeverLockScreen(loader: ClassLoader): Int {
+    private fun hookMoreScreenTimeouts(loader: ClassLoader): Int {
         val clazz = Reflect.loadClass(
             loader,
             "com.android.settings.KeyguardTimeoutDropDownPreference",
@@ -996,32 +997,58 @@ internal object SettingsFeatureHooks {
         return if (HookRuntime.hook(method, "settings_neverlock/disableUnusableTimeouts") { chain ->
                 val preference = chain.thisObject
                 val context = Reflect.readField(preference, "mContext") as? Context
-                val policy = context?.getSystemService(Context.DEVICE_POLICY_SERVICE)
-                val maximum = if (policy is DevicePolicyManager) {
-                    policy.getMaximumTimeToLock(null)
-                } else {
-                    0L
-                }
+                if (context != null) extendScreenTimeouts(preference, context)
+
+                val maximum = context?.let { currentContext ->
+                    (currentContext.getSystemService(Context.DEVICE_POLICY_SERVICE)
+                        as? DevicePolicyManager)?.getMaximumTimeToLock(null)
+                } ?: 0L
                 if (maximum != 0L) return@hook chain.proceed()
-                if (!hasNeverTimeout(preference)) return@hook chain.proceed()
+
+                // 宿主无设备策略上限时不会自行保留「永不」，这里只刷新管理策略禁用态。
                 Reflect.callWith(preference, "updateDisableState", true)
                 null
             }
         ) 1 else 0
     }
 
-    private fun hasNeverTimeout(preference: Any): Boolean {
+    private fun extendScreenTimeouts(preference: Any, context: Context): Boolean {
         val entries = Reflect.callWith(preference, "getEntries") as? Array<*> ?: return false
         val values = Reflect.callWith(preference, "getEntryValues") as? Array<*> ?: return false
-        if (entries.size != values.size) return false
-        var neverCount = 0
-        for (index in values.indices) {
-            val entry = entries[index] ?: return false
-            val value = values[index]?.toString()?.toLongOrNull() ?: return false
-            if (entry.toString().isBlank() || value <= 0L || value > Int.MAX_VALUE) return false
-            if (value == Int.MAX_VALUE.toLong()) neverCount++
+        val labels = ADDITIONAL_SCREEN_TIMEOUTS.associate { option ->
+            option.millis.toLong() to moduleString(
+                context,
+                option.stringResource,
+                option.fallbackLabel,
+            )
         }
-        return neverCount == 1
+        val entryList = entries.map { it as? CharSequence ?: return false }
+        val valueList = values.map { it as? CharSequence ?: return false }
+        val merged = mergeScreenTimeoutOptions(
+            entryList,
+            valueList,
+            labels,
+        ) ?: return false
+        val mergedEntries = Array<CharSequence>(merged.size) { merged[it].second }
+        val mergedValues = Array<CharSequence>(merged.size) { merged[it].first.toString() }
+        if (!invokeCharSequenceArraySetter(preference, "setEntries", mergedEntries)) return false
+        return invokeCharSequenceArraySetter(preference, "setEntryValues", mergedValues)
+    }
+
+    private fun invokeCharSequenceArraySetter(
+        preference: Any,
+        name: String,
+        values: Array<CharSequence>,
+    ): Boolean {
+        val method = Reflect.findMethods(preference.javaClass, name, 1).firstOrNull {
+            it.parameterTypes[0].isArray &&
+                it.parameterTypes[0].componentType == CharSequence::class.java
+        } ?: return false
+        return Reflect.attempt {
+            method.isAccessible = true
+            method.invoke(preference, values)
+            true
+        } == true
     }
 
     private fun hookOverlayPermission(loader: ClassLoader): Int {

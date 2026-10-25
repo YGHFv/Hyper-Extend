@@ -69,6 +69,7 @@ import io.github.YGHFv.HyperExtend.core.HyperScope
 import io.github.YGHFv.HyperExtend.core.LauncherShareBridge
 import io.github.YGHFv.HyperExtend.core.NfcCardImage
 import io.github.YGHFv.HyperExtend.core.ScopeFeatureGroup
+import io.github.YGHFv.HyperExtend.core.directFeatureOfGroup
 import io.github.YGHFv.HyperExtend.core.enabledCountInScope
 import io.github.YGHFv.HyperExtend.core.entryScopes
 import io.github.YGHFv.HyperExtend.core.entryScope
@@ -389,7 +390,14 @@ private fun HyperApp(themeMode: Int, onThemeMode: (Int) -> Unit) {
                 onSwitch = setSwitch,
                 group = group,
                 onOpenFeature = { openFeatureId = it.id },
-                onOpenGroup = { openGroupId = it.name },
+                onOpenGroup = { group ->
+                    val direct = directFeatureOfGroup(group)
+                    if (direct != null) {
+                        openFeatureId = direct.id
+                    } else {
+                        openGroupId = group.name
+                    }
+                },
                 onBack = {
                     if (group != null) openGroupId = ""
                     else {

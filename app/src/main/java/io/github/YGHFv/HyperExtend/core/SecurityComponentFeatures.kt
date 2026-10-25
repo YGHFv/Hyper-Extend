@@ -233,12 +233,13 @@ val SECURITY_COMPONENT_FEATURES: List<HyperFeature> = listOf(
 
     HyperFeature(
         id = "security_center_disable_root_environment",
-        title = "隐藏 Root 环境检查",
-        summary = "关闭安全中心、病毒扫描与支付安全中的 Root 检测",
+        title = "跳过 Root 环境检测",
+        summary = "关闭病毒扫描、支付安全与安全分数的 Root 判断",
         scopes = listOf("securitycenter"),
         origin = "西米露 / HyperCeiler · DisableRootedCheck / DisableRootCheck",
         license = "AGPL-3.0",
         defaultEnabled = false,
+        requirement = "处理 w4.l、病毒扫描、系统 Root 模型与 XSOF 状态；不代替扫描项列表里的 Root 开关。",
         group = ScopeFeatureGroup.SECURITY_CENTER_SECURITY,
     ),
     HyperFeature(
@@ -393,13 +394,13 @@ val SECURITY_COMPONENT_FEATURES: List<HyperFeature> = listOf(
     ),
     HyperFeature(
         id = "security_center_disable_root_check_item",
-        title = "禁用 Root 检测",
-        summary = "让扫描项里的 Root 检查始终显示为关闭",
+        title = "隐藏扫描项中的 Root 项",
+        summary = "让安全扫描结果中的 Root 检测项始终显示为已关闭",
         scopes = listOf("securitycenter"),
         origin = "西米露 / HyperCeiler · DisableRootCheck",
         license = "AGPL-3.0",
         defaultEnabled = false,
-        requirement = "只关闭扫描项的 Root 检测开关，不修改设备实际 Root 状态。",
+        requirement = "只改写 w4.l#o() 的扫描项开关，不回退病毒扫描或其他 Root 环境检测。",
         group = ScopeFeatureGroup.SECURITY_CENTER_SECURITY,
     ),
     HyperFeature(
@@ -729,11 +730,12 @@ val SECURITY_COMPONENT_FEATURES: List<HyperFeature> = listOf(
     HyperFeature(
         id = "security_center_beauty_light_auto",
         title = "自动切换前置补光",
-        summary = "解除机型区域判断，让前置摄像助手自动启用补光能力",
+        summary = "恢复前置补光页里的自动切换开关",
         scopes = listOf("securitycenter"),
         origin = "西米露 / HyperCeiler · BeautyLightAuto",
         license = "AGPL-3.0",
         defaultEnabled = false,
+        requirement = "只恢复 preference_key_beauty_auto_light 与 sp_auto_change_brightness；不解锁前置摄像助手。",
         group = ScopeFeatureGroup.SECURITY_CENTER_BEAUTY,
     ),
     HyperFeature(
@@ -744,6 +746,7 @@ val SECURITY_COMPONENT_FEATURES: List<HyperFeature> = listOf(
         origin = "西米露 / HyperCeiler · BeautyLightAuto",
         license = "AGPL-3.0",
         defaultEnabled = false,
+        requirement = "只放行 q8.i#M() 的前置摄像助手能力门禁，不自动打开补光或相机。",
         group = ScopeFeatureGroup.SECURITY_CENTER_BEAUTY,
     ),
     HyperFeature(

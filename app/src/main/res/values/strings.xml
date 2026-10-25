@@ -4,4 +4,8 @@
     <string name="system_settings_wifipassword_btn_title">查看</string>
     <string name="system_settings_wifi_password_label">密码</string>
     <string name="system_settings_wifi_password_dlgtitle">WiFi 详情</string>
+    <string name="settings_screen_timeout_20_minutes">20 分钟</string>
+    <string name="settings_screen_timeout_30_minutes">30 分钟</string>
+    <string name="settings_screen_timeout_60_minutes">60 分钟</string>
+    <string name="settings_screen_timeout_never">永不</string>
 </resources>

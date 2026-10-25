@@ -50,6 +50,19 @@ class ScopeFeatureGroupTest {
             ),
             featureGroupsOfScope("system_server"),
         )
+        assertEquals(
+            "system_framework_core_patch",
+            directFeatureOfGroup(ScopeFeatureGroup.SYSTEM_FRAMEWORK_CORE)?.id,
+        )
+    }
+
+    @Test fun onlySingleDetailGroupsBypassTheGroupPage() {
+        assertEquals(
+            "security_center_sidebar_line_color",
+            directFeatureOfGroup(ScopeFeatureGroup.SECURITY_CENTER_SIDEBAR_APPEARANCE)?.id,
+        )
+        assertNull(directFeatureOfGroup(ScopeFeatureGroup.SECURITY_CENTER_BEAUTY))
+        assertNull(directFeatureOfGroup(ScopeFeatureGroup.SECURITY_CENTER_SECURITY))
     }
 
     @Test fun groupingDoesNotLoseFeaturesOrChangeHostCounts() {

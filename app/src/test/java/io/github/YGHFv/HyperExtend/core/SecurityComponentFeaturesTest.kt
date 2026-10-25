@@ -7,11 +7,15 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class SecurityComponentFeaturesTest {
-    @Test fun securityComponentFeaturesHaveUniqueHostsAndGroups() {
+    @Test fun securityComponentFeaturesHaveUniqueHostsGroupsAndTitles() {
         assertEquals(77, SECURITY_COMPONENT_FEATURES.size)
         assertEquals(
             SECURITY_COMPONENT_FEATURES.size,
             SECURITY_COMPONENT_FEATURES.map { it.id }.distinct().size,
+        )
+        assertEquals(
+            SECURITY_COMPONENT_FEATURES.size,
+            SECURITY_COMPONENT_FEATURES.map { it.title }.distinct().size,
         )
         for (feature in SECURITY_COMPONENT_FEATURES) {
             val scope = feature.entryScope
@@ -132,6 +136,33 @@ class SecurityComponentFeaturesTest {
                     "market",
                 ),
             ),
+        )
+    }
+
+    @Test fun rootAndBeautyEntriesKeepTheirDistinctHostPermissions() {
+        assertEquals(
+            "跳过 Root 环境检测",
+            featureById("security_center_disable_root_environment")?.title,
+        )
+        assertEquals(
+            "隐藏扫描项中的 Root 项",
+            featureById("security_center_disable_root_check_item")?.title,
+        )
+        assertEquals(
+            "自动切换前置补光",
+            featureById("security_center_beauty_light_auto")?.title,
+        )
+        assertEquals(
+            "解锁前置摄像助手",
+            featureById("security_center_beauty_face")?.title,
+        )
+        assertTrue(
+            featureById("security_center_beauty_light_auto")
+                ?.requirement?.contains("不解锁前置摄像助手") == true,
+        )
+        assertTrue(
+            featureById("security_center_beauty_face")
+                ?.requirement?.contains("不自动打开补光或相机") == true,
         )
     }
 }

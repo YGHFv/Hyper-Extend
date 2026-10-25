@@ -53,6 +53,14 @@ class SettingsFeaturesTest {
         }
     }
 
+    @Test fun screenTimeoutFeatureDescribesAllAdditionalChoices() {
+        val feature = featureById("system_settings_allow_never_lock_screen")
+        assertNotNull(feature)
+        assertEquals("解锁更多自动锁屏时间", feature?.title)
+        assertTrue(feature?.summary?.contains("20、30、60 分钟") == true)
+        assertTrue(feature?.summary?.contains("永不") == true)
+    }
+
     @Test fun usbModeChoiceOnlyExposesModesProvidedByCurrentHost() {
         val feature = featureById("system_settings_usb_mode")
         assertNotNull(feature)

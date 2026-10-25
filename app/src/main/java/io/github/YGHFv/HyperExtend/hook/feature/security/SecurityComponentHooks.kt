@@ -545,6 +545,7 @@ internal object SecurityCenterSecurityHooks {
     private const val APP_DISABLE_MENU_ID = 666
     private const val APP_INFO_MENU_ID = 667
     private const val APP_MANAGER_MENU_ID = 668
+    private const val BEAUTY_AUTO_LIGHT_KEY = "preference_key_beauty_auto_light"
 
     private const val APP_DETAIL_VERSION_CODE = "hyperextend_app_version_code"
     private const val APP_DETAIL_UID = "hyperextend_app_uid"
@@ -811,15 +812,16 @@ internal object SecurityCenterSecurityHooks {
         if (settings.isOn("security_center_unlock_side_hide_freeform")) {
             count += hookSideHideFreeform(loader)
         }
-        if (settings.isOn("security_center_beauty_light_auto") ||
-            settings.isOn("security_center_beauty_face")
-        ) {
+        if (settings.isOn("security_center_beauty_light_auto")) {
+            count += hookBeautyLightAuto(loader)
+        }
+        if (settings.isOn("security_center_beauty_face")) {
             count += hookBooleanParam(
                 loader,
                 "q8.i",
                 "M",
                 0,
-                "security_beauty/light_auto",
+                "security_beauty/face",
                 true,
             )
         }
@@ -2116,6 +2118,46 @@ internal object SecurityCenterSecurityHooks {
         }
         if (count == 0) missingHook("security_beauty/privacy")
         return count
+    }
+
+    /**
+     * 「自动切换补光」与「解锁前置摄像助手」不是同一个门禁。
+     *
+     * 当前宿主的 `BeautySettingsFragment#onCreatePreferences` 仅在
+     * `com.miui.gamebooster.utils.r#d()` 为 true（taoyao）时保留
+     * `preference_key_beauty_auto_light`；这个复选框实际读写的是
+     * `q8.i#L()` / `q8.i#q0(boolean)` 的 `sp_auto_change_brightness`。
+     * `q8.i#M()` 则只负责前置摄像助手的人脸能力分类。
+     *
+     * 不直接改写 `r#d()`，因为该方法还参与顶部能力图布局与亮度换算。这里只在宿主
+     * 完成偏好初始化后，把已被移除的自动补光复选框放回原分类，避免连带改变
+     * Face、隐私摄像头或人像居中。
+     */
+    private fun hookBeautyLightAuto(loader: ClassLoader): Int {
+        val clazz = Reflect.loadClass(
+            loader,
+            "com.miui.gamebooster.beauty.BeautySettingsFragment",
+        ) ?: return missingHook("security_beauty/BeautySettingsFragment")
+        val method = Reflect.findMethods(clazz, "onCreatePreferences", 2).singleOrNull {
+            it.returnType == Void.TYPE &&
+                it.parameterTypes[0] == Bundle::class.java &&
+                it.parameterTypes[1] == String::class.java
+        } ?: return missingHook("security_beauty/BeautySettingsFragment#onCreatePreferences")
+        return if (HookRuntime.hookAfter(
+            method,
+            "security_beauty/light_auto#preferences",
+        ) { chain, original ->
+                val autoLight = Reflect.readField(chain.thisObject, "f16571c")
+                val category = Reflect.readField(chain.thisObject, "f16572d")
+                if (autoLight != null && category != null) {
+                    val existing = Reflect.callWith(category, "findPreference", BEAUTY_AUTO_LIGHT_KEY)
+                    if (existing == null) {
+                        Reflect.callWith(category, "addPreference", autoLight)
+                    }
+                }
+                original
+            }
+        ) 1 else 0
     }
 
     private fun hookSidebarLineColor(settings: HookSettings): Int {

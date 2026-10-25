@@ -216,6 +216,9 @@ XSOF 环境任务链：
   `gamebooster.utils.s1` 与 `ea.b` 的当前方法签名均先静态核对后安装。
 - 气泡与前置摄像：气泡候选、活动气泡查询和序列化入口分别处理；
   前置补光、隐私摄像头与人像居中按能力 getter/写入方法分别放行。
+  2026-10-25 勘误：此前「自动切换补光」误与前置摄像助手共用
+  `q8.i#M()`，现已拆为 `BeautySettingsFragment#onCreatePreferences` 的偏好恢复；
+  `q8.i#M()` 只保留给「解锁前置摄像助手」。
 - 侧边栏线条颜色：使用当前安全中心
   `0x7f060e99`、`0x7f060e9a`、`0x7f060e9b` 资源，通过
   `Resources#getColor(int)` 与 `getColor(int, Theme)` 覆盖。

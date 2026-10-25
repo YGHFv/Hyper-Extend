@@ -247,7 +247,7 @@ enum class ScopeFeatureGroup(val scopeId: String, val title: String, val summary
     SECURITY_CENTER_SIDEBAR_APPEARANCE("securitycenter", "侧边栏外观", "线条颜色与视觉覆盖"),
     SETTINGS_HOME("settings", "首页与入口", "谷歌入口、国际版与澎湃 AI"),
     SETTINGS_CONNECTION("settings", "连接与共享", "网络加速与 NFC 页面"),
-    SETTINGS_DISPLAY("settings", "显示与锁屏", "触感、布局优化与永不锁屏"),
+    SETTINGS_DISPLAY("settings", "显示与锁屏", "触感、布局优化与自动锁屏时间"),
     SETTINGS_NOTIFICATION("settings", "通知", "系统应用与不可屏蔽频道"),
     SETTINGS_PERMISSION("settings", "权限", "悬浮窗权限直达"),
     SETTINGS_DEVELOPER("settings", "开发者选项", "应用冻结、刷新率与极致模式"),
@@ -276,6 +276,18 @@ fun featureGroupsOfScope(scopeId: String): List<ScopeFeatureGroup> =
 /** null 表示作用域主页的直属功能；首页总数仍使用未分组的 featuresOfScope。 */
 fun featuresOfScopePage(scopeId: String, group: ScopeFeatureGroup? = null): List<HyperFeature> =
     featuresOfScope(scopeId).filter { it.entryGroup == group }
+
+/**
+ * 只有一个详情功能的分类直接落到功能页。
+ *
+ * 分类页本身只负责收纳；当分类里只剩一行同名功能时，再让用户点一次只会制造
+ * 「核心破解 → 核心破解」这类重复入口。单功能分类保留在外层分类列表中，
+ * 但点击后直接打开它的详情页。纯开关仍留在分类页，避免跨级修改开关。
+ */
+fun directFeatureOfGroup(group: ScopeFeatureGroup): HyperFeature? =
+    featuresOfScopePage(group.scopeId, group)
+        .singleOrNull()
+        ?.takeIf { it.hasDetailPage }
 
 /**
  * 首页要显示的作用域入口。

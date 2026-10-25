@@ -147,14 +147,15 @@ val SETTINGS_FEATURES: List<HyperFeature> = listOf(
         group = ScopeFeatureGroup.SETTINGS_DISPLAY,
     ),
     HyperFeature(
+        // 沿用历史键，避免升级后丢失已有用户的开关状态。
         id = "system_settings_allow_never_lock_screen",
-        title = "允许永不锁屏",
-        summary = "在 OLED 设备上保留「永不」锁屏超时选项",
+        title = "解锁更多自动锁屏时间",
+        summary = "为自动锁屏增加 20、30、60 分钟与「永不」选项",
         scopes = listOf("settings"),
         origin = "西米露 / HyperCeiler · UnlockNeverSleepScreenOS4",
         license = "AGPL-3.0",
         defaultEnabled = false,
-        requirement = "仅当设备策略没有设置最长锁屏时间时生效。",
+        requirement = "仅在设备策略允许的范围内追加；设置了最长锁屏时间时仍由设备策略裁剪。",
         group = ScopeFeatureGroup.SETTINGS_DISPLAY,
     ),
     HyperFeature(
