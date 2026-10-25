@@ -10,3 +10,4 @@ Lcom/xiaomi/mirror/synergy/CallMethod;->doCall(Landroid/content/ContentResolver;
 Lcom/xiaomi/mirror/RemoteDeviceInfo;->isSupportSendApp()Z
 Lcom/xiaomi/mirror/RemoteDeviceInfo;->isSupportSubScreen()Z
 Lcom/milink/util/z0;->c(Ljava/lang/String;)Z
+Lkp/a;->a(Landroid/content/Context;)Z

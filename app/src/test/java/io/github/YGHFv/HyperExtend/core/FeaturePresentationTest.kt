@@ -15,7 +15,8 @@ class FeaturePresentationTest {
             setOf(
                 "screenshot_clipboard", "milink_clipboard_guard",
                 MilinkSettings.REGION_CHECK, MilinkSettings.BLOCK_HPPLAY,
-                MilinkSettings.UNLOCK_SEND_APP, "mishare_receive_guard",
+                MilinkSettings.UNLOCK_SEND_APP, MilinkSettings.ALLOW_CAMERA_DEVICES,
+                "mishare_receive_guard", TsmClientSettings.AUTO_NFC,
                 MiShareSettings.DISABLE_AUTO_OFF,
                 "screenshot_unlock_privacy_marking", "screenshot_unlock_minimum_crop_limit",
                 "rotation_suggestion", "rotation_lock_fix", "status_bar_double_tap", "status_bar_screenshot_hide",

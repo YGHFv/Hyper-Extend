@@ -27,7 +27,7 @@ class MilinkMigrationTest {
                 descriptor(target.returns)
             assertTrue(signature, signature in signatures)
         }
-        assertEquals(12, signatures.size)
+        assertEquals(13, signatures.size)
         assertTrue(MilinkTargets.regionTargets.all { it.isStatic })
         assertFalse(MilinkTargets.hpplayDirectoryTarget.isStatic)
         assertTrue(MilinkTargets.sendAppEvidenceTargets.first().isStatic)
@@ -37,6 +37,7 @@ class MilinkMigrationTest {
         assertFalse(MilinkTargets.sendAppAdditionalTargets[0].isStatic)
         assertFalse(MilinkTargets.sendAppAdditionalTargets[1].isStatic)
         assertTrue(MilinkTargets.subScreenWhitelistTarget.isStatic)
+        assertFalse(MilinkTargets.cameraDeviceTarget.isStatic)
     }
 
     @Test fun regionReplacementsKeepTheTwoExpectedValues() {
@@ -67,7 +68,8 @@ class MilinkMigrationTest {
         val region = featureById(MilinkSettings.REGION_CHECK)!!
         val hpplay = featureById(MilinkSettings.BLOCK_HPPLAY)!!
         val sendApp = featureById(MilinkSettings.UNLOCK_SEND_APP)!!
-        for (feature in listOf(region, hpplay, sendApp)) {
+        val camera = featureById(MilinkSettings.ALLOW_CAMERA_DEVICES)!!
+        for (feature in listOf(region, hpplay, sendApp, camera)) {
             assertEquals(listOf("milink"), feature.scopes)
             assertFalse(feature.defaultEnabled)
             assertEquals(FeaturePanel.MILINK, feature.panel)

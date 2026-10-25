@@ -25,12 +25,15 @@ import io.github.YGHFv.HyperExtend.hook.feature.screenshot.ScreenshotEditorHooks
 import io.github.YGHFv.HyperExtend.core.ScreenshotEditorSettings
 import io.github.YGHFv.HyperExtend.core.MilinkSettings
 import io.github.YGHFv.HyperExtend.core.MiShareSettings
+import io.github.YGHFv.HyperExtend.core.TsmClientSettings
 import io.github.YGHFv.HyperExtend.hook.feature.MilinkClipboardGuard
+import io.github.YGHFv.HyperExtend.hook.feature.milink.MilinkAllowCameraDevices
 import io.github.YGHFv.HyperExtend.hook.feature.milink.MilinkHpplayBlocker
 import io.github.YGHFv.HyperExtend.hook.feature.milink.MilinkRegionCheck
 import io.github.YGHFv.HyperExtend.hook.feature.milink.MilinkSendAppUnlock
 import io.github.YGHFv.HyperExtend.hook.feature.mishare.MiShareAutoTurnOffGuard
 import io.github.YGHFv.HyperExtend.hook.feature.mishare.MiShareReceiveGuard
+import io.github.YGHFv.HyperExtend.hook.feature.tsmclient.TsmAutoNfc
 import io.github.YGHFv.HyperExtend.hook.feature.NativeNotifyIcon
 import io.github.YGHFv.HyperExtend.hook.feature.NfcCardFace
 import io.github.YGHFv.HyperExtend.hook.feature.PasskeyFix
@@ -155,6 +158,10 @@ internal object HookDispatcher {
             if (settings.isOn(MilinkSettings.UNLOCK_SEND_APP)) {
                 parts += "${MilinkSettings.UNLOCK_SEND_APP}=${MilinkSendAppUnlock.install(loader)}"
             }
+            if (settings.isOn(MilinkSettings.ALLOW_CAMERA_DEVICES)) {
+                parts += "${MilinkSettings.ALLOW_CAMERA_DEVICES}=" +
+                    "${MilinkAllowCameraDevices.install(loader)}"
+            }
             parts.joinToString(",").ifEmpty { "no feature enabled" }
         }
         "com.miui.mishare.connectivity" -> { loader, settings ->
@@ -172,7 +179,13 @@ internal object HookDispatcher {
             if (installed > 0) "guided_access_home=$installed" else "no feature enabled"
         }
         HostPlatform.SYSTEMUI -> { loader, settings -> installSystemUi(loader, settings) }
-        HostPlatform.TSM_CLIENT -> { loader, settings -> installNfcCardFace(loader, settings) }
+        HostPlatform.TSM_CLIENT -> { loader, settings ->
+            val parts = mutableListOf(installNfcCardFace(loader, settings))
+            if (settings.isOn(TsmClientSettings.AUTO_NFC)) {
+                parts += "${TsmClientSettings.AUTO_NFC}=${TsmAutoNfc.install(loader)}"
+            }
+            parts.joinToString(",")
+        }
         HostPlatform.SETTINGS -> { loader, settings ->
             (ControlCenterHooks.installSettings(loader, settings) +
                 io.github.YGHFv.HyperExtend.hook.feature.systemui.NotificationManagementHooks.installSettings(loader, settings) +

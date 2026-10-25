@@ -29,6 +29,7 @@ internal object MilinkTargets {
     private const val REMOTE_DEVICE_INFO = "com.xiaomi.mirror.RemoteDeviceInfo"
     private const val CALL_METHOD = "com.xiaomi.mirror.synergy.CallMethod"
     private const val SUB_SCREEN_APPS = "com.milink.util.z0"
+    private const val CAMERA_DEVICE_ALLOW = "kp.a"
 
     private val universalClipboardRegionCheck = MilinkTarget(
         owner = UNIVERSAL_CLIPBOARD_LYRA,
@@ -119,6 +120,13 @@ internal object MilinkTargets {
         returns = "boolean",
         isStatic = true,
     )
+    private val cameraDeviceAllow = MilinkTarget(
+        owner = CAMERA_DEVICE_ALLOW,
+        name = "a",
+        parameters = listOf("android.content.Context"),
+        returns = "boolean",
+        isStatic = false,
+    )
 
     val regionTargets: List<MilinkTarget> = listOf(
         universalClipboardRegionCheck,
@@ -148,8 +156,10 @@ internal object MilinkTargets {
 
     val subScreenWhitelistTarget: MilinkTarget = subScreenApp
 
+    val cameraDeviceTarget: MilinkTarget = cameraDeviceAllow
+
     val all: List<MilinkTarget> = regionTargets + hpplayDirectoryTarget +
-        sendAppEvidenceTargets + sendAppHookTargets
+        sendAppEvidenceTargets + sendAppHookTargets + cameraDeviceTarget
 
     fun resolve(loader: ClassLoader, target: MilinkTarget): Method? {
         val clazz = Reflect.loadClass(loader, target.owner) ?: return null

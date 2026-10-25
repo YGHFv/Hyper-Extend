@@ -440,6 +440,18 @@ val FEATURES: List<HyperFeature> = listOf(
             "因此仅标记为设备互联侧部分支持。修改后重启设备互联生效，未做设备验收。",
     ),
     HyperFeature(
+        id = MilinkSettings.ALLOW_CAMERA_DEVICES,
+        title = "解锁相机设备白名单",
+        summary = "允许非白名单设备使用跨设备相机能力",
+        scopes = listOf("milink"),
+        origin = "西米露 / HyperCeiler · AllowCameraDevices",
+        license = "AGPL-3.0",
+        defaultEnabled = false,
+        requirement = "只让 kp.a#a(Context) 的设备允许判断返回 true；宿主后续的应用黑名单、" +
+            "授权规则、API 与 targetSdk 检查仍照常执行。不伪造远端设备在线，也不改动连接建立。" +
+            "修改后重启设备互联生效，当前为静态适配，未做设备验收。",
+    ),
+    HyperFeature(
         id = "mishare_receive_guard",
         title = "接收文件索引冲突修复",
         summary = "绕过残留媒体索引，使用备用文件名接收",
@@ -563,6 +575,19 @@ val FEATURES: List<HyperFeature> = listOf(
                 summary = "同步每张卡的自定义图片",
             ),
         ),
+    ),
+    HyperFeature(
+        id = TsmClientSettings.AUTO_NFC,
+        title = "刷卡页自动开启 NFC",
+        summary = "进入智能卡刷卡页时开启 NFC，退出后恢复原状态",
+        scopes = listOf("tsmclient"),
+        origin = "西米露 / HyperCeiler · AutoNfc",
+        license = "AGPL-3.0",
+        defaultEnabled = false,
+        requirement = "只挂小米智能卡 DoubleClickActivity 的 onCreate(Bundle) 与 onDestroy()。" +
+            "进入刷卡页且 NFC 原本关闭时开启；退出时仅在本次由本功能开启的情况下恢复关闭，" +
+            "原本开启的 NFC 不会被关掉。不改钱包授权链；隐藏 API 调用失败只记日志，" +
+            "不影响宿主。修改后强停小米智能卡生效，当前为静态适配，未做设备验收。",
     ),
     HyperFeature(
         id = "passkey_fix",
