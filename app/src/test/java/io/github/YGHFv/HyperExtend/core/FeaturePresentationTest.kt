@@ -19,6 +19,7 @@ class FeaturePresentationTest {
                 "mishare_receive_guard", TsmClientSettings.AUTO_NFC,
                 MiShareSettings.DISABLE_AUTO_OFF,
                 "screenshot_unlock_privacy_marking", "screenshot_unlock_minimum_crop_limit",
+                ScreenshotEditorSettings.SAVE_TO_PICTURES_FEATURE,
                 "rotation_suggestion", "rotation_lock_fix", "status_bar_double_tap", "status_bar_screenshot_hide",
                 "home_other_disable_prestart",
             ) + SYSTEM_FRAMEWORK_FEATURES.filterNot { it.hasDetailPage }.map { it.id } +

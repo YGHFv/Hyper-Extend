@@ -19,6 +19,9 @@ internal object ScreenshotEditorHooks {
         if (settings.isOn(ScreenshotEditorSettings.CROP_FEATURE)) {
             installed += installCropMinSize(loader, settings)
         }
+        if (settings.isOn(ScreenshotEditorSettings.SAVE_TO_PICTURES_FEATURE)) {
+            installed += installSaveToPictures(loader, settings)
+        }
         return installed
     }
 
@@ -56,5 +59,11 @@ internal object ScreenshotEditorHooks {
                 val current = original as? Int ?: return@hook original
                 ScreenshotEditorPolicy.relaxMinCropSize(current, ScreenshotEditorSettings.CROP_RELAX_DIVISOR)
             }) 1 else 0
+    }
+
+    private fun installSaveToPictures(loader: ClassLoader, settings: HookSettings): Int {
+        if (!settings.isOn(ScreenshotEditorSettings.SAVE_TO_PICTURES_FEATURE)) return 0
+        val method = NotificationHooks.resolve(loader, ScreenshotEditorTargets.usePicturesDirectory) ?: return 0
+        return if (HookRuntime.hookReturning(method, "screenshot_editor/saveToPictures", true)) 1 else 0
     }
 }

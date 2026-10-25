@@ -383,6 +383,19 @@ val FEATURES: List<HyperFeature> = listOf(
             "修改后重启截图进程生效。",
     ),
     HyperFeature(
+        id = ScreenshotEditorSettings.SAVE_TO_PICTURES_FEATURE,
+        title = "截图保存到 Pictures",
+        summary = "把新截图保存到 Pictures 目录",
+        scopes = listOf("screenshot"),
+        origin = "西米露 / HyperCeiler · SaveToPictures",
+        license = "AGPL-3.0",
+        defaultEnabled = false,
+        requirement = "仅当前 com.miui.screenshot 宿主。只把 Util.n() 的目录判定固定为 true，" +
+            "让主截图、后置截图、图片保存、标注导出与编辑器导出统一选择 Environment.DIRECTORY_PICTURES；" +
+            "不改 Environment.DIRECTORY_DCIM 静态字段，不影响其他应用或其他进程。已保存文件不移动。" +
+            "修改后重启截图进程生效。",
+    ),
+    HyperFeature(
         id = "screenshot_clipboard",
         title = "截图自动写入剪贴板",
         summary = "截图保存后自动复制到剪贴板",

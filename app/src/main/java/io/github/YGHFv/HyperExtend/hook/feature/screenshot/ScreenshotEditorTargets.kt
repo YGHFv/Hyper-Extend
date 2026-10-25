@@ -8,6 +8,7 @@ internal object ScreenshotEditorTargets {
     const val SHELL_FETCHER = "com.miui.gallery.editor.photo.screen.shell.res.ShellResourceFetcher"
     const val MOSAIC_VIEW = "com.miui.gallery.editor.photo.screen.mosaic.ScreenMosaicView"
     const val CROP_VIEW = "com.miui.gallery.editor.photo.screen.crop.ScreenCropView"
+    const val UTIL = "com.miui.screenshot.util.Util"
 
     val shellEntry = SystemUiMethod(SHELL_FETCHER, "getResId", "long", isStatic = true)
     val shellQuery = SystemUiMethod(
@@ -40,5 +41,19 @@ internal object ScreenshotEditorTargets {
         "$CROP_VIEW\$ResizeDetector", "calculateMinSize", "int",
     )
 
-    val all = listOf(shellEntry, shellQuery, privacyMarking, cropMinSize)
+    /**
+     * 截图保存目录判定 —— 全宿主只有这一处决定 Pictures / DCIM。
+     *
+     * 取证（MIUIScreenshot.apk / versionCode 10603038）：
+     * `public static boolean n()` 读取 `gallery_screenshots_version`，并按国际版/国内版特性值
+     * 返回是否使用新目录。它的五个调用点全部只用于选择保存目录：
+     * `ImageSaveTask`、`AnnotationImageSaveTask`、`ExportTask`、`MediaUtils` 与
+     * `RearImageExporter`。因此固定为 true 只会把新截图改存到 `Pictures/Screenshots`。
+     *
+     * 刻意不改 `Environment.DIRECTORY_DCIM`：那是进程级静态字段，且常量可能已被内联；
+     * 改它既可能不生效，也会波及截图进程内所有读取该字段的代码。
+     */
+    val usePicturesDirectory = SystemUiMethod(UTIL, "n", "boolean", isStatic = true)
+
+    val all = listOf(shellEntry, shellQuery, privacyMarking, cropMinSize, usePicturesDirectory)
 }

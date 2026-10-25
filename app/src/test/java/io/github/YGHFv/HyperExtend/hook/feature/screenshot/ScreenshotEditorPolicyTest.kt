@@ -34,15 +34,19 @@ class ScreenshotEditorPolicyTest {
         assertNull(ScreenshotEditorSettings.device("a".repeat(65)))
     }
 
-    @Test fun catalogAddsBothScreenshotEditorFeaturesWithoutEnablingThem() {
+    @Test fun catalogAddsScreenshotEditorFeaturesWithoutEnablingThem() {
         val privacy = featureById(ScreenshotEditorSettings.PRIVACY_FEATURE)!!
         val device = featureById(ScreenshotEditorSettings.DEVICE_FEATURE)!!
+        val saveToPictures = featureById(ScreenshotEditorSettings.SAVE_TO_PICTURES_FEATURE)!!
         assertEquals(listOf("screenshot"), privacy.scopes)
         assertEquals(listOf("screenshot"), device.scopes)
+        assertEquals(listOf("screenshot"), saveToPictures.scopes)
         assertFalse(privacy.defaultEnabled)
         assertFalse(device.defaultEnabled)
+        assertFalse(saveToPictures.defaultEnabled)
         assertFalse(privacy.hasDetailPage)
         assertTrue(device.hasDetailPage)
+        assertFalse(saveToPictures.hasDetailPage)
         assertEquals(ScreenshotEditorSettings.DEVICE, device.config.single().key)
         assertTrue(ScreenshotEditorSettings.DEVICE in HyperSettings.STRING_KEYS)
     }
@@ -90,9 +94,9 @@ class ScreenshotEditorPolicyTest {
             val signature = descriptor(method.owner) + "->" + method.name +
                 "(" + method.parameters.joinToString("") { descriptor(it) } + ")" + descriptor(method.returns)
             assertTrue(signature, signature in signatures)
-            // 裁剪靶点是宿主内部类的 private 实例方法，其余三个都是静态方法。
+            // 裁剪靶点是宿主内部类的 private 实例方法，其余四个都是静态方法。
             assertEquals(method != ScreenshotEditorTargets.cropMinSize, method.isStatic)
         }
-        assertEquals(4, signatures.size)
+        assertEquals(5, signatures.size)
     }
 }

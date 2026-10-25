@@ -6,6 +6,7 @@ object ScreenshotEditorSettings {
     const val DEVICE = "$DEVICE_FEATURE.device"
     const val PRIVACY_FEATURE = "screenshot_unlock_privacy_marking"
     const val CROP_FEATURE = "screenshot_unlock_minimum_crop_limit"
+    const val SAVE_TO_PICTURES_FEATURE = "screenshot_save_to_pictures"
 
     private val DEVICE_PATTERN = Regex("[A-Za-z0-9._-]{1,64}")
 
