@@ -9,7 +9,7 @@
 | --- | --- |
 | 基准平台 | 澎湃 OS 4（Android 16） |
 | 技术栈 | libxposed API 102 + miuix（HyperOS 风格 Compose UI） |
-| 当前版本 | `0.1.6`（versionCode `7`） |
+| 当前版本 | `0.2.0`（versionCode `8`） |
 | 作用域 | 19 个宿主进程（见 `META-INF/xposed/scope.list`） |
 | 功能条目 | 95 条，全部默认关闭 |
 | 许可 | AGPL-3.0 |
