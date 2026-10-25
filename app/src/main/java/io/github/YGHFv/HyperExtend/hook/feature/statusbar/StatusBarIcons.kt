@@ -19,6 +19,7 @@ import io.github.YGHFv.HyperExtend.hook.HookSettings
 internal object StatusBarIcons {
     fun install(loader: ClassLoader, settings: HookSettings): Int = listOf(
         "slots" to { IconBlockListHooks.install(loader, settings) },
+        "data-saver" to { DataSaverIconHooks.install(loader, settings) },
         "battery" to { BatteryVisibilityHooks.install(loader, settings) },
         "notifications" to { NotificationIconLimitHooks.install(loader, settings) },
         "wifi" to { WifiIndicatorHooks.install(loader, settings) },

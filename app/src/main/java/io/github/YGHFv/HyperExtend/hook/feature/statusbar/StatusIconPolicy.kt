@@ -26,6 +26,24 @@ internal object StatusIconPolicy {
         else -> null
     }
 
+    /** 「流量节省」图标是否归本模块管理；四档之外一律不动宿主。 */
+    fun dataSaverManaged(mode: Int): Boolean = mode == 1 || mode == 2 || mode == 11 || mode == 12
+
+    /**
+     * 「流量节省」可见性回调里该给宿主什么布尔值；null 表示原样放行。
+     *
+     * `1`（始终显示）/`2`（始终隐藏）是本模块直接改写宿主判定；
+     * `11`/`12` 是**区域**档位，只由块名单决定出现在状态栏还是控制中心，
+     * 所以可见性必须跟着宿主原值走 —— 否则「仅在控制中心显示」会连
+     * 「流量节省到底开没开」一起改掉。
+     */
+    fun dataSaverVisible(mode: Int, native: Boolean): Boolean? = when (mode) {
+        1 -> true
+        2 -> false
+        11, 12 -> native
+        else -> null
+    }
+
     fun blockList(native: List<String>, modes: Map<String, Int>, controlCenter: Boolean): List<String> {
         val result = ArrayList(native)
         modes.forEach { (slot, mode) ->

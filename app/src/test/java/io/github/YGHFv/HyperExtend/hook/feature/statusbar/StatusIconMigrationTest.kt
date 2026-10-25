@@ -106,6 +106,23 @@ class StatusIconMigrationTest {
         assertEquals(listOf("0", "1", "2"), config.entries.map { it.variant })
     }
 
+    @Test fun dataSaverOnlyForcesTheAlwaysModesAndKeepsRegionModesNative() {
+        for (mode in listOf(0, 3, 10, 13, 99))
+            for (native in listOf(false, true)) {
+                assertFalse(StatusIconPolicy.dataSaverManaged(mode))
+                assertNull(StatusIconPolicy.dataSaverVisible(mode, native))
+            }
+        for (mode in listOf(1, 2, 11, 12)) assertTrue(StatusIconPolicy.dataSaverManaged(mode))
+        // 「始终显示」/「始终隐藏」是本模块改写宿主判定，与数据节省当前开关无关。
+        assertEquals(true, StatusIconPolicy.dataSaverVisible(1, false))
+        assertEquals(true, StatusIconPolicy.dataSaverVisible(1, true))
+        assertEquals(false, StatusIconPolicy.dataSaverVisible(2, true))
+        assertEquals(false, StatusIconPolicy.dataSaverVisible(2, false))
+        // 「仅在控制中心/状态栏显示」是区域档位，可见性必须跟着宿主原值走。
+        for (mode in listOf(11, 12)) for (native in listOf(false, true))
+            assertEquals(native, StatusIconPolicy.dataSaverVisible(mode, native))
+    }
+
     private fun descriptor(type: String): String = when (type) {
         "void" -> "V"; "int" -> "I"; "boolean" -> "Z"
         else -> "L${type.replace('.', '/')};"
@@ -158,6 +175,17 @@ class StatusIconMigrationTest {
         for (name in listOf("RIGHT_BLOCK_LIST", "CONTROL_CENTER_BLOCK_LIST", "MINI_RIGHT_BLOCK_LIST"))
             field(set, t.DEFAULTS, name, "java.util.ArrayList")
         assertEquals(25, set.size)
+    }
+
+    @Test fun dataSaverHolderCreationUsesExactCurrentPolicyControllerAndIconListMembers() {
+        val t = DataSaverIconTargets
+        val set = fixture("data-saver-icon-current")
+        listOf(t.callback, t.setIcon, t.getHolder).forEach { method(set, it) }
+        t.fields.forEach { (owner, name, type) -> field(set, owner, name, type) }
+        // 宿主 onDataSaverChanged 只调 setIconVisibility；补建的 setIcon 必须是三参那个重载。
+        assertEquals(listOf("java.lang.CharSequence", "java.lang.String", "int"), t.setIcon.parameters)
+        assertEquals(t.HOLDER, t.getHolder.returns)
+        assertEquals(7, set.size)
     }
 
     @Test fun notificationFixtureIncludesFullCopyConstructorAndNativeConsumers() {
