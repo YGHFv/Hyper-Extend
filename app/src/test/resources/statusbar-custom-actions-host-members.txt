@@ -1,0 +1,15 @@
+# 已缓存系统界面与框架的精确成员，不包含设备身份。
+Lcom/miui/systemui/statusbar/StatusBarClickTool;->invokeInputManager(Z)V
+Lcom/android/systemui/statusbar/gesture/StatusBarLongPressGestureDetector;->clickTool:Lcom/miui/systemui/statusbar/StatusBarClickTool;
+Lcom/android/systemui/statusbar/phone/PhoneStatusBarView;->mTouchableRegion:Landroid/graphics/Region;
+Lcom/miui/systemui/statusbar/StatusBarClickTool;->commandQueue:Lcom/android/systemui/statusbar/notification/data/repository/DynamicIslandCommandQueueRepository;
+Lcom/miui/systemui/statusbar/StatusBarClickTool;->statusBarIsland:Ldagger/Lazy;
+Lcom/android/systemui/statusbar/notification/data/repository/DynamicIslandCommandQueueRepository;->disableState:Lkotlinx/coroutines/flow/ReadonlyStateFlow;
+Lcom/android/systemui/statusbar/StatusBarIslandControllerImpl;->registerFlow:Lkotlinx/coroutines/flow/ReadonlyStateFlow;
+Lkotlinx/coroutines/flow/ReadonlyStateFlow;->$$delegate_0:Lkotlinx/coroutines/flow/StateFlow;
+Lkotlinx/coroutines/flow/StateFlow;->getValue()Ljava/lang/Object;
+Lkotlin/Pair;->getFirst()Ljava/lang/Object;
+Ldagger/Lazy;->get()Ljava/lang/Object;
+Landroid/util/MiuiMultiWindowUtils;->startSmallFreeformForControlCenter(Landroid/content/Context;)Ljava/lang/String;
+Lmiui/hardware/input/MiuiInputManager;->getInstance()Lmiui/hardware/input/MiuiInputManager;
+Lmiui/hardware/input/MiuiInputManager;->scrollToTop()V

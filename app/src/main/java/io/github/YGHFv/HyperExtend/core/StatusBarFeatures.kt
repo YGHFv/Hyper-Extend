@@ -758,14 +758,15 @@ val STATUS_BAR_FEATURES: List<HyperFeature> = listOf(
     ),
 
     HyperFeature(
-        id = "status_bar_double_tap",
-        title = "双击状态栏锁屏",
-        summary = "双击状态栏空白处息屏",
-        requirement = "仅系统界面 202602260 主屏，观察原生 PhoneStatusBarView 已接受的背景触摸，不替换触摸监听器、不消费或重放事件。保留子控件、原生可触区域、状态栏交互和长按/下拉处理。触摸探索、遮挡、多指、鼠标/手写笔、越界、拖动、取消、分离或配置变化重置双击；包含历史移动采样。通过精确 PowerManager.goToSleep(long) 请求，失败保留原生，不提前初始化服务。关闭/安全模式停止处理，首次开启需要重建宿主；源代码修复尚未编译或实际息屏验收。",
+        id = StatusBarGestureSettings.FEATURE,
+        title = "自定义状态栏点击动作",
+        summary = "分别设置状态栏空白处的单击和双击动作",
+        requirement = "仅已取证系统界面 202602260 主屏。保留旧开关，缺省为单击跟随系统、双击息屏。单击等待双击判定结束，双击仅在第二次有效抬手时执行一次；统一拦截原生双击及这两次点击的延迟单击回调，阻止同时滚动到页面顶部。保留单击跟随系统的原生动作、子控件、可触区域及长按/下拉事件流，不替换触摸监听器、不回收或重放事件。遮挡、多指、触摸探索、拖动、取消、分离、配置或动作变化取消待执行动作；尊重原生禁用状态和灵动岛占用。关闭/安全模式恢复原生双击处理；两项均跟随系统时不干预。动作失败不补发原生滚动；小爱、小窗、回到顶部依赖对应宿主服务，缺失时记录失败。首次开启需用户重建宿主，本地测试与构建不代表真机验收。",
         scopes = listOf("systemui"),
-        origin = "西米露 / HyperCeiler · DoubleTapToSleep",
+        origin = "西米露 / HyperCeiler · DoubleTapToSleep；参考 XiaomiHelper · StatusBarTapGesture / CommonGesture（GPL-3.0-or-later）",
         license = "AGPL-3.0",
         defaultEnabled = false,
+        config = StatusBarGestureSettings.config,
     ),
 
     HyperFeature(

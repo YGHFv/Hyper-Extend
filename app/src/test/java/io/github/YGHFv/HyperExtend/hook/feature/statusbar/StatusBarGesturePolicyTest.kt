@@ -41,13 +41,16 @@ class StatusBarGesturePolicyTest {
         val signatures = javaClass.getResourceAsStream("/statusbar-double-tap-host-members.txt")!!
             .bufferedReader().use { it.readLines().toSet() }
         val t = StatusBarGestureTargets
-        for (method in listOf(t.touch, t.dispatch, t.sleep) + t.callers) {
+        for (method in listOf(t.touch, t.dispatch, t.sleep, t.nativeDoubleTap, t.nativeSingleTap,
+            t.detectorTouch, t.detectorMessage) + t.callers) {
             val signature = descriptor(method.owner) + "->" + method.name + "(" +
                 method.parameters.joinToString("") { descriptor(it) } + ")" + descriptor(method.returns)
             assertTrue(signature, signature in signatures)
         }
         assertTrue(descriptor(t.OWNER) + "->mTouchEventHandler:" + descriptor(t.HANDLER) in signatures)
-        assertEquals(8, signatures.size)
+        assertTrue(descriptor(t.OWNER) + "->mStatusBarLongPressGestureDetector:" + descriptor(t.DETECTOR) in signatures)
+        assertTrue(descriptor(t.LISTENER) + "->this\$0:" + descriptor(t.DETECTOR) in signatures)
+        assertEquals(14, signatures.size)
         assertEquals(listOf("long"), t.sleep.parameters)
         assertFalse(t.sleep.isStatic)
         assertEquals("onTouchEvent", t.touch.name)

@@ -1,0 +1,36 @@
+# 已取证系统界面 202602260 与缓存框架，原始 DEX 指令归约。
+# 系统界面 classes.dex SHA256 5513709910e39187485d0e89e40e02a1ae920d091219818818b26a3df10d6d96
+# 系统界面 classes2.dex SHA256 24d34eac72b22a0c65b5645969ea727a61c22056bab911bb679ec473b2659c69
+# 系统界面 classes3.dex SHA256 80c2cdecd42aa34c58a3040dabd894ed4d9b72522039fc99322474a6c1e57a40
+# 框架手势 classes4.dex SHA256 b6d5722af732fd605077bc6b13fe830a2325c13f90ad960c298471d8d6194298
+# 小米框架 classes.dex SHA256 37809e1c0056397d551abd770de4396afbbd42b68bfed6e64cccaa28d6426468
+Landroid/view/GestureDetector$GestureHandler;->handleMessage(Landroid/os/Message;)V
+0x003c invoke-static v1, Landroid/view/GestureDetector;->-$$Nest$fgetmCurrentDownEvent(Landroid/view/GestureDetector;)Landroid/view/MotionEvent;
+0x0040 invoke-interface v0, v1, Landroid/view/GestureDetector$OnDoubleTapListener;->onSingleTapConfirmed(Landroid/view/MotionEvent;)Z
+# 延迟 TAP 消息使用按下事件副本，不能只依赖触摸分发的 ThreadLocal。
+Lcom/miui/systemui/statusbar/StatusBarClickTool;->invokeInputManager(Z)V
+0x0002 iget-object v0, v0, Lcom/android/systemui/statusbar/notification/data/repository/DynamicIslandCommandQueueRepository;->disableState Lkotlinx/coroutines/flow/ReadonlyStateFlow;
+0x0016 const/high16 v1, 8388608
+0x001d const/high16 v1, 1048576
+0x0022 const/high16 v1, 131072
+0x0035 iget-object v0, v0, Lcom/android/systemui/statusbar/StatusBarIslandControllerImpl;->registerFlow Lkotlinx/coroutines/flow/ReadonlyStateFlow;
+0x0052 const-wide/16 v3, 600
+0x0089 invoke-static v5, v1, v1, v0, v6, Lkotlinx/coroutines/BuildersKt;->launch$default(Lkotlinx/coroutines/CoroutineScope; Lkotlin/coroutines/CoroutineContext; Lkotlinx/coroutines/CoroutineStart; Lkotlin/jvm/functions/Function2; I)Lkotlinx/coroutines/Job;
+Lcom/android/systemui/accessibility/SystemActions;->start()V
+0x0017 const-string v0, "SYSTEM_ACTION_BACK"
+0x001c const-string v0, "SYSTEM_ACTION_HOME"
+0x0021 const-string v0, "SYSTEM_ACTION_RECENTS"
+0x0026 const-string v0, "SYSTEM_ACTION_NOTIFICATIONS"
+0x002b const-string v0, "SYSTEM_ACTION_QUICK_SETTINGS"
+0x003a const-string v0, "SYSTEM_ACTION_TAKE_SCREENSHOT"
+0x007c const/4 v7, 2
+0x007d const-string v5, "com.android.systemui.permission.SELF"
+0x007f invoke-virtual/range v2 ... v7, Landroid/content/Context;->registerReceiverForAllUsers(Landroid/content/BroadcastReceiver; Landroid/content/IntentFilter; Ljava/lang/String; Landroid/os/Handler; I)Landroid/content/Intent;
+Lcom/android/systemui/accessibility/SystemActions$SystemActionsBroadcastReceiver;->onReceive(Landroid/content/Context; Landroid/content/Intent;)V
+0x0140 invoke-virtual v6, Lcom/android/systemui/shade/ShadeExpansionInteractor;->animateExpandSettingsPanel()V
+0x0148 invoke-virtual v6, Lcom/miui/systemui/screenshot/ScreenshotHelper;->takeScreenshot()V
+0x0183 invoke-virtual v6, v7, Ljava/util/Optional;->ifPresent(Ljava/util/function/Consumer;)V
+0x01c7 invoke-virtual v6, Lcom/android/systemui/shade/ShadeExpansionInteractor;->animateExpandNotificationsPanel()V
+0x01e7 invoke-virtual v6, v3, Lcom/android/systemui/accessibility/SystemActions;->sendDownAndUpKeyEvents(I)V
+0x01ed invoke-virtual v6, v2, Lcom/android/systemui/accessibility/SystemActions;->sendDownAndUpKeyEvents(I)V
+# 复用宿主已有、自身权限保护的接收器，不新增导出接收器，不模拟 shell 输入。

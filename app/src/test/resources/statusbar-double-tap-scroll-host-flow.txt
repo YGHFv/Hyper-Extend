@@ -1,0 +1,34 @@
+# 已取证系统界面 202602260，状态栏双击滚动的 DEX 指令归约。
+# classes2.dex SHA256 24d34eac72b22a0c65b5645969ea727a61c22056bab911bb679ec473b2659c69
+# classes3.dex SHA256 80c2cdecd42aa34c58a3040dabd894ed4d9b72522039fc99322474a6c1e57a40
+Lcom/android/systemui/statusbar/phone/PhoneStatusBarView;->onTouchEvent(Landroid/view/MotionEvent;)Z
+0x001a iget-object v0, v3, Lcom/android/systemui/statusbar/phone/PhoneStatusBarView;->mStatusBarLongPressGestureDetector Lcom/android/systemui/statusbar/gesture/StatusBarLongPressGestureDetector;
+0x001e iget-object v0, v0, Lcom/android/systemui/statusbar/gesture/StatusBarLongPressGestureDetector;->gestureDetector Landroid/view/GestureDetector;
+0x0020 invoke-virtual v0, v4, Landroid/view/GestureDetector;->onTouchEvent(Landroid/view/MotionEvent;)Z
+Lcom/android/systemui/statusbar/gesture/StatusBarLongPressGestureDetector$gestureDetector$1;->onDoubleTapEvent(Landroid/view/MotionEvent;)Z
+0x0000 iget-object v0, v0, Lcom/android/systemui/statusbar/gesture/StatusBarLongPressGestureDetector$gestureDetector$1;->this$0 Lcom/android/systemui/statusbar/gesture/StatusBarLongPressGestureDetector;
+0x0002 iget-object v0, v0, Lcom/android/systemui/statusbar/gesture/StatusBarLongPressGestureDetector;->clickTool Lcom/miui/systemui/statusbar/StatusBarClickTool;
+0x0004 const/4 v1, 1
+0x0005 invoke-virtual v0, v1, Lcom/miui/systemui/statusbar/StatusBarClickTool;->invokeInputManager(Z)V
+Lcom/android/systemui/statusbar/gesture/StatusBarLongPressGestureDetector$gestureDetector$1;->onSingleTapConfirmed(Landroid/view/MotionEvent;)Z
+0x0000 iget-object v0, v0, Lcom/android/systemui/statusbar/gesture/StatusBarLongPressGestureDetector$gestureDetector$1;->this$0 Lcom/android/systemui/statusbar/gesture/StatusBarLongPressGestureDetector;
+0x0002 iget-object v0, v0, Lcom/android/systemui/statusbar/gesture/StatusBarLongPressGestureDetector;->clickTool Lcom/miui/systemui/statusbar/StatusBarClickTool;
+0x0004 const/4 v1, 0
+0x0005 invoke-virtual v0, v1, Lcom/miui/systemui/statusbar/StatusBarClickTool;->invokeInputManager(Z)V
+Lcom/miui/systemui/statusbar/StatusBarClickTool$$ExternalSyntheticLambda0;->invoke()Ljava/lang/Object;
+0x0005 invoke-virtual v3, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+0x0009 const-string/jumbo v1, scrollToTop
+0x0013 const/4 v1, 1
+Lcom/miui/systemui/statusbar/StatusBarClickTool$invokeInputManager$1;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;
+0x0007 iget v2, v4, Lcom/miui/systemui/statusbar/StatusBarClickTool$invokeInputManager$1;->label I
+0x000f iget-object v5, v4, Lcom/miui/systemui/statusbar/StatusBarClickTool$invokeInputManager$1;->this$0 Lcom/miui/systemui/statusbar/StatusBarClickTool;
+0x0011 iget-object v5, v5, Lcom/miui/systemui/statusbar/StatusBarClickTool;->scrollToTop$delegate Lkotlin/Lazy;
+0x001b iget-object v2, v4, Lcom/miui/systemui/statusbar/StatusBarClickTool$invokeInputManager$1;->this$0 Lcom/miui/systemui/statusbar/StatusBarClickTool;
+0x001f invoke-virtual v5, v2, v3, Ljava/lang/reflect/Method;->invoke(Ljava/lang/Object; [Ljava/lang/Object;)Ljava/lang/Object;
+0x0025 iget-boolean v4, v4, Lcom/miui/systemui/statusbar/StatusBarClickTool$invokeInputManager$1;->$double Z
+Lcom/miui/systemui/statusbar/StatusBarClickTool;->invokeInputManager(Z)V
+0x007d invoke-virtual v5, v0, Lcom/miui/systemui/statusbar/StatusBarClickTool;->clicked(Ljava/lang/String;)V
+0x0080 new-instance v0, Lcom/miui/systemui/statusbar/StatusBarClickTool$invokeInputManager$1;
+0x0082 const/4 v1, 0
+0x0083 invoke-direct v0, v5, v6, v1, Lcom/miui/systemui/statusbar/StatusBarClickTool$invokeInputManager$1;-><init>(Lcom/miui/systemui/statusbar/StatusBarClickTool; Z Lkotlin/coroutines/Continuation;)V
+0x0089 invoke-static v5, v1, v1, v0, v6, Lkotlinx/coroutines/BuildersKt;->launch$default(Lkotlinx/coroutines/CoroutineScope; Lkotlin/coroutines/CoroutineContext; Lkotlinx/coroutines/CoroutineStart; Lkotlin/jvm/functions/Function2; I)Lkotlinx/coroutines/Job;
