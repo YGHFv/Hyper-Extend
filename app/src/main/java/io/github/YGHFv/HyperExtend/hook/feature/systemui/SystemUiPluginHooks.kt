@@ -10,6 +10,7 @@ import io.github.YGHFv.HyperExtend.core.TileColorSettings
 import io.github.YGHFv.HyperExtend.core.TileMaterialSettings
 import io.github.YGHFv.HyperExtend.core.CardTileListSettings
 import io.github.YGHFv.HyperExtend.core.CardTileColorSettings
+import io.github.YGHFv.HyperExtend.core.DeviceCenterSingleRowSettings
 import io.github.YGHFv.HyperExtend.core.PercentageSettings
 import io.github.YGHFv.HyperExtend.core.LockscreenMaterialSettings
 import io.github.YGHFv.HyperExtend.hook.HookRuntime
@@ -29,13 +30,25 @@ internal object SystemUiPluginHooks {
         // 「控制中心亮度值 / 音量值」两张卡片已并入 slider_percentage（原生原位数值方式），
         // 所以这里只有 PercentageSettings.FEATURE 一个条目；Style 决定装浮层还是原生原位标签。
         val appearance = listOf(AppVolumeSettings.FEATURE, MISOUND_FEATURE, "control_center_hide_edit", SecurityFooterHooks.FEATURE, VolumeFooterHooks.FEATURE, VolumeThemeHooks.FEATURE, StockTilesPolicy.FEATURE, GmsTilePolicy.FEATURE, TaplusTilePolicy.FEATURE, SunlightTilePolicy.FEATURE, AudioMuteSettings.FEATURE, VolumeLongPressPolicy.FEATURE, TileCornerSettings.FEATURE, TileColorSettings.FEATURE, TileMaterialSettings.FEATURE, CardTileColorSettings.FEATURE, CardTileListSettings.FEATURE, PercentageSettings.FEATURE)
-            .filter { settings.isOn(it) }
+            .plus(DeviceCenterSingleRowSettings.FEATURE).filter { settings.isOn(it) }
         val shortcuts = (LockscreenShortcutPolicy.features + LockscreenMaterialSettings.FEATURE).filter { settings.isOn(it) }
         val enabled = appearance + shortcuts
         if (enabled.isEmpty()) return emptyList()
         val factory = Reflect.loadClass(loader, "com.android.systemui.shared.plugins.PluginInstance\$PluginFactory")
             ?: return listOf("systemui_plugin=missing_factory")
-        val info = factory.getDeclaredField("pluginAppInfo").apply { isAccessible = true }
+        val currentLoader = runCatching { factory.getDeclaredMethod("createClassLoader") }.getOrNull()
+        // OS3 在专用 Supplier.get() 内构建并缓存类加载器，仍在插件实例化之前发现宿主。
+        val supplier = if (currentLoader == null) factory.getDeclaredField("mClassLoaderFactory").type else null
+        val loaderMethod = currentLoader ?: supplier!!.getDeclaredMethod("get")
+        require(loaderMethod.parameterCount == 0 && !java.lang.reflect.Modifier.isStatic(loaderMethod.modifiers))
+        require(if (supplier == null) loaderMethod.returnType == ClassLoader::class.java else
+            java.util.function.Supplier::class.java.isAssignableFrom(supplier) && loaderMethod.returnType == Any::class.java)
+        val info = (if (supplier == null) factory.getDeclaredField("pluginAppInfo")
+            else supplier.getDeclaredField("f\$1")).apply {
+            require(type == ApplicationInfo::class.java)
+            isAccessible = true
+        }
+        var appVolumeDiscovery = AppVolumeSettings.FEATURE in appearance
         var shortcutDiscovery = shortcuts.isNotEmpty()
         var tilesDiscovery = StockTilesPolicy.FEATURE in appearance || GmsTilePolicy.FEATURE in appearance || TaplusTilePolicy.FEATURE in appearance || SunlightTilePolicy.FEATURE in appearance || AudioMuteSettings.FEATURE in appearance
         var miSoundDiscovery = MISOUND_FEATURE in appearance
@@ -48,11 +61,13 @@ internal object SystemUiPluginHooks {
         var securityDiscovery = SecurityFooterHooks.FEATURE in appearance
         var cardColorDiscovery = CardTileColorSettings.FEATURE in appearance
         var cardListDiscovery = CardTileListSettings.FEATURE in appearance
+        var deviceRowDiscovery = DeviceCenterSingleRowSettings.FEATURE in appearance
         var percentageDiscovery = PercentageSettings.FEATURE in appearance
         var materialDiscovery = TileMaterialSettings.FEATURE in appearance
         fun discover(packageName: String, pluginLoader: ClassLoader) {
             val selected = when (packageName) {
                 PACKAGE -> appearance.filter { (it !in setOf(StockTilesPolicy.FEATURE, GmsTilePolicy.FEATURE, TaplusTilePolicy.FEATURE, SunlightTilePolicy.FEATURE, AudioMuteSettings.FEATURE) || tilesDiscovery) &&
+                    (it != AppVolumeSettings.FEATURE || appVolumeDiscovery) &&
                     (it != MISOUND_FEATURE || miSoundDiscovery) &&
                     (it != VolumeLongPressPolicy.FEATURE || pressDiscovery) &&
                     (it != EditButtonHooks.FEATURE || editDiscovery) &&
@@ -62,6 +77,7 @@ internal object SystemUiPluginHooks {
                     (it != SecurityFooterHooks.FEATURE || securityDiscovery) &&
                     (it != CardTileColorSettings.FEATURE || cardColorDiscovery) &&
                     (it != CardTileListSettings.FEATURE || cardListDiscovery) &&
+                    (it != DeviceCenterSingleRowSettings.FEATURE || deviceRowDiscovery) &&
                     (it != TileMaterialSettings.FEATURE || materialDiscovery) &&
                     (it != PercentageSettings.FEATURE || percentageDiscovery) }
                 LockscreenShortcutPolicy.PACKAGE -> if (shortcutDiscovery) shortcuts else emptyList()
@@ -101,6 +117,7 @@ internal object SystemUiPluginHooks {
                         SecurityFooterHooks.FEATURE -> SecurityFooterHooks.installPlugin(pluginLoader, settings)
                         CardTileColorSettings.FEATURE -> CardTileColorHooks.install(pluginLoader, settings)
                         CardTileListSettings.FEATURE -> CardTileListHooks.install(pluginLoader, settings)
+                        DeviceCenterSingleRowSettings.FEATURE -> DeviceCenterSingleRowHooks.install(pluginLoader, settings)
                         PercentageSettings.FEATURE -> PercentageHooks.install(pluginLoader, loader, settings)
                         TileMaterialSettings.FEATURE -> TileMaterialHooks.install(pluginLoader, settings)
                         else -> 0
@@ -115,12 +132,13 @@ internal object SystemUiPluginHooks {
                 }.onFailure { ModuleLog.error("systemui_plugin/$id unsupported; retaining native behavior", it) }
             }
         }
-        if (shortcuts.isNotEmpty() || tilesDiscovery || miSoundDiscovery || pressDiscovery || editDiscovery || cornerDiscovery || themeDiscovery || footerDiscovery || securityDiscovery || cardColorDiscovery || cardListDiscovery || percentageDiscovery || materialDiscovery) {
+        if (appVolumeDiscovery || shortcuts.isNotEmpty() || tilesDiscovery || miSoundDiscovery || pressDiscovery || editDiscovery || cornerDiscovery || themeDiscovery || footerDiscovery || securityDiscovery || cardColorDiscovery || cardListDiscovery || deviceRowDiscovery || percentageDiscovery || materialDiscovery) {
             val discoveryReady = runCatching {
                 val instance = Class.forName("com.android.systemui.shared.plugins.PluginInstance", false, loader)
                 val callers = listOf(factory.getDeclaredMethod("createPlugin", instance), factory.getDeclaredMethod("createPluginContext"))
                 callers.map { HookRuntime.deoptimize(it, "systemui_plugin/${it.name}") }.all { it }
             }.getOrDefault(false)
+            appVolumeDiscovery = appVolumeDiscovery && discoveryReady
             shortcutDiscovery = shortcutDiscovery && discoveryReady
             tilesDiscovery = tilesDiscovery && discoveryReady
             miSoundDiscovery = miSoundDiscovery && discoveryReady
@@ -132,13 +150,14 @@ internal object SystemUiPluginHooks {
             securityDiscovery = securityDiscovery && discoveryReady
             cardColorDiscovery = cardColorDiscovery && discoveryReady
             cardListDiscovery = cardListDiscovery && discoveryReady
+            deviceRowDiscovery = deviceRowDiscovery && discoveryReady
             percentageDiscovery = percentageDiscovery && discoveryReady
             materialDiscovery = materialDiscovery && discoveryReady
             if (!discoveryReady) {
                 ModuleLog.warn("systemui_plugin caller deoptimization failed; retaining native shortcuts/stock tiles/volume hold/slider values/edit button/tile appearance/volume theme/footer")
             }
         }
-        val hooked = HookRuntime.hookAfter(factory.getDeclaredMethod("createClassLoader"), "systemui_plugin/loader") { chain, result ->
+        val hooked = HookRuntime.hookAfter(loaderMethod, "systemui_plugin/loader") { chain, result ->
             val packageName = (info.get(chain.thisObject) as? ApplicationInfo)?.packageName
             if (packageName != null && result is ClassLoader) discover(packageName, result)
             result

@@ -9,6 +9,7 @@ import io.github.YGHFv.HyperExtend.core.ModuleLog
 import io.github.YGHFv.HyperExtend.hook.HookRuntime
 import io.github.YGHFv.HyperExtend.hook.HookSettings
 import io.github.YGHFv.HyperExtend.hook.Reflect
+import io.github.YGHFv.HyperExtend.hook.SafeModeRuntime
 import io.github.YGHFv.HyperExtend.hook.UnsafeAccess
 import java.lang.reflect.Method
 
@@ -67,6 +68,7 @@ internal object SystemFrameworkCorePatchHooks {
         count += installSignatureOverride(loader, settings)
         count += installSharedUserBypass(loader, settings)
         count += installPreSignature(loader, settings)
+        count += CorePatchPreSignatureHooks.install(loader, settings)
         count += installAndroidPackageInstaller(loader, settings)
         count += installFingerprintGuard(loader, settings)
         return count
@@ -557,35 +559,12 @@ internal object SystemFrameworkCorePatchHooks {
     }
 
     /**
-     * 「沿用已安装应用的签名」，以及覆盖安装真正会走的两条 key-set 分支。
+     * 覆盖安装的 key-set 分支与原应用权限声明校验。
      *
-     * ## 为什么这一处也必须补
-     *
-     * 宿主在 `ReconcilePackageUtils#reconcilePackages` 里**先**问
-     * `KeySetManagerService#shouldCheckUpgradeKeySetLocked`：一旦判真，就**完全跳过**
-     * `verifySignatures`，改问 `checkUpgradeKeySetLocked`；两者判否时抛
-     * `ReconcileFailure(-7, "… upgrade keys do not match the previously installed version")`。
-     * 也就是说 [installSignatureOverride] 伪造的 `checkCapability` 对声明了
-     * `upgrade-key-set` 的应用（Google 系与部分国内大应用）根本不会被问到 ——
-     * 这正是「核心破解明明开了，某些应用还是覆盖不了不同签名」的第二条真实原因。
-     *
-     * 旁路必须**成对**：单独放开 `should` 只是把判定搬到 `check`，单独放开 `check` 则永远
-     * 轮不到它。这里用同一个判据（开关 + 用户安装帧）在两个方法里各自判定，
-     * 因为 `check` 只会在 `should` 判真时被调用，两条判断天然一致，不需要跨调用传状态。
-     *
-     * ## 与上游的分工
-     *
-     * 上游把这两处和 `doesSignatureMatchForPermissions` 一起挂在 `use_pre_signature` 上。
-     * 本模块把 key-set 旁路并入「允许覆盖安装不同签名」（用户的实际诉求就是覆盖安装），
-     * `use_pre_signature` 则单独保留为下面这个更高权限的子项。
-     *
-     * ## 权限签名延续单独成项
-     *
-     * `doesSignatureMatchForPermissions` 决定的是「新包能否继续持有别人声明的
-     * `signature` / `signature\|privileged` 权限」，风险比覆盖安装高一档，
-     * 因此它只认新子项，绝不被 `override_signature` 顺带打开（capability 4 也仍在
-     * [CorePatchSignaturePolicy] 的永不伪造名单里）。判据沿用上游那条最硬的约束：
-     * **包名逐字相同**才放行，避免换成另一个包来冒充。
+     * 参考 HyperCeiler DigestCreakPatch：全局能力 4/16 保持原生；
+     * doesSignatureMatchForPermissions 仅在原生判否且声明方与安装包同名时兼容。
+     * 本模块把这条安装必需的兼容接入覆盖开关，旧 use_pre_signature 键也继续有效。
+     * 不替换签名对象、不赋予其它包的签名级权限，不把 shouldCheckUpgradeKeySetLocked 改为常量真。
      */
     private fun installPreSignature(loader: ClassLoader, settings: HookSettings): Int {
         var count = 0
@@ -629,31 +608,32 @@ internal object SystemFrameworkCorePatchHooks {
         } else {
             missing(KEY_SET_MANAGER)
         }
-        // 2) 权限签名延续：只认 use_pre_signature，且要求包名逐字相同。
-        val helper = Reflect.loadClass(loader, INSTALL_HELPER)
-        val match = helper?.let {
-            Reflect.findMethods(it, "doesSignatureMatchForPermissions", paramCount = 3)
-                .firstOrNull { method ->
-                    method.returnType == Boolean::class.javaPrimitiveType &&
-                        method.parameterTypes[0] == String::class.java
-                }
-        } ?: null
-        if (match == null) {
-            missing("$INSTALL_HELPER#doesSignatureMatchForPermissions(String,ParsedPackage,int)")
-        } else if (HookRuntime.hook(
-                match,
+        // 2) 原应用权限声明：覆盖开关或旧兼容开关都可启用，但不能冒充其它声明方。
+        val permission = runCatching { CorePatchInstallTargets.resolve(loader) }.getOrElse {
+            ModuleLog.warn("核心破解：权限声明校验结构不匹配，保留原生行为 (${it.javaClass.simpleName})")
+            return count
+        }
+        if (!permission.callers.map {
+                HookRuntime.deoptimize(it, "core_patch_use_pre_signature/$INSTALL_HELPER#${it.name}")
+            }.all { it }) return count
+        if (HookRuntime.hookAfter(
+                permission.match,
                 "core_patch_use_pre_signature/$INSTALL_HELPER#doesSignatureMatchForPermissions",
-            ) { chain ->
-                val original = chain.proceed()
-                // 只在宿主本来判「不匹配」时补救，判匹配的调用一律不碰。
-                if (original != false) return@hook original
-                if (!settings.isOn(OP_USE_PRE_SIGNATURE)) return@hook original
-                val installedName = chain.args.getOrNull(0) as? String
-                val parsedName = Reflect.callWith(chain.args.getOrNull(1), "getPackageName") as? String
-                if (!CorePatchSignaturePolicy.samePackageName(installedName, parsedName)) {
-                    return@hook original
-                }
-                true
+            ) { chain, original ->
+                if (original != false) return@hookAfter original
+                val override = settings.isOn(OP_OVERRIDE_SIGNATURE)
+                val preSignature = settings.isOn(OP_USE_PRE_SIGNATURE)
+                if (!override && !preSignature) return@hookAfter original
+                val parsedPackage = chain.args.getOrNull(1) ?: return@hookAfter original
+                CorePatchSignaturePolicy.permissionDeclarationResult(
+                    original = false,
+                    overrideEnabled = override,
+                    preSignatureEnabled = preSignature,
+                    definingPackageName = chain.args.getOrNull(0) as? String,
+                    parsedPackageName = permission.packageName.invoke(parsedPackage) as? String,
+                    frameNames = CorePatchSignaturePolicy.frameNames(Thread.currentThread().stackTrace),
+                    safeMode = SafeModeRuntime.blocked,
+                )
             }
         ) count++
         return count

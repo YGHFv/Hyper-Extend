@@ -21,10 +21,9 @@ package io.github.YGHFv.HyperExtend.hook.feature.system
  * ## 为什么只能放宽一部分能力
  *
  * `checkCapability` 的第二个参数是 `@CertCapabilities`，它同时被**运行时权限**复用：
- * `InstallPackageHelper#doesSignatureMatchForPermissions` 就用 `PERMISSION` 询问
- * 「新包是否延续旧包的签名权限」。伪造它等于让任意应用接走别人的
- * `signature|privileged` 权限；伪造 `AUTH` 则能冒充他人的账户签名。
- * 因此 `4`（PERMISSION）与 `16`（AUTH）**永不放宽**，本模块只伪造
+ * `InstallPackageHelper#doesSignatureMatchForPermissions` 用 `PERMISSION` 核对权限声明方。
+ * 全局伪造它会放宽其它应用的签名级权限；伪造 `AUTH` 则能冒充他人的账户签名。
+ * 因此 `4`（PERMISSION）与 `16`（AUTH）**不在全局能力放宽范围内**，本模块只伪造
  * 覆盖安装真正需要的 `1`（INSTALLED_DATA）与 `8`（ROLLBACK）。`2`（SHARED_USER_ID）
  * 由「共享 UID 签名兼容」子项单独决定 —— 上游把 1/2/8 一起放开，但让不同签名的包
  * 落进共享 UID（可能是 system 级）比覆盖安装高一档风险，不该被顺带打开。
@@ -145,17 +144,32 @@ internal object CorePatchSignaturePolicy {
     }
 
     /**
-     * 「沿用已安装签名」的包名门禁。
+     * 原应用权限声明兼容的包名门禁。
      *
      * `doesSignatureMatchForPermissions(definingPackageName, parsedPackage, flags)` 的第一个参数是
      * **声明该权限的包名**（宿主在 `preparePackage` 里逐条权限调用它：自定义权限传应用自己的包名，
-     * 引用别人的权限则传那个定义方），第二个才是待安装包。
-     * 只有两者逐字相同才放行 —— 也就是「只允许一个新包沿用**它自己**以前那份签名所声明的权限」，
-     * 否则任意应用都能靠改名/改内容接走别人声明的 `signature` 级权限。
+     * 权限组归属也传那个定义方），第二个才是待安装包。
+     * 只有两者逐字相同才放行，即只兼容更新包重新声明本包已有的权限及权限组。
+     * 不替换 SigningDetails，也不赋予其它应用声明的签名级权限。
      * 上游 DigestCreakPatch 用的是同一条判据（注释原文：avoid another one that tries to impersonate）。
      */
     fun samePackageName(installedName: String?, parsedName: String?): Boolean =
         !installedName.isNullOrBlank() && !parsedName.isNullOrBlank() && installedName == parsedName
+
+    /** 覆盖安装不能漏掉自身权限声明；旧子项保留兼容，仍只处理用户安装链。 */
+    fun permissionDeclarationResult(
+        original: Boolean,
+        overrideEnabled: Boolean,
+        preSignatureEnabled: Boolean,
+        definingPackageName: String?,
+        parsedPackageName: String?,
+        frameNames: Set<String>,
+        safeMode: Boolean,
+    ): Boolean = original || (
+        !safeMode && (overrideEnabled || preSignatureEnabled) &&
+            samePackageName(definingPackageName, parsedPackageName) &&
+            inUserInstallPath(frameNames)
+        )
 
     /** 从真实栈帧取方法名集合。 */
     fun frameNames(stack: Array<StackTraceElement>): Set<String> =

@@ -24,7 +24,7 @@ class AppVolumeEntryMotionTest {
         assertEquals(0.95f, motion.scaleY, epsilon)
         assertEquals(19f, motion.translationY(20f), epsilon)
         assertEquals(0f, motion.translationX(30f), epsilon)
-        // The capsule-to-slider gap contracts with the same native scale.
+        // 胶囊与滑块的间距按同一个原生比例收缩。
         val entryBottom = 20f + motion.translationY(20f) + 20f * motion.scaleY
         val sliderTop = 60f + 12f + 100f * (1f - 0.95f)
         assertEquals(20f * 0.95f, sliderTop - entryBottom, epsilon)
@@ -44,7 +44,7 @@ class AppVolumeEntryMotionTest {
         assertEquals(0.945f, motion.scaleX, epsilon)
         assertEquals(0.76f, motion.scaleY, epsilon)
         assertEquals(0.6f, motion.alpha, epsilon)
-        // Map the entry center through the content and parent independently.
+        // 独立计算入口中心经过内容和父容器后的坐标。
         val x = 40f - 17f
         val y = 20f - 87f
         val contentX = 12f + 3f + 30f + (x - 30f) * 1.05f
@@ -120,6 +120,55 @@ class AppVolumeEntryMotionTest {
         for ((scale, alpha) in listOf(0f to 1f, 1f to 0f, Float.NaN to 1f)) {
             val parent = AppVolumeEntryMotion().apply { include(0f, 0f, 0f, 0f, scale, scale, 0f, 0f, alpha) }
             org.junit.Assert.assertNull(content.relativeTo(parent, 30f, 20f))
+        }
+    }
+
+    @Test fun footerCapsuleKeepsNativeDownwardBounceInsteadOfExtrapolatingSliderPivot() {
+        val parent = AppVolumeEntryMotion().apply {
+            include(0f, 240f, 30f, 40f, 1f, 1f, 0f, 0f, 1f)
+        }
+        val native = AppVolumeEntryMotion().apply {
+            include(0f, 60f, 30f, 20f, 0.95f, 0.95f, 0f, 12f, 1f)
+            include(0f, 240f, 30f, 40f, 1f, 1f, 0f, 0f, 1f)
+        }
+        val relative = native.relativeCapsuleTo(parent, 30f, 20f)!!
+        assertEquals(0.95f, relative.scaleY, epsilon)
+        assertEquals(12f, relative.translationY, epsilon)
+        assertEquals(0f, relative.translationX, epsilon)
+    }
+
+    @Test fun hiddenReplacementGeometryDoesNotReverseTheCapsuleMotion() {
+        val parent = AppVolumeEntryMotion().apply {
+            include(10f, 240f, 20f, 40f, 0.8f, 0.7f, 5f, 7f, 0.5f)
+        }
+        // GONE 目标可保留旧布局坐标，也可能没有尺寸；只复制其胶囊自身的变换。
+        for (top in listOf(0f, 60f, 120f)) {
+            val native = AppVolumeEntryMotion().apply {
+                include(0f, top, 30f, 20f, 0.95f, 0.9f, 2f, 12f, 0.8f)
+                include(10f, 240f, 20f, 40f, 0.8f, 0.7f, 5f, 7f, 0.5f)
+            }
+            val relative = native.relativeCapsuleTo(parent, 30f, 20f)!!
+            assertEquals(0.95f, relative.scaleX, epsilon)
+            assertEquals(0.9f, relative.scaleY, epsilon)
+            assertEquals(2f, relative.translationX, epsilon)
+            assertEquals(12f, relative.translationY, epsilon)
+            assertEquals(0.8f, relative.alpha, epsilon)
+        }
+    }
+
+    @Test fun footerShowHideIsInheritedOnceAndNativeResetClearsResidualMotion() {
+        val parent = AppVolumeEntryMotion().apply {
+            include(10f, 240f, 20f, 40f, 0.8f, 0.7f, 5f, 7f, 0.5f)
+        }
+        val native = AppVolumeEntryMotion()
+        for ((scale, translation) in listOf(0.95f to 12f, 1.03f to -2f, 1f to 0f)) {
+            native.reset()
+            native.include(0f, 60f, 30f, 20f, scale, scale, 0f, translation, 1f)
+            native.include(10f, 240f, 20f, 40f, 0.8f, 0.7f, 5f, 7f, 0.5f)
+            val relative = native.relativeCapsuleTo(parent, 30f, 20f)!!
+            assertEquals(scale, relative.scaleY, epsilon)
+            assertEquals(translation, relative.translationY, epsilon)
+            assertEquals(1f, relative.alpha, epsilon)
         }
     }
 }

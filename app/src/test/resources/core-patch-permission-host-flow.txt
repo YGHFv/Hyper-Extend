@@ -1,0 +1,31 @@
+# 已取证 OS4 / Android 17 宿主，原始 DEX 指令归约。
+# services.jar classes3.dex SHA256：a22118a302dc78584ad76a40b7bc21a4cfb8b7ddff06448f18cd88992f12b2f0
+Lcom/android/server/pm/InstallPackageHelper;->doesSignatureMatchForPermissions
+0x0040 invoke Lcom/android/server/pm/KeySetManagerService;->shouldCheckUpgradeKeySetLocked
+0x0046 invoke Lcom/android/server/pm/KeySetManagerService;->checkUpgradeKeySetLocked
+0x0050 const/4 4
+0x0051 invoke Landroid/content/pm/SigningDetails;->checkCapability
+0x005d invoke Landroid/content/pm/SigningDetails;->checkCapability
+0x0075 invoke Lcom/android/server/pm/PackageSetting;->setSigningDetails
+Lcom/android/server/pm/InstallPackageHelper;->preparePackage
+0x0276 invoke Lcom/android/internal/pm/parsing/pkg/ParsedPackage;->setSigningDetails
+0x0290 invoke Lcom/android/internal/pm/parsing/pkg/ParsedPackage;->setSigningDetails
+0x0626 invoke Lcom/android/server/pm/KeySetManagerService;->shouldCheckUpgradeKeySetLocked
+0x062c invoke Lcom/android/server/pm/KeySetManagerService;->checkUpgradeKeySetLocked
+0x0741 invoke Lcom/android/server/pm/InstallPackageHelper;->doesSignatureMatchForPermissions
+0x0775 const-string ' attempting to redeclare permission group '
+0x0783 const-string ' already owned by '
+0x0791 const/16 -126
+0x0830 invoke Lcom/android/server/pm/InstallPackageHelper;->doesSignatureMatchForPermissions
+0x0855 const-string ' attempting to redeclare system permission '
+0x088c const-string ' attempting to redeclare permission '
+0x089a const-string ' already owned by '
+0x08a8 const/16 -112
+0x095e invoke Lcom/android/server/pm/InstallPackageHelper;->doesSignatureMatchForPermissions
+0x09bc const-string  with incompatible certificate
+0x09c6 const/16 -127
+0x0a1f const/16 -127
+0x0c7b invoke Lcom/android/server/pm/KeySetManagerService;->shouldCheckUpgradeKeySetLocked
+0x0c81 invoke Lcom/android/server/pm/KeySetManagerService;->checkUpgradeKeySetLocked
+0x0cbb invoke Landroid/content/pm/SigningDetails;->checkCapability
+0x0cc3 invoke Landroid/content/pm/SigningDetails;->checkCapability

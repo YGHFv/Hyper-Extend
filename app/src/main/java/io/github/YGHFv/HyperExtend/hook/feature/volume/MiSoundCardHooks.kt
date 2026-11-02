@@ -40,7 +40,7 @@ internal object MiSoundCardHooks {
         cards[root]?.get()?.prepare(style)
     }
 
-    fun install(loader: ClassLoader, controller: Class<*>): Int {
+    fun install(loader: ClassLoader, controller: Class<*>, targets: MiSoundVolumeTargets.Layout): Int {
         val adapter = Class.forName(controller.name + "\$i", false, loader)
         val holder = Class.forName(controller.name + "\$i\$a", false, loader)
         val callback = Class.forName(controller.name + "\$e", false, loader)
@@ -50,9 +50,9 @@ internal object MiSoundCardHooks {
         val page = field(controller, "o")
         val status = field(controller, "a")
         val handler = field(controller, "x")
-        val pages = field(adapter, "e")
-        val adapterController = field(adapter, "g")
-        val item = field(holder, "e")
+        val pages = field(adapter, targets.adapterPages)
+        val adapterController = field(adapter, targets.adapterController)
+        val item = field(holder, targets.holderItem)
         val callbackController = field(callback, "a")
         val cleanup = controller.getDeclaredMethod("p").apply { isAccessible = true }
         val add = controller.getDeclaredMethod("C", View::class.java, WindowManager.LayoutParams::class.java)
@@ -63,6 +63,8 @@ internal object MiSoundCardHooks {
         require(context.type == Context::class.java && status.type == Int::class.javaPrimitiveType)
         require(View::class.java.isAssignableFrom(ball.type) && ViewGroup::class.java.isAssignableFrom(page.type))
         require(Handler::class.java.isAssignableFrom(handler.type) && ViewGroup::class.java.isAssignableFrom(item.type))
+        require(List::class.java.isAssignableFrom(pages.type) && adapterController.type == controller &&
+            callbackController.type == controller)
         var enabled = false
         fun supported(): Boolean = enabled
         fun card(host: Any): Card? {

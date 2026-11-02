@@ -45,4 +45,16 @@ class SystemFrameworkCorePatchFeatureTest {
         // 子项默认关闭：避免「只开总开关」就把全部安装限制一起放宽。
         assertTrue(feature.options.all { !it.defaultEnabled && !defaultEnabledOf(it.id) })
     }
+
+    @Test fun overrideDocumentsOwnDeclarationsAndPreSignatureDocumentsRecoveryConditions() {
+        val override = feature.options.single { it.id == "system_framework_core_patch_override_signature" }
+        val legacy = feature.options.single { it.id == "system_framework_core_patch_use_pre_signature" }
+        assertTrue(override.summary!!.contains("本包已有权限声明"))
+        assertEquals("沿用已安装应用签名", legacy.title)
+        val description = legacy.summary!!
+        assertTrue(description.contains("覆盖开关及禁用签名验证"))
+        assertTrue(description.contains("V1 验签失败"))
+        assertTrue(description.contains("旧证书"))
+        assertTrue(description.contains("本包权限声明"))
+    }
 }

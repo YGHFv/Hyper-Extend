@@ -1,7 +1,7 @@
 /* Copyright (C) 2026 YGHFv; SPDX-License-Identifier: AGPL-3.0-or-later */
 package io.github.YGHFv.HyperExtend.hook.feature.volume
 
-/** Compose native content-to-dialog transforms without replaying the dialog's own motion. */
+/** 合成原生内容到对话框的变换，不重复播放对话框自身的动画。 */
 internal class AppVolumeEntryMotion {
     var scaleX = 1f
         private set
@@ -19,7 +19,7 @@ internal class AppVolumeEntryMotion {
         layoutX = 0f; layoutY = 0f; mappedX = 0f; mappedY = 0f
     }
 
-    // Include the content first, then its ancestors, stopping before the shared dialog.
+    // 先纳入内容，再逐层纳入祖先，到共享对话框之前停止。
     fun include(
         left: Float, top: Float, pivotX: Float, pivotY: Float,
         scaleX: Float, scaleY: Float, translationX: Float, translationY: Float, alpha: Float,
@@ -38,7 +38,11 @@ internal class AppVolumeEntryMotion {
 
     data class Residual(val scaleX: Float, val scaleY: Float, val translationX: Float, val translationY: Float, val alpha: Float)
 
-    /** Remove transforms already inherited from the entry's actual parent (footer or dialog). */
+    /** 在原生胶囊中心取残差，将按钮自身的动画平移到新入口，不外推音量条的支点。 */
+    fun relativeCapsuleTo(parent: AppVolumeEntryMotion, centerX: Float, centerY: Float): Residual? =
+        relativeTo(parent, layoutX - parent.layoutX + centerX, layoutY - parent.layoutY + centerY)
+
+    /** 去除入口从实际父容器（底部按钮区或对话框）已经继承的变换。 */
     fun relativeTo(parent: AppVolumeEntryMotion, localCenterX: Float, localCenterY: Float): Residual? {
         if (parent.scaleX <= 0.0001f || parent.scaleY <= 0.0001f || parent.alpha <= 0.0001f) return null
         val x = localCenterX + parent.layoutX

@@ -65,23 +65,22 @@ internal object AppVolumeEntryHooks {
         val panel = SystemUiAppVolumePanel.install(loader)
         val show = dialog.getDeclaredMethod("showH", Runnable::class.java)
         val hide = dialog.getDeclaredMethod("dismissH", Boolean::class.javaPrimitiveType, Runnable::class.java)
-        val finish = dialog.getDeclaredMethod("lambda\$dismissH\$0", Runnable::class.java)
+        val targets = AppVolumePluginTargets.resolve(loader, dialog, controller)
         val apply = Class.forName("com.android.systemui.miui.ViewStateGroup", false, loader)
             .getDeclaredMethod("apply", ViewGroup::class.java)
         val layout = dialog.getDeclaredMethod("updateDialogViewLP")
         val flip = Class.forName("miui.systemui.util.FlipUtils", false, loader).getDeclaredMethod("isFlipTiny")
-        val wideFold = Class.forName("miui.systemui.util.DeviceUtils", false, loader)
-            .getDeclaredMethod("isWideFoldDevice").invoke(null) == true
+        val wideFold = targets.wideFold(loader)
         require(LinearLayout::class.java.isAssignableFrom(dialog))
         val suffix = Integer.toHexString(System.identityHashCode(loader))
         val motion = Class.forName(PREFIX + "MiuiVolumeDialogMotion", false, loader)
-        for (name in listOf("updateStates", "updateStateToExpand")) {
-            HookRuntime.deoptimize(motion.getDeclaredMethod(name, Boolean::class.javaPrimitiveType), "app_volume/$name")
-        }
-        HookRuntime.deoptimize(controller.getDeclaredMethod("dismissVolumePanel", Int::class.javaPrimitiveType), "app_volume/dismissVolumePanel")
-        HookRuntime.deoptimize(controller.getDeclaredMethod("showH", Int::class.javaPrimitiveType), "app_volume/controllerShow")
-        HookRuntime.deoptimize(Class.forName(PREFIX + "s", false, loader).getDeclaredMethod("run"), "app_volume/dismissCallback")
-        HookRuntime.deoptimize(dialog.getDeclaredMethod("a", dialog, Runnable::class.java), "app_volume/dismissBridge")
+        val callers = listOf("updateStates", "updateStateToExpand").map {
+            motion.getDeclaredMethod(it, Boolean::class.javaPrimitiveType)
+        } + listOf(
+            controller.getDeclaredMethod("dismissVolumePanel", Int::class.javaPrimitiveType),
+            controller.getDeclaredMethod("showH", Int::class.javaPrimitiveType),
+        ) + targets.finishCallers
+        if (!callers.map { HookRuntime.deoptimize(it, "app_volume/${it.name}") }.all { it }) return 0
         var count = 0
         if (HookRuntime.hookAfter(show, "app_volume/show/$suffix") { chain, original ->
                 states[chain.thisObject]?.get()?.show()
@@ -91,11 +90,13 @@ internal object AppVolumeEntryHooks {
                 Reflect.attempt { states[chain.thisObject]?.get()?.beginDismiss() }
                 chain.proceed()
             }) count++
-        if (HookRuntime.hook(finish, "app_volume/finish/$suffix") { chain ->
-                // Restore before the controller's completion callback reparents its native columns.
-                Reflect.attempt { (chain.thisObject as? ViewGroup)?.let(panel::finishDismiss) }
+        if (HookRuntime.hook(targets.finish, "app_volume/finish/$suffix") { chain ->
+                val host = if (targets.os3) Reflect.readField(chain.thisObject, "mVolumeView") as? ViewGroup
+                    else chain.thisObject as? ViewGroup
+                // 控制器的完成回调会重新挂载原生音量列，必须先还原。
+                Reflect.attempt { host?.let(panel::finishDismiss) }
                 val result = chain.proceed()
-                Reflect.attempt { states[chain.thisObject]?.get()?.finishDismiss() }
+                Reflect.attempt { states[host]?.get()?.finishDismiss() }
                 result
             }) count++
         // Both synchronous expand and asynchronous pre-draw show pass through apply().
@@ -118,7 +119,7 @@ internal object AppVolumeEntryHooks {
         // Do not create any rows if a lifecycle/geometry interceptor failed to install.
         if (count != 5) return count
         val ringer = Class.forName(PREFIX + "MiuiRingerModeLayout", false, loader)
-        for (name in listOf("onMaterialModeChanged", "updateResources")) {
+        for (name in targets.resourceUpdates) {
             if (HookRuntime.hookAfter(ringer.getDeclaredMethod(name), "app_volume/$name/$suffix") { chain, original ->
                     val parent = (chain.thisObject as? View)?.parent
                     states[parent]?.get()?.let { it.style(); it.update() }
@@ -128,7 +129,7 @@ internal object AppVolumeEntryHooks {
         if (HookRuntime.hook(showPanel, "app_volume/controller/$suffix") { chain ->
                 Reflect.attempt {
                     val host = Reflect.readField(chain.thisObject, "mVolumeView") as? ViewGroup
-                    host?.let { entry(it, panel, flip, wideFold, position)?.bindController(chain.thisObject!!) }
+                    host?.let { entry(it, panel, flip, wideFold(it.context), position)?.bindController(chain.thisObject!!) }
                 }
                 chain.proceed()
             }) count++
@@ -154,6 +155,7 @@ internal object AppVolumeEntryHooks {
                 buttons?.indexOfChild(silent) ?: -1, buttons?.indexOfChild(dnd) ?: -1, dialog.indexOfChild(host))
             if (index < 0) return@attempt null
             val anchor = if (!position.inFooter) null else if (position.targetsSilent) silent else dnd
+            val footerMotionSource = if (position.inFooter) find(anchor!!, "bg_blur") ?: return@attempt null else null
             val id = resource(dialog.context, "layout", "miui_ringer_mode_layout")
             if (id == 0) return@attempt null
             val row = LayoutInflater.from(dialog.context).inflate(id, dialog, false) as ViewGroup
@@ -174,7 +176,7 @@ internal object AppVolumeEntryHooks {
             row.tag = TAG
             row.visibility = View.GONE
             val state = Entry(dialog, row, click, icon, panel, flip, helper, wideFold, position, host,
-                buttons, anchor, if (position.replacesNative) anchor else null)
+                buttons, anchor, if (position.replacesNative) anchor else null, footerMotionSource)
             state.style()
             standard.accessibilityDelegate = null
             standard.importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS
@@ -202,7 +204,7 @@ internal object AppVolumeEntryHooks {
         val dialog: ViewGroup, val row: ViewGroup, val click: View, val icon: ImageView,
         val panel: SystemUiAppVolumePanel, val flip: Method, val helper: Any, val wideFold: Boolean,
         val position: AppVolumeButtonPosition, val footer: ViewGroup, val buttons: LinearLayout?,
-        val anchor: View?, val replaced: View?,
+        val anchor: View?, val replaced: View?, val footerMotionSource: View?,
     ) : View.OnAttachStateChangeListener, ViewTreeObserver.OnPreDrawListener {
         private var controller: WeakReference<Any>? = null
         private var motionSource: View? = null
@@ -449,13 +451,20 @@ internal object AppVolumeEntryHooks {
                 }
                 return source === dialog
             }
-            if (!sample(motionSource, motion) || !sample(row.parent as? View, parentMotion)) { resetMotion(); return }
-            // Use the visible capsule center, not the row center (which includes the bottom gap).
+            // 原生按键动画直接更新 bg_blur 的缩放和位移；底部入口跟随对应按钮，
+            // 包括已被隐藏的替换目标，不能将音量条的支点外推到其下方。
+            val source = if (position.inFooter) footerMotionSource else motionSource
+            if (!sample(source, motion) || !sample(row.parent as? View, parentMotion)) { resetMotion(); return }
+            // 使用可见胶囊中心，不把行间距纳入缩放支点。
             row.pivotX = click.left + click.width / 2f
             row.pivotY = click.top + click.height / 2f
             val parent = row.parent as? View ?: return
-            val residual = motion.relativeTo(parentMotion,
-                row.left + row.pivotX - parent.scrollX, row.top + row.pivotY - parent.scrollY)
+            val residual = if (position.inFooter) {
+                motion.relativeCapsuleTo(parentMotion, source!!.width / 2f, source.height / 2f)
+            } else {
+                motion.relativeTo(parentMotion,
+                    row.left + row.pivotX - parent.scrollX, row.top + row.pivotY - parent.scrollY)
+            }
             if (residual == null) { resetMotion(); row.alpha = 0f; return }
             row.scaleX = residual.scaleX; row.scaleY = residual.scaleY; row.alpha = residual.alpha
             row.translationX = residual.translationX; row.translationY = residual.translationY

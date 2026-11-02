@@ -144,6 +144,17 @@ val SYSTEM_UI_FEATURES: List<HyperFeature> = listOf(
         requirement = "仅系统界面 202602260 主屏原生模糊路径，保留混合模式、透明度动画、圆角与模糊能力检查，不替换全局资源。增强选项默认关闭，仅额外作用于锁屏。原生玻璃材质的独立 token、息屏和外屏保持原样；玻璃回退模糊时沿用其外层场景，不把锁屏或息屏误当通知栏。关闭后下次原生材质更新恢复，安全模式完整恢复需重启系统界面。首次开启需重启；源码未编译，非真机验收。",
     ),
     HyperFeature(
+        id = DeviceCenterSingleRowSettings.FEATURE,
+        title = "单行融合设备",
+        summary = "固定一行显示，四台完整展示，更多保留原生展开入口",
+        scopes = listOf("systemui"),
+        origin = "HyperExtend · 融合设备单行独立实现（沿用 HyperCeiler 功能分组）",
+        license = "AGPL-3.0",
+        defaultEnabled = false,
+        group = ScopeFeatureGroup.CONTROL_CENTER,
+        requirement = "适配已取证的 OS3 插件 171050400 与 OS4 插件 183025700。开启后仅整理控制中心融合设备卡片的显示列表：最多三台时保留原生更多入口；四台完整显示四台；超过四台显示前三台与原生更多设备按钮。空设备提示、第三方设备控制入口、完整设备数据、原生点击和高度动画保持不变，不强制显示系统隐藏的融合设备卡片。关闭后下次原生设备列表更新恢复；开启、关闭及安全模式完整恢复需重启系统界面。已通过本地测试与构建，尚待真机验收。",
+    ),
+    HyperFeature(
         id = CardTileListSettings.FEATURE,
         title = "自定义卡片磁贴列表",
         summary = "调整普通卡片顺序与数量，保留原生 VoWiFi 生命周期",

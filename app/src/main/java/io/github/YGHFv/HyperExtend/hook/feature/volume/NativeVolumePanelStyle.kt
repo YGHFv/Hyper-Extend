@@ -71,8 +71,10 @@ internal object NativeVolumePanelStyle {
         val source = Reflect.readField(motion, "mDialogContentView") as android.view.View
         val location = IntArray(2).also(source::getLocationOnScreen)
         val ease = Class.forName("miui.systemui.animation.FolmeUtilsExtKt", false, loader)
+        // OS3 官方展开器使用未分层的六组弹簧；较新宿主保留分层参数。
+        val suffix = if (ease.declaredMethods.any { it.name == "getEASE_EXPAND_SIZE_LAYERED" }) "_LAYERED" else ""
         val springs = listOf("EXPAND_SIZE", "EXPAND_POSITION", "EXPAND_COLOR", "COLLAPSE_SIZE", "COLLAPSE_POSITION", "COLLAPSE_COLOR").map {
-            val style = ease.getDeclaredMethod("getEASE_${it}_LAYERED").invoke(null)!!
+            val style = ease.getDeclaredMethod("getEASE_$it$suffix").invoke(null)!!
             check((Reflect.readField(style, "style") as Int) == -2)
             val factors = Reflect.readField(style, "factors") as DoubleArray
             AppVolumeSpring(factors[0], factors[1])

@@ -78,7 +78,8 @@ class SystemUiFeaturesTest {
         //        「改系统原生隐藏偏好」档，不再单独成卡（两张卡写的是同一个全局键）。
         // 69 -> 68：把「锁屏左侧入口替换为手电筒」并入锁屏左侧按钮卡片的
         //        「处理方式」三选一（上游本来就是一个下拉框，隐藏与手电筒抢同一个位置）。
-        assertEquals(68, SYSTEM_UI_FEATURES.size)
+        // 68 -> 69：新增默认关闭的「单行融合设备」，同时适配 OS3 与 OS4。
+        assertEquals(69, SYSTEM_UI_FEATURES.size)
         SYSTEM_UI_FEATURES.forEach { feature ->
             assertFalse(feature.defaultEnabled)
             assertEquals(when (feature.id) {

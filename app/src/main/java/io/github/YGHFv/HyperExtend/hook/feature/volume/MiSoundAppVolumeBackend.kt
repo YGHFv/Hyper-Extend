@@ -15,7 +15,9 @@ import java.lang.reflect.Method
 import java.util.UUID
 
 /** 通过运行期反射验证的 MiSound 播放器 setter 与持久化路径；绝不调用 setStreamVolume。 */
-internal class MiSoundAppVolumeBackend(loader: ClassLoader, private val controller: Class<*>) {
+internal class MiSoundAppVolumeBackend(
+    loader: ClassLoader, private val controller: Class<*>, targets: MiSoundVolumeTargets.Layout,
+) {
     private val column = Class.forName(controller.name + "\$h", false, loader)
     private val ctor = column.getDeclaredConstructor(controller, AudioPlaybackConfiguration::class.java).apply { isAccessible = true }
     private val volume = column.getDeclaredField("h").apply { isAccessible = true }
@@ -29,8 +31,12 @@ internal class MiSoundAppVolumeBackend(loader: ClassLoader, private val controll
     private val remove = controller.getDeclaredMethod("D", android.view.View::class.java).apply { isAccessible = true }
     private val nativeSources = Class.forName("com.miui.misound.playervolume.f", false, loader)
         .getDeclaredMethod("a", Context::class.java).apply { isAccessible = true }
-    private val disabled = Class.forName("z.m", false, loader).getDeclaredMethod("m", android.content.ContentResolver::class.java)
-        .apply { isAccessible = true }
+    private val disabled = Class.forName(targets.postureClass, false, loader)
+        .getDeclaredMethod(targets.postureMethod, android.content.ContentResolver::class.java)
+        .apply {
+            require(returnType == Boolean::class.javaPrimitiveType && java.lang.reflect.Modifier.isStatic(modifiers))
+            isAccessible = true
+        }
     private val lease = AppVolumeBridgeLease()
     private var identities = emptyMap<Int, String>()
 

@@ -1,0 +1,78 @@
+# 已取证 OS4 / Android 17 宿主，V1 旧签名恢复的成员与指令归约。
+# framework.jar:classes4.dex SHA256 b6d5722af732fd605077bc6b13fe830a2325c13f90ad960c298471d8d6194298
+Landroid/util/apk/ApkSignatureVerifier;->verifySignatures(Landroid/content/pm/parsing/result/ParseInput;Ljava/lang/String;IZ)Landroid/content/pm/parsing/result/ParseResult;
+  0x0005 invoke-interface v0, Landroid/content/pm/parsing/result/ParseResult;->isError()Z
+  0x000b invoke-interface v6, v0, Landroid/content/pm/parsing/result/ParseInput;->error(Landroid/content/pm/parsing/result/ParseResult;)Landroid/content/pm/parsing/result/ParseResult;
+  0x0016 iget-object v1, v1, Landroid/util/apk/ApkSignatureVerifier$SigningDetailsWithDigests;->signingDetails Landroid/content/pm/SigningDetails;
+  0x0049 invoke-interface v6, v1, Landroid/content/pm/parsing/result/ParseInput;->success(Ljava/lang/Object;)Landroid/content/pm/parsing/result/ParseResult;
+Landroid/util/apk/ApkSignatureVerifier;->verifyV1Signature(Landroid/content/pm/parsing/result/ParseInput;Ljava/lang/String;Z)Landroid/content/pm/parsing/result/ParseResult;
+  0x0015 const/16 v11, -103
+  0x0073 invoke-interface v4, v5, v0, Landroid/content/pm/parsing/result/ParseInput;->error(I Ljava/lang/String;)Landroid/content/pm/parsing/result/ParseResult;
+  0x0090 invoke-interface v5, Landroid/content/pm/parsing/result/ParseResult;->isError()Z
+  0x0096 invoke-interface v4, v5, Landroid/content/pm/parsing/result/ParseInput;->error(Landroid/content/pm/parsing/result/ParseResult;)Landroid/content/pm/parsing/result/ParseResult;
+  0x00d9 invoke-interface v4, v11, v0, Landroid/content/pm/parsing/result/ParseInput;->error(I Ljava/lang/String;)Landroid/content/pm/parsing/result/ParseResult;
+  0x01aa const/16 v11, -103
+  0x022e invoke-interface v4, v0, v9, v10, Landroid/content/pm/parsing/result/ParseInput;->error(I Ljava/lang/String; Ljava/lang/Exception;)Landroid/content/pm/parsing/result/ParseResult;
+  0x0260 invoke-interface v4, v0, Landroid/content/pm/parsing/result/ParseInput;->success(Ljava/lang/Object;)Landroid/content/pm/parsing/result/ParseResult;
+  0x0296 const/16 v7, -103
+  0x0298 invoke-interface v4, v7, v1, v0, Landroid/content/pm/parsing/result/ParseInput;->error(I Ljava/lang/String; Ljava/lang/Exception;)Landroid/content/pm/parsing/result/ParseResult;
+  0x02c7 invoke-interface v4, v7, v1, v0, Landroid/content/pm/parsing/result/ParseInput;->error(I Ljava/lang/String; Ljava/lang/Exception;)Landroid/content/pm/parsing/result/ParseResult;
+Landroid/util/apk/ApkSignatureVerifier;->verifyV3AndBelowSignatures(Landroid/content/pm/parsing/result/ParseInput;Ljava/lang/String;IZ)Landroid/content/pm/parsing/result/ParseResult;
+  0x0007 const/16 v2, -103
+  0x001e invoke-interface v5, v2, v1, v0, Landroid/content/pm/parsing/result/ParseInput;->error(I Ljava/lang/String; Ljava/lang/Exception;)Landroid/content/pm/parsing/result/ParseResult;
+  0x0043 invoke-interface v5, v2, v0, Landroid/content/pm/parsing/result/ParseInput;->error(I Ljava/lang/String;)Landroid/content/pm/parsing/result/ParseResult;
+  0x0063 invoke-interface v5, v2, v0, v4, Landroid/content/pm/parsing/result/ParseInput;->error(I Ljava/lang/String; Ljava/lang/Exception;)Landroid/content/pm/parsing/result/ParseResult;
+  0x0084 invoke-interface v5, v2, v0, Landroid/content/pm/parsing/result/ParseInput;->error(I Ljava/lang/String;)Landroid/content/pm/parsing/result/ParseResult;
+  0x0089 invoke-static v5, v6, v8, Landroid/util/apk/ApkSignatureVerifier;->verifyV1Signature(Landroid/content/pm/parsing/result/ParseInput; Ljava/lang/String; Z)Landroid/content/pm/parsing/result/ParseResult;
+# services.jar:classes3.dex SHA256 a22118a302dc78584ad76a40b7bc21a4cfb8b7ddff06448f18cd88992f12b2f0
+Lcom/android/server/pm/PackageInstallerSession;->getAddedApkLitesLocked()Ljava/util/List;
+  0x002d invoke-static v7, v8, v9, Landroid/content/pm/parsing/ApkLiteParseUtils;->parseApkLite(Landroid/content/pm/parsing/result/ParseInput; Ljava/io/File; I)Landroid/content/pm/parsing/result/ParseResult;
+Lcom/android/server/pm/PackageInstallerSession;->validateApkInstallLocked()Landroid/content/pm/parsing/PackageLite;
+  0x00ab invoke-direct v1, Lcom/android/server/pm/PackageInstallerSession;->getAddedApkLitesLocked()Ljava/util/List;
+Landroid/content/pm/SigningInfo;->getSigningDetails()Landroid/content/pm/SigningDetails;
+Landroid/content/pm/SigningDetails;-><init>(Landroid/content/pm/SigningDetails;)V
+Landroid/content/pm/SigningDetails;-><init>(Landroid/os/Parcel;)V
+Landroid/content/pm/SigningDetails;-><init>([Landroid/content/pm/Signature;IILandroid/util/ArraySet;[Landroid/content/pm/Signature;)V
+Landroid/content/pm/SigningDetails;-><init>([Landroid/content/pm/Signature;II[Landroid/content/pm/Signature;)V
+Landroid/content/pm/SigningDetails;-><init>([Landroid/content/pm/Signature;ILandroid/util/ArraySet;[Landroid/content/pm/Signature;)V
+Landroid/content/pm/SigningDetails;-><init>([Landroid/content/pm/Signature;I[Landroid/content/pm/Signature;)V
+Landroid/content/pm/SigningDetails;-><init>([Landroid/content/pm/Signature;I)V
+Landroid/content/pm/SigningDetails;->getSignatures()[Landroid/content/pm/Signature;
+Landroid/content/pm/parsing/result/ParseTypeImpl;->reset()Landroid/content/pm/parsing/result/ParseInput;
+Landroid/content/pm/parsing/result/ParseInput;->error(ILjava/lang/String;Ljava/lang/Exception;)Landroid/content/pm/parsing/result/ParseResult;
+Landroid/content/pm/parsing/result/ParseInput;->error(ILjava/lang/String;)Landroid/content/pm/parsing/result/ParseResult;
+Landroid/content/pm/parsing/result/ParseInput;->error(I)Landroid/content/pm/parsing/result/ParseResult;
+Landroid/content/pm/parsing/result/ParseInput;->error(Landroid/content/pm/parsing/result/ParseResult;)Landroid/content/pm/parsing/result/ParseResult;
+Landroid/content/pm/parsing/result/ParseInput;->error(Ljava/lang/String;)Landroid/content/pm/parsing/result/ParseResult;
+Landroid/content/pm/parsing/result/ParseInput;->success(Ljava/lang/Object;)Landroid/content/pm/parsing/result/ParseResult;
+Landroid/util/apk/ApkSignatureVerifier$SigningDetailsWithDigests;-><init>(Landroid/content/pm/SigningDetails;Ljava/util/Map;)V
+# framework.jar:classes.dex SHA256 fa635bd907ce5e8e63d314ec330264f209ac493bd46745d6fa089c058c7f50d7
+Landroid/content/pm/SigningDetails;-><init>(Landroid/content/pm/SigningDetails;)V
+  0x0006 iget-object v1, v4, Landroid/content/pm/SigningDetails;->mSignatures [Landroid/content/pm/Signature;
+  0x000a iget-object v1, v4, Landroid/content/pm/SigningDetails;->mSignatures [Landroid/content/pm/Signature;
+  0x0012 iput-object v1, v3, Landroid/content/pm/SigningDetails;->mSignatures [Landroid/content/pm/Signature;
+  0x0015 iput-object v0, v3, Landroid/content/pm/SigningDetails;->mSignatures [Landroid/content/pm/Signature;
+  0x0017 iget v1, v4, Landroid/content/pm/SigningDetails;->mSignatureSchemeVersion I
+  0x0019 iput v1, v3, Landroid/content/pm/SigningDetails;->mSignatureSchemeVersion I
+  0x001b iget v1, v4, Landroid/content/pm/SigningDetails;->mSignatureSchemeMinorVersion I
+  0x001d iput v1, v3, Landroid/content/pm/SigningDetails;->mSignatureSchemeMinorVersion I
+  0x0021 iget-object v2, v4, Landroid/content/pm/SigningDetails;->mPublicKeys Landroid/util/ArraySet;
+  0x0026 iput-object v1, v3, Landroid/content/pm/SigningDetails;->mPublicKeys Landroid/util/ArraySet;
+  0x0028 iget-object v1, v4, Landroid/content/pm/SigningDetails;->mPastSigningCertificates [Landroid/content/pm/Signature;
+  0x002c iget-object v0, v4, Landroid/content/pm/SigningDetails;->mPastSigningCertificates [Landroid/content/pm/Signature;
+  0x0034 iput-object v0, v3, Landroid/content/pm/SigningDetails;->mPastSigningCertificates [Landroid/content/pm/Signature;
+  0x0037 iput-object v0, v3, Landroid/content/pm/SigningDetails;->mPastSigningCertificates [Landroid/content/pm/Signature;
+  0x003a iput-object v0, v3, Landroid/content/pm/SigningDetails;->mSignatures [Landroid/content/pm/Signature;
+  0x003d iput v1, v3, Landroid/content/pm/SigningDetails;->mSignatureSchemeVersion I
+  0x003f iput v1, v3, Landroid/content/pm/SigningDetails;->mSignatureSchemeMinorVersion I
+  0x0041 iput-object v0, v3, Landroid/content/pm/SigningDetails;->mPublicKeys Landroid/util/ArraySet;
+  0x0043 iput-object v0, v3, Landroid/content/pm/SigningDetails;->mPastSigningCertificates [Landroid/content/pm/Signature;
+Landroid/content/pm/SigningInfo;->getSigningDetails()Landroid/content/pm/SigningDetails;
+  0x0000 iget-object v0, v1, Landroid/content/pm/SigningInfo;->mSigningDetails Landroid/content/pm/SigningDetails;
+Landroid/content/pm/parsing/result/ParseTypeImpl;->reset()Landroid/content/pm/parsing/result/ParseInput;
+  0x0000 const/4 v0, 0
+  0x0003 const/4 v1, 1
+  0x0004 iput v1, v2, Landroid/content/pm/parsing/result/ParseTypeImpl;->mErrorCode I
+  0x0013 const/4 v0, -1
+Landroid/content/pm/parsing/result/ParseTypeImpl;->success(Ljava/lang/Object;)Landroid/content/pm/parsing/result/ParseResult;
+  0x0000 iget v0, v3, Landroid/content/pm/parsing/result/ParseTypeImpl;->mErrorCode I

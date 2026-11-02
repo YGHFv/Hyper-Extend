@@ -97,7 +97,7 @@ val SYSTEM_FRAMEWORK_FEATURES: List<HyperFeature> = listOf(
             HyperOption(
                 id = "system_framework_core_patch_override_signature",
                 title = "允许覆盖安装不同签名",
-                summary = "同包名不同签名时继续覆盖安装",
+                summary = "同包名不同签名时允许更新，并兼容本包已有权限声明",
                 defaultEnabled = false,
                 group = "常规",
             ),
@@ -108,13 +108,12 @@ val SYSTEM_FRAMEWORK_FEATURES: List<HyperFeature> = listOf(
                 defaultEnabled = false,
                 group = "常规",
             ),
-            // 上游把「覆盖安装不同签名」拆成 digest_creak 与 use_pre_signature 两个开关：
-            // 前者放宽能力判定与 key-set，后者额外把已安装应用的签名（含其 signature 级权限）
-            // 直接送给新包。风险高一档，所以这里同样拆成两个子项，不并到上一项里顺带打开。
+            // 保留旧设置键；除权限声明兼容外，补迁 AuthCreakPatch 的 V1 旧签名恢复。
+            // 恢复需覆盖和签名验证子项同时开启；不改 APK，正常验签成功时不替换。
             HyperOption(
                 id = "system_framework_core_patch_use_pre_signature",
-                title = "沿用已安装应用的签名",
-                summary = "同包名时沿用已安装应用的签名与其签名级权限（仅用户主动安装生效）",
+                title = "沿用已安装应用签名",
+                summary = "配合覆盖开关及禁用签名验证，在 V1 验签失败时沿用旧证书；同时兼容本包权限声明，仅用于可信更新包",
                 defaultEnabled = false,
                 group = "常规",
             ),

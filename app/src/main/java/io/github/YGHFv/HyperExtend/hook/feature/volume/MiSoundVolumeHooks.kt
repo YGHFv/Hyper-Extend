@@ -30,9 +30,8 @@ internal object MiSoundVolumeHooks {
         if (Build.VERSION.SDK_INT < 33) return 0
         val type = Reflect.loadClass(loader, AppVolumeSettings.SERVICE) ?: return 0
         val controller = Reflect.loadClass(loader, "com.miui.misound.playervolume.a") ?: return 0
-        val controllerField = type.getDeclaredField("e").apply { isAccessible = true }
-        if (controllerField.type != controller) return 0
-        val backend = MiSoundAppVolumeBackend(loader, controller)
+        val (targets, controllerField) = MiSoundVolumeTargets.resolve(type, controller)
+        val backend = MiSoundAppVolumeBackend(loader, controller, targets)
         val controllerContext = controller.getDeclaredField("c").apply { isAccessible = true }
         val ball = controller.getDeclaredField("m").apply { isAccessible = true }
         val dataOnly = ThreadLocal<Boolean>()
@@ -127,7 +126,7 @@ internal object MiSoundVolumeHooks {
             HookRuntime.deoptimize(start, "app_volume/misound/startCaller")
         // 卡片样式是独立于数据桥的第二组 hook；之前只安装了这里的 5 个服务 hook，
         // MiSoundCardHooks 虽然存在但从未接入，因此原生卡片必然始终保留。
-        val cardCount = runCatching { MiSoundCardHooks.install(loader, controller) }
+        val cardCount = runCatching { MiSoundCardHooks.install(loader, controller, targets) }
             .onFailure { ModuleLog.error("app_volume card hooks unavailable; native card retained", it) }
             .getOrDefault(0)
         ModuleLog.info("app_volume/card_hooks=$cardCount")

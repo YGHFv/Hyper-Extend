@@ -59,7 +59,7 @@ class CorePatchSignaturePolicyTest {
         assertFalse(CorePatchSignaturePolicy.inUserInstallPath(setOf("preparePackageFoo")))
     }
 
-    /** 包名门禁是「沿用已安装签名」唯一的冒充防线，空值与不同名都必须判否。 */
+    /** 包名门禁是原应用权限声明的冒充防线，空值与不同名都必须判否。 */
     @Test
     fun preSignatureRequiresVerbatimPackageNameMatch() {
         assertTrue(CorePatchSignaturePolicy.samePackageName("com.example.app", "com.example.app"))
@@ -130,5 +130,60 @@ class CorePatchSignaturePolicyTest {
     fun frameNamesReadRealStackFrames() {
         val names = CorePatchSignaturePolicy.frameNames(Thread.currentThread().stackTrace)
         assertTrue(names.contains("frameNamesReadRealStackFrames"))
+    }
+
+    private fun declaration(
+        original: Boolean = false,
+        override: Boolean = true,
+        legacy: Boolean = false,
+        owner: String? = "com.example.app",
+        parsed: String? = "com.example.app",
+        frames: Set<String> = setOf("preparePackage"),
+        safeMode: Boolean = false,
+    ) = CorePatchSignaturePolicy.permissionDeclarationResult(
+        original, override, legacy, owner, parsed, frames, safeMode)
+
+    @Test fun overrideAloneHandlesOwnPermissionDeclarations() {
+        assertTrue(declaration(override = true, legacy = false))
+        assertTrue(declaration(override = true, legacy = true))
+    }
+
+    @Test fun legacySettingStillWorksIndependentlyAndBothOffRestoreNativeFailure() {
+        assertTrue(declaration(override = false, legacy = true))
+        assertFalse(declaration(override = false, legacy = false))
+        assertFalse(declaration(safeMode = true))
+        assertFalse(declaration(override = false, legacy = true, safeMode = true))
+    }
+
+    @Test fun declarationsCannotImpersonateAnotherPackageOrPlatform() {
+        for (owner in listOf("com.example.other", "android", null, "", " ")) {
+            assertFalse(declaration(owner = owner))
+            assertFalse(declaration(owner = owner, legacy = true))
+        }
+        for (parsed in listOf(null, "", " ")) assertFalse(declaration(parsed = parsed))
+    }
+
+    @Test fun declarationCompatibilityDoesNotApplyToBootScanOrRuntimePermissionChecks() {
+        for (frames in listOf(
+            emptySet(),
+            setOf("processParseResult", "addForInitLI", "reconcilePackages"),
+            setOf("checkPermission", "hasSignatureCapability"),
+            setOf("doesSignatureMatchForPermissions"),
+            setOf("preparePackageFoo"),
+        )) assertFalse(declaration(frames = frames, legacy = true))
+    }
+
+    @Test fun nativeSuccessIsPreservedInEverySettingAndSafetyCombination() {
+        for (override in listOf(false, true))
+            for (legacy in listOf(false, true))
+                for (safe in listOf(false, true))
+                    assertTrue(declaration(original = true, override = override, legacy = legacy,
+                        owner = "com.example.other", frames = emptySet(), safeMode = safe))
+    }
+
+    @Test fun ownDeclarationCompatibilityNeverChangesGlobalCapabilities() {
+        assertTrue(declaration())
+        for (capability in listOf(CorePatchSignaturePolicy.CAP_PERMISSION, CorePatchSignaturePolicy.CAP_AUTH))
+            assertFalse(forges(capability, sharedUser = true))
     }
 }

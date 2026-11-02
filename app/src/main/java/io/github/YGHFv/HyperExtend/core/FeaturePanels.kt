@@ -11,7 +11,7 @@ enum class FeaturePanel(val title: String, vararg val featureIds: String) {
     ISLAND_MEDIA("灵动岛媒体", IslandMediaSettings.LAYOUT, IslandMediaSettings.TEXT, IslandMediaSettings.PROGRESS, IslandMediaSettings.BACKGROUND),
     MEDIA("媒体卡片", "media_card_progress", "media_card_always_dark", MediaBackgroundSettings.FEATURE,
         MediaCardSettings.LAYOUT, MediaCardSettings.TEXT_SIZE, "media_unlock_custom_actions"),
-    NEW_CONTROL_CENTER("新控制中心", ForceBlurSettings.FEATURE, "shade_header_gradient_blur", HeaderWeatherSettings.FEATURE, PercentageSettings.FEATURE, "control_center_hide_edit", "control_center_hide_carrier", "control_center_hide_security_footer", "control_center_auto_collapse"),
+    NEW_CONTROL_CENTER("新控制中心", ForceBlurSettings.FEATURE, "shade_header_gradient_blur", HeaderWeatherSettings.FEATURE, PercentageSettings.FEATURE, DeviceCenterSingleRowSettings.FEATURE, "control_center_hide_edit", "control_center_hide_carrier", "control_center_hide_security_footer", "control_center_auto_collapse"),
     CLASSIC_CONTROL_CENTER("经典控制中心", "control_center_unlock_old", ClassicQsSettings.FEATURE),
     TILES("磁贴", "control_center_fix_tiles_list", "control_center_gms_tile", "control_center_taplus_tile", "control_center_sunlight_tile", AudioMuteSettings.FEATURE, QsLabelSettings.FEATURE, FlashlightStrengthSettings.FEATURE, "control_center_dim_tile_icon", TileMaterialSettings.FEATURE, TileCornerSettings.FEATURE, TileColorSettings.FEATURE, CardTileColorSettings.FEATURE, CardTileListSettings.FEATURE),
     VOLUME("音量面板", NativeSystemUiSettings.VOLUME, "volume_default_theme", "volume_hide_collapsed_footer", "volume_long_press_expand", AppVolumeSettings.FEATURE),
